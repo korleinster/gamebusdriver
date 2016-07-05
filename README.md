@@ -4,7 +4,7 @@ KPU
 
 
 기본적으로 텍스트 예쁘게 만드는 방법은 아래와 같다.
-*Italic*, **bold**, and  'monospace'
+*Italic*, **bold**, and  `monospace`
 
 여기서부턴 우주초월이 임의로 만든 소스
 ================================

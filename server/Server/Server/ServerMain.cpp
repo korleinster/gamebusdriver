@@ -11,6 +11,10 @@ using namespace std;
 	16.07.06
 	서버 기본 틀. 클라이언트를 저장하는 clients 가 원래 array 었으나, vector 포인터 형태로 처음 변경해 보았기 때문에, 버그가 발생할 소지가 있다.
 	클라이언트에서 정보를 잘 전달하기 위해, 기본 프로토콜을 같이 적용하여 추후 만들 생각 이다.
+
+	16.07.26
+	일부 주석 설명 변경 및 process 함수를 if 문에서 switch 문으로 변경
+	몇몇 조건 부분을 가독성을 높이기 위해 TRUE == (!ServerShutdwon) 으로 변경
 */
 
 // 서버의 기초가 되는 함수 및 변수 ( 여기서 건드릴 함수 및 변수는 없다 )
@@ -159,7 +163,7 @@ void SendPacket(int id, Packet *packet) {
 }
 
 void workerThreads() {
-	while (!ServerShutdown) {
+	while (TRUE == (!ServerShutdown)) {
 		DWORD key;
 		DWORD iosize;
 		OVLP_EX *my_overlap;
@@ -270,7 +274,7 @@ void acceptThread() {
 		error_quit(L"socket()", err_no);
 	}
 	
-	while (!ServerShutdown) {
+	while (TRUE == (!ServerShutdown)) {
 		// accept()
 		struct sockaddr_in clientaddr;
 		int addrlen = sizeof(clientaddr);
@@ -325,12 +329,19 @@ void ProcessPacket(unsigned int id, const Packet buf[]) {
 	// packet[...] = data			> 2번째 부터는 속성에 맞는 순대로 처리를 해준다.
 
 	// buf[1] 번째의 속성으로 분류를 한 뒤에, 내부에서 2번째 부터 데이터를 처리하기 시작한다.
-	if (1 == buf[1]) {
+	switch (buf[1])
+	{
+	case 1:
+	{
 
 	}
-	else {
+		break;
+	default:
+	{
 		// 클라이언트로 부터 알수 없는 데이터가 왔을 경우, 해킹 방지를 위해 서버를 강제 종료. 해당 클라이언트의 고유 번호와 타입 번호를 알려준다.
 		printf("ERROR, Unknown signal -> [ %u ] protocol num = %d\n", id, buf[1]);
 		exit(-1);
+	}
+		break;
 	}
 }

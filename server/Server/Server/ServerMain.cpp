@@ -15,22 +15,49 @@ using namespace std;
 	16.07.26
 	일부 주석 설명 변경 및 process 함수를 if 문에서 switch 문으로 변경
 	몇몇 조건 부분을 가독성을 높이기 위해 TRUE == (!ServerShutdwon) 으로 변경
+
+	16.08.16
+	클라이언트 프로그래머가 서버로 통신 보내기 위한 간편한 class SendPacket 추가 - new buf 형태로 할당받아 버퍼를 사용함
+
+	16.08.18
+	error_display, error_quit 함수를 protocol.h 로 옮김
+	할당받아 사용하던 buf 를 삭제하고, 공용 배열 버퍼를 만들었다.
+	기본 서버 통신 확인용 TEST process protocol define -> protocol.h 헤더 참조 ( 18번째 줄 )
+	class SendPacket 에 Send_default_test() 함수 추가 -> protocol.h 헤더 참조 ( 100번째 줄 )
+	class SendPacket 에 getPacketBuf() 함수 추가 -> protocol.h 헤더 참조 ( 115번째 줄 )
+	현재 recv 버퍼를 send 전역 버퍼처럼 만들었지만, 이후 벡터에 넣을 수 있도록 recv 와 해당 queue 를 합칠 예정이다 ( protocol.h - 46, 50 줄 )
+	OVLP_EX, PLAYER_INFO 구조체 두개를 protocol.h 에서 ServerMain.cpp 로 선언을 옮겼다. - 서버에서만 활용할 예정이기 때문
 */
 
-// 서버의 기초가 되는 함수 및 변수 ( 여기서 건드릴 함수 및 변수는 없다 )
+// 서버의 기초가 되는 함수 및 변수 ( 여기서 건드릴 함수 및 변수는 없다 ) **********************************
 void GetServerIpAddress();
 void ServerClose();
-void error_display(char *, int, int);
-void error_quit(wchar_t *, int);
 int checkCpuCore();
 void Initialize();
-void SendPacket(int, Packet *);
+void SendPacket(unsigned int, const Packet *);
 
 HANDLE g_hIocp;
 bool ServerShutdown{ false };
 
+using OVLP_EX = struct Overlap_ex {
+	OVERLAPPED original_overlap;
+	int operation;
+	WSABUF wsabuf;
+	Packet iocp_buffer[MAX_BUF_SIZE];
+};
+
+using PLAYER_INFO = struct Client_INFO {
+	SOCKET s;
+	unsigned int id;
+	bool connected;
+	OVLP_EX recv_overlap;
+	int packet_size;
+	int previous_size;
+	Packet packet_buff[MAX_BUF_SIZE];
+};
+
 void workerThreads();
-// ----- 여기까지의 함수 및 변수는 건드리지 말자 !! -----
+// ----- 여기까지의 함수 및 변수는 건드리지 말자 !! ----- *************************************************
 
 // 처음 접속한 클라이언트에게 데이터를 주거나, 다른 클라이언트에게 정보를 전송해 주어야 하는 경우, 여기에 코드가 들어가야 한다.
 void acceptThread();
@@ -96,26 +123,6 @@ void ServerClose() {
 	WSACleanup();
 }
 
-// 에러 상황을 보고하지만, 서버를 종료시키지 않는다. 몇 번째 줄에서 에러가 발생했는지 코드 줄 수를 세서 위치를 알아낼 수 있다.
-void error_display(char *msg, int err_no, int line) {
-	WCHAR *lpMsgBuf;
-	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, NULL, err_no,
-		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&lpMsgBuf, 0, NULL);
-	printf("[ %s - %d ]", msg, line);
-	wprintf(L"에러 %s\n", lpMsgBuf);
-	LocalFree(lpMsgBuf);
-}
-
-// 에러 상황을 보고하고, 서버를 종료
-void error_quit(wchar_t *msg, int err_no) {
-	WCHAR *lpMsgBuf;
-	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, NULL, err_no,
-		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&lpMsgBuf, 0, NULL);
-	MessageBox(NULL, (LPCTSTR)lpMsgBuf, msg, MB_ICONERROR);
-	LocalFree(lpMsgBuf);
-	exit(-1);
-}
-
 // 멀티쓰레드를 위한 cpu 코어 갯 수 체크 함수 ( 최대 쓰레드 갯수를 리턴 )
 int checkCpuCore() {
 	SYSTEM_INFO si;
@@ -139,7 +146,7 @@ void Initialize() {
 }
 
 // 클라이언트들 에게 통신을 보내는 함수 ( 보내야 하는 클라이언트 id 와, 패킷을 보내야 하는 버퍼 주소가 필요하다 )
-void SendPacket(int id, Packet *packet) {
+void SendPacket(unsigned int id, const Packet *packet) {
 	// packet[0] = packet size
 	// packet[1] = type
 	// packet[...] = data
@@ -331,9 +338,10 @@ void ProcessPacket(unsigned int id, const Packet buf[]) {
 	// buf[1] 번째의 속성으로 분류를 한 뒤에, 내부에서 2번째 부터 데이터를 처리하기 시작한다.
 	switch (buf[1])
 	{
-	case 1:
+	case TEST:
 	{
-
+		// 받은 패킷을 그대로 돌려준다.
+		SendPacket(id, buf);
 	}
 		break;
 	default:

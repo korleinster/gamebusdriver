@@ -4,16 +4,26 @@ KPU
 
 서버 변경 사항
 ===============
-`16.07.06` [ **김형준** ] - *서버 기본 틀 마련*, 서버 기본 틀. 클라이언트를 저장하는 clients 가 원래 array 었으나, vector 포인터 형태로 처음 변경해 보았기 때문에, 버그가 발생할 소지가 있다.	클라이언트에서 정보를 잘 전달하기 위해, 기본 프로토콜을 같이 적용하여 추후 만들 생각 이다.
+
+`16.08.18` [ **김형준** ] - *protocol.h & ServerMain.cpp 수정*, class SendPacket 의 경우 메모리 해제와 비동기 작동에 관련하여 문제가 발생할 것 같아 전역 buf_send 배열로 변경.
+buf_recv 와 queue 의 경우 나중에 하나로 합칠 예정.
+OVLP_EX, PLAYER_INFO 구조체 두개를 protocol.h 에서 ServerMain.cpp 로 선언을 옮김.
+error_display, error_quit 함수를 protocol.h 로 옮김.
+기본 서버 통신 확인용 TEST process protocol define
+class SendPacket 에 Send_default_test() 함수 추가
 * 위 버전을 복구하기 위한 링크
-* https://github.com/korleinster/gamebusdriver/tree/64f9ddd196d45a0782d4a4d1861a07c27ef53a09
+* https://github.com/korleinster/gamebusdriver/tree/cd800086b82bc6bc8af297514da69ad89cdf8c10
 
 `16.08.16` [ **김형준** ] - *protocol.h 수정*, 클라이언트에서 패킷 보내기 편하기 하기 위해 클래스를 한번 만들어 봤는데, 동적할당으로는 처음 작성해 보았기 때문에, 비동기로 작동할 경우 자기 맘대로 메모리 해제를 할 가능성이 다분히 있다고 생각이 된다.
 오류가 발생할 가능성이 있으니 문제없는지 꼭 확인해 보고 사용하자.
 * 위 버전을 복구하기 위한 링크
-* https://github.com/korleinster/gamebusdriver/tree/1d979606895b9cdec5ab708ffe2c42a2044671a8	
-	
-	클라이언트 변경 사항
+* https://github.com/korleinster/gamebusdriver/tree/1d979606895b9cdec5ab708ffe2c42a2044671a8
+
+`16.07.06` [ **김형준** ] - *서버 기본 틀 마련*, 서버 기본 틀. 클라이언트를 저장하는 clients 가 원래 array 었으나, vector 포인터 형태로 처음 변경해 보았기 때문에, 버그가 발생할 소지가 있다.	클라이언트에서 정보를 잘 전달하기 위해, 기본 프로토콜을 같이 적용하여 추후 만들 생각 이다.
+* 위 버전을 복구하기 위한 링크
+* https://github.com/korleinster/gamebusdriver/tree/64f9ddd196d45a0782d4a4d1861a07c27ef53a09	
+
+클라이언트 변경 사항
 ===============
 
 

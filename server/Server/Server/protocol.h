@@ -43,7 +43,7 @@ void error_quit(wchar_t *msg, int err_no) {
 }
 
 // 보낸 패킷 할당받은거 메모리 해제용 ( 메세지를 받을 경우 맨 앞에 있는 해당 주소메모리 해제 후, 큐에서 빼준다 ) - < 벡터로 buf_recv 배열과 합칠 예정 >
-queue<Packet*> free_memory_queue;
+// queue<Packet*> free_memory_queue;
 
 // 클라이언트 전용 받기 & 보내기 버퍼
 Packet buf_send[MAX_BUF_SIZE] = { 0 };

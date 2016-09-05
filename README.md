@@ -26,7 +26,9 @@ class SendPacket 에 Send_default_test() 함수 추가
 클라이언트 변경 사항
 ===============
 
-
+`16.09.06` [ **김형준** ] - *클라 기본 틀*, 통신 관련 코드는 없다. 윈도우 창으로 생성이 된다. 추후 통신 코드 수정할 예정
+* 위 버전을 복구하기 위한 링크
+* https://github.com/korleinster/gamebusdriver/tree/2dbb9f0d3b385690a9b16c9d18eec950ca8163b4
 
 
 여기서부턴 README 및 GitHub 사용법

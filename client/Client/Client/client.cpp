@@ -18,7 +18,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	wndclass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 	wndclass.lpszMenuName = NULL;
 	wndclass.lpszClassName = L"MyWndClass";
-	if (TRUE == !RegisterClass(&wndclass)) { return -1; }
+	if (false == RegisterClass(&wndclass)) { return -1; }
 
 	// 윈도우 생성
 	HWND hWnd = CreateWindow(L"MyWndClass", L"WinApp", WS_OVERLAPPEDWINDOW, 0, 0, 600, 200, NULL, NULL, hInstance, NULL);
@@ -50,7 +50,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 		PostQuitMessage(0);
 		return 0;
 		break;
-	default:
-		break;
 	}
+	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }

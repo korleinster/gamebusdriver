@@ -32,6 +32,26 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
+	/*HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_MONSTERMASTER));
+
+	while (TRUE)
+	{
+		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+		{
+			if (msg.message == WM_QUIT)
+				break;
+
+			if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+			{
+				TranslateMessage(&msg);
+				DispatchMessage(&msg);
+			}
+		}
+		else
+		{
+			
+		}
+	}*/
 
 	return msg.wParam;
 }
@@ -50,6 +70,68 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 		PostQuitMessage(0);
 		return 0;
 		break;
+
+	case WM_KEYDOWN:
+		switch (wParam)
+		{
+		case VK_ESCAPE:
+			PostQuitMessage(0);
+			return 0;
+			break;
+		}
+		break;
+
+	/*case WM_SOCKET:
+	{
+		if (WSAGETSELECTERROR(lParam)) {
+			closesocket((SOCKET)wParam);
+			exit(-1);
+			break;
+		}
+
+		switch (WSAGETSELECTEVENT(lParam)) {
+		case FD_READ:
+			ReadPacket((SOCKET)wParam);
+			break;
+		case FD_CLOSE:
+		{
+			closesocket((SOCKET)wParam);
+
+			for (auto iter = g_packetList.begin(); iter != g_packetList.end(); ++iter)
+			{
+				switch ((*iter)[1])
+				{
+				case SC_PUT_PLAYER:
+				{
+					sc_packet_put_player* pData = reinterpret_cast<sc_packet_put_player*>(*iter);
+					delete pData;
+					break;
+				}
+
+				case SC_POS:
+				{
+					sc_packet_pos* pData = reinterpret_cast<sc_packet_pos*>(*iter);
+					delete pData;
+					break;
+				}
+
+				case SC_REMOVE_PLAYER:
+				{
+					sc_packet_remove_player* pData = reinterpret_cast<sc_packet_remove_player*>(*iter);
+					delete pData;
+					break;
+				}
+				}
+			}
+
+			g_packetList.clear();
+
+			exit(-1);
+			break;
+		}
+		}
+	}*/
+
 	}
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }

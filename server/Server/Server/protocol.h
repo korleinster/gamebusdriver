@@ -15,7 +15,11 @@
 #define OP_SERVER_SEND 2
 
 // process protocol
-#define TEST 1			// 받은 패킷 그대로 돌려주기용. ( 보낸 내용이 그대로 돌아오지 않는다면, 클라나 서버에 문제가 있다는 뜻 )
+enum PacketProtocolType_Server_ProcessPacketFunction {
+	TEST = 1,		// 받은 패킷 그대로 돌려주기용. ( 보낸 내용이 그대로 돌아오지 않는다면, 클라나 서버에 문제가 있다는 뜻 )
+	KEYINPUT,		// 클라이언트에서 키 입력을 받았을 경우
+
+};	
 
 using Packet = unsigned char;
 
@@ -48,6 +52,7 @@ void error_quit(wchar_t *msg, int err_no) {
 // 클라이언트 전용 받기 & 보내기 버퍼
 Packet buf_send[MAX_BUF_SIZE] = { 0 };
 Packet buf_recv[MAX_BUF_SIZE] = { 0 };
+// extern ??
 
 // 클라이언트에서 데이터를 보내고자 할 때, 아래 클래스를 사용하면 편하다.
 class SendPacket {

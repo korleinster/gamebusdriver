@@ -2,6 +2,13 @@
 KPU 
 졸업작품용 협업 System
 
+branch 합치기 이전의 최종 commit 본
+===============
+`16.09.26` [ **김형준** ] - iocp 복잡한 함수들을, 유지보수 편하게 하기 위해 class 형식으로 모두 변경. protocol.h 의 몇몇 함수와 전역 변수가 class화 하여 바꾼 서버 클래스와 충돌이 많아서, 아예 client send packet 클래스에 합쳐버렸음. 차후 문제가 발생할 여지가 있기 때문에 북구 링크남김
+* 위 버전을 복구하기 위한 링크
+* https://github.com/korleinster/gamebusdriver/tree/e6689c40b5a5f11265545538135003353d99b8d8
+
+
 서버 변경 사항
 ===============
 

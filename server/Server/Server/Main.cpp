@@ -22,6 +22,9 @@ using namespace std;
 	class SendPacket 에 getPacketBuf() 함수 추가 -> protocol.h 헤더 참조 ( 115번째 줄 )
 	현재 recv 버퍼를 send 전역 버퍼처럼 만들었지만, 이후 벡터에 넣을 수 있도록 recv 와 해당 queue 를 합칠 예정이다 ( protocol.h - 46, 50 줄 )
 	OVLP_EX, PLAYER_INFO 구조체 두개를 protocol.h 에서 ServerMain.cpp 로 선언을 옮겼다. - 서버에서만 활용할 예정이기 때문
+
+	16.09.26
+	iocp 서버 클래스로 변환
 */
 
 int main() {

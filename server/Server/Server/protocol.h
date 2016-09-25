@@ -21,38 +21,12 @@ enum PacketProtocolType_Server_ProcessPacketFunction {
 
 using Packet = unsigned char;
 
-//// 오류 검사용 함수라 건드리지 않아도 된다
-//// 에러 상황을 보고하지만, 서버를 종료시키지 않는다. 몇 번째 줄에서 에러가 발생했는지 코드 줄 수를 세서 위치를 알아낼 수 있다.
-//// error_display( "화면에 출력할 메세지", 에러 번호, __LINE__ )
-//void error_display(char *msg, int err_no, int line) {
-//	WCHAR *lpMsgBuf;
-//	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, NULL, err_no,
-//		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&lpMsgBuf, 0, NULL);
-//	printf("[ %s - %d ]", msg, line);
-//	wprintf(L"에러 %s\n", lpMsgBuf);
-//	LocalFree(lpMsgBuf);
-//}
-//
-//// 에러 상황을 보고하고, 서버를 종료
-//// error_quit( L"화면에 출력할 메세지", 에러 번호, __LINE__ ) - 아예 프로그램이 종료 된다.
-//void error_quit(wchar_t *msg, int err_no) {
-//	WCHAR *lpMsgBuf;
-//	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, NULL, err_no,
-//		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&lpMsgBuf, 0, NULL);
-//	MessageBox(NULL, (LPCTSTR)lpMsgBuf, msg, MB_ICONERROR);
-//	LocalFree(lpMsgBuf);
-//	exit(-1);
-//}
-//
-//// 보낸 패킷 할당받은거 메모리 해제용 ( 메세지를 받을 경우 맨 앞에 있는 해당 주소메모리 해제 후, 큐에서 빼준다 ) - < 벡터로 buf_recv 배열과 합칠 예정 >
-//// queue<Packet*> free_memory_queue;
-//
 //// 클라이언트 전용 받기 & 보내기 버퍼
 //Packet buf_send[MAX_BUF_SIZE] = { 0 };
 //Packet buf_recv[MAX_BUF_SIZE] = { 0 };
 //// extern ??
 
-// 클라이언트에서 데이터를 보내고자 할 때, 아래 클래스를 사용하면 편하다.
+// 클라이언트에서 데이터를 보내고자 할 때, 아래 클래스를 사용하면 편하다. -> 나중에 그냥 클라이언트 통신 소켓 클래스 형식으로 완전히 바꾸는게 좋을 듯 하다.
 class Client_SendPacket {
 private:
 	Packet *buf;	// 실제 데이터 전송을 할 버퍼 공간 ( 전체 사이즈 + 타입 + 실제 데이터 등등... )
@@ -70,14 +44,14 @@ public:
 		
 		// 실제 최대 버퍼 사이즈 보다 데이터 길이가 커지면 안된다.
 		if (MAX_BUF_SIZE < (data_size + 2)) {
-			// 아래와 같은 에러가 발생하게 된다면, 버퍼 사이즈를 건들이기 보다 실제 데이터 크기를 압축해 줄여 보낼 수 있도록 하자
+			// 아래와 같은 에러가 발생하게 된다면, 버퍼 사이즈를 건드리기 보다 실제 데이터 크기를 압축해 줄여 보낼 수 있도록 하자
 			printf("[ code LINE %d ] [ code FUNCTION %s ] SendPacket class ERROR :: data size overed MAX_BUF_SIZE\n", __LINE__, __FUNCTION__);
 		}
 		else {
 			// 혹시 모를 만약의 경우에 대비해 일단 할당으로...
 			//buf = new Packet[MAX_BUF_SIZE];
 
-			// 할당 후 비동기 작동시 문제발생할 확률이 높아서 일반 공용 전역 버퍼를 활용한다.
+			// 할당 후 비동기 작동시 문제발생할 확률이 높아서 일반 공용 전역 버퍼를 활용한다. -> 클래스 자체를 전역으로 선언하는게 나을듯 ( 서버측 코드와 충돌함 )
 			buf = buf_send;
 
 			// 패킷 안의 실제 내용 생성
@@ -87,6 +61,7 @@ public:
 		}
 	}
 
+	// 소켓을 따로 클래스에 저장하는게 좋을 것 같다
 	void Send(const SOCKET s) {
 		if (0 >= size) { printf("[ code LINE %d ] SendPacket class ERROR :: there is no data size", __LINE__); }
 		if (2 >= buf[0]) { printf("[ code LINE %d ] SendPacket class ERROR :: there is no data size", __LINE__); }

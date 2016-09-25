@@ -143,7 +143,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="iocpServerClass.cpp" />
-    <ClCompile Include="ServerMain.cpp" />
+    <ClCompile Include="ProcessPacket_functioncpp.cpp" />
+    <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="iocpServerClass.h" />

@@ -21,11 +21,14 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ServerMain.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="iocpServerClass.cpp">
       <Filter>소스 파일\00.ServerClass</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessPacket_functioncpp.cpp">
+      <Filter>소스 파일\00.ServerClass</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

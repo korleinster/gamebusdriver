@@ -21,50 +21,52 @@ enum PacketProtocolType_Server_ProcessPacketFunction {
 
 using Packet = unsigned char;
 
-// 오류 검사용 함수라 건드리지 않아도 된다
-// 에러 상황을 보고하지만, 서버를 종료시키지 않는다. 몇 번째 줄에서 에러가 발생했는지 코드 줄 수를 세서 위치를 알아낼 수 있다.
-// error_display( "화면에 출력할 메세지", 에러 번호, __LINE__ )
-void error_display(char *msg, int err_no, int line) {
-	WCHAR *lpMsgBuf;
-	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, NULL, err_no,
-		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&lpMsgBuf, 0, NULL);
-	printf("[ %s - %d ]", msg, line);
-	wprintf(L"에러 %s\n", lpMsgBuf);
-	LocalFree(lpMsgBuf);
-}
-
-// 에러 상황을 보고하고, 서버를 종료
-// error_quit( L"화면에 출력할 메세지", 에러 번호, __LINE__ ) - 아예 프로그램이 종료 된다.
-void error_quit(wchar_t *msg, int err_no) {
-	WCHAR *lpMsgBuf;
-	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, NULL, err_no,
-		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&lpMsgBuf, 0, NULL);
-	MessageBox(NULL, (LPCTSTR)lpMsgBuf, msg, MB_ICONERROR);
-	LocalFree(lpMsgBuf);
-	exit(-1);
-}
-
-// 보낸 패킷 할당받은거 메모리 해제용 ( 메세지를 받을 경우 맨 앞에 있는 해당 주소메모리 해제 후, 큐에서 빼준다 ) - < 벡터로 buf_recv 배열과 합칠 예정 >
-// queue<Packet*> free_memory_queue;
-
-// 클라이언트 전용 받기 & 보내기 버퍼
-Packet buf_send[MAX_BUF_SIZE] = { 0 };
-Packet buf_recv[MAX_BUF_SIZE] = { 0 };
-// extern ??
+//// 오류 검사용 함수라 건드리지 않아도 된다
+//// 에러 상황을 보고하지만, 서버를 종료시키지 않는다. 몇 번째 줄에서 에러가 발생했는지 코드 줄 수를 세서 위치를 알아낼 수 있다.
+//// error_display( "화면에 출력할 메세지", 에러 번호, __LINE__ )
+//void error_display(char *msg, int err_no, int line) {
+//	WCHAR *lpMsgBuf;
+//	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, NULL, err_no,
+//		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&lpMsgBuf, 0, NULL);
+//	printf("[ %s - %d ]", msg, line);
+//	wprintf(L"에러 %s\n", lpMsgBuf);
+//	LocalFree(lpMsgBuf);
+//}
+//
+//// 에러 상황을 보고하고, 서버를 종료
+//// error_quit( L"화면에 출력할 메세지", 에러 번호, __LINE__ ) - 아예 프로그램이 종료 된다.
+//void error_quit(wchar_t *msg, int err_no) {
+//	WCHAR *lpMsgBuf;
+//	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, NULL, err_no,
+//		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&lpMsgBuf, 0, NULL);
+//	MessageBox(NULL, (LPCTSTR)lpMsgBuf, msg, MB_ICONERROR);
+//	LocalFree(lpMsgBuf);
+//	exit(-1);
+//}
+//
+//// 보낸 패킷 할당받은거 메모리 해제용 ( 메세지를 받을 경우 맨 앞에 있는 해당 주소메모리 해제 후, 큐에서 빼준다 ) - < 벡터로 buf_recv 배열과 합칠 예정 >
+//// queue<Packet*> free_memory_queue;
+//
+//// 클라이언트 전용 받기 & 보내기 버퍼
+//Packet buf_send[MAX_BUF_SIZE] = { 0 };
+//Packet buf_recv[MAX_BUF_SIZE] = { 0 };
+//// extern ??
 
 // 클라이언트에서 데이터를 보내고자 할 때, 아래 클래스를 사용하면 편하다.
-class SendPacket {
+class Client_SendPacket {
 private:
 	Packet *buf;	// 실제 데이터 전송을 할 버퍼 공간 ( 전체 사이즈 + 타입 + 실제 데이터 등등... )
 	BYTE size = 0;	// 버퍼의 제일 앞 칸에 들어가야 한다 ( buf 배열에 입력 될 때는 +2 가 더해진다 )
 	BYTE type = 0;	// 패킷 사이즈 다음 칸에 타입이 정해진다
 
+	Packet buf_recv[MAX_BUF_SIZE] = { 0 };
+	Packet buf_send[MAX_BUF_SIZE] = { 0 };
 public:
-	SendPacket() {};
-	~SendPacket() { /*delete[] buf;*/ };
+	Client_SendPacket() {};
+	~Client_SendPacket() { /*delete[] buf;*/ };
 
 	// 현재 데이터 크기, 서버에서 처리할 때 분류할 타입, 서버에 보낼 데이터 복사할 원본 데이터 포인터 위치
-	SendPacket(const BYTE data_size, const BYTE type, BYTE* data_start_pointer) : size(data_size), type(type) {
+	Client_SendPacket(const BYTE data_size, const BYTE type, BYTE* data_start_pointer) : size(data_size), type(type) {
 		
 		// 실제 최대 버퍼 사이즈 보다 데이터 길이가 커지면 안된다.
 		if (MAX_BUF_SIZE < (data_size + 2)) {
@@ -116,4 +118,22 @@ public:
 	}
 
 	Packet* getPacketBuf() { return buf; }
+
+	void error_display(char *msg, int err_no, int line) {
+		WCHAR *lpMsgBuf;
+		FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, NULL, err_no,
+			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&lpMsgBuf, 0, NULL);
+		printf("[ %s - %d ]", msg, line);
+		wprintf(L"에러 %s\n", lpMsgBuf);
+		LocalFree(lpMsgBuf);
+	}
+
+	void error_quit(wchar_t *msg, int err_no) {
+		WCHAR *lpMsgBuf;
+		FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, NULL, err_no,
+			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&lpMsgBuf, 0, NULL);
+		MessageBox(NULL, (LPCTSTR)lpMsgBuf, msg, MB_ICONERROR);
+		LocalFree(lpMsgBuf);
+		exit(-1);
+	}
 };

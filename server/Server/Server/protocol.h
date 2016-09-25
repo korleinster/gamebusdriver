@@ -1,5 +1,7 @@
 #pragma once
-#include"stdafx.h"
+#pragma comment(lib, "ws2_32")
+#include<WinSock2.h>
+#include<queue>
 
 #define SERVERPORT 9000
 #define MAX_BUF_SIZE 256

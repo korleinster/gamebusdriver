@@ -1,10 +1,4 @@
-#include"protocol.h"
-#include<Windows.h>
-#include<stdlib.h>
-
-#include<iostream>
-#include<thread>
-#include<vector>
+#include"stdafx.h"
 using namespace std;
 
 /*

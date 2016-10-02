@@ -32,7 +32,7 @@ int main() {
 	_wsetlocale(LC_ALL, L"korean");
 
 	// IOCP ¼­¹ö class
-	//IOCP_SERVER_CLASS iocpServer;
+	IOCP_SERVER_CLASS iocpServer;
 
 
 }

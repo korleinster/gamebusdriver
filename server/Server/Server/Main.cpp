@@ -31,5 +31,6 @@ int main() {
 
 	_wsetlocale(LC_ALL, L"korean");
 
-	IOCP_SERVER_CLASS iocpServer;
+	// IOCP ¼­¹ö class
+	//IOCP_SERVER_CLASS iocpServer;
 }

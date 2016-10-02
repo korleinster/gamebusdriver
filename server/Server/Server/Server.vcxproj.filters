@@ -19,6 +19,9 @@
     <Filter Include="소스 파일\00.ServerClass">
       <UniqueIdentifier>{87a8b892-3a8d-43f1-924f-96746f3a5b3e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="헤더 파일\01.boost_asio">
+      <UniqueIdentifier>{2aded128-ac81-4ccc-9ebb-755b3ff44e16}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="iocpServerClass.cpp">
@@ -40,6 +43,9 @@
     </ClInclude>
     <ClInclude Include="stdafx.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="boost_asio.h">
+      <Filter>헤더 파일\01.boost_asio</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

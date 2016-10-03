@@ -31,7 +31,7 @@ public:
 	void IOCP_SERVER_WorkerThread();
 	void IOCP_SERVER_AcceptThread();
 
-	void IOCP_SERVER_ProcessPacket(unsigned int id, const Packet buf[]);
+	void IOCP_SERVER_ProcessPacket(const unsigned int& id, const Packet buf[]);
 	void IOCP_SERVER_SendPacket(unsigned int id, const Packet *buf);
 
 	void IOCP_SERVER_ErrorDisplay(char *msg, int err_no, int line);

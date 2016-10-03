@@ -1,7 +1,7 @@
 #pragma once
 #include"stdafx.h"
 
-void IOCP_SERVER_CLASS::IOCP_SERVER_ProcessPacket(unsigned int id, const Packet buf[])
+void IOCP_SERVER_CLASS::IOCP_SERVER_ProcessPacket(const unsigned int& id, const Packet buf[])
 {
 	// packet[0] = packet size		> 0번째 자리에는 무조건, 패킷의 크기가 들어가야만 한다.
 	// packet[1] = type				> 1번째 자리에는 현재 패킷이 무슨 패킷인지 속성을 정해주는 값이다.
@@ -13,6 +13,8 @@ void IOCP_SERVER_CLASS::IOCP_SERVER_ProcessPacket(unsigned int id, const Packet 
 	case TEST:
 	{
 		// 받은 패킷을 그대로 돌려준다.
+		printf("[ No. %3u ] TEST Packet Recived !!\n", id);
+		printf("buf[0] = %d, buf[1] = %d, buf[2] = %d\n\n", buf[0], buf[1], buf[2]);
 		IOCP_SERVER_SendPacket(id, buf);
 	}
 	break;

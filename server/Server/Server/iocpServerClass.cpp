@@ -95,6 +95,7 @@ void IOCP_SERVER_CLASS::IOCP_SERVER_WorkerThread()
 
 			closesocket(clients[key]->s);
 			clients[key]->connected = false;
+			printf("[ No. %3u ] Disconnected\n", key);
 
 			/* view list 에서 빼주자 */
 			/* 모든 클라이언트에게, 현재 클라이언트가 끊겼다고 알려주자 */
@@ -205,7 +206,7 @@ void IOCP_SERVER_CLASS::IOCP_SERVER_AcceptThread()
 		/* DB 관련 login 기능이 여기에 추가되어야 한다. 로그인이 번호가 제대로 맞으면 통과, 아니면 클라이언트 연결을 끊는다. 로그인을 하면 DB에서 정보를 가져온다 */
 
 		playerIndex += 1;
-		printf("[ No. %u ] Client IP = %s, Port = %d is Connected\n", playerIndex, inet_ntoa(clientaddr.sin_addr), ntohs(clientaddr.sin_port));
+		printf("[ No. %3u ] Client IP = %s, Port = %d is Connected\n", playerIndex, inet_ntoa(clientaddr.sin_addr), ntohs(clientaddr.sin_port));
 
 		CreateIoCompletionPort(reinterpret_cast<HANDLE>(client_sock), g_hIocp, playerIndex, 0);
 

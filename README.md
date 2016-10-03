@@ -2,16 +2,20 @@
 KPU 
 졸업작품용 협업 System
 
+서버 및 클라이언트 기본 프레임 워크 완성 ( C++ class 기반 )
+===============
+`16.10.04` [ **김형준** ] - 서버와 클라이언트의 기본적인 기틀은 완성되어서 문제가 완벽히 없는 버전. `boost::asio 모델은 아직 미적용.`
+* 위 버전을 복구하기 위한 링크
+* https://github.com/korleinster/gamebusdriver/tree/0e32a971d5b353f9956150f61b8f4b75151e7e2b
+
 branch 합치기 이전의 최종 commit 본
 ===============
 `16.09.26` [ **김형준** ] - iocp 복잡한 함수들을, 유지보수 편하게 하기 위해 class 형식으로 모두 변경. protocol.h 의 몇몇 함수와 전역 변수가 class화 하여 바꾼 서버 클래스와 충돌이 많아서, 아예 client send packet 클래스에 합쳐버렸음. 차후 문제가 발생할 여지가 있기 때문에 북구 링크남김
 * 위 버전을 복구하기 위한 링크
 * https://github.com/korleinster/gamebusdriver/tree/e6689c40b5a5f11265545538135003353d99b8d8
 
-
 서버 변경 사항
 ===============
-
 `16.08.18` [ **김형준** ] - *protocol.h & ServerMain.cpp 수정*, class SendPacket 의 경우 메모리 해제와 비동기 작동에 관련하여 문제가 발생할 것 같아 전역 buf_send 배열로 변경.
 buf_recv 와 queue 의 경우 나중에 하나로 합칠 예정.
 OVLP_EX, PLAYER_INFO 구조체 두개를 protocol.h 에서 ServerMain.cpp 로 선언을 옮김.
@@ -32,7 +36,6 @@ class SendPacket 에 Send_default_test() 함수 추가
 
 클라이언트 변경 사항
 ===============
-
 `16.09.06` [ **김형준** ] - *클라 기본 틀*, 통신 관련 코드는 없다. 윈도우 창으로 생성이 된다. 추후 통신 코드 수정할 예정
 * 위 버전을 복구하기 위한 링크
 * https://github.com/korleinster/gamebusdriver/tree/2dbb9f0d3b385690a9b16c9d18eec950ca8163b4

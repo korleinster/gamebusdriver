@@ -27,7 +27,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	UpdateWindow(hWnd);
 
 	// 서버와의 통신 진행 - 디버그 모드가 아니라면 ServerIP.txt 파일에 적힌 ip 주소로 바로 연결이 된다.
-	client.Init(hWnd);
+	g_client.Init(hWnd);
 
 	// 메시지 루프
 	MSG msg;
@@ -84,7 +84,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 			break;
 		default:	// 디버깅 모드에서 예외되는 키를 입력할 경우, 서버와 기본 연결 테스트 통신을 하게 된다.
 #ifdef _DEBUG
-			client.sendPacket_TEST();
+			g_client.sendPacket_TEST();
 #endif // _DEBUG
 			return 0;
 			break;
@@ -92,7 +92,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 		break;
 
 	case WM_SOCKET:
-		client.ProcessWinMessage(hWnd, uMsg, wParam, lParam);
+		g_client.ProcessWinMessage(hWnd, uMsg, wParam, lParam);
 		return 0;
 		break;
 

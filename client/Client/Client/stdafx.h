@@ -16,7 +16,7 @@ using namespace std;
 #include<fstream>
 #include"clientClass.h"
 
-static AsynchronousClientClass client;
+static AsynchronousClientClass g_client;
 
 #ifdef _DEBUG
 #pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")

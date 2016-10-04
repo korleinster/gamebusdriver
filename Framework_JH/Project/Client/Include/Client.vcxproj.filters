@@ -10,6 +10,12 @@
     <Filter Include="00.MainApp">
       <UniqueIdentifier>{0f05fcf8-fa87-4cff-a82b-e7a4635076d1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97.Manager">
+      <UniqueIdentifier>{f2ce7bc7-6018-4015-b82d-af5d2359b952}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Manager\00.DeviceMgr">
+      <UniqueIdentifier>{7c15faf0-42e1-4a97-a169-7a8fe3621cb8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -30,6 +36,18 @@
     <ClInclude Include="..\Codes\MainApp.h">
       <Filter>00.MainApp</Filter>
     </ClInclude>
+    <ClInclude Include="..\Headers\Constant.h">
+      <Filter>98.Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\Macro.h">
+      <Filter>98.Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\DeviceMgr.h">
+      <Filter>97.Manager\00.DeviceMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\Function.h">
+      <Filter>98.Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -40,6 +58,9 @@
     </ClCompile>
     <ClCompile Include="..\Codes\MainApp.cpp">
       <Filter>00.MainApp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\DeviceMgr.cpp">
+      <Filter>97.Manager\00.DeviceMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

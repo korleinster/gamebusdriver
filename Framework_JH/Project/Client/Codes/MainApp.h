@@ -1,13 +1,13 @@
 #pragma once
-#include "Include.h"
+#include"Include.h"
 
 class CMainApp
 {
 public:
-	HRESULT		InitApp();
-	void		Update();
-	void		Render();
-	void		Release();
+	HRESULT		Init_MainApp();
+	void		Update_MainApp();
+	void		Render_MainApp();
+	void		Release_MainApp();
 public:
 	static CMainApp* Create(void);
 public:

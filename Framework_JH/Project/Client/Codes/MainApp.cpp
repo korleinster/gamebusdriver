@@ -8,24 +8,24 @@ CMainApp::CMainApp()
 
 CMainApp::~CMainApp()
 {
-	Release();
+	Release_MainApp();
 }
 
-HRESULT CMainApp::InitApp()
+HRESULT CMainApp::Init_MainApp()
 {
 	return S_OK;
 }
 
-void CMainApp::Update()
+void CMainApp::Update_MainApp()
 {
 
 }
 
-void CMainApp::Render()
+void CMainApp::Render_MainApp()
 {
 }
 
-void CMainApp::Release()
+void CMainApp::Release_MainApp()
 {
 
 }
@@ -34,9 +34,10 @@ CMainApp* CMainApp::Create(void)
 {
 	CMainApp*	pMainApp = new CMainApp;
 
-	if (FAILED(pMainApp->InitApp()))
+	if (FAILED(pMainApp->Init_MainApp()))
 	{
-		MessageBox(NULL, L"MainApp Create Failed", L"System Message", MB_OK);
+		//MessageBox(NULL, L"MainApp Create Failed!!", L"System Message", MB_OK);
+		MSG_BOX(L"MainApp Create Failed!!");
 		delete pMainApp;
 		pMainApp = NULL;		
 	}

@@ -13,7 +13,5 @@
 //	- C / C++ > General > Additional Include Directories 에 "C:\boost_1_55_0" 추가
 //	- Linker > General > Additional Library Directories 에 "C:\boost_1_55_0\stage\lib" 추가
 
-#include<boost\bind.hpp>
-#include<boost\asio.hpp>
-
-using boost::asio::ip::tcp;
+//#include<boost\bind.hpp>
+//#include<boost\asio.hpp>

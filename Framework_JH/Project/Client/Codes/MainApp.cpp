@@ -38,8 +38,9 @@ CMainApp* CMainApp::Create(void)
 	{
 		//MessageBox(NULL, L"MainApp Create Failed!!", L"System Message", MB_OK);
 		MSG_BOX(L"MainApp Create Failed!!");
-		delete pMainApp;
-		pMainApp = NULL;		
+		Safe_Delete(pMainApp);
+		//delete pMainApp;
+		//pMainApp = NULL;		
 	}
 
 	return pMainApp;

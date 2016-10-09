@@ -27,6 +27,7 @@ public:
 private:
 	HRESULT		Init_Blend();
 public:
+	// =====For.Getter
 	ID3D11Device*			GetDevice() { return m_pDevice; }
 	ID3D11DeviceContext*	GetDeviceContext() { return m_pDeviceContext; }
 	IDXGISwapChain*			GetSwapChain() { return m_pSwapChain; }

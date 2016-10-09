@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "MainApp.h"
 
+#include "DeviceMgr.h"
+
 CMainApp::CMainApp()
 {
 
@@ -13,6 +15,10 @@ CMainApp::~CMainApp()
 
 HRESULT CMainApp::Init_MainApp()
 {
+	// =====For.Device Init
+	CDeviceMgr::GetInstance()->Init(CDeviceMgr::WIN_MODE_WIN);
+	m_pDevice = CDeviceMgr::GetInstance();
+
 	return S_OK;
 }
 
@@ -23,11 +29,15 @@ void CMainApp::Update_MainApp()
 
 void CMainApp::Render_MainApp()
 {
+	// 이부분 RenderMgr로 옮길 예정
+	m_pDevice->Render_Begin();
+
+	m_pDevice->Render_End();
 }
 
 void CMainApp::Release_MainApp()
 {
-
+	CDeviceMgr::DestroyInstance();
 }
 
 CMainApp* CMainApp::Create(void)
@@ -36,11 +46,8 @@ CMainApp* CMainApp::Create(void)
 
 	if (FAILED(pMainApp->Init_MainApp()))
 	{
-		//MessageBox(NULL, L"MainApp Create Failed!!", L"System Message", MB_OK);
 		MSG_BOX(L"MainApp Create Failed!!");
 		Safe_Delete(pMainApp);
-		//delete pMainApp;
-		//pMainApp = NULL;		
 	}
 
 	return pMainApp;

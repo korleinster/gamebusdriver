@@ -3,7 +3,7 @@
 
 IMPLEMENT_SINGLETON(CDeviceMgr)
 
-const float CDeviceMgr::COLOR_BACKBUFFER[4] = { 0.2f, 0.2f, 0.6f, 1.f };
+const float CDeviceMgr::COLOR_BACKBUFFER[4] = { 0.f, 0.f, 0.f, 1.f };
 
 
 CDeviceMgr::CDeviceMgr()

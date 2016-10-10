@@ -33,3 +33,4 @@
 *.opendb
 *.suo
 *.ipch
+ipch/

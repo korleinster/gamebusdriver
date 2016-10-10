@@ -33,4 +33,5 @@
 *.opendb
 *.suo
 *.ipch
-ipch/
+server/serverBoostModel/ipch/
+client/clientBoostModel/ipch/

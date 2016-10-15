@@ -10,6 +10,7 @@ public:
 
 	// 복사생성 불가
 	PLAYER_INFO(const PLAYER_INFO&) = delete;
+	// 이동생성 불가
 	PLAYER_INFO& operator=(const PLAYER_INFO&) = delete;
 
 	boost::asio::ip::tcp::socket* getSocket() { return s; }

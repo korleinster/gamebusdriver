@@ -20,7 +20,7 @@ void boostAsioClient::Init(const HWND& hwnd)
 
 	using boost::asio::ip::tcp;
 	m_resolver = new tcp::resolver(m_io_service);
-	m_query = new tcp::resolver::query(boost::asio::ip::host_name(), "");
+	m_query = new tcp::resolver::query(m_serverIP/*boost::asio::ip::host_name()*/, "");
 	m_endpoint_iterator = m_resolver->resolve(*m_query);
 
 	m_socket = new tcp::socket(m_io_service);

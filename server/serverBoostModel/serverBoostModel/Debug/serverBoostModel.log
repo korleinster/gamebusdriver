@@ -5,6 +5,29 @@
   Assuming _WIN32_WINNT=0x0501 (i.e. Windows XP target).
   main.cpp
   boostAsioServer.cpp
+d:\program files (x86)\vs projects\졸업작품\server\serverboostmodel\serverboostmodel\boostasioserver.cpp(109): error C2672: 'boost::asio::basic_socket_acceptor<boost::asio::ip::tcp,boost::asio::socket_acceptor_service<Protocol>>::async_accept': 일치하는 오버로드된 함수가 없습니다.
+          with
+          [
+              Protocol=boost::asio::ip::tcp
+          ]
+d:\program files (x86)\vs projects\졸업작품\server\serverboostmodel\serverboostmodel\boostasioserver.cpp(109): error C2780: '::boost::asio::async_result<::boost::asio::handler_type<AcceptHandler,void(boost::system::error_code)>::type>::type boost::asio::basic_socket_acceptor<boost::asio::ip::tcp,boost::asio::socket_acceptor_service<Protocol>>::async_accept(boost::asio::basic_socket<boost::asio::ip::tcp,SocketService> &,boost::asio::ip::basic_endpoint<boost::asio::ip::tcp> &,AcceptHandler &&)': 인수가 3개 있어야 하는데 2개를 사용했습니다.
+          with
+          [
+              Protocol=boost::asio::ip::tcp
+          ]
+  d:\program files (x86)\vs projects\boost_1_62_0\boost_1_62_0\boost\asio\basic_socket_acceptor.hpp(1121): note: 'boost::asio::basic_socket_acceptor<boost::asio::ip::tcp,boost::asio::socket_acceptor_service<Protocol>>::async_accept' 선언을 참조하십시오.
+          with
+          [
+              Protocol=boost::asio::ip::tcp
+          ]
+d:\program files (x86)\vs projects\졸업작품\server\serverboostmodel\serverboostmodel\boostasioserver.cpp(109): error C2784: '::boost::asio::async_result<::boost::asio::handler_type<AcceptHandler,void(boost::system::error_code)>::type>::type boost::asio::basic_socket_acceptor<boost::asio::ip::tcp,boost::asio::socket_acceptor_service<Protocol>>::async_accept(boost::asio::basic_socket<Protocol1,SocketService1> &,AcceptHandler &&,enable_if<std::is_convertible<Protocol,Protocol1>::value,void>::type *)': 'boost::asio::basic_socket<Protocol1,SocketService1> &'의 템플릿 인수를 'boost::asio::ip::tcp::socket *'에서 추론할 수 없습니다.
+          with
+          [
+              Protocol=boost::asio::ip::tcp
+          ]
+  d:\program files (x86)\vs projects\boost_1_62_0\boost_1_62_0\boost\asio\basic_socket_acceptor.hpp(1009): note: 'boost::asio::basic_socket_acceptor<boost::asio::ip::tcp,boost::asio::socket_acceptor_service<Protocol>>::async_accept' 선언을 참조하십시오.
+          with
+          [
+              Protocol=boost::asio::ip::tcp
+          ]
   코드를 생성하고 있습니다...
-  serverBoostModel.vcxproj -> D:\Program Files (x86)\VS projects\졸업작품\server\serverBoostModel\Debug\serverBoostModel.exe
-  serverBoostModel.vcxproj -> D:\Program Files (x86)\VS projects\졸업작품\server\serverBoostModel\Debug\serverBoostModel.pdb (Full PDB)

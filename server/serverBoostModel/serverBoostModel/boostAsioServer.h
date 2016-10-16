@@ -39,6 +39,8 @@ private:
 	void acceptThread();
 	void workerThread();
 
+	void handle_accept(PLAYER_INFO*, const boost::system::error_code& error);
+
 	// member º¯¼ö
 	boost::asio::io_service m_io_service;
 

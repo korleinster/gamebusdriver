@@ -2,6 +2,8 @@
 #include"stdafx.h"
 using boost::asio::ip::tcp;
 
+// 참고할만한 boost asio http://neive.tistory.com/22
+
 boostAsioServer::boostAsioServer()
 {
 	Init();
@@ -87,13 +89,28 @@ void boostAsioServer::makeWorkerThreads_and_AcceptThread()
 
 }
 
+// 왠지 이 함수는 워커쓰레드로 변형 되어 구조를 다시 짜맞추어야 할 듯 하다.
+void boostAsioServer::handle_accept(PLAYER_INFO* ptr, const boost::system::error_code& error)
+{
+	// error = 0 일 경우 성공, 나머지는 오류 플러그이다.
+	if (!error) {
+		
+	}
+}
+
 void boostAsioServer::acceptThread()
 {
 	while (true == (!m_ServerShutdown))
 	{
+		// 여기서 플레이어를 accept 하여 정보를 받은 다음에 ( 소켓에 다 클라이언트 정보 내용이 담겨있는 듯 하다 )
+		PLAYER_INFO *tempPtr = new PLAYER_INFO(m_acceptor->get_io_service(), ++m_playerIndex);
+
+		// 예제는 여기서 비동기적으로 일 처리를 해준 다음에, 다시 대기 상태로, start_accept 를 불러온다. ( 현재 에러남 )
+		m_acceptor->async_accept(tempPtr->getSocket(), boost::bind(&boostAsioServer::handle_accept, this, tempPtr, boost::asio::placeholders::error));
+
 		// 접속한 클라이언트에 할당할 tcp::socket 을 만든다. socket 을 통해서 클라이언트 메세지를 주고 받으므로 m_io_serviec 를 할당
 		// 여기에 해당하는 iocp 는 accept, 와 g_hIocp = CreateIoCompletionPort(...) 부분이 합쳐져 있는 것과 같다.
-		m_clients.emplace_back(new PLAYER_INFO(m_io_service, ++m_playerIndex));
+		//m_clients.emplace_back(new PLAYER_INFO(m_io_service, ++m_playerIndex));
 		
 		// 현재 이 부분 에러남
 		/*m_clients[m_playerIndex]->getSocket()->async_connect(*m_endpoint,

@@ -25,17 +25,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	UpdateWindow(hWnd);
 
 	// 서버와의 통신 진행 - 디버그 모드가 아니라면 ServerIP.txt 파일에 적힌 ip 주소로 바로 연결이 된다.
-
+	g_client.Init(hWnd);
 
 	// 메시지 루프
 	MSG msg;
-	/*
-	while (GetMessage(&msg, NULL, 0, 0) > 0) {
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-	}
-	*/
-
 	HACCEL hAccelTable = LoadAccelerators(hInstance, 0);
 
 	while (TRUE)
@@ -92,7 +85,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 		break;
 
 	case WM_SOCKET:	// 네트워크를 통해 날아온 데이터들은 여기서 처리를 해주게 된다.
-		
+		g_client.ProcessWinMessage(hWnd, uMsg, wParam, lParam);
 		return 0;
 		break;
 

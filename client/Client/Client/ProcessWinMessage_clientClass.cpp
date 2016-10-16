@@ -13,7 +13,7 @@ void AsynchronousClientClass::ProcessWinMessage(HWND hwnd, UINT uMsg, WPARAM wPa
 	{
 	case FD_READ: {	// 데이터 수신
 
-		//m_retval = recvn();
+		// m_retval = recvn();
 		DWORD ioByteSize{ 0 };
 		DWORD ioFlag{ 0 };
 

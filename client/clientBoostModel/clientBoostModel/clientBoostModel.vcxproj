@@ -150,11 +150,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="boostAsioClient.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="processPacket.cpp" />
+    <ClCompile Include="ProcessWinMessage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\server\serverBoostModel\serverBoostModel\protocol.h" />
+    <ClInclude Include="boostAsioClient.h" />
     <ClInclude Include="stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ServerIP.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -8,7 +8,12 @@ public:
 
 	void Init(const HWND&);
 
-	void ConnectingServer();
+	void ProcessWinMessage(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	void sendPacket_TEST();
+
+private:
+	// member Function
+	void inputServerIP();
 	void inputServerIP_ReadtxtFile();
 	void inputServerIP_cin();
 
@@ -17,13 +22,10 @@ public:
 	void error_quit(wchar_t *msg, int err_no);
 
 	SOCKET* getServerSocket();
-	void ProcessWinMessage(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	void processPacket();
 
 	void sendPacket(const BYTE data_size, const BYTE type, BYTE* data_start_pointer);
-	void sendPacket_TEST();
 
-private:
 	// 윈도우 창 관련 멤버 변수
 	WNDCLASS m_wndclass;
 	HWND m_hWnd;

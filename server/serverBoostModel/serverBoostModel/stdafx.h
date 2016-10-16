@@ -15,6 +15,6 @@ using namespace std;
 #include"protocol.h"
 
 // boost asio 관련 헤더
-#include"boostAsioClass.h"
+#include"boostAsioServer.h"
 
 // TODO: 프로그램에 필요한 추가 헤더는 여기에서 참조합니다.

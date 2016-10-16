@@ -13,7 +13,7 @@ AsynchronousClientClass::~AsynchronousClientClass()
 
 void AsynchronousClientClass::Init(const HWND& hwnd)
 {
-	ConnectingServer();
+	inputServerIP();
 
 	// init Winsock
 	if (WSAStartup(MAKEWORD(2, 2), &m_wsadata) != 0) {
@@ -26,15 +26,7 @@ void AsynchronousClientClass::Init(const HWND& hwnd)
 		int err_no = WSAGetLastError();
 		error_quit(L"socket()", err_no);
 	}
-
-	// 넌블로킹 소켓 전환
-	/*DWORD on = 1;
-	m_retval = ioctlsocket(sock, FIONBIO, &on);
-	if (SOCKET_ERROR == retval) {
-	int err_no = WSAGetLastError();
-	error_quit(L"ioctlsocket()", err_no);
-	}*/
-	
+		
 	// connect
 	SOCKADDR_IN serveraddr;
 	ZeroMemory(&serveraddr, sizeof(serveraddr));
@@ -86,7 +78,7 @@ void AsynchronousClientClass::inputServerIP_cin()
 	cin >> m_serverIP;
 }
 
-void AsynchronousClientClass::ConnectingServer()
+void AsynchronousClientClass::inputServerIP()
 {
 #ifdef _DEBUG
 	cout << "choose Server to connect.\n\n0. Read Server IP in .txt File\n1. Input Server IP, directly\n\nchoice method : ";

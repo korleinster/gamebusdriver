@@ -14,6 +14,9 @@ using namespace std;
 
 // client 통신 관련
 #include<fstream>
+#include"boostAsioClient.h"
+
+static boostAsioClient g_client;
 
 // 디버깅 전용 콘솔창
 #ifdef _DEBUG

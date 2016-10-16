@@ -13,7 +13,7 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="소스 파일\00.boost::asio::io_service">
+    <Filter Include="소스 파일\00.boostAsioServer">
       <UniqueIdentifier>{6a03d804-c83c-4bad-bd30-1c85f64e8048}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -24,8 +24,8 @@
     <ClInclude Include="protocol.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="boostAsioClass.h">
-      <Filter>소스 파일\00.boost::asio::io_service</Filter>
+    <ClInclude Include="boostAsioServer.h">
+      <Filter>소스 파일\00.boostAsioServer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -35,8 +35,8 @@
     <ClCompile Include="main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="boostAsioClass.cpp">
-      <Filter>소스 파일\00.boost::asio::io_service</Filter>
+    <ClCompile Include="boostAsioServer.cpp">
+      <Filter>소스 파일\00.boostAsioServer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

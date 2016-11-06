@@ -90,6 +90,7 @@ void boostAsioServer::makeWorkerThreads_and_AcceptThread()
 
 }
 
+/*
 // 왠지 이 함수는 워커쓰레드로 변형 되어 구조를 다시 짜맞추어야 할 듯 하다. ( 추측이 틀린듯 하다 )
 void boostAsioServer::handle_accept(PLAYER_INFO* player_ptr, const boost::system::error_code& error)
 {
@@ -103,6 +104,7 @@ void boostAsioServer::handle_accept(PLAYER_INFO* player_ptr, const boost::system
 	}
 	// 해당 함수가 끝이 나면, acceptThread 가 무한 루프이기 때문에, 재귀 호출을 하지 않더라도 accept 함수가 호출이 되게 된다.
 }
+*/
 
 void boostAsioServer::acceptThread()
 {
@@ -112,7 +114,17 @@ void boostAsioServer::acceptThread()
 		PLAYER_INFO *tempPtr = new PLAYER_INFO(m_acceptor->get_io_service(), ++m_playerIndex);
 
 		// 예제는 여기서 비동기적으로 일 처리를 해준 다음에, 다시 대기 상태로, start_accept 를 불러온다.
-		m_acceptor->async_accept(*(tempPtr->getSocket()), boost::bind(&boostAsioServer::handle_accept, this, tempPtr, boost::asio::placeholders::error));
+		//m_acceptor->async_accept(*(tempPtr->getSocket()), boost::bind(&boostAsioServer::handle_accept, this, tempPtr, boost::asio::placeholders::error));
+		m_acceptor->async_accept(*(tempPtr->getSocket()), [&](const boost::system::error_code& error) -> void {
+			// error = 0 일 경우 성공, 나머지는 오류 플러그이다.
+			if (!error) {
+				// 여기서 플레이어 접속 시 진행되는 기본 초기화를 해주어야 한다.
+				cout << "Client No. " << tempPtr->getId() << " Connected :: IP = " << tempPtr->getSocket()->remote_endpoint().address().to_string() << ", Port = " << tempPtr->getSocket()->remote_endpoint().port() << "\n";
+				tempPtr->setConnection(true);
+				m_clients.emplace_back(tempPtr);
+
+			}
+		});
 
 		// 접속한 클라이언트에 할당할 tcp::socket 을 만든다. socket 을 통해서 클라이언트 메세지를 주고 받으므로 m_io_serviec 를 할당
 		// 여기에 해당하는 iocp 는 accept, 와 g_hIocp = CreateIoCompletionPort(...) 부분이 합쳐져 있는 것과 같다.

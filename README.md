@@ -7,7 +7,7 @@ KPU
 ===============
 `16.11.06` [ **김형준** ] - can create accept & workerThread pool,
 Can not send recv & send, process packet
-* https://github.com/korleinster/gamebusdriver/tree/220a9722cde74808fb12831f7289923873dc3ef1
+* https://github.com/korleinster/gamebusdriver/tree/1471218b2fa8a195a78e05d49f54db4567c161ec
 
 서버 및 클라이언트 기본 프레임 워크 완성 ( C++ class 기반 )
 ===============

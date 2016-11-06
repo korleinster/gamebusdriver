@@ -6,6 +6,7 @@
 
 // packet[1] operation
 #define DISCONNECTED 0
+#define CONNECTED 1
 
 // iocp buf operation
 #define OP_SERVER_RECV 1

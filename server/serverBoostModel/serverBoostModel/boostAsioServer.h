@@ -5,22 +5,28 @@
 class PLAYER_INFO
 {
 public:
-	PLAYER_INFO(boost::asio::io_service& io, const unsigned int id) : s(new boost::asio::ip::tcp::socket(io)), id(id) {};
-	~PLAYER_INFO() { delete s; };
+	PLAYER_INFO(boost::asio::io_service& io, const unsigned int id) : m_player_socket(new boost::asio::ip::tcp::socket(io)), m_id(id) {};
+	~PLAYER_INFO() { delete m_player_socket; };
 
-	// 복사생성 불가
+	// 복사 및 이동 생성 불가
 	PLAYER_INFO(const PLAYER_INFO&) = delete;
-	// 이동생성 불가
 	PLAYER_INFO& operator=(const PLAYER_INFO&) = delete;
 
-	boost::asio::ip::tcp::socket* getSocket() { return s; }
-	Packet* getRecvBuf() { return recvBuf; }
+	// get 시리즈
+	boost::asio::ip::tcp::socket* getSocket() { return m_player_socket; }
+	Packet* getRecvBuf() { return m_recvBuf; }
+	unsigned int getId() { return m_id; }
+	bool getConnection() { return m_connect; }
+
+	void setConnection(const bool& state) { m_connect = state; }
 
 private:
-	boost::asio::ip::tcp::socket* s;
-	unsigned int id;
-	Packet recvBuf[MAX_BUF_SIZE]{ 0 };
+	boost::asio::ip::tcp::socket* m_player_socket;
 
+	unsigned int m_id;
+	bool m_connect{ true };
+
+	Packet m_recvBuf[MAX_BUF_SIZE]{ 0 };
 };
 
 class boostAsioServer
@@ -51,7 +57,7 @@ private:
 	//boost::asio::ip::tcp::socket	*m_socket{ nullptr };
 	boost::asio::ip::tcp::acceptor	*m_acceptor{ nullptr };
 	boost::asio::ip::tcp::endpoint	*m_endpoint{ nullptr };
-	boost::asio::io_service::strand *m_strand{ nullptr };
+	//boost::asio::io_service::strand *m_strand{ nullptr };
 
 
 	unsigned int m_playerIndex{ UINT_MAX };

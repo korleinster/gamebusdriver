@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DEFECTS>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\나쉬움\desktop\jj\ykduo\</FILEPATH>
+      <FILENAME>renderer.cpp</FILENAME>
+      <LINE>131</LINE>
+      <COLUMN>10</COLUMN>
+    </SFA>
+    <DEFECTCODE>6340</DEFECTCODE>
+    <DESCRIPTION>서명 불일치: 'unsigned long'이(가) _Param_(3)로 전달되었습니다. 'wsprintfW'에 대한 호출 시에는 일부 signed 형식이 필요합니다.</DESCRIPTION>
+    <FUNCTION>CRenderer::Render_FPS</FUNCTION>
+    <DECORATED>?Render_FPS@CRenderer@@AAEXABM@Z</DECORATED>
+    <FUNCLINE>124</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+</DEFECTS>

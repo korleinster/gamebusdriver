@@ -1,2 +1,0 @@
-﻿  stdafx.cpp
-c:\users\나쉬움\desktop\gamebusdriver\framework_jh\project\client\include\stdafx.h(39): fatal error C1083: 포함 파일을 열 수 없습니다. 'D3DX11.h': No such file or directory

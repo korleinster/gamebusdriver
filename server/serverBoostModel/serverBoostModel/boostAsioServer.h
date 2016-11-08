@@ -18,7 +18,13 @@ public:
 	unsigned int getId() { return m_id; }
 	bool getConnection() { return m_connect; }
 
+	// set 시리즈
 	void setConnection(const bool& state) { m_connect = state; }
+
+	// packet send recv
+	void packet_recv_from_client();
+	void packet_send_for_client(Packet *packet_ptr, size_t length);
+	void Send_Packet(Packet *packet_ptr, unsigned int id);
 
 private:
 	boost::asio::ip::tcp::socket* m_player_socket;
@@ -45,7 +51,7 @@ private:
 	void acceptThread();
 	void workerThread();
 
-	void handle_accept(PLAYER_INFO*, const boost::system::error_code& error);
+	//void handle_accept(PLAYER_INFO*, const boost::system::error_code& error);
 
 	// member 변수
 	boost::asio::io_service m_io_service;

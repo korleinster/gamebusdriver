@@ -123,6 +123,11 @@ void boostAsioServer::acceptThread()
 				tempPtr->setConnection(true);
 				m_clients.emplace_back(tempPtr);
 
+				// 데이터 넣어야 하는 기본 초기화를 여기서 해주자...
+
+
+				// 비동기 대기를 넣고, accept 를 위한 턴을 넘긴다.
+				tempPtr->packet_recv_from_client();
 			}
 		});
 
@@ -141,5 +146,41 @@ void boostAsioServer::acceptThread()
 
 void boostAsioServer::workerThread()
 {
-	m_io_service.run();
+	while (true == (!m_ServerShutdown))
+	{
+		m_io_service.run();
+	}
+}
+
+void PLAYER_INFO::packet_recv_from_client()
+{
+	m_player_socket->async_read_some(m_recvBuf, [&](boost::system::error_code error_code, size_t length) {
+		if (error_code) {
+			if (error_code == boost::asio::error::operation_aborted) { return; }
+			if (false == m_connect) { return; }
+
+			cout << "PLAYER_INFO::packet_recv_from_client() Error - ID " << m_id << ", Error Code = " << error_code << "\n";
+			m_player_socket->shutdown(m_player_socket->shutdown_both);
+			m_player_socket->close();
+			return;
+		}
+
+		// 여기서 부터 패킷 조립을 한다
+	});
+}
+
+void PLAYER_INFO::packet_send_for_client(Packet *packet_ptr, size_t length)
+{
+	m_player_socket->async_write_some(boost::asio::buffer(packet_ptr, length), [&](boost::system::error_code error_code, size_t bytes_transferred) {
+		if (!error_code) {
+			if (length != bytes_transferred) {
+				cout << "Incomplete Send occured on session[" << m_id << "]. This session should be closed.\n";
+			}
+			delete packet_ptr;
+		}
+	});
+}
+
+void PLAYER_INFO::Send_Packet(Packet *packet_ptr, unsigned int id) {
+
 }

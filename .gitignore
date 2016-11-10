@@ -40,3 +40,10 @@ ipch/
 *.cachefile
 *.VC.db
 *.VC.VC.opendb
+
+*.idb
+*.ilk
+*.tlog
+*.pdb
+*.suo
+*.log

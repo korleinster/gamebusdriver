@@ -14,6 +14,7 @@ using namespace std;
 
 // client 통신 관련
 #include<fstream>
+#include<thread>
 #include"boostAsioClient.h"
 
 static boostAsioClient g_client;

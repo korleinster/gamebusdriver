@@ -32,6 +32,7 @@ private:
 
 	boost::asio::ip::tcp::resolver *m_resolver{ nullptr };
 	boost::asio::ip::tcp::resolver::query *m_query{ nullptr };
+	boost::asio::ip::tcp::endpoint *m_endpoint{ nullptr };
 	boost::asio::ip::tcp::resolver::iterator m_endpoint_iterator;
 
 	boost::asio::ip::tcp::socket *m_socket{ nullptr };

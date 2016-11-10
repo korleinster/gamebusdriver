@@ -108,79 +108,158 @@ void boostAsioServer::handle_accept(PLAYER_INFO* player_ptr, const boost::system
 
 void boostAsioServer::acceptThread()
 {
-	while (true == (!m_ServerShutdown))
-	{
-		// 여기서 플레이어를 accept 하여 정보를 받은 다음에 ( 소켓에 다 클라이언트 정보 내용이 담겨있는 듯 하다 )
-		PLAYER_INFO *tempPtr = new PLAYER_INFO(m_acceptor->get_io_service(), ++m_playerIndex);
+	// 여기서 플레이어를 accept 하여 정보를 받은 다음에 ( 소켓에 다 클라이언트 정보 내용이 담겨있는 듯 하다 )
+	PLAYER_INFO *tempPtr = new PLAYER_INFO(m_acceptor->get_io_service(), ++m_playerIndex);
 
-		// 예제는 여기서 비동기적으로 일 처리를 해준 다음에, 다시 대기 상태로, start_accept 를 불러온다.
-		//m_acceptor->async_accept(*(tempPtr->getSocket()), boost::bind(&boostAsioServer::handle_accept, this, tempPtr, boost::asio::placeholders::error));
-		m_acceptor->async_accept(*(tempPtr->getSocket()), [&](const boost::system::error_code& error) -> void {
-			// error = 0 일 경우 성공, 나머지는 오류 플러그이다.
-			if (!error) {
-				// 여기서 플레이어 접속 시 진행되는 기본 초기화를 해주어야 한다.
-				cout << "Client No. " << tempPtr->getId() << " Connected :: IP = " << tempPtr->getSocket()->remote_endpoint().address().to_string() << ", Port = " << tempPtr->getSocket()->remote_endpoint().port() << "\n";
-				tempPtr->setConnection(true);
-				m_clients.emplace_back(tempPtr);
+	// 예제는 여기서 비동기적으로 일 처리를 해준 다음에, 다시 대기 상태로, start_accept 를 불러온다.
+	//m_acceptor->async_accept(*(tempPtr->getSocket()), boost::bind(&boostAsioServer::handle_accept, this, tempPtr, boost::asio::placeholders::error));
+	m_acceptor->async_accept(*(tempPtr->getSocket()), [&](const boost::system::error_code& error) -> void {
+		// error = 0 일 경우 성공, 나머지는 오류 플러그이다.
+		if (!error) {
+			// 여기서 플레이어 접속 시 진행되는 기본 초기화를 해주어야 한다. ******************************************** 여기서 어떠한 에러가 발생한다... *******************
+			//cout << "Client No. " << tempPtr->getId() << " Connected :: IP = " << tempPtr->getSocket()->remote_endpoint().address().to_string() << ", Port = " << tempPtr->getSocket()->remote_endpoint().port() << "\n";
+			cout << "client Connected\n";
+			tempPtr->setConnection(true);
+			g_clients.emplace_back(tempPtr);
 
-				// 데이터 넣어야 하는 기본 초기화를 여기서 해주자...
+			// 데이터 넣어야 하는 기본 초기화를 여기서 해주자...
 
 
-				// 비동기 대기를 넣고, accept 를 위한 턴을 넘긴다.
-				tempPtr->packet_recv_from_client();
-			}
-		});
+			// 비동기 대기를 넣고, accept 를 위한 턴을 넘긴다.
+			tempPtr->packet_recv_from_client();
+		}
+		boostAsioServer::acceptThread();
+	});
 
-		// 접속한 클라이언트에 할당할 tcp::socket 을 만든다. socket 을 통해서 클라이언트 메세지를 주고 받으므로 m_io_serviec 를 할당
-		// 여기에 해당하는 iocp 는 accept, 와 g_hIocp = CreateIoCompletionPort(...) 부분이 합쳐져 있는 것과 같다.
-		//m_clients.emplace_back(new PLAYER_INFO(m_io_service, ++m_playerIndex));
+	// 접속한 클라이언트에 할당할 tcp::socket 을 만든다. socket 을 통해서 클라이언트 메세지를 주고 받으므로 m_io_serviec 를 할당
+	// 여기에 해당하는 iocp 는 accept, 와 g_hIocp = CreateIoCompletionPort(...) 부분이 합쳐져 있는 것과 같다.
+	//m_clients.emplace_back(new PLAYER_INFO(m_io_service, ++m_playerIndex));
 
-		// 현재 이 부분 에러남
-		/*m_clients[m_playerIndex]->getSocket()->async_connect(*m_endpoint,
-			boost::bind([&](const boost::system::error_code& error) {
-			if (error) { cout << "connect ERROR failed : " << m_playerIndex << "player\n"; }
-			else { cout << "[ No. " << m_playerIndex << " ] Client IP = " << m_clients[m_playerIndex]->getSocket()->remote_endpoint().address().to_string() << ", Port = " << m_clients[m_playerIndex]->getSocket()->remote_endpoint().port() << " is Connected\n"; }
-		}, this, boost::asio::placeholders::error));*/
-	}
+	// 현재 이 부분 에러남
+	/*m_clients[m_playerIndex]->getSocket()->async_connect(*m_endpoint,
+		boost::bind([&](const boost::system::error_code& error) {
+		if (error) { cout << "connect ERROR failed : " << m_playerIndex << "player\n"; }
+		else { cout << "[ No. " << m_playerIndex << " ] Client IP = " << m_clients[m_playerIndex]->getSocket()->remote_endpoint().address().to_string() << ", Port = " << m_clients[m_playerIndex]->getSocket()->remote_endpoint().port() << " is Connected\n"; }
+	}, this, boost::asio::placeholders::error));*/
 }
 
 void boostAsioServer::workerThread()
 {
-	while (true == (!m_ServerShutdown))
-	{
-		m_io_service.run();
-	}
+	m_io_service.run();
 }
 
 void PLAYER_INFO::packet_recv_from_client()
 {
-	m_player_socket->async_read_some(m_recvBuf, [&](boost::system::error_code error_code, size_t length) {
-		if (error_code) {
-			if (error_code == boost::asio::error::operation_aborted) { return; }
-			if (false == m_connect) { return; }
+	while (true == m_connect_state) {
+		m_player_socket->async_read_some(boost::asio::buffer(m_recvBuf, MAX_BUF_SIZE), [&](const boost::system::error_code& error_code, size_t length) {
+			if (error_code) {
+				if (error_code == boost::asio::error::operation_aborted) { return; }
+				if (false == m_connect_state) { return; }
 
-			cout << "PLAYER_INFO::packet_recv_from_client() Error - ID " << m_id << ", Error Code = " << error_code << "\n";
-			m_player_socket->shutdown(m_player_socket->shutdown_both);
-			m_player_socket->close();
-			return;
-		}
+				cout << "PLAYER_INFO::packet_recv_from_client() Error - ID [ " << m_id << " ], Error Code = " << error_code << "\n";
+				m_player_socket->shutdown(m_player_socket->shutdown_both);
+				m_player_socket->close();
 
-		// 여기서 부터 패킷 조립을 한다
-	});
-}
+				g_clients[m_id]->setConnection(false);
+				printf("[ No. %3u ] Disconnected\n", m_id);
 
-void PLAYER_INFO::packet_send_for_client(Packet *packet_ptr, size_t length)
-{
-	m_player_socket->async_write_some(boost::asio::buffer(packet_ptr, length), [&](boost::system::error_code error_code, size_t bytes_transferred) {
-		if (!error_code) {
-			if (length != bytes_transferred) {
-				cout << "Incomplete Send occured on session[" << m_id << "]. This session should be closed.\n";
+				/* view list 에서 빼주자 */
+				/* 모든 클라이언트에게, 현재 클라이언트가 끊겼다고 알려주자 */
+
+				/*Packet p[11];
+				p[0] = 11;
+				p[1] = DISCONNECTED;
+				*((int *)(&p[2])) = key;*/
+
+				//for (int i = 0; i < clients.size(); ++i) {
+				//	if (false == clients[i]->connected) { continue; }
+				//	//if (i == playerIndex) { continue; }
+
+				//	SendPacket(i, p);
+				//}
+
+				return;
 			}
-			delete packet_ptr;
+
+			// 여기서 부터 패킷 조립을 한다
+			int data_to_process = static_cast<int>(length);
+			Packet *tempBuf = m_recvBuf_temp;
+			while (0 < data_to_process) {
+				if (0 == packet_size) {
+					packet_size = tempBuf[0];
+					if (tempBuf[0] > MAX_BUF_SIZE) {
+						cout << "PLAYER_INFO::packet_recv_from_client() Error - ID [ " << m_id << " ], Packet size is over then MAX_BUF_SIZE ( " << MAX_BUF_SIZE << " Bytes )\n";
+						exit(-1);
+					}
+				}
+				int need_to_build = packet_size - previous_size;
+				if (need_to_build <= data_to_process) {
+					// 패킷 조립
+					memcpy(m_recvBuf + previous_size, tempBuf, need_to_build);
+					PLAYER_INFO::Process_Packet(m_recvBuf, m_id);
+					packet_size = 0;
+					previous_size = 0;
+					data_to_process -= need_to_build;
+					tempBuf += need_to_build;
+				}
+				else {
+					// 훗날을 기약
+					memcpy(m_recvBuf + previous_size, tempBuf, data_to_process);
+					previous_size += data_to_process;
+					data_to_process = 0;
+					tempBuf += data_to_process;
+				}
+			}
+			//PLAYER_INFO::packet_recv_from_client();	// 이 한 줄을 생략하고, 그냥 while 무한 loop 를 넣어버렸다.
+		});
+	}
+}
+
+//void PLAYER_INFO::packet_send_for_client(Packet *packet_ptr, size_t length)
+//{
+//	m_player_socket->async_write_some(boost::asio::buffer(packet_ptr, length), [&](boost::system::error_code error_code, size_t bytes_transferred) {
+//		if (!error_code) {
+//			if (length != bytes_transferred) {
+//				cout << "Incomplete Send occured on session[" << m_id << "]. This session should be closed.\n";
+//			}
+//			delete[] packet_ptr;
+//		}
+//	});
+//}
+
+void PLAYER_INFO::Send_Packet(const Packet *packet_ptr, unsigned int id)
+{
+	unsigned short packet_size = packet_ptr[0];
+	Packet *tempSendPacket = new Packet[packet_size];
+	memset(tempSendPacket, 0, packet_size);
+	memcpy(tempSendPacket, packet_ptr, packet_size);
+
+	g_clients[id]->getSocket()->async_write_some(boost::asio::buffer(tempSendPacket, packet_size), [&](const boost::system::error_code& error_code, size_t bytes_transferred) {
+		if (!error_code) {
+			if (packet_size != bytes_transferred) { cout << "PLAYER_INFO::Send_Packet() Warning - ID [ " << m_id << " ], packet_data_size & bytes_transferred is not same !!\n"; }
+			delete[] packet_ptr;
 		}
 	});
 }
 
-void PLAYER_INFO::Send_Packet(Packet *packet_ptr, unsigned int id) {
+void PLAYER_INFO::Process_Packet(const Packet *packet, unsigned int id)
+{
+	// packet[0] = packet size		> 0번째 자리에는 무조건, 패킷의 크기가 들어가야만 한다.
+	// packet[1] = type				> 1번째 자리에는 현재 패킷이 무슨 패킷인지 속성을 정해주는 값이다.
+	// packet[...] = data			> 2번째 부터는 속성에 맞는 순대로 처리를 해준다.
 
+	// buf[1] 번째의 속성으로 분류를 한 뒤에, 내부에서 2번째 부터 데이터를 처리하기 시작한다.
+	switch (packet[1])
+	{
+	case TEST:
+		// 받은 패킷을 그대로 돌려준다.
+		printf("[ No. %3u ] TEST Packet Recived !!\n", id);
+		printf("buf[0] = %d, buf[1] = %d, buf[2] = %d\n\n", packet[0], packet[1], packet[2]);
+		PLAYER_INFO::Send_Packet(packet, id);
+		break;
+	case KEYINPUT:
+		break;
+	default:
+		break;
+	}
 }

@@ -10,6 +10,7 @@ boostAsioClient::~boostAsioClient()
 	// Init()
 	if (nullptr != m_resolver)	delete m_resolver;
 	if (nullptr != m_query)		delete m_query;
+	if (nullptr != m_endpoint)	delete m_endpoint;
 	if (nullptr != m_socket)	delete m_socket;
 }
 
@@ -21,6 +22,8 @@ void boostAsioClient::Init(const HWND& hwnd)
 	using boost::asio::ip::tcp;
 	m_resolver = new tcp::resolver(m_io_service);
 	m_query = new tcp::resolver::query(m_serverIP/*boost::asio::ip::host_name()*/, "");
+
+	m_endpoint = new tcp::endpoint(boost::asio::ip::address::from_string(m_serverIP), SERVERPORT);
 	m_endpoint_iterator = m_resolver->resolve(*m_query);
 
 	m_socket = new tcp::socket(m_io_service);
@@ -34,7 +37,18 @@ void boostAsioClient::Init(const HWND& hwnd)
 	}
 	if (error) { throw boost::system::system_error(error); }*/
 
-	boost::asio::connect(*m_socket, m_endpoint_iterator);
+	//boost::asio::connect(*m_socket, m_endpoint_iterator);
+	m_socket->async_connect(*m_endpoint, [&](const boost::system::error_code& error_code) {
+#ifdef _DEBUG
+		if (error_code) { cout << "connect failed : " << error_code.message() << "\n"; }
+		else { cout << "\n\n\nServer Connected !!\n\n\n"; /*system("cls");*/ }
+#endif // _DEBUG
+		boostAsioClient::sendPacket_TEST();
+	});
+
+	// 초기화를 위해서 서버에서 접속한 후에, 한번 데이터를 받아와야 한다.
+
+	m_io_service.run();
 }
 
 void boostAsioClient::inputServerIP_ReadtxtFile()
@@ -73,6 +87,10 @@ void boostAsioClient::sendPacket_TEST()
 	m_sendBuf[1] = TEST;
 	m_sendBuf[2] = 1;
 
-	boost::system::error_code ignored_error;
-	boost::asio::write(*m_socket, boost::asio::buffer(m_sendBuf), boost::asio::transfer_all(), ignored_error);
+	/*boost::system::error_code ignored_error;
+	boost::asio::write(*m_socket, boost::asio::buffer(m_sendBuf), boost::asio::transfer_all(), ignored_error);*/
+
+	boost::asio::async_write(*m_socket, boost::asio::buffer(m_sendBuf, m_sendBuf[0]), [&](const boost::system::error_code& error_code, size_t bytes_transferred) {
+		
+	});
 }

@@ -16,23 +16,30 @@ public:
 	boost::asio::ip::tcp::socket* getSocket() { return m_player_socket; }
 	Packet* getRecvBuf() { return m_recvBuf; }
 	unsigned int getId() { return m_id; }
-	bool getConnection() { return m_connect; }
+	bool getConnection() { return m_connect_state; }
 
 	// set 시리즈
-	void setConnection(const bool& state) { m_connect = state; }
+	void setConnection(const bool& state) { m_connect_state = state; }
 
 	// packet send recv
 	void packet_recv_from_client();
-	void packet_send_for_client(Packet *packet_ptr, size_t length);
-	void Send_Packet(Packet *packet_ptr, unsigned int id);
+	//void packet_send_for_client(Packet *packet_ptr, size_t length);
+	void Send_Packet(const Packet *packet_ptr, unsigned int id);
+
+	void Process_Packet(const Packet *packet, unsigned int id);
 
 private:
 	boost::asio::ip::tcp::socket* m_player_socket;
 
 	unsigned int m_id;
-	bool m_connect{ true };
+	bool m_connect_state{ true };
 
+	// m_recvBuf_temp 버퍼는 패킷 조립을 하기위해, 임시적으로 데이터를 저장하기 위한 버퍼로 사용한다. packet_size 와 previous_size 변수 또한 패킷 조립용
+	Packet m_recvBuf_temp[MAX_BUF_SIZE]{ 0 };
 	Packet m_recvBuf[MAX_BUF_SIZE]{ 0 };
+	//Packet m_sendBuf[MAX_BUF_SIZE]{ 0 };
+	unsigned int packet_size{ 0 };
+	unsigned int previous_size{ 0 };
 };
 
 class boostAsioServer
@@ -65,11 +72,11 @@ private:
 	boost::asio::ip::tcp::endpoint	*m_endpoint{ nullptr };
 	//boost::asio::io_service::strand *m_strand{ nullptr };
 
-
 	unsigned int m_playerIndex{ UINT_MAX };
-	vector<PLAYER_INFO *> m_clients;
 
 	bool m_ServerShutdown{ false };
 	int m_cpuCore{ 0 };
 	vector<thread*> m_worker_threads;
 };
+
+static vector<PLAYER_INFO *> g_clients;

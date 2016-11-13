@@ -62,6 +62,11 @@ void AsynchronousClientClass::Init(const HWND& hwnd)
 	m_wsa_recvbuf.len = MAX_BUF_SIZE;
 	m_wsa_sendbuf.buf = reinterpret_cast<CHAR*>(m_sendbuf);
 	m_wsa_sendbuf.len = MAX_BUF_SIZE;
+
+#ifdef _DEBUG
+	system("cls");
+	printf("Connected with SERVER\n");
+#endif
 }
 
 void AsynchronousClientClass::inputServerIP_ReadtxtFile()

@@ -3,11 +3,11 @@ KPU
 졸업작품용 협업 System
 
 
-서버 기본 프레임 워크 작성중 ( boost asio 기반 )
+서버 기본 프레임 워크 Comlepte ( boost asio 기반, ONLY SERVER !!! )
 ===============
 `16.11.06` [ **김형준** ] - can create accept & workerThread pool,
 Can not send recv & send, process packet
-* https://github.com/korleinster/gamebusdriver/tree/1471218b2fa8a195a78e05d49f54db4567c161ec
+* https://github.com/korleinster/gamebusdriver/tree/2894a629ae483925df68da14c3140a0c7a0bd03b
 
 서버 및 클라이언트 기본 프레임 워크 완성 ( C++ class 기반 )
 ===============

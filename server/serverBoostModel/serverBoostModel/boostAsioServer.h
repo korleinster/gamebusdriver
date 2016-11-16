@@ -1,45 +1,40 @@
+// 디렉토리 파일 위치				..\boost_1_62_0\boost_1_62_0;				%(AdditionalIncludeDirectories)
+// 링커 추가 라이브러리 디렉토리	..\boost_1_62_0\boost_1_62_0\stage\lib;		%(AdditionalLibraryDirectories)
+
 #pragma once
-#include<boost\bind.hpp>
 #include<boost\asio.hpp>
 
-class PLAYER_INFO
+static boost::asio::io_service g_io_service;
+
+using boost::asio::ip::tcp;
+
+class player_session : public std::enable_shared_from_this<player_session>
 {
 public:
-	PLAYER_INFO(boost::asio::io_service& io, const unsigned int id) : m_player_socket(new boost::asio::ip::tcp::socket(io)), m_id(id) {};
-	~PLAYER_INFO() { delete m_player_socket; };
+	player_session(tcp::socket s, const unsigned int& index) : m_socket(std::move(s)), m_id(index) {};
+	~player_session() {};
 
-	// 복사 및 이동 생성 불가
-	PLAYER_INFO(const PLAYER_INFO&) = delete;
-	PLAYER_INFO& operator=(const PLAYER_INFO&) = delete;
+	void Init();
 
-	// get 시리즈
-	boost::asio::ip::tcp::socket* getSocket() { return m_player_socket; }
-	Packet* getRecvBuf() { return m_recvBuf; }
-	unsigned int getId() { return m_id; }
-	bool getConnection() { return m_connect_state; }
-
-	// set 시리즈
-	void setConnection(const bool& state) { m_connect_state = state; }
-
-	// packet send recv
-	void packet_recv_from_client();
-	//void packet_send_for_client(Packet *packet_ptr, size_t length);
-	void Send_Packet(const Packet *packet_ptr, unsigned int id);
-
-	void Process_Packet(const Packet *packet, unsigned int id);
-
+	bool get_current_connect_state() { return m_connect_state; }
 private:
-	boost::asio::ip::tcp::socket* m_player_socket;
+	// Function
+	void m_recv_packet();
+	void m_process_packet(const unsigned int& id, Packet buf[]);
+	void send_packet(const unsigned int& id, Packet *packet);
 
-	unsigned int m_id;
-	bool m_connect_state{ true };
+	// 통신용 변수
+	tcp::socket		m_socket;
 
-	// m_recvBuf_temp 버퍼는 패킷 조립을 하기위해, 임시적으로 데이터를 저장하기 위한 버퍼로 사용한다. packet_size 와 previous_size 변수 또한 패킷 조립용
-	Packet m_recvBuf_temp[MAX_BUF_SIZE]{ 0 };
-	Packet m_recvBuf[MAX_BUF_SIZE]{ 0 };
-	//Packet m_sendBuf[MAX_BUF_SIZE]{ 0 };
-	unsigned int packet_size{ 0 };
-	unsigned int previous_size{ 0 };
+	// 플레이어 상태 변수
+	bool m_connect_state{ false };
+	unsigned int m_id{ 0 };
+
+	// 버퍼 변수
+	Packet m_recv_buf[MAX_BUF_SIZE]{ 0 };
+	Packet m_data_buf[MAX_BUF_SIZE]{ 0 };
+	unsigned int m_packet_size_current{ 0 };
+	unsigned int m_packet_size_previous{ 0 };
 };
 
 class boostAsioServer
@@ -50,33 +45,24 @@ public:
 	
 private:
 	// Function
-	void Init();
 	void getMyServerIP();
 	void CheckThisCPUcoreCount();
 
-	void makeWorkerThreads_and_AcceptThread();
+	void start_io_service();
 	void acceptThread();
-	void workerThread();
 
-	//void handle_accept(PLAYER_INFO*, const boost::system::error_code& error);
+	// 통신용 변수
+	tcp::acceptor	m_acceptor;
+	tcp::socket		m_socket;
 
-	// member 변수
-	boost::asio::io_service m_io_service;
+	// 플레이어 고유 id 변수
+	unsigned int	m_playerIndex{ UINT_MAX };
 
-	boost::asio::ip::tcp::resolver				*m_resolver{ nullptr };
-	boost::asio::ip::tcp::resolver::query		*m_query{ nullptr };
-	boost::asio::ip::tcp::resolver::iterator	m_resolver_iterator;
-
-	//boost::asio::ip::tcp::socket	*m_socket{ nullptr };
-	boost::asio::ip::tcp::acceptor	*m_acceptor{ nullptr };
-	boost::asio::ip::tcp::endpoint	*m_endpoint{ nullptr };
-	//boost::asio::io_service::strand *m_strand{ nullptr };
-
-	unsigned int m_playerIndex{ UINT_MAX };
-
-	bool m_ServerShutdown{ false };
-	int m_cpuCore{ 0 };
+	// 서버 기본 정보 관련 변수
+	bool			m_ServerShutdown{ false };
+	int				m_cpuCore{ 0 };
 	vector<thread*> m_worker_threads;
 };
 
-static vector<PLAYER_INFO *> g_clients;
+// 플레이어가 담긴 변수
+static vector<shared_ptr<player_session>> g_clients;

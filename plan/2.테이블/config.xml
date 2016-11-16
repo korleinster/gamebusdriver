@@ -1,8 +1,0 @@
-<config>
-	<attackTiming>0.7</attackTiming>
-	<jump>1.74</jump>
-
-	<npcChatCameraZoom>5</npcChatCameraZoom>
-
-	<seedistance>100</seedistance>
-</config>

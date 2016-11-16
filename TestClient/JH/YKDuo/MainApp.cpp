@@ -16,12 +16,15 @@
 #include "Info.h"
 #include "CubeCol.h"
 #include "CylinderCol.h"
+#include "Texture.h"
+#include "RcTex.h"
 
 
 CMainApp::CMainApp()
 	:m_pRenderer(NULL),
 	 m_pRcCol(NULL),
-	m_pInfo(NULL)
+	m_pInfo(NULL),
+	m_pTexture(NULL)
 {
 	AllocConsole();
 	freopen("CONOUT$", "wt", stdout);
@@ -46,8 +49,10 @@ HRESULT CMainApp::Initialize(void)
 
 	CTimeMgr::GetInstance()->InitTime();
 
+	m_pTexture = CTexture::Create(L"../Resource/Test.jpg");
+
 	//m_pRcCol = CCubeCol::Create();
-	m_pRcCol = CCylinderCol::Create(1.f, 1.f, 1.f, 100, 10);
+	m_pRcCol = CRcTex::Create();
 
 	if (FAILED(CCamera::GetInstance()->Initialize()))
 	{
@@ -157,6 +162,8 @@ void CMainApp::Render(void)
 	m_pGrapicDevcie->m_pDeviceContext->VSSetShader(m_pVertexShader->m_pVertexShader, NULL, 0);
 	m_pGrapicDevcie->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pRcCol->m_ConstantBuffer);
 	m_pGrapicDevcie->m_pDeviceContext->PSSetShader(m_pPixelShader->m_pPixelShader, NULL, 0);// 셋이 9에서 settransform 했던것들
+	m_pGrapicDevcie->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
+	m_pGrapicDevcie->m_pDeviceContext->PSGetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
 
 	
 	m_pRcCol->Render();

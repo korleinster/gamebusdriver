@@ -97,6 +97,12 @@
     <Filter Include="97. Resources\01. Buffer\96-5 Cylinder">
       <UniqueIdentifier>{44deaaa9-1c87-433e-9e9d-5516f478ee80}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97. Resources\03. Texture">
+      <UniqueIdentifier>{c27655a7-d113-48e1-b652-82a15adbb8b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97. Resources\03. Texture\Test">
+      <UniqueIdentifier>{f4664322-505d-408b-bc2d-609db7b81488}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -182,6 +188,15 @@
     <ClInclude Include="Include.h">
       <Filter>98. Header\98-4 Macro</Filter>
     </ClInclude>
+    <ClInclude Include="RcTex.h">
+      <Filter>97. Resources\01. Buffer\96-1 RcTex</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>97. Resources\03. Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="TestTexture.h">
+      <Filter>97. Resources\03. Texture\Test</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainApp.cpp">
@@ -243,6 +258,15 @@
     </ClCompile>
     <ClCompile Include="CylinderCol.cpp">
       <Filter>97. Resources\01. Buffer\96-5 Cylinder</Filter>
+    </ClCompile>
+    <ClCompile Include="RcTex.cpp">
+      <Filter>97. Resources\01. Buffer\96-1 RcTex</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>97. Resources\03. Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="TestTexture.cpp">
+      <Filter>97. Resources\03. Texture\Test</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

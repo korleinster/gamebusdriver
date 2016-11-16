@@ -4,6 +4,7 @@ class CRenderer;
 class CInfo;
 class CVIBuffer;
 class CShader;
+class CTexture;
 class CMainApp
 {
 public:
@@ -17,6 +18,7 @@ private:
 	CInfo*		m_pInfo;
 	CShader*	m_pVertexShader;
 	CShader*	m_pPixelShader;
+	CTexture*	m_pTexture;
 
 
 public:

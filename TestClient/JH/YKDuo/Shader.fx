@@ -1,37 +1,8 @@
-////--------------------------------------------------------------------------------------
-//// File: Tutorial02.fx
-////
-//// Copyright (c) Microsoft Corporation. All rights reserved.
-////--------------------------------------------------------------------------------------
-//
-////--------------------------------------------------------------------------------------
-//// Vertex Shader
-////--------------------------------------------------------------------------------------
-//float4 VS(float4 Pos : POSITION) : SV_POSITION
-//{
-//	return Pos;
-//}
-//
-//
-////--------------------------------------------------------------------------------------
-//// Pixel Shader
-////--------------------------------------------------------------------------------------
-//float4 PS(float4 Pos : SV_POSITION) : SV_Target
-//{
-//	return float4(1.0f, 1.0f, 0.0f, 1.0f);    // Yellow, with Alpha = 1
-//}
 
+Texture2D txDiffuse : register(t0);
+SamplerState samLinear : register(s0);
 
-//--------------------------------------------------------------------------------------
-// File: Tutorial04.fx
-//
-// Copyright (c) Microsoft Corporation. All rights reserved.
-//--------------------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------------
-// Constant Buffer Variables
-//--------------------------------------------------------------------------------------
-cbuffer ConstantBuffer : register( b0 ) //컨스턴트 버퍼 넘기면 여기로 꽂힘
+cbuffer ConstantBuffer : register(b0) //컨스턴트 버퍼 넘기면 여기로 꽂힘
 {
 	matrix World;
 	matrix View;
@@ -39,33 +10,44 @@ cbuffer ConstantBuffer : register( b0 ) //컨스턴트 버퍼 넘기면 여기로 꽂힘
 }
 
 //--------------------------------------------------------------------------------------
-struct VS_OUTPUT
+struct VS_INPUT
 {
-    float4 Pos : SV_POSITION;
-    float4 Color : COLOR0;
+	float4 Pos : POSITION;
+	float2 Tex : TEXCOORD0;
+};
+
+struct VS_OUT
+{
+	float4 Pos : SV_POSITION;
+	float2 Tex : TEXCOORD0;
 };
 
 //--------------------------------------------------------------------------------------
 // Vertex Shader
 //--------------------------------------------------------------------------------------
-VS_OUTPUT VS( float3 Pos : POSITION, float4 Color : COLOR )
+
+VS_OUT VS(VS_INPUT input)
 {
-    VS_OUTPUT output = (VS_OUTPUT)0;
-    output.Pos = mul( float4(Pos, 1), World );
-    output.Pos = mul( output.Pos, View );
-    output.Pos = mul( output.Pos, Projection );
-    output.Color = Color;
-    return output;
+	VS_OUT output = (VS_OUT)0;
+	output.Pos = mul(input.Pos, World);
+	output.Pos = mul(output.Pos, View);
+	output.Pos = mul(output.Pos, Projection);
+	output.Tex = input.Tex;
+
+	return output;
 }
+
+
 
 
 //--------------------------------------------------------------------------------------
 // Pixel Shader
 //--------------------------------------------------------------------------------------
-float4 PS( VS_OUTPUT input ) : SV_Target
+float4 PS(VS_OUT input) : SV_Target
 {
-	return input.Color;
-   // return float4(1.0f, 1.0f, 0.0f, 1.0f);
+	return txDiffuse.Sample(samLinear, input.Tex);
+//return input.Color;
+// return float4(1.0f, 1.0f, 0.0f, 1.0f);
 }
 
 

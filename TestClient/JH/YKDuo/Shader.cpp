@@ -28,8 +28,6 @@ CShader::~CShader()
 
 HRESULT CShader::Ready_ShaderFile(wstring wstrFilePath, LPCSTR wstrShaderName, LPCSTR wstrShaderVersion, ShaderType _SType)
 {
-	//쉐이더는 gpu를 활용하는 기법.
-
 	HRESULT hr = S_OK;
 	DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 
@@ -42,9 +40,8 @@ HRESULT CShader::Ready_ShaderFile(wstring wstrFilePath, LPCSTR wstrShaderName, L
 #endif
 	ID3DBlob* pErrorBlob = NULL;
 	ID3DBlob* pShaderBlob = NULL;
-	
+
 	hr = D3DX11CompileFromFile(wstrFilePath.c_str(), NULL, NULL, wstrShaderName, wstrShaderVersion, dwShaderFlags, 0, NULL, &pShaderBlob, &pErrorBlob, NULL);
-	//셰이더코드 불러오는 함수
 
 	if (FAILED(hr))
 	{
@@ -71,10 +68,12 @@ HRESULT CShader::Ready_ShaderFile(wstring wstrFilePath, LPCSTR wstrShaderName, L
 		D3D11_INPUT_ELEMENT_DESC layout[] =
 		{
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		};//시멘틱 라벨
+			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			//{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			//{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		};
 
-		UINT numElements = ARRAYSIZE(layout);// 할당
+		UINT numElements = ARRAYSIZE(layout);
 
 		hr = CDevice::GetInstance()->m_pDevice->CreateInputLayout(layout, numElements, pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), &m_pVertexLayout);
 		pShaderBlob->Release();
@@ -82,10 +81,9 @@ HRESULT CShader::Ready_ShaderFile(wstring wstrFilePath, LPCSTR wstrShaderName, L
 			return hr;
 
 		CDevice::GetInstance()->m_pDeviceContext->IASetInputLayout(m_pVertexLayout);
-		//셰이더가 안되면 여기확인
 	}
 
-	else if (_SType == SHADER_PS)//픽셸쉐이더 할당
+	else if (_SType == SHADER_PS)
 	{
 		hr = CDevice::GetInstance()->m_pDevice->CreatePixelShader(pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), NULL, &m_pPixelShader);
 		pShaderBlob->Release();
@@ -114,7 +112,7 @@ DWORD CShader::Release(void)
 
 CShader * CShader::Create(wstring wstrFilePath, LPCSTR wstrShaderName, LPCSTR wstrShaderVersion, ShaderType _SType)
 {
-	CShader*		pShader = new CShader;
+	CShader*      pShader = new CShader;
 	if (FAILED(pShader->Ready_ShaderFile(wstrFilePath, wstrShaderName, wstrShaderVersion, _SType)))
 		Safe_Delete(pShader);
 

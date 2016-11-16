@@ -15,6 +15,7 @@ public:
 
 protected:
 	DWORD		m_dwRefCount;
+	ID3D11Device* m_pDevice;
 
 };
 

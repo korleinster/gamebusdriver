@@ -2,7 +2,11 @@
 Texture2D txDiffuse : register(t0);
 SamplerState samLinear : register(s0);
 
+<<<<<<< HEAD
 cbuffer ConstantBuffer : register(b0) //컨스턴트 버퍼 넘기면 여기로 꽂힘
+=======
+cbuffer ConstantBuffer : register( b0 ) //컨스턴트 버퍼 넘기면 여기로 꽂힘
+>>>>>>> origin/master
 {
 	matrix World;
 	matrix View;
@@ -43,11 +47,19 @@ VS_OUT VS(VS_INPUT input)
 //--------------------------------------------------------------------------------------
 // Pixel Shader
 //--------------------------------------------------------------------------------------
+<<<<<<< HEAD
 float4 PS(VS_OUT input) : SV_Target
 {
 	return txDiffuse.Sample(samLinear, input.Tex);
 //return input.Color;
 // return float4(1.0f, 1.0f, 0.0f, 1.0f);
+=======
+float4 PS(VS_OUT input ) : SV_Target
+{
+	return txDiffuse.Sample(samLinear, input.Tex);
+	//return input.Color;
+   // return float4(1.0f, 1.0f, 0.0f, 1.0f);
+>>>>>>> origin/master
 }
 
 

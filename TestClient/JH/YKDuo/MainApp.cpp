@@ -126,10 +126,10 @@ void CMainApp::Render(void)
 	// Initialize the projection matrix
 	ConstantBuffer cb;
 
-	D3DXMatrixTranspose(&cb.matWorld, &m_pInfo->m_matWorld);//9에서는 그냥 꽂아도됫지만 11에서는 전치행렬 돌려서 꽂아야 됨
-	D3DXMatrixTranspose(&cb.matView, &CCamera::GetInstance()->m_matView);
-	D3DXMatrixTranspose(&cb.matProjection, &CCamera::GetInstance()->m_matProj);
-	m_pGrapicDevcie->m_pDeviceContext->UpdateSubresource(m_pRcCol->m_ConstantBuffer, 0, NULL, &cb, 0, 0);
+	//D3DXMatrixTranspose(&cb.matWorld, &m_pInfo->m_matWorld);//9에서는 그냥 꽂아도됫지만 11에서는 전치행렬 돌려서 꽂아야 됨
+	//D3DXMatrixTranspose(&cb.matView, &CCamera::GetInstance()->m_matView);
+	//D3DXMatrixTranspose(&cb.matProjection, &CCamera::GetInstance()->m_matProj);
+	//m_pGrapicDevcie->m_pDeviceContext->UpdateSubresource(m_pRcCol->m_ConstantBuffer, 0, NULL, &cb, 0, 0);
 
 
 	//이용희 교수님의 랩프로젝트 발췌 - 맵/ 언맵 - 
@@ -159,14 +159,20 @@ void CMainApp::Render(void)
 
 	//m_pGrapicDevcie->m_pDeviceContext->CreateRasterizerState(&RSDesc, &g_pRasterizerState);
 
+<<<<<<< HEAD
 	m_pGrapicDevcie->m_pDeviceContext->VSSetShader(m_pVertexShader->m_pVertexShader, NULL, 0);
 	m_pGrapicDevcie->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pRcCol->m_ConstantBuffer);
 	m_pGrapicDevcie->m_pDeviceContext->PSSetShader(m_pPixelShader->m_pPixelShader, NULL, 0);// 셋이 9에서 settransform 했던것들
 	m_pGrapicDevcie->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
 	m_pGrapicDevcie->m_pDeviceContext->PSGetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
+=======
+	//m_pGrapicDevcie->m_pDeviceContext->VSSetShader(m_pVertexShader->m_pVertexShader, NULL, 0);
+	//m_pGrapicDevcie->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pRcCol->m_ConstantBuffer);
+	//m_pGrapicDevcie->m_pDeviceContext->PSSetShader(m_pPixelShader->m_pPixelShader, NULL, 0);// 셋이 9에서 settransform 했던것들
+>>>>>>> origin/master
 
 	
-	m_pRcCol->Render();
+	//m_pRcCol->Render();
 
 	m_pGrapicDevcie->EndDevice();
 }

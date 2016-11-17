@@ -1,7 +1,11 @@
 #include "stdafx.h"
 #include "Texture.h"
 #include "Device.h"
+<<<<<<< HEAD
 //#include "DirectXTex.h"
+=======
+
+>>>>>>> origin/master
 
 CTexture::CTexture()
 {

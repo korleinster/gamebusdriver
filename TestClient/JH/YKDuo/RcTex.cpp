@@ -29,10 +29,17 @@ HRESULT CRcTex::CreateBuffer()
 
 	VTXTEX Vertex[] =
 	{
+<<<<<<< HEAD
 		{ D3DXVECTOR3(-1.f, 1.f, 0.f), D3DXVECTOR2(0.f,0.f) },
 		{ D3DXVECTOR3(1.f, 1.f, 0.f),  D3DXVECTOR2(1.f,0.f) },
 		{ D3DXVECTOR3(1.f, -1.f, 0.f),  D3DXVECTOR2(1.f,1.f) },
 		{ D3DXVECTOR3(-1.f, -1.f, 0.f),  D3DXVECTOR2(0.f,1.f) }
+=======
+		{ D3DXVECTOR3(-1.f, 1.f, 0.f),  D3DXCOLOR(1,1,1,1) },
+		{ D3DXVECTOR3(1.f, 1.f, 0.f),  D3DXCOLOR(1,1,1,1) },
+		{ D3DXVECTOR3(1.f, -1.f, 0.f),  D3DXCOLOR(1,1,1,1) },
+		{ D3DXVECTOR3(-1.f, -1.f, 0.f),  D3DXCOLOR(1,1,1,1) }
+>>>>>>> origin/master
 	};
 
 	D3D11_BUFFER_DESC vbd;

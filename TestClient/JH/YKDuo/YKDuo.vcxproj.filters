@@ -100,9 +100,12 @@
     <Filter Include="97. Resources\03. Texture">
       <UniqueIdentifier>{c27655a7-d113-48e1-b652-82a15adbb8b8}</UniqueIdentifier>
     </Filter>
+<<<<<<< HEAD
     <Filter Include="97. Resources\03. Texture\Test">
       <UniqueIdentifier>{f4664322-505d-408b-bc2d-609db7b81488}</UniqueIdentifier>
     </Filter>
+=======
+>>>>>>> origin/master
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -194,9 +197,12 @@
     <ClInclude Include="Texture.h">
       <Filter>97. Resources\03. Texture</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="TestTexture.h">
       <Filter>97. Resources\03. Texture\Test</Filter>
     </ClInclude>
+=======
+>>>>>>> origin/master
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainApp.cpp">
@@ -265,9 +271,12 @@
     <ClCompile Include="Texture.cpp">
       <Filter>97. Resources\03. Texture</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="TestTexture.cpp">
       <Filter>97. Resources\03. Texture\Test</Filter>
     </ClCompile>
+=======
+>>>>>>> origin/master
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">

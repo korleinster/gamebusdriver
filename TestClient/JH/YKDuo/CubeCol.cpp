@@ -14,6 +14,7 @@ CCubeCol::~CCubeCol()
 
 HRESULT CCubeCol::CreateBuffer(void)
 {
+	// 수정 필요 버텍스 꼬임
 	//여기
 	HRESULT hr = E_FAIL;
 	m_iVertexStrides = sizeof(VTXCOL);

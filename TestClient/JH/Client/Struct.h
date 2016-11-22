@@ -54,6 +54,12 @@ typedef struct tagVertexCylinderColor
 	D3DXCOLOR				dwColor;
 }VTXCYL;
 
+typedef struct tagVertexCylinderTex
+{
+	D3DXVECTOR3				vPos;
+	D3DXVECTOR3				vTex;
+}VTXCYLTEX;
+
 //const DWORD VTXFVF_CUBE = D3DFVF_XYZ | D3DFVF_TEX1 | D3DFVF_TEXCOORDSIZE3(0);
 
 typedef struct tagIndex16

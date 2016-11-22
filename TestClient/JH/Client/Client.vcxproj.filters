@@ -94,11 +94,14 @@
     <Filter Include="02. Object\Player">
       <UniqueIdentifier>{188675ce-0726-438b-9616-1caa01e9f8f8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="97. Resources\01. Buffer\96-5 Cylinder">
-      <UniqueIdentifier>{44deaaa9-1c87-433e-9e9d-5516f478ee80}</UniqueIdentifier>
-    </Filter>
     <Filter Include="97. Resources\03. Texture">
       <UniqueIdentifier>{c27655a7-d113-48e1-b652-82a15adbb8b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97. Resources\01. Buffer\96-5 CylinderCol">
+      <UniqueIdentifier>{44deaaa9-1c87-433e-9e9d-5516f478ee80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97. Resources\01. Buffer\96-6 CylinderTex">
+      <UniqueIdentifier>{8be964c6-7e07-41f3-9775-a155d11db1dc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -180,7 +183,7 @@
       <Filter>97. Resources\01. Buffer\96-4 CubeCol</Filter>
     </ClInclude>
     <ClInclude Include="CylinderCol.h">
-      <Filter>97. Resources\01. Buffer\96-5 Cylinder</Filter>
+      <Filter>97. Resources\01. Buffer\96-5 CylinderCol</Filter>
     </ClInclude>
     <ClInclude Include="Include.h">
       <Filter>98. Header\98-4 Macro</Filter>
@@ -193,6 +196,9 @@
     </ClInclude>
     <ClInclude Include="CubeTex.h">
       <Filter>97. Resources\01. Buffer\96-3 CubeTex</Filter>
+    </ClInclude>
+    <ClInclude Include="CylinderTex.h">
+      <Filter>97. Resources\01. Buffer\96-6 CylinderTex</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -254,7 +260,7 @@
       <Filter>97. Resources\01. Buffer\96-4 CubeCol</Filter>
     </ClCompile>
     <ClCompile Include="CylinderCol.cpp">
-      <Filter>97. Resources\01. Buffer\96-5 Cylinder</Filter>
+      <Filter>97. Resources\01. Buffer\96-5 CylinderCol</Filter>
     </ClCompile>
     <ClCompile Include="RcTex.cpp">
       <Filter>97. Resources\01. Buffer\96-1 RcTex</Filter>
@@ -264,6 +270,9 @@
     </ClCompile>
     <ClCompile Include="CubeTex.cpp">
       <Filter>97. Resources\01. Buffer\96-3 CubeTex</Filter>
+    </ClCompile>
+    <ClCompile Include="CylinderTex.cpp">
+      <Filter>97. Resources\01. Buffer\96-6 CylinderTex</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

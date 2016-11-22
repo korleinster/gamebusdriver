@@ -19,6 +19,8 @@
 #include "Texture.h"
 #include "RcTex.h"
 #include "CubeTex.h"
+#include "CylinderTex.h"
+//けいしかいしぉ
 
 
 CMainApp::CMainApp()
@@ -50,10 +52,11 @@ HRESULT CMainApp::Initialize(void)
 
 	CTimeMgr::GetInstance()->InitTime();
 
-	m_pTexture = CTexture::Create(L"../Resource/Test.dds");
+	m_pTexture = CTexture::Create(L"../Resource/Test2.dds");
 
 	//m_pRcCol = CCubeCol::Create();
-	m_pRcCol = CCubeTex::Create();
+	m_pRcCol = CCylinderTex::Create(1,1,1,20,20);
+	//m_pRcCol = CCubeTex::Create();
 
 	if (FAILED(CCamera::GetInstance()->Initialize()))
 	{

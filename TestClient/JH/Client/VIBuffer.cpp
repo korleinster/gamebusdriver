@@ -88,7 +88,7 @@ void CVIBuffer::CreateRasterizerState()
 	D3D11_RASTERIZER_DESC tRasterizerDesc;
 	ZeroMemory(&tRasterizerDesc, sizeof(D3D11_RASTERIZER_DESC));
 	tRasterizerDesc.CullMode = D3D11_CULL_NONE;
-	tRasterizerDesc.FillMode = D3D11_FILL_WIREFRAME;
+	tRasterizerDesc.FillMode = D3D11_FILL_SOLID;
 	pGrapicDevice->m_pDevice->CreateRasterizerState(&tRasterizerDesc, &m_pRasterizerState);
 }
 

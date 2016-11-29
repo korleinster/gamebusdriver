@@ -20,6 +20,7 @@
 #include "RcTex.h"
 #include "CubeTex.h"
 #include "CylinderTex.h"
+#include "StaticMesh.h"
 //けいしかいしぉ
 
 
@@ -27,7 +28,8 @@ CMainApp::CMainApp()
 	:m_pRenderer(NULL),
 	 m_pRcCol(NULL),
 	m_pInfo(NULL),
-	m_pTexture(NULL)
+	m_pTexture(NULL),
+	m_pMesh(NULL)
 {
 	AllocConsole();
 	freopen("CONOUT$", "wt", stdout);
@@ -55,8 +57,13 @@ HRESULT CMainApp::Initialize(void)
 	m_pTexture = CTexture::Create(L"../Resource/Test2.dds");
 
 	//m_pRcCol = CCubeCol::Create();
-	m_pRcCol = CCylinderTex::Create(1,1,1,20,20);
+	//m_pRcCol = CCylinderTex::Create(1,1,1,20,20);
 	//m_pRcCol = CCubeTex::Create();
+
+	char cModelPath[MAX_PATH];
+	WideCharToMultiByte(CP_ACP, 0, L"../Resource/Handgun_Game_Blender Gamer Engine.fbx", MAX_PATH, cModelPath, MAX_PATH, NULL, NULL);
+
+	m_pMesh = CStaticMesh::Create(cModelPath);
 
 	if (FAILED(CCamera::GetInstance()->Initialize()))
 	{
@@ -162,6 +169,7 @@ void CMainApp::Render(void)
 	//RSDesc.AntialiasedLineEnable = FALSE;         // 虞昔 照銅訟軒嬢縮 蒸製
 
 	//m_pGrapicDevcie->m_pDeviceContext->CreateRasterizerState(&RSDesc, &g_pRasterizerState);
+
 
 	m_pGrapicDevcie->m_pDeviceContext->VSSetShader(m_pVertexShader->m_pVertexShader, NULL, 0);
 	m_pGrapicDevcie->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pRcCol->m_ConstantBuffer);

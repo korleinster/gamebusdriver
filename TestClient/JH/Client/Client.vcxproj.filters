@@ -103,6 +103,15 @@
     <Filter Include="97. Resources\01. Buffer\96-6 CylinderTex">
       <UniqueIdentifier>{8be964c6-7e07-41f3-9775-a155d11db1dc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97. Resources\01. Buffer\96-7 Mesh">
+      <UniqueIdentifier>{eb73aed1-7731-4a48-a4e3-49c92c322d73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97. Resources\01. Buffer\96-7 Mesh\DynamicMesh">
+      <UniqueIdentifier>{06d36388-0091-4061-832d-d1b57f133507}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97. Resources\01. Buffer\96-7 Mesh\StaticMesh">
+      <UniqueIdentifier>{e2476279-99c0-481c-b266-410855c7eccb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -200,6 +209,12 @@
     <ClInclude Include="CylinderTex.h">
       <Filter>97. Resources\01. Buffer\96-6 CylinderTex</Filter>
     </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>97. Resources\01. Buffer\96-7 Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticMesh.h">
+      <Filter>97. Resources\01. Buffer\96-7 Mesh\StaticMesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainApp.cpp">
@@ -273,6 +288,12 @@
     </ClCompile>
     <ClCompile Include="CylinderTex.cpp">
       <Filter>97. Resources\01. Buffer\96-6 CylinderTex</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>97. Resources\01. Buffer\96-7 Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticMesh.cpp">
+      <Filter>97. Resources\01. Buffer\96-7 Mesh\StaticMesh</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

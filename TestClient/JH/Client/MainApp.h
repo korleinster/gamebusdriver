@@ -5,6 +5,7 @@ class CInfo;
 class CVIBuffer;
 class CShader;
 class CTexture;
+class CResources;
 class CMainApp
 {
 public:
@@ -19,6 +20,7 @@ private:
 	CShader*	m_pVertexShader;
 	CShader*	m_pPixelShader;
 	CTexture*	m_pTexture;
+	CResources* m_pMesh;
 
 
 public:

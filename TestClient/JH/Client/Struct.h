@@ -30,8 +30,9 @@ struct ConstantBuffer
 typedef struct tagVertexTexture
 {
 	D3DXVECTOR3				vPos;
-	//D3DXVECTOR3				vNormal;
+	D3DXVECTOR3				vNormal;
 	D3DXVECTOR2				vTexUV;
+
 }VTXTEX;
 //const DWORD VTXFVF_TEX = D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX1 | D3DFVF_TEX2;
 

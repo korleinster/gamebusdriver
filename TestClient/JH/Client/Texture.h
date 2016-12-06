@@ -19,6 +19,7 @@ private:
 	virtual HRESULT CreateCubeTexture(LPCWSTR szFilePath);
 public:
 	static CTexture* Create(LPCWSTR szFilePath);
+	void Render(void);
 public:
 	virtual CResources* CloneResource(void);
 

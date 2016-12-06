@@ -8,7 +8,7 @@
 class CStaticMesh : public CMesh
 {
 public:
-	CStaticMesh* Create(const char* szFilePath);
+	static CStaticMesh* Create(const char* szFilePath);
 	virtual CResources* CloneResource();
 
 public:

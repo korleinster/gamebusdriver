@@ -15,13 +15,16 @@ CStaticMesh::~CStaticMesh()
 
 }
 
-CStaticMesh* CStaticMesh::Create(const char* szFilePath)
+CStaticMesh * CStaticMesh::Create(const char* szFilePath)
 {
-	CStaticMesh* pComponent = new CStaticMesh();
+	CStaticMesh* pStaticMesh = new CStaticMesh;
 
-	if (FAILED(pComponent->Initalize(szFilePath)))
-		::Safe_Delete(pComponent);
-	return pComponent;
+	if (FAILED(pStaticMesh->Initalize(szFilePath)))
+	{
+		::Safe_Delete(pStaticMesh);
+	}
+
+	return pStaticMesh;
 }
 
 CResources * CStaticMesh::CloneResource(void)
@@ -47,7 +50,7 @@ HRESULT CStaticMesh::Initalize(const char* szFilePath)
 		E_FAIL);
 
 	CMesh::CreateRasterizerState();
-	Init_Shader();
+	//Init_Shader();
 
 	pFBXScene->Destroy();
 	pImporter->Destroy();
@@ -64,6 +67,10 @@ HRESULT CStaticMesh::Load_StaticMesh(const char* szFilePath,
 	FbxScene* _pFBXScene,
 	FbxImporter* _pImporter)
 {
+	HRESULT hr = E_FAIL;
+
+	vector<UINT> vecIndeces;
+
 	if (!(_pImporter->Initialize(szFilePath, -1, _pFBXManager->GetIOSettings())))
 		FAILED_CHECK_MSG(E_FAIL, L"Static Mesh Init Failed");
 	if (!(_pImporter->Import(_pFBXScene)))
@@ -96,6 +103,8 @@ HRESULT CStaticMesh::Load_StaticMesh(const char* szFilePath,
 		D3DXVECTOR3 vOutNormal;
 		FbxVector4* mControlPoints = pMesh->GetControlPoints();
 		int iVTXCounter = 0;
+		
+
 
 		for (int j = 0; j < pMesh->GetPolygonCount(); j++)
 		{
@@ -103,6 +112,8 @@ HRESULT CStaticMesh::Load_StaticMesh(const char* szFilePath,
 			assert(iNumVertices == 3);
 			FbxGeometryElementUV* VtxUV = pMesh->GetElementUV(0);
 			FbxGeometryElementNormal* VtxNormal = pMesh->GetElementNormal(0);
+
+			
 
 			for (int k = 0; k < iNumVertices; k++)
 			{
@@ -144,11 +155,17 @@ HRESULT CStaticMesh::Load_StaticMesh(const char* szFilePath,
 					switch (VtxUV->GetReferenceMode())
 					{
 					case FbxGeometryElement::eDirect:
+					{
+
+					}
 					case FbxGeometryElement::eIndexToDirect:
+					{
+						
 						vOutUV.x = static_cast<float>(VtxUV->GetDirectArray()
 							.GetAt(iTextureUVIndex).mData[0]);
 						vOutUV.y = 1 - static_cast<float>(VtxUV->GetDirectArray()
 							.GetAt(iTextureUVIndex).mData[1]);
+					}
 						break;
 					default:
 						throw std::exception("invalid Reference");
@@ -163,9 +180,18 @@ HRESULT CStaticMesh::Load_StaticMesh(const char* szFilePath,
 				vtxtex.vNormal = vOutNormal;
 				vtxtex.vTexUV = vOutUV;
 				vecVTXTEX.push_back(&vtxtex);
+
+
+				//int index = VtxUV->GetIndexArray().GetAt(iTextureUVIndex);
+				vecIndeces.push_back(VtxUV->GetIndexArray().GetAt(iTextureUVIndex));
+
+	
+
+
 			}
 		}
 	}
+
 
 	unsigned int n = vecVTXTEX.size();
 	VTXTEX* pVTXTex = new VTXTEX[n];
@@ -192,7 +218,45 @@ HRESULT CStaticMesh::Load_StaticMesh(const char* szFilePath,
 	D3D11_SUBRESOURCE_DATA tData;
 	ZeroMemory(&tData, sizeof(D3D11_SUBRESOURCE_DATA));
 	tData.pSysMem = pVTXTex;
-	CDevice::GetInstance()->m_pDevice->CreateBuffer(&tBufferDesc, &tData, &m_ConstantBuffer);
+	hr = CDevice::GetInstance()->m_pDevice->CreateBuffer(&tBufferDesc, &tData, &m_VertexBuffer);
+
+	if (FAILED(hr))
+		return E_FAIL;
+
+
+	m_iIndex = 3 * vecIndeces.size();
+
+	D3D11_BUFFER_DESC ibd;
+	ibd.Usage = D3D11_USAGE_DEFAULT;
+	ibd.ByteWidth = sizeof(UINT) * vecIndeces.size();
+	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	ibd.CPUAccessFlags = 0;
+	ibd.MiscFlags = 0;
+	ibd.StructureByteStride = 0;
+
+	D3D11_SUBRESOURCE_DATA iinitData;
+	iinitData.pSysMem = &vecIndeces[0];
+	hr = CDevice::GetInstance()->m_pDevice->CreateBuffer(&ibd, &iinitData, &m_IndexBuffer);
+
+	if (FAILED(hr))
+		return E_FAIL;
+
+
+	D3D11_BUFFER_DESC cbd;
+	cbd.Usage = D3D11_USAGE_DEFAULT;
+	cbd.ByteWidth = sizeof(ConstantBuffer);
+	cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	cbd.CPUAccessFlags = 0;
+	cbd.MiscFlags = 0;
+	cbd.StructureByteStride = 0;
+	hr = CDevice::GetInstance()->m_pDevice->CreateBuffer(&cbd, NULL, &m_ConstantBuffer);
+
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"Constant Buffer Error", MB_OK);
+		return hr;
+	}
+
 
 	return S_OK;
 }

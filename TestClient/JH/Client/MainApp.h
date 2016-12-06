@@ -6,6 +6,8 @@ class CVIBuffer;
 class CShader;
 class CTexture;
 class CResources;
+class CStaticMesh;
+class CInput;
 class CMainApp
 {
 public:
@@ -20,7 +22,8 @@ private:
 	CShader*	m_pVertexShader;
 	CShader*	m_pPixelShader;
 	CTexture*	m_pTexture;
-	CResources* m_pMesh;
+	//CInput*		m_pInput;
+	CStaticMesh* m_pMesh;
 
 
 public:

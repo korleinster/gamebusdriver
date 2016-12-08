@@ -18,7 +18,7 @@ CCamera::~CCamera()
 
 HRESULT CCamera::Initialize(void)
 {
-	m_vEye = D3DXVECTOR3(0.0f, 1.0f, -5.0f);
+	m_vEye = D3DXVECTOR3(0.0f, 1.0f, -20.0f);
 	m_vAt = D3DXVECTOR3(0.f, 1.f, 0.f);
 	m_vUp = D3DXVECTOR3(0.f, 1.f, 0.f);
 

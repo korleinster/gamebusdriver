@@ -97,11 +97,17 @@ HRESULT CTexture::CreateCubeTexture(LPCWSTR szFilePath)
 	return S_OK;
 }
 
+void CTexture::Render()
+{
+	CDevice::GetInstance()->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTextureRV);
+	CDevice::GetInstance()->m_pDeviceContext->PSSetSamplers(0, 1, &m_pSamplerLinear);
+}
+
 CTexture * CTexture::Create(LPCWSTR szFilePath)
 {
 	CTexture* pTexture = new CTexture;
 
-	if (FAILED(pTexture->CreateCubeTexture(szFilePath)))
+	if (FAILED(pTexture->CreateTexture(szFilePath)))
 	{
 		::Safe_Delete(pTexture);
 	}

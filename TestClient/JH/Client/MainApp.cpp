@@ -13,6 +13,7 @@
 #include "Obj.h"
 #include "Camera.h"
 #include "RcCol.h"
+#include "Input.h"
 #include "Info.h"
 #include "CubeCol.h"
 #include "CylinderCol.h"
@@ -21,7 +22,6 @@
 #include "CubeTex.h"
 #include "CylinderTex.h"
 #include "StaticMesh.h"
-//けいしかいしぉ
 
 
 CMainApp::CMainApp()
@@ -54,20 +54,25 @@ HRESULT CMainApp::Initialize(void)
 
 	CTimeMgr::GetInstance()->InitTime();
 
-	m_pTexture = CTexture::Create(L"../Resource/Test2.dds");
+	m_pTexture = CTexture::Create(L"../Resource/Bird.png");
 
 	//m_pRcCol = CCubeCol::Create();
 	//m_pRcCol = CCylinderTex::Create(1,1,1,20,20);
 	//m_pRcCol = CCubeTex::Create();
 
 	char cModelPath[MAX_PATH];
-	WideCharToMultiByte(CP_ACP, 0, L"../Resource/Handgun_Game_Blender Gamer Engine.fbx", MAX_PATH, cModelPath, MAX_PATH, NULL, NULL);
+	WideCharToMultiByte(CP_ACP, 0, L"../Resource/testFBX2.FBX", MAX_PATH, cModelPath, MAX_PATH, NULL, NULL);
 
 	m_pMesh = CStaticMesh::Create(cModelPath);
 
 	if (FAILED(CCamera::GetInstance()->Initialize()))
 	{
 		MessageBox(NULL, L"System Message", L"Camera Initialize Failed", MB_OK);
+	}
+
+	if (FAILED(CInput::GetInstance()->Initialize(g_hInst, g_hWnd)))
+	{
+		MessageBox(NULL, L"System Message", L"Input Initialize Failed", MB_OK);
 	}
 	
 	m_pRenderer = CRenderer::Create();
@@ -112,19 +117,22 @@ int CMainApp::Update(void)
 {
 
 	CCamera::GetInstance()->Update();
+	CInput::GetInstance()->SetInputState();
 	m_pInfo->Update();
 	CTimeMgr::GetInstance()->SetTime();
 
 
 
 
-	m_pInfo->m_vPos.x = 1.f;
-	m_pInfo->m_vPos.y = 1.f;
-	m_pInfo->m_vPos.z = 1.f;
+	m_pInfo->m_vPos.x = 0.f;
+	m_pInfo->m_vPos.y = 0.f;
+	m_pInfo->m_vPos.z = 0.f;
 
-	m_pInfo->m_vScale = D3DXVECTOR3(2.f, 2.f, 2.f);
+	m_pInfo->m_vScale = D3DXVECTOR3(1.f, 1.f, 1.f);
 	m_pInfo->m_fAngle[ANGLE_Y] += D3DXToRadian(10.f) * CTimeMgr::GetInstance()->GetTime();
 	m_pInfo->m_fAngle[ANGLE_X] += D3DXToRadian(10.f) * CTimeMgr::GetInstance()->GetTime();
+
+	
 
 	return 0;
 }
@@ -140,7 +148,10 @@ void CMainApp::Render(void)
 	D3DXMatrixTranspose(&cb.matWorld, &m_pInfo->m_matWorld);//9拭辞澗 益撹 家焼亀橘走幻 11拭辞澗 穿帖楳慶 宜形辞 家焼醤 喫
 	D3DXMatrixTranspose(&cb.matView, &CCamera::GetInstance()->m_matView);
 	D3DXMatrixTranspose(&cb.matProjection, &CCamera::GetInstance()->m_matProj);
-	m_pGrapicDevcie->m_pDeviceContext->UpdateSubresource(m_pRcCol->m_ConstantBuffer, 0, NULL, &cb, 0, 0);
+
+	m_pGrapicDevcie->m_pDeviceContext->IASetInputLayout(m_pVertexShader->m_pVertexLayout);
+	m_pGrapicDevcie->m_pDeviceContext->UpdateSubresource(m_pMesh->m_ConstantBuffer, 0, NULL, &cb, 0, 0);
+	
 
 
 	//戚遂費 嘘呪還税 窪覗稽詮闘 降忠 - 己/ 情己 - 
@@ -170,15 +181,17 @@ void CMainApp::Render(void)
 
 	//m_pGrapicDevcie->m_pDeviceContext->CreateRasterizerState(&RSDesc, &g_pRasterizerState);
 
-
 	m_pGrapicDevcie->m_pDeviceContext->VSSetShader(m_pVertexShader->m_pVertexShader, NULL, 0);
-	m_pGrapicDevcie->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pRcCol->m_ConstantBuffer);
+	m_pGrapicDevcie->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pMesh->m_ConstantBuffer);
 	m_pGrapicDevcie->m_pDeviceContext->PSSetShader(m_pPixelShader->m_pPixelShader, NULL, 0);// 実戚 9拭辞 settransform 梅揮依級
 	m_pGrapicDevcie->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
 	m_pGrapicDevcie->m_pDeviceContext->PSGetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
 
-	
-	m_pRcCol->Render();
+	m_pGrapicDevcie->m_pDeviceContext->IASetVertexBuffers(0, 1, &m_pMesh->m_VertexBuffer, &m_pMesh->m_iVertexStrides, &m_pMesh->m_iVertexOffsets);
+
+
+	m_pGrapicDevcie->m_pDeviceContext->Draw(m_pMesh->m_iVertices, 0);
+	//m_pMesh->Render();
 
 	m_pGrapicDevcie->EndDevice();
 }
@@ -200,4 +213,5 @@ void CMainApp::Release(void)
 	CTimeMgr::GetInstance()->DestroyInstance();
 	CCamera::GetInstance()->DestroyInstance();
 	CShaderMgr::GetInstance()->DestroyInstance();
+	CInput::GetInstance()->DestroyInstance();
 }

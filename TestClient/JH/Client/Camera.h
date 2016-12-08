@@ -17,7 +17,7 @@ public:
 	D3DXVECTOR3 m_vAt;
 	D3DXVECTOR3 m_vUp;
 
-private:
+protected:
 	float m_fFovY;
 	float m_fAspect; 
 	float m_fNear;

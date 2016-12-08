@@ -43,38 +43,11 @@
     <Filter Include="06. MgrClass">
       <UniqueIdentifier>{5bcf8d54-c956-4438-b158-14dd21ff9eea}</UniqueIdentifier>
     </Filter>
-    <Filter Include="96. System">
-      <UniqueIdentifier>{35a9bbef-d45e-4630-9ff0-b797722b380a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. System\1-1 Device">
-      <UniqueIdentifier>{265cc807-f5b2-4943-b700-01e9d3a5ecb2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. System\1-2 Time">
-      <UniqueIdentifier>{58b8f416-047b-42dc-b420-8349cd1dea9d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. System\1-3 Font">
-      <UniqueIdentifier>{00729105-6959-41e7-a6a0-489d6a5f9f42}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. System\1-4 Input">
-      <UniqueIdentifier>{1d7eb249-e6a8-47fb-81c9-ae8e94c9bb8c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="97. Resources">
       <UniqueIdentifier>{cd7e6a71-1746-4b95-98f8-5b055bfe0dd0}</UniqueIdentifier>
     </Filter>
     <Filter Include="97. Resources\01. Buffer">
       <UniqueIdentifier>{7dd28f43-21f1-486d-85d9-96f348109597}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="97. Resources\01. Buffer\96-1 RcTex">
-      <UniqueIdentifier>{fa9f9a0d-90d1-4b76-b59d-5e0d84bfea39}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="97. Resources\01. Buffer\96-2 RcCol">
-      <UniqueIdentifier>{f6d69223-8518-499f-9048-3e16c607bde5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="97. Resources\01. Buffer\96-3 CubeTex">
-      <UniqueIdentifier>{89ca584b-cf3e-4b8c-a733-17e6ffac052b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="97. Resources\01. Buffer\96-4 CubeCol">
-      <UniqueIdentifier>{c57bf197-5d9e-4325-a897-f9f5a8c14b92}</UniqueIdentifier>
     </Filter>
     <Filter Include="97. Resources\02. Shader">
       <UniqueIdentifier>{df5c8ee7-de5b-4715-b972-654daa39c29e}</UniqueIdentifier>
@@ -97,19 +70,55 @@
     <Filter Include="97. Resources\03. Texture">
       <UniqueIdentifier>{c27655a7-d113-48e1-b652-82a15adbb8b8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="97. Resources\01. Buffer\96-5 CylinderCol">
+    <Filter Include="01. Scene\Stage">
+      <UniqueIdentifier>{e472a14d-0b60-44bb-9890-49779a4b8b85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Camera\DynamicCamera">
+      <UniqueIdentifier>{8c98ebcb-6182-4312-97cb-2833bcb4b6cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95. System">
+      <UniqueIdentifier>{35a9bbef-d45e-4630-9ff0-b797722b380a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95. System\1-1 Device">
+      <UniqueIdentifier>{265cc807-f5b2-4943-b700-01e9d3a5ecb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95. System\1-2 Time">
+      <UniqueIdentifier>{58b8f416-047b-42dc-b420-8349cd1dea9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95. System\1-3 Font">
+      <UniqueIdentifier>{00729105-6959-41e7-a6a0-489d6a5f9f42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95. System\1-4 Input">
+      <UniqueIdentifier>{1d7eb249-e6a8-47fb-81c9-ae8e94c9bb8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Utility">
+      <UniqueIdentifier>{0faec323-eafb-402d-a6e4-14a021a412be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97. Resources\01. Buffer\97-1 RcTex">
+      <UniqueIdentifier>{fa9f9a0d-90d1-4b76-b59d-5e0d84bfea39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97. Resources\01. Buffer\97-2 RcCol">
+      <UniqueIdentifier>{f6d69223-8518-499f-9048-3e16c607bde5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97. Resources\01. Buffer\97-3 CubeTex">
+      <UniqueIdentifier>{89ca584b-cf3e-4b8c-a733-17e6ffac052b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97. Resources\01. Buffer\97-4 CubeCol">
+      <UniqueIdentifier>{c57bf197-5d9e-4325-a897-f9f5a8c14b92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97. Resources\01. Buffer\97-5 CylinderCol">
       <UniqueIdentifier>{44deaaa9-1c87-433e-9e9d-5516f478ee80}</UniqueIdentifier>
     </Filter>
-    <Filter Include="97. Resources\01. Buffer\96-6 CylinderTex">
+    <Filter Include="97. Resources\01. Buffer\97-6 CylinderTex">
       <UniqueIdentifier>{8be964c6-7e07-41f3-9775-a155d11db1dc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="97. Resources\01. Buffer\96-7 Mesh">
+    <Filter Include="97. Resources\01. Buffer\97-7 Mesh">
       <UniqueIdentifier>{eb73aed1-7731-4a48-a4e3-49c92c322d73}</UniqueIdentifier>
     </Filter>
-    <Filter Include="97. Resources\01. Buffer\96-7 Mesh\DynamicMesh">
+    <Filter Include="97. Resources\01. Buffer\97-7 Mesh\DynamicMesh">
       <UniqueIdentifier>{06d36388-0091-4061-832d-d1b57f133507}</UniqueIdentifier>
     </Filter>
-    <Filter Include="97. Resources\01. Buffer\96-7 Mesh\StaticMesh">
+    <Filter Include="97. Resources\01. Buffer\97-7 Mesh\StaticMesh">
       <UniqueIdentifier>{e2476279-99c0-481c-b266-410855c7eccb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -143,10 +152,10 @@
       <Filter>98. Header\98-3 Struct</Filter>
     </ClInclude>
     <ClInclude Include="Device.h">
-      <Filter>96. System\1-1 Device</Filter>
+      <Filter>95. System\1-1 Device</Filter>
     </ClInclude>
     <ClInclude Include="TimeMgr.h">
-      <Filter>96. System\1-2 Time</Filter>
+      <Filter>95. System\1-2 Time</Filter>
     </ClInclude>
     <ClInclude Include="Component.h">
       <Filter>04. Component</Filter>
@@ -173,7 +182,7 @@
       <Filter>97. Resources\01. Buffer</Filter>
     </ClInclude>
     <ClInclude Include="RcCol.h">
-      <Filter>97. Resources\01. Buffer\96-2 RcCol</Filter>
+      <Filter>97. Resources\01. Buffer\97-2 RcCol</Filter>
     </ClInclude>
     <ClInclude Include="ResourcesMgr.h">
       <Filter>06. MgrClass\6-2 ResourcesMgr</Filter>
@@ -189,31 +198,40 @@
       <Filter>06. MgrClass\6-1 ObjMgr</Filter>
     </ClInclude>
     <ClInclude Include="CubeCol.h">
-      <Filter>97. Resources\01. Buffer\96-4 CubeCol</Filter>
+      <Filter>97. Resources\01. Buffer\97-4 CubeCol</Filter>
     </ClInclude>
     <ClInclude Include="CylinderCol.h">
-      <Filter>97. Resources\01. Buffer\96-5 CylinderCol</Filter>
+      <Filter>97. Resources\01. Buffer\97-5 CylinderCol</Filter>
     </ClInclude>
     <ClInclude Include="Include.h">
       <Filter>98. Header\98-4 Macro</Filter>
     </ClInclude>
     <ClInclude Include="RcTex.h">
-      <Filter>97. Resources\01. Buffer\96-1 RcTex</Filter>
+      <Filter>97. Resources\01. Buffer\97-1 RcTex</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
       <Filter>97. Resources\03. Texture</Filter>
     </ClInclude>
     <ClInclude Include="CubeTex.h">
-      <Filter>97. Resources\01. Buffer\96-3 CubeTex</Filter>
+      <Filter>97. Resources\01. Buffer\97-3 CubeTex</Filter>
     </ClInclude>
     <ClInclude Include="CylinderTex.h">
-      <Filter>97. Resources\01. Buffer\96-6 CylinderTex</Filter>
+      <Filter>97. Resources\01. Buffer\97-6 CylinderTex</Filter>
     </ClInclude>
     <ClInclude Include="Mesh.h">
-      <Filter>97. Resources\01. Buffer\96-7 Mesh</Filter>
+      <Filter>97. Resources\01. Buffer\97-7 Mesh</Filter>
     </ClInclude>
     <ClInclude Include="StaticMesh.h">
-      <Filter>97. Resources\01. Buffer\96-7 Mesh\StaticMesh</Filter>
+      <Filter>97. Resources\01. Buffer\97-7 Mesh\StaticMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Stage.h">
+      <Filter>01. Scene\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicCamera.h">
+      <Filter>05. Camera\DynamicCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>95. System\1-4 Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -227,10 +245,10 @@
       <Filter>99. Default</Filter>
     </ClCompile>
     <ClCompile Include="Device.cpp">
-      <Filter>96. System\1-1 Device</Filter>
+      <Filter>95. System\1-1 Device</Filter>
     </ClCompile>
     <ClCompile Include="TimeMgr.cpp">
-      <Filter>96. System\1-2 Time</Filter>
+      <Filter>95. System\1-2 Time</Filter>
     </ClCompile>
     <ClCompile Include="Component.cpp">
       <Filter>04. Component</Filter>
@@ -257,7 +275,7 @@
       <Filter>97. Resources\01. Buffer</Filter>
     </ClCompile>
     <ClCompile Include="RcCol.cpp">
-      <Filter>97. Resources\01. Buffer\96-2 RcCol</Filter>
+      <Filter>97. Resources\01. Buffer\97-2 RcCol</Filter>
     </ClCompile>
     <ClCompile Include="ResourcesMgr.cpp">
       <Filter>06. MgrClass\6-2 ResourcesMgr</Filter>
@@ -272,28 +290,37 @@
       <Filter>06. MgrClass\6-1 ObjMgr</Filter>
     </ClCompile>
     <ClCompile Include="CubeCol.cpp">
-      <Filter>97. Resources\01. Buffer\96-4 CubeCol</Filter>
+      <Filter>97. Resources\01. Buffer\97-4 CubeCol</Filter>
     </ClCompile>
     <ClCompile Include="CylinderCol.cpp">
-      <Filter>97. Resources\01. Buffer\96-5 CylinderCol</Filter>
+      <Filter>97. Resources\01. Buffer\97-5 CylinderCol</Filter>
     </ClCompile>
     <ClCompile Include="RcTex.cpp">
-      <Filter>97. Resources\01. Buffer\96-1 RcTex</Filter>
+      <Filter>97. Resources\01. Buffer\97-1 RcTex</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>97. Resources\03. Texture</Filter>
     </ClCompile>
     <ClCompile Include="CubeTex.cpp">
-      <Filter>97. Resources\01. Buffer\96-3 CubeTex</Filter>
+      <Filter>97. Resources\01. Buffer\97-3 CubeTex</Filter>
     </ClCompile>
     <ClCompile Include="CylinderTex.cpp">
-      <Filter>97. Resources\01. Buffer\96-6 CylinderTex</Filter>
+      <Filter>97. Resources\01. Buffer\97-6 CylinderTex</Filter>
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
-      <Filter>97. Resources\01. Buffer\96-7 Mesh</Filter>
+      <Filter>97. Resources\01. Buffer\97-7 Mesh</Filter>
     </ClCompile>
     <ClCompile Include="StaticMesh.cpp">
-      <Filter>97. Resources\01. Buffer\96-7 Mesh\StaticMesh</Filter>
+      <Filter>97. Resources\01. Buffer\97-7 Mesh\StaticMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Stage.cpp">
+      <Filter>01. Scene\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="DynamicCamera.cpp">
+      <Filter>05. Camera\DynamicCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>95. System\1-4 Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

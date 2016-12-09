@@ -13,8 +13,9 @@
 #define OP_SERVER_SEND 2
 
 // process protocol
-enum PacketProtocolType_Server_ProcessPacketFunction {
+enum PacketProtocolType {
 	TEST = 1,		// 받은 패킷 그대로 돌려주기용. ( 보낸 내용이 그대로 돌아오지 않는다면, 클라나 서버에 문제가 있다는 뜻 )
+	DUMMY_CLIENT,	// dummy client 용 프로토콜
 	KEYINPUT,		// 클라이언트에서 키 입력을 받았을 경우
 
 };	

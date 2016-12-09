@@ -16,6 +16,9 @@
     <Filter Include="소스 파일\00.boostAsioServer">
       <UniqueIdentifier>{6a03d804-c83c-4bad-bd30-1c85f64e8048}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\00.Process_packet">
+      <UniqueIdentifier>{cc4c0643-da94-49fa-ae86-41cad069ef56}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -37,6 +40,9 @@
     </ClCompile>
     <ClCompile Include="boostAsioServer.cpp">
       <Filter>소스 파일\00.boostAsioServer</Filter>
+    </ClCompile>
+    <ClCompile Include="m_process_packet.cpp">
+      <Filter>소스 파일\00.Process_packet</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

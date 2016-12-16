@@ -23,7 +23,7 @@ private:
 	CShader*	m_pPixelShader;
 	CTexture*	m_pTexture;
 	//CInput*		m_pInput;
-	CStaticMesh* m_pMesh;
+	CVIBuffer* m_pMesh;
 
 
 public:

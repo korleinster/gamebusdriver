@@ -54,14 +54,14 @@ HRESULT CMainApp::Initialize(void)
 
 	CTimeMgr::GetInstance()->InitTime();
 
-	m_pTexture = CTexture::Create(L"../Resource/Bird.png");
+	m_pTexture = CTexture::Create(L"../Resource/test.jpg");
 
 	//m_pRcCol = CCubeCol::Create();
 	//m_pRcCol = CCylinderTex::Create(1,1,1,20,20);
 	//m_pRcCol = CCubeTex::Create();
 
 	char cModelPath[MAX_PATH];
-	WideCharToMultiByte(CP_ACP, 0, L"../Resource/testFBX2.FBX", MAX_PATH, cModelPath, MAX_PATH, NULL, NULL);
+	WideCharToMultiByte(CP_ACP, 0, L"../Resource/bird.FBX", MAX_PATH, cModelPath, MAX_PATH, NULL, NULL);
 
 	m_pMesh = CStaticMesh::Create(cModelPath);
 
@@ -128,7 +128,7 @@ int CMainApp::Update(void)
 	m_pInfo->m_vPos.y = 0.f;
 	m_pInfo->m_vPos.z = 0.f;
 
-	m_pInfo->m_vScale = D3DXVECTOR3(1.f, 1.f, 1.f);
+	m_pInfo->m_vScale = D3DXVECTOR3(0.1f, 0.1f, 0.1f);
 	m_pInfo->m_fAngle[ANGLE_Y] += D3DXToRadian(10.f) * CTimeMgr::GetInstance()->GetTime();
 	m_pInfo->m_fAngle[ANGLE_X] += D3DXToRadian(10.f) * CTimeMgr::GetInstance()->GetTime();
 
@@ -190,8 +190,8 @@ void CMainApp::Render(void)
 	m_pGrapicDevcie->m_pDeviceContext->IASetVertexBuffers(0, 1, &m_pMesh->m_VertexBuffer, &m_pMesh->m_iVertexStrides, &m_pMesh->m_iVertexOffsets);
 
 
-	m_pGrapicDevcie->m_pDeviceContext->Draw(m_pMesh->m_iVertices, 0);
-	//m_pMesh->Render();
+	//m_pGrapicDevcie->m_pDeviceContext->Draw(m_pMesh->m_iVertices, 0);
+	m_pMesh->Render();
 
 	m_pGrapicDevcie->EndDevice();
 }

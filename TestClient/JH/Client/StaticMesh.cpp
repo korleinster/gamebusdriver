@@ -83,7 +83,7 @@ HRESULT CStaticMesh::Load_StaticMesh(const char* szFilePath,
 	if (!pRootNode)
 		return E_FAIL;
 
-	vector<VTXTEX*> vecVTXTEX;
+	vector<VTXTEX> vecVTXTEX;
 
 	for (int i = 0; i < pRootNode->GetChildCount(); ++i)
 	{
@@ -179,7 +179,7 @@ HRESULT CStaticMesh::Load_StaticMesh(const char* szFilePath,
 				vtxtex.vPos = vPos;
 				vtxtex.vNormal = vOutNormal;
 				vtxtex.vTexUV = vOutUV;
-				vecVTXTEX.push_back(&vtxtex);
+				vecVTXTEX.push_back(vtxtex);
 
 
 				//int index = VtxUV->GetIndexArray().GetAt(iTextureUVIndex);
@@ -197,9 +197,9 @@ HRESULT CStaticMesh::Load_StaticMesh(const char* szFilePath,
 	VTXTEX* pVTXTex = new VTXTEX[n];
 	for (unsigned int i = 0; i < vecVTXTEX.size(); ++i)
 	{
-		pVTXTex[i].vPos = vecVTXTEX[i]->vPos;
-		pVTXTex[i].vNormal = vecVTXTEX[i]->vNormal;
-		pVTXTex[i].vTexUV - vecVTXTEX[i]->vTexUV;
+		pVTXTex[i].vPos = vecVTXTEX[i].vPos;
+		pVTXTex[i].vNormal = vecVTXTEX[i].vNormal;
+		pVTXTex[i].vTexUV - vecVTXTEX[i].vTexUV;
 	}
 
 	m_iVertices = vecVTXTEX.size();

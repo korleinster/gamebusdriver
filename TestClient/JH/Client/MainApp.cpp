@@ -54,7 +54,7 @@ HRESULT CMainApp::Initialize(void)
 
 	CTimeMgr::GetInstance()->InitTime();
 
-	m_pTexture = CTexture::Create(L"../Resource/test.jpg");
+	m_pTexture = CTexture::Create(L"../Resource/bird.png");
 
 	//m_pRcCol = CCubeCol::Create();
 	//m_pRcCol = CCylinderTex::Create(1,1,1,20,20);

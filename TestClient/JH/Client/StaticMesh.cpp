@@ -199,7 +199,7 @@ HRESULT CStaticMesh::Load_StaticMesh(const char* szFilePath,
 	{
 		pVTXTex[i].vPos = vecVTXTEX[i].vPos;
 		pVTXTex[i].vNormal = vecVTXTEX[i].vNormal;
-		pVTXTex[i].vTexUV - vecVTXTEX[i].vTexUV;
+		pVTXTex[i].vTexUV = vecVTXTEX[i].vTexUV;
 	}
 
 	m_iVertices = vecVTXTEX.size();

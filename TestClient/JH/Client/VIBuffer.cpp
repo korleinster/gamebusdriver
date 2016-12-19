@@ -66,6 +66,7 @@ void CVIBuffer::Render(void)
 
 	//pGrapicDevice->m_pDeviceContext->RSSetState(m_pd3dRasterizerState);
 	pGrapicDevice->m_pDeviceContext->DrawIndexed(m_iIndex, m_iStartIndex, m_iBaseVertex);
+	pGrapicDevice->m_pDeviceContext->Draw(m_iVertices, m_iStartVertex);
 	//9에서 인덱스프리미티브 차이랑 같음
 
 }

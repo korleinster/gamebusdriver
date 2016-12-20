@@ -1,0 +1,339 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="99. Default">
+      <UniqueIdentifier>{19e422c4-45dc-4e2f-8aa9-31334bd4ac3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. MainApp">
+      <UniqueIdentifier>{cf47aa0a-86e8-4842-93b4-991d9897fec5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. Header">
+      <UniqueIdentifier>{7dc12bd2-b395-4ba2-a882-7bf0068d664a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. Header\98-1 Enum">
+      <UniqueIdentifier>{042ee5d8-91c8-4da6-ad9b-27b7265b1fb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. Header\98-2 Value">
+      <UniqueIdentifier>{93cc4615-9586-47a7-968e-1e1cd8e251bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. Header\98-3 Struct">
+      <UniqueIdentifier>{a766d3fc-a6d2-433c-a0f6-53d623e72588}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. Header\98-4 Macro">
+      <UniqueIdentifier>{d32e5d5e-2001-457f-856d-3b2a0cc007f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Component">
+      <UniqueIdentifier>{b9c68c64-5059-4f2f-bf73-18fa4d52a6f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Component\4-1 Info">
+      <UniqueIdentifier>{a380f8e8-6231-4765-99b4-0522dcb52100}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object">
+      <UniqueIdentifier>{703acaa6-860a-4b73-8843-36a0d3ea86ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene">
+      <UniqueIdentifier>{936af3ff-ae7d-4bd3-88ef-359a41997f91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Renderer">
+      <UniqueIdentifier>{f80727da-43a4-4206-9e6b-506ca21ab95b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Camera">
+      <UniqueIdentifier>{716b3bf8-6f3b-42f8-bd1f-2760256a5c96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. MgrClass">
+      <UniqueIdentifier>{5bcf8d54-c956-4438-b158-14dd21ff9eea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97. Resources">
+      <UniqueIdentifier>{cd7e6a71-1746-4b95-98f8-5b055bfe0dd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97. Resources\01. Buffer">
+      <UniqueIdentifier>{7dd28f43-21f1-486d-85d9-96f348109597}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97. Resources\02. Shader">
+      <UniqueIdentifier>{df5c8ee7-de5b-4715-b972-654daa39c29e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. MgrClass\6-1 ObjMgr">
+      <UniqueIdentifier>{a1c09b43-1d13-4ea3-804c-1e0049a2f160}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. MgrClass\6-2 ResourcesMgr">
+      <UniqueIdentifier>{7230c08b-8af9-46a0-a0cf-6ad01a681dc7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. MgrClass\6-3 CollisionMgr">
+      <UniqueIdentifier>{f4e45e4e-147f-4020-9cf5-b359ef9500ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. MgrClass\6-4 ShaderMgr">
+      <UniqueIdentifier>{4afbbe90-5584-4e81-ac84-01decce550e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object\Player">
+      <UniqueIdentifier>{188675ce-0726-438b-9616-1caa01e9f8f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97. Resources\03. Texture">
+      <UniqueIdentifier>{c27655a7-d113-48e1-b652-82a15adbb8b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\Stage">
+      <UniqueIdentifier>{e472a14d-0b60-44bb-9890-49779a4b8b85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Camera\DynamicCamera">
+      <UniqueIdentifier>{8c98ebcb-6182-4312-97cb-2833bcb4b6cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95. System">
+      <UniqueIdentifier>{35a9bbef-d45e-4630-9ff0-b797722b380a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95. System\1-1 Device">
+      <UniqueIdentifier>{265cc807-f5b2-4943-b700-01e9d3a5ecb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95. System\1-2 Time">
+      <UniqueIdentifier>{58b8f416-047b-42dc-b420-8349cd1dea9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95. System\1-3 Font">
+      <UniqueIdentifier>{00729105-6959-41e7-a6a0-489d6a5f9f42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95. System\1-4 Input">
+      <UniqueIdentifier>{1d7eb249-e6a8-47fb-81c9-ae8e94c9bb8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Utility">
+      <UniqueIdentifier>{0faec323-eafb-402d-a6e4-14a021a412be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97. Resources\01. Buffer\97-1 RcTex">
+      <UniqueIdentifier>{fa9f9a0d-90d1-4b76-b59d-5e0d84bfea39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97. Resources\01. Buffer\97-2 RcCol">
+      <UniqueIdentifier>{f6d69223-8518-499f-9048-3e16c607bde5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97. Resources\01. Buffer\97-3 CubeTex">
+      <UniqueIdentifier>{89ca584b-cf3e-4b8c-a733-17e6ffac052b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97. Resources\01. Buffer\97-4 CubeCol">
+      <UniqueIdentifier>{c57bf197-5d9e-4325-a897-f9f5a8c14b92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97. Resources\01. Buffer\97-5 CylinderCol">
+      <UniqueIdentifier>{44deaaa9-1c87-433e-9e9d-5516f478ee80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97. Resources\01. Buffer\97-6 CylinderTex">
+      <UniqueIdentifier>{8be964c6-7e07-41f3-9775-a155d11db1dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97. Resources\01. Buffer\97-7 Mesh">
+      <UniqueIdentifier>{eb73aed1-7731-4a48-a4e3-49c92c322d73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97. Resources\01. Buffer\97-7 Mesh\DynamicMesh">
+      <UniqueIdentifier>{06d36388-0091-4061-832d-d1b57f133507}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97. Resources\01. Buffer\97-7 Mesh\StaticMesh">
+      <UniqueIdentifier>{e2476279-99c0-481c-b266-410855c7eccb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="MainApp.h">
+      <Filter>00. MainApp</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>99. Default</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>99. Default</Filter>
+    </ClInclude>
+    <ClInclude Include="YKDuo.h">
+      <Filter>99. Default</Filter>
+    </ClInclude>
+    <ClInclude Include="Enum.h">
+      <Filter>98. Header\98-1 Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="Value.h">
+      <Filter>98. Header\98-2 Value</Filter>
+    </ClInclude>
+    <ClInclude Include="Macro.h">
+      <Filter>98. Header\98-4 Macro</Filter>
+    </ClInclude>
+    <ClInclude Include="Struct.h">
+      <Filter>98. Header\98-3 Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="Device.h">
+      <Filter>95. System\1-1 Device</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeMgr.h">
+      <Filter>95. System\1-2 Time</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>04. Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Info.h">
+      <Filter>04. Component\4-1 Info</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>03. Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Obj.h">
+      <Filter>02. Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>01. Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>05. Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources.h">
+      <Filter>97. Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="VIBuffer.h">
+      <Filter>97. Resources\01. Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="RcCol.h">
+      <Filter>97. Resources\01. Buffer\97-2 RcCol</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourcesMgr.h">
+      <Filter>06. MgrClass\6-2 ResourcesMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>97. Resources\02. Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.fx" />
+    <ClInclude Include="ShaderMgr.h">
+      <Filter>06. MgrClass\6-4 ShaderMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjMgr.h">
+      <Filter>06. MgrClass\6-1 ObjMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="CubeCol.h">
+      <Filter>97. Resources\01. Buffer\97-4 CubeCol</Filter>
+    </ClInclude>
+    <ClInclude Include="CylinderCol.h">
+      <Filter>97. Resources\01. Buffer\97-5 CylinderCol</Filter>
+    </ClInclude>
+    <ClInclude Include="Include.h">
+      <Filter>98. Header\98-4 Macro</Filter>
+    </ClInclude>
+    <ClInclude Include="RcTex.h">
+      <Filter>97. Resources\01. Buffer\97-1 RcTex</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>97. Resources\03. Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="CubeTex.h">
+      <Filter>97. Resources\01. Buffer\97-3 CubeTex</Filter>
+    </ClInclude>
+    <ClInclude Include="CylinderTex.h">
+      <Filter>97. Resources\01. Buffer\97-6 CylinderTex</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>97. Resources\01. Buffer\97-7 Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticMesh.h">
+      <Filter>97. Resources\01. Buffer\97-7 Mesh\StaticMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Stage.h">
+      <Filter>01. Scene\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicCamera.h">
+      <Filter>05. Camera\DynamicCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>95. System\1-4 Input</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="MainApp.cpp">
+      <Filter>00. MainApp</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>99. Default</Filter>
+    </ClCompile>
+    <ClCompile Include="YKDuo.cpp">
+      <Filter>99. Default</Filter>
+    </ClCompile>
+    <ClCompile Include="Device.cpp">
+      <Filter>95. System\1-1 Device</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeMgr.cpp">
+      <Filter>95. System\1-2 Time</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>04. Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Info.cpp">
+      <Filter>04. Component\4-1 Info</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>03. Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Obj.cpp">
+      <Filter>02. Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>01. Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>05. Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources.cpp">
+      <Filter>97. Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="VIBuffer.cpp">
+      <Filter>97. Resources\01. Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="RcCol.cpp">
+      <Filter>97. Resources\01. Buffer\97-2 RcCol</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourcesMgr.cpp">
+      <Filter>06. MgrClass\6-2 ResourcesMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>97. Resources\02. Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderMgr.cpp">
+      <Filter>06. MgrClass\6-4 ShaderMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjMgr.cpp">
+      <Filter>06. MgrClass\6-1 ObjMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="CubeCol.cpp">
+      <Filter>97. Resources\01. Buffer\97-4 CubeCol</Filter>
+    </ClCompile>
+    <ClCompile Include="CylinderCol.cpp">
+      <Filter>97. Resources\01. Buffer\97-5 CylinderCol</Filter>
+    </ClCompile>
+    <ClCompile Include="RcTex.cpp">
+      <Filter>97. Resources\01. Buffer\97-1 RcTex</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>97. Resources\03. Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="CubeTex.cpp">
+      <Filter>97. Resources\01. Buffer\97-3 CubeTex</Filter>
+    </ClCompile>
+    <ClCompile Include="CylinderTex.cpp">
+      <Filter>97. Resources\01. Buffer\97-6 CylinderTex</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>97. Resources\01. Buffer\97-7 Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticMesh.cpp">
+      <Filter>97. Resources\01. Buffer\97-7 Mesh\StaticMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Stage.cpp">
+      <Filter>01. Scene\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="DynamicCamera.cpp">
+      <Filter>05. Camera\DynamicCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>95. System\1-4 Input</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="small.ico">
+      <Filter>99. Default</Filter>
+    </Image>
+    <Image Include="YKDuo.ico">
+      <Filter>99. Default</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="YKDuo.rc">
+      <Filter>99. Default</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

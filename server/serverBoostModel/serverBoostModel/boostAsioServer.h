@@ -4,6 +4,9 @@
 #pragma once
 #include<boost\asio.hpp>
 
+// 시야리스트 관리용 STL ( 따로 CAS 를 위해 자료구조를 만들 것인지 고민해 보자 )
+#include <unordered_set>
+
 static boost::asio::io_service g_io_service;
 
 using boost::asio::ip::tcp;
@@ -35,6 +38,15 @@ private:
 	Packet m_data_buf[MAX_BUF_SIZE]{ 0 };
 	unsigned int m_packet_size_current{ 0 };
 	unsigned int m_packet_size_previous{ 0 };
+
+
+	// 플레이어 캐릭터 관련 정보
+	player_data m_player_data;
+
+	// 현재 플레이어의 view list
+	/// 고민 1. 기본 unorderd_set 자료형을 쓸 것인가 ?
+	unordered_set<unsigned int> m_view_list;
+	/// 고민 2. 따로 멀티 쓰레드 전용 자료구조를 만들어 쓸 것인가 ? CAS...
 };
 
 class boostAsioServer

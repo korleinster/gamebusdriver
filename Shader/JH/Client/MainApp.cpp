@@ -62,7 +62,7 @@ HRESULT CMainApp::Initialize(void)
 
 	char cModelPath[MAX_PATH];
 	//WideCharToMultiByte(CP_ACP, 0, L"../Resource/bird.FBX", MAX_PATH, cModelPath, MAX_PATH, NULL, NULL);
-	WideCharToMultiByte(CP_ACP, 0, L"../Resource/Bird.FBX", MAX_PATH, cModelPath, MAX_PATH, NULL, NULL);
+	WideCharToMultiByte(CP_ACP, 0, L"../Resource/bird.FBX", MAX_PATH, cModelPath, MAX_PATH, NULL, NULL);
 
 	m_pMesh = CStaticMesh::Create(cModelPath);
 

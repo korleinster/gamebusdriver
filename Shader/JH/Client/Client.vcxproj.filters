@@ -121,6 +121,9 @@
     <Filter Include="97. Resources\01. Buffer\97-7 Mesh\StaticMesh">
       <UniqueIdentifier>{e2476279-99c0-481c-b266-410855c7eccb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="94.Fx">
+      <UniqueIdentifier>{c68da3de-6865-47fe-95da-0be0f2ec97cb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -190,7 +193,6 @@
     <ClInclude Include="Shader.h">
       <Filter>97. Resources\02. Shader</Filter>
     </ClInclude>
-    <ClInclude Include="Shader.fx" />
     <ClInclude Include="ShaderMgr.h">
       <Filter>06. MgrClass\6-4 ShaderMgr</Filter>
     </ClInclude>
@@ -232,6 +234,9 @@
     </ClInclude>
     <ClInclude Include="Input.h">
       <Filter>95. System\1-4 Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.fx">
+      <Filter>94.Fx</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

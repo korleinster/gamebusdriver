@@ -10,7 +10,7 @@ public:
 	virtual ~CTexture();
 
 public:
-	ID3D11ShaderResourceView*           m_pTextureRV;
+	ID3D11ShaderResourceView*           m_pTextureRV; // ¼ÎÀÌ´õ ÀÚ¿ø ºä
 	ID3D11SamplerState*                 m_pSamplerLinear;
 	ID3D11BlendState*               m_pBlendState;
 

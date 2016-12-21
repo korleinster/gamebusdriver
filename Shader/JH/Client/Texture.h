@@ -10,9 +10,9 @@ public:
 	virtual ~CTexture();
 
 public:
-	ID3D11ShaderResourceView*           m_pTextureRV; // 셰이더 자원 뷰
-	ID3D11SamplerState*                 m_pSamplerLinear;
-	ID3D11BlendState*               m_pBlendState;
+	ID3D11ShaderResourceView*	m_pTextureRV; // 셰이더 자원 뷰
+	ID3D11SamplerState*			m_pSamplerLinear;
+	ID3D11BlendState*			m_pBlendState; // 혼합 연산을 구겅하는데 쓰이는 상태 집합을 대표
 
 private:
 	virtual HRESULT CreateTexture(LPCWSTR szFilePath);

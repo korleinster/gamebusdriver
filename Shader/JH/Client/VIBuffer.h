@@ -12,12 +12,12 @@ public:
 	virtual ~CVIBuffer();
 
 public:
-	ID3D11RasterizerState*		m_pRasterizerState;
+	ID3D11RasterizerState*		m_pRasterizerState; // 파이프라인의 래슽화기 단계를 구성하는데 쓰이는 설정들을 묶은 상태집합을 대표함
 
 	UINT				m_nInstanceBufferStride;
 	UINT				m_nInstanceBufferOffset;
 
-	ID3D11Buffer*		m_ConstantBuffer;
+	ID3D11Buffer*		m_ConstantBuffer; 
 	ID3D11Buffer*		m_VertexBuffer;
 	//ID3D11InputLayout*  m_VertexLayout;
 	int					m_iVertices;

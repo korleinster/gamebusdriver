@@ -11,7 +11,7 @@ public:
 
 public:
 	ID3D11VertexShader*     m_pVertexShader;
-	ID3D11InputLayout*      m_pVertexLayout;
+	ID3D11InputLayout*      m_pVertexLayout; // 입력배치 객체(정점 구조체의 각 성분이 어떤 용도인지 알려줌)
 	ID3D11PixelShader*      m_pPixelShader;
 
 private:

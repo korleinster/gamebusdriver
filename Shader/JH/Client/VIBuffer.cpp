@@ -74,23 +74,23 @@ void CVIBuffer::Render(void)
 void CVIBuffer::CreateRasterizerState()
 {
 	CDevice* pGrapicDevice = CDevice::GetInstance();
-	//D3D11_RASTERIZER_DESC RSDesc;
-	//RSDesc.FillMode = D3D11_FILL_SOLID;           // 평범하게 렌더링
-	//RSDesc.CullMode = D3D11_CULL_NONE;         // 컬모드 하지 않음
-	//RSDesc.FrontCounterClockwise = FALSE;        // 시계방향이 뒷면임 CCW
-	//RSDesc.DepthBias = 0;                      //깊이 바이어스 값 0
-	//RSDesc.DepthBiasClamp = 0;
-	//RSDesc.SlopeScaledDepthBias = 0;
-	//RSDesc.DepthClipEnable = FALSE;            // 깊이 클리핑 없음
-	//RSDesc.ScissorEnable = FALSE;             // 시저 테스트 하지 않음
-	//RSDesc.MultisampleEnable = FALSE;          // 멀티 샘플링 하지 않음
-	//RSDesc.AntialiasedLineEnable = FALSE;
-
+	
 	D3D11_RASTERIZER_DESC tRasterizerDesc;
 	ZeroMemory(&tRasterizerDesc, sizeof(D3D11_RASTERIZER_DESC));
-	tRasterizerDesc.CullMode = D3D11_CULL_NONE;
-	tRasterizerDesc.FillMode = D3D11_FILL_SOLID;
-	pGrapicDevice->m_pDevice->CreateRasterizerState(&tRasterizerDesc, &m_pRasterizerState);
+	tRasterizerDesc.FillMode = D3D11_FILL_SOLID; // 기본의 고형체 렌더링 와이어프레임은 D3D11_FILL_WIREFRAME
+	tRasterizerDesc.CullMode = D3D11_CULL_BACK; // 후면 삼각형을 선별해서 제외 시킴
+	tRasterizerDesc.FrontCounterClockwise = false; // 카메라기준 시계방향으로 감긴 삼각형을 전명으로 간주
+	tRasterizerDesc.DepthBias = 0;
+	tRasterizerDesc.DepthBiasClamp = 0.f;
+	tRasterizerDesc.SlopeScaledDepthBias = 0.f;
+	tRasterizerDesc.DepthClipEnable = true;
+	tRasterizerDesc.ScissorEnable = false;
+	tRasterizerDesc.MultisampleEnable = false;
+	tRasterizerDesc.AntialiasedLineEnable = false;	
+	
+	pGrapicDevice->m_pDevice->CreateRasterizerState(
+		&tRasterizerDesc, // 생성하고자 하는 래스터화기 상태 집합을 서술하는 D3D11_RASTERIZER_DESC 구조체
+		&m_pRasterizerState); // ID3D11RasterizerState를 가리키는 포인터
 }
 
 DWORD CVIBuffer::Release(void)

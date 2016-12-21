@@ -62,7 +62,7 @@ HRESULT CMainApp::Initialize(void)
 
 	char cModelPath[MAX_PATH];
 	//WideCharToMultiByte(CP_ACP, 0, L"../Resource/bird.FBX", MAX_PATH, cModelPath, MAX_PATH, NULL, NULL);
-	WideCharToMultiByte(CP_ACP, 0, L"../Resource/bird.FBX", MAX_PATH, cModelPath, MAX_PATH, NULL, NULL);
+	WideCharToMultiByte(CP_ACP, 0, L"../Resource/town.FBX", MAX_PATH, cModelPath, MAX_PATH, NULL, NULL);
 
 	m_pMesh = CStaticMesh::Create(cModelPath);
 
@@ -130,8 +130,9 @@ int CMainApp::Update(void)
 	m_pInfo->m_vPos.z = 0.f;
 
 	m_pInfo->m_vScale = D3DXVECTOR3(0.1f, 0.1f, 0.1f);
-	m_pInfo->m_fAngle[ANGLE_Y] += D3DXToRadian(10.f) * CTimeMgr::GetInstance()->GetTime();
 	m_pInfo->m_fAngle[ANGLE_X] += D3DXToRadian(10.f) * CTimeMgr::GetInstance()->GetTime();
+	m_pInfo->m_fAngle[ANGLE_Y] += D3DXToRadian(10.f) * CTimeMgr::GetInstance()->GetTime();
+	//m_pInfo->m_fAngle[ANGLE_Z] += D3DXToRadian(10.f) * CTimeMgr::GetInstance()->GetTime();
 
 	
 

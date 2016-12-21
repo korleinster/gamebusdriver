@@ -41,11 +41,22 @@ HRESULT CShader::Ready_ShaderFile(wstring wstrFilePath, LPCSTR wstrShaderName, L
 	ID3DBlob* pErrorBlob = NULL;
 	ID3DBlob* pShaderBlob = NULL;
 
-	hr = D3DX11CompileFromFile(wstrFilePath.c_str(), NULL, NULL, wstrShaderName, wstrShaderVersion, dwShaderFlags, 0, NULL, &pShaderBlob, &pErrorBlob, NULL);
+	hr = D3DX11CompileFromFile(
+		wstrFilePath.c_str(), // 셰이더 소스 코드를 담고 있는.fx파일의 이름
+		NULL, 
+		NULL,
+		wstrShaderName, // 셰이더 프로그램의 진입점, 셰이더 함수의 이름
+		wstrShaderVersion, //사용할 셰이더 버전(Directx 11의 경우 ps_5_0을 사용)
+		dwShaderFlags, // 셰이더 코드의 컴파일 방식에 영향을 미치는 플래그
+		0, 
+		NULL,
+		&pShaderBlob, // 컴파일된 셰이더를 담은 ID3DBlob구조체를 가리키는 포인터를 돌려줌
+		&pErrorBlob, // 컴파일 오류시 오류 메시지를 담은 문자열을 담은 ID3DBlob구조체를 가리키는 포인터를 돌려줌
+		NULL); // 비동기 컴파일시 오류코드를 조회하는데 쓰임 pPump에 널이라면 이매개변수도 널
 
 	if (FAILED(hr))
 	{
-		if (pErrorBlob != NULL)
+		if (pErrorBlob != NULL) // pErrorBlob오류 메시지가 있을경우
 			OutputDebugStringA((char*)pErrorBlob->GetBufferPointer());
 		if (pErrorBlob) pErrorBlob->Release();
 		return hr;
@@ -76,12 +87,19 @@ HRESULT CShader::Ready_ShaderFile(wstring wstrFilePath, LPCSTR wstrShaderName, L
 
 		UINT numElements = ARRAYSIZE(layout);
 
-		hr = CDevice::GetInstance()->m_pDevice->CreateInputLayout(layout, numElements, pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), &m_pVertexLayout);
+		hr = CDevice::GetInstance()->m_pDevice->CreateInputLayout( // 입력배치 생성
+			layout, // 정점 구조체를 서술하는 D3D11_INPUT_ELEMENT_DESC들의 배열
+			numElements, // D3D11_INPUT_ELEMENT_DESC배열의 원소개수
+			pShaderBlob->GetBufferPointer(), // 정점셰이더를 컴파일해서 얻은 바이트 코드를 가리키는 포인터
+			pShaderBlob->GetBufferSize(), // 바이트 코드의 크기
+			&m_pVertexLayout); // 생성된 입력배치를 이 포인터를 통해서 돌려줌
+
 		pShaderBlob->Release();
+
 		if (FAILED(hr))
 			return hr;
 
-		CDevice::GetInstance()->m_pDeviceContext->IASetInputLayout(m_pVertexLayout);
+		CDevice::GetInstance()->m_pDeviceContext->IASetInputLayout(m_pVertexLayout); 
 	}
 
 	else if (_SType == SHADER_PS)

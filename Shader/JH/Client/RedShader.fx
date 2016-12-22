@@ -47,9 +47,6 @@ VS_OUT VS(VS_INPUT input) // 정점 쉐이더의 가장 중요한 임무는 로컬공간에 있는 정
 float4 PS(VS_OUT input) : SV_Target
 {
 	return float4(1.0f, 0.0f, 0.0f, 1.0f);
-	//return txDiffuse.Sample(samLinear, input.Tex);
-//return input.Color;
-// return float4(1.0f, 1.0f, 0.0f, 1.0f);
 }
 
 

@@ -124,6 +124,9 @@
     <Filter Include="94.Fx">
       <UniqueIdentifier>{c68da3de-6865-47fe-95da-0be0f2ec97cb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="06. MgrClass\6-5 LightMgr">
+      <UniqueIdentifier>{a28c7c31-d31a-4a9a-929e-f982c1fd4416}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -340,5 +343,10 @@
     <ResourceCompile Include="YKDuo.rc">
       <Filter>99. Default</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="RedShader.fx">
+      <Filter>94.Fx</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

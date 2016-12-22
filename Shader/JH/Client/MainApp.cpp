@@ -62,7 +62,7 @@ HRESULT CMainApp::Initialize(void)
 
 	char cModelPath[MAX_PATH];
 	//WideCharToMultiByte(CP_ACP, 0, L"../Resource/bird.FBX", MAX_PATH, cModelPath, MAX_PATH, NULL, NULL);
-	WideCharToMultiByte(CP_ACP, 0, L"../Resource/town.FBX", MAX_PATH, cModelPath, MAX_PATH, NULL, NULL);
+	WideCharToMultiByte(CP_ACP, 0, L"../Resource/bird.FBX", MAX_PATH, cModelPath, MAX_PATH, NULL, NULL);
 
 	m_pMesh = CStaticMesh::Create(cModelPath);
 
@@ -86,15 +86,37 @@ HRESULT CMainApp::Initialize(void)
 		MessageBox(NULL, L"System Message", L"Resource Container Reserve Failed", MB_OK);
 		return E_FAIL;
 	}
-
-	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"VERTEXSHADER", L"Shader.fx", "VS", "vs_5_0", SHADER_VS); //키값, fx위치, 쉐이더이름, 버젼, 
+	
+	// ==========For.Shader
+	// =====For.Default
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(
+		L"DEFAULT_VS", // map에서 찾을 키값
+		L"Shader.fx", // 파일 경로
+		"VS", // 셰이더 진입점(함수이름)
+		"vs_5_0", // 사용할 셰이더 버전(DirectX 11의 경우 _5_0 사용)
+		SHADER_VS); //셰이더 타입
 	if (FAILED(hr))
 	{
 		MessageBox(NULL, L"System Message", L"Vertex Shader Create Failed", MB_OK);
 		return hr;
 	}
 
-	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"PIXELSHADER", L"Shader.fx", "PS", "ps_5_0", SHADER_PS);
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"DEFAULT_PS", L"Shader.fx", "PS", "ps_5_0", SHADER_PS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"PIXEL Shader Create Failed", MB_OK);
+		return hr;
+	}
+
+	// =====For.Red
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"RED_VS", L"RedShader.fx",	"VS", "vs_5_0",	SHADER_VS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"Vertex Shader Create Failed", MB_OK);
+		return hr;
+	}
+
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"RED_PS", L"RedShader.fx", "PS", "ps_5_0", SHADER_PS);
 	if (FAILED(hr))
 	{
 		MessageBox(NULL, L"System Message", L"PIXEL Shader Create Failed", MB_OK);
@@ -108,8 +130,8 @@ HRESULT CMainApp::Initialize(void)
 	wireframeDesc.FrontCounterClockwise = false;
 	wireframeDesc.DepthClipEnable = true;
 
-	m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"VERTEXSHADER");
-	m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"PIXELSHADER");
+	m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"RED_VS");
+	m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"RED_PS");
 	
 	return S_OK;
 }
@@ -150,6 +172,11 @@ void CMainApp::Render(void)
 	D3DXMatrixTranspose(&cb.matWorld, &m_pInfo->m_matWorld);//9에서는 그냥 꽂아도됫지만 11에서는 전치행렬 돌려서 꽂아야 됨
 	D3DXMatrixTranspose(&cb.matView, &CCamera::GetInstance()->m_matView);
 	D3DXMatrixTranspose(&cb.matProjection, &CCamera::GetInstance()->m_matProj);
+
+	//// Store the previous depth state
+	//ID3D11DepthStencilState* pPrevDepthState;
+	//UINT nPrevStencil;
+	//m_pGrapicDevcie->m_pDeviceContext->OMGetDepthStencilState(&pPrevDepthState, &nPrevStencil);
 
 	m_pGrapicDevcie->m_pDeviceContext->IASetInputLayout(m_pVertexShader->m_pVertexLayout);
 	m_pGrapicDevcie->m_pDeviceContext->UpdateSubresource(m_pMesh->m_ConstantBuffer, 0, NULL, &cb, 0, 0);

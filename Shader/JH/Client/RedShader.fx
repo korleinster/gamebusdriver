@@ -3,6 +3,25 @@
 Texture2D txDiffuse : register(t0);
 SamplerState samLinear : register(s0);
 
+//BlendState NoBlend
+//{
+//	BlendEnbale[0] = False;
+//};
+//
+//DepthStencilState DepthTestOn
+//{
+//	DepthEnable = True;
+//	DepthWriteMask = All;
+//	DepthFunc = Less;
+//};
+//
+//RasterizerState rsWireframe
+//{
+//	FillMode = Solid;
+//	CullMode = Back;
+//	FrontCounterClockwise = False;
+//};
+
 cbuffer ConstantBuffer : register(b0) //컨스턴트 버퍼 넘기면 여기로 꽂힘
 {
 	matrix World;

@@ -54,7 +54,7 @@ HRESULT CMainApp::Initialize(void)
 
 	CTimeMgr::GetInstance()->InitTime();
 
-	m_pTexture = CTexture::Create(L"../Resource/bird.png");
+	m_pTexture = CTexture::Create(L"../Resource/town.png");
 
 	//m_pRcCol = CCubeCol::Create();
 	//m_pRcCol = CCylinderTex::Create(1,1,1,20,20);
@@ -62,7 +62,7 @@ HRESULT CMainApp::Initialize(void)
 
 	char cModelPath[MAX_PATH];
 	//WideCharToMultiByte(CP_ACP, 0, L"../Resource/bird.FBX", MAX_PATH, cModelPath, MAX_PATH, NULL, NULL);
-	WideCharToMultiByte(CP_ACP, 0, L"../Resource/bird.FBX", MAX_PATH, cModelPath, MAX_PATH, NULL, NULL);
+	WideCharToMultiByte(CP_ACP, 0, L"../Resource/town.FBX", MAX_PATH, cModelPath, MAX_PATH, NULL, NULL);
 
 	m_pMesh = CStaticMesh::Create(cModelPath);
 
@@ -130,8 +130,8 @@ HRESULT CMainApp::Initialize(void)
 	wireframeDesc.FrontCounterClockwise = false;
 	wireframeDesc.DepthClipEnable = true;
 
-	m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"RED_VS");
-	m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"RED_PS");
+	m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"DEFAULT_VS");
+	m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"DEFAULT_PS");
 	
 	return S_OK;
 }
@@ -152,8 +152,8 @@ int CMainApp::Update(void)
 	m_pInfo->m_vPos.z = 0.f;
 
 	m_pInfo->m_vScale = D3DXVECTOR3(0.1f, 0.1f, 0.1f);
-	m_pInfo->m_fAngle[ANGLE_X] += D3DXToRadian(10.f) * CTimeMgr::GetInstance()->GetTime();
-	m_pInfo->m_fAngle[ANGLE_Y] += D3DXToRadian(10.f) * CTimeMgr::GetInstance()->GetTime();
+	//m_pInfo->m_fAngle[ANGLE_X] += D3DXToRadian(10.f) * CTimeMgr::GetInstance()->GetTime();
+	//m_pInfo->m_fAngle[ANGLE_Y] += D3DXToRadian(10.f) * CTimeMgr::GetInstance()->GetTime();
 	//m_pInfo->m_fAngle[ANGLE_Z] += D3DXToRadian(10.f) * CTimeMgr::GetInstance()->GetTime();
 
 	

@@ -85,9 +85,6 @@
     <Filter Include="95. System\1-2 Time">
       <UniqueIdentifier>{58b8f416-047b-42dc-b420-8349cd1dea9d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="95. System\1-3 Font">
-      <UniqueIdentifier>{00729105-6959-41e7-a6a0-489d6a5f9f42}</UniqueIdentifier>
-    </Filter>
     <Filter Include="95. System\1-4 Input">
       <UniqueIdentifier>{1d7eb249-e6a8-47fb-81c9-ae8e94c9bb8c}</UniqueIdentifier>
     </Filter>
@@ -126,6 +123,9 @@
     </Filter>
     <Filter Include="06. MgrClass\6-5 LightMgr">
       <UniqueIdentifier>{a28c7c31-d31a-4a9a-929e-f982c1fd4416}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97. Resources\04.Font">
+      <UniqueIdentifier>{db53087b-38cc-4c4a-be12-d1d449431811}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

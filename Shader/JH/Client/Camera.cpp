@@ -18,11 +18,11 @@ CCamera::~CCamera()
 
 HRESULT CCamera::Initialize(void)
 {
-	m_vEye = D3DXVECTOR3(0.0f, 1.0f, -35.0f);
+	m_vEye = D3DXVECTOR3(0.0f, -40.0f, 30.0f);
 	m_vAt = D3DXVECTOR3(0.f, 0.f, 0.f);
 	m_vUp = D3DXVECTOR3(0.f, 1.f, 0.f);
 
-	m_fFovY = D3DXToRadian(60.f);
+	m_fFovY = D3DXToRadian(45.f);
 	m_fAspect = float(WINCX) / static_cast<float>(WINCY);
 	m_fNear = 0.1f;
 	m_fFar = 100.f;

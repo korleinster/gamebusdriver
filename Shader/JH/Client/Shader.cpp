@@ -79,7 +79,7 @@ HRESULT CShader::Ready_ShaderFile(wstring wstrFilePath, LPCSTR wstrShaderName, L
 		D3D11_INPUT_ELEMENT_DESC layout[] =
 		{
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			//{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 			//{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			
@@ -87,7 +87,8 @@ HRESULT CShader::Ready_ShaderFile(wstring wstrFilePath, LPCSTR wstrShaderName, L
 
 		UINT numElements = ARRAYSIZE(layout);
 
-		hr = CDevice::GetInstance()->m_pDevice->CreateInputLayout( // 입력배치 생성
+		// D3D11_INPUT_ELEMENT_DESC와 vertex shader semantic의 매칭이 이루어짐
+		hr = CDevice::GetInstance()->m_pDevice->CreateInputLayout( // 입력배치 생성하는 함수
 			layout, // 정점 구조체를 서술하는 D3D11_INPUT_ELEMENT_DESC들의 배열
 			numElements, // D3D11_INPUT_ELEMENT_DESC배열의 원소개수
 			pShaderBlob->GetBufferPointer(), // 정점셰이더를 컴파일해서 얻은 바이트 코드를 가리키는 포인터

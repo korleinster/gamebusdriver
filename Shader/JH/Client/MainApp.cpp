@@ -152,9 +152,10 @@ int CMainApp::Update(void)
 	m_pInfo->m_vPos.z = 0.f;
 
 	m_pInfo->m_vScale = D3DXVECTOR3(0.1f, 0.1f, 0.1f);
+	
 	//m_pInfo->m_fAngle[ANGLE_X] += D3DXToRadian(10.f) * CTimeMgr::GetInstance()->GetTime();
 	//m_pInfo->m_fAngle[ANGLE_Y] += D3DXToRadian(10.f) * CTimeMgr::GetInstance()->GetTime();
-	//m_pInfo->m_fAngle[ANGLE_Z] += D3DXToRadian(10.f) * CTimeMgr::GetInstance()->GetTime();
+	m_pInfo->m_fAngle[ANGLE_Z] += D3DXToRadian(10.f) * CTimeMgr::GetInstance()->GetTime();
 
 	
 
@@ -210,10 +211,16 @@ void CMainApp::Render(void)
 
 	//m_pGrapicDevcie->m_pDeviceContext->CreateRasterizerState(&RSDesc, &g_pRasterizerState);
 
+	// VS에 버텍스 셰이더 설정
 	m_pGrapicDevcie->m_pDeviceContext->VSSetShader(m_pVertexShader->m_pVertexShader, NULL, 0);
+	// VS에 상수 버퍼 설정
 	m_pGrapicDevcie->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pMesh->m_ConstantBuffer);
+	// PS에 픽셀 셰이더 설정
 	m_pGrapicDevcie->m_pDeviceContext->PSSetShader(m_pPixelShader->m_pPixelShader, NULL, 0);// 셋이 9에서 settransform 했던것들
+	// PS에 상수 버퍼 설정
 	m_pGrapicDevcie->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
+	
+	
 	m_pGrapicDevcie->m_pDeviceContext->PSGetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
 
 	m_pGrapicDevcie->m_pDeviceContext->IASetVertexBuffers(0, 1, &m_pMesh->m_VertexBuffer, &m_pMesh->m_iVertexStrides, &m_pMesh->m_iVertexOffsets);

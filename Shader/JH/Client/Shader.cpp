@@ -38,7 +38,7 @@ HRESULT CShader::Ready_ShaderFile(wstring wstrFilePath, LPCSTR wstrShaderName, L
 	// the release configuration of this program.
 	dwShaderFlags |= D3DCOMPILE_DEBUG;
 #endif
-	ID3DBlob* pErrorBlob = NULL;
+	ID3DBlob* pErrorBlob = NULL; // 컴파일된 hlsl의 바이트코드를 담아두는역할
 	ID3DBlob* pShaderBlob = NULL;
 
 	hr = D3DX11CompileFromFile(
@@ -68,7 +68,11 @@ HRESULT CShader::Ready_ShaderFile(wstring wstrFilePath, LPCSTR wstrShaderName, L
 	if (_SType == SHADER_VS)
 	{
 
-		hr = CDevice::GetInstance()->m_pDevice->CreateVertexShader(pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), NULL, &m_pVertexShader);
+		hr = CDevice::GetInstance()->m_pDevice->CreateVertexShader(
+			pShaderBlob->GetBufferPointer(), 
+			pShaderBlob->GetBufferSize(),
+			NULL,
+			&m_pVertexShader);
 
 		if (FAILED(hr))
 		{
@@ -76,11 +80,20 @@ HRESULT CShader::Ready_ShaderFile(wstring wstrFilePath, LPCSTR wstrShaderName, L
 			return E_FAIL;
 		}
 
-		D3D11_INPUT_ELEMENT_DESC layout[] =
+		D3D11_INPUT_ELEMENT_DESC layout[] = // 같은 시멘틱스를 식별할 인덱스 값
 		{
-			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "POSITION", // 시멘틱스 이름
+			0,
+			DXGI_FORMAT_R32G32B32_FLOAT, // 포맷
+			0, // 입력슬롯의 인덱스 값
+			0, // 버텍스데이터의 처음에서 요소까지의 오프셋
+			D3D11_INPUT_PER_VERTEX_DATA, // 데이터 종류
+			0 }, // 인스턴스 번호
+
 			//{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+
 			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+
 			//{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			
 		};
@@ -105,7 +118,10 @@ HRESULT CShader::Ready_ShaderFile(wstring wstrFilePath, LPCSTR wstrShaderName, L
 
 	else if (_SType == SHADER_PS)
 	{
-		hr = CDevice::GetInstance()->m_pDevice->CreatePixelShader(pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), NULL, &m_pPixelShader);
+		hr = CDevice::GetInstance()->m_pDevice->CreatePixelShader(
+			pShaderBlob->GetBufferPointer(), 
+			pShaderBlob->GetBufferSize(), 
+			NULL, &m_pPixelShader);
 		pShaderBlob->Release();
 
 		if (FAILED(hr))

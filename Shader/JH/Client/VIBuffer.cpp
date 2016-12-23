@@ -73,20 +73,27 @@ void CVIBuffer::Render(void)
 
 void CVIBuffer::CreateRasterizerState()
 {
+	// 레스터 라이저에서 다음과 같은 처리를 수행한다
+	// 보이지 않는 프리미티브 제거(은면제거, 컬링 처리)
+	// 좌표의 뷰포트 변환
+	// 시저 테스트
+	// 깊이 바이어스 계산
+	// 프리미티브들을 렌더 타겟 상의 텍셀 단위로 변경
+	// 멀티 샘플링이나 필 모드의 설정에 따른 처리
 	CDevice* pGrapicDevice = CDevice::GetInstance();
 	
 	D3D11_RASTERIZER_DESC tRasterizerDesc;
 	ZeroMemory(&tRasterizerDesc, sizeof(D3D11_RASTERIZER_DESC));
 	tRasterizerDesc.FillMode = D3D11_FILL_SOLID; // 기본의 고형체 렌더링 와이어프레임은 D3D11_FILL_WIREFRAME
 	tRasterizerDesc.CullMode = D3D11_CULL_BACK; // 후면 삼각형을 선별해서 제외 시킴
-	tRasterizerDesc.FrontCounterClockwise = false; // 카메라기준 시계방향으로 감긴 삼각형을 전명으로 간주
-	tRasterizerDesc.DepthBias = 0;
+	tRasterizerDesc.FrontCounterClockwise = false; // 카메라기준 시계방향으로 감긴 삼각형을 전면으로 간주
+	tRasterizerDesc.DepthBias = 0; // 깊이 바이어스 값
 	tRasterizerDesc.DepthBiasClamp = 0.f;
 	tRasterizerDesc.SlopeScaledDepthBias = 0.f;
-	tRasterizerDesc.DepthClipEnable = true;
-	tRasterizerDesc.ScissorEnable = false;
-	tRasterizerDesc.MultisampleEnable = false;
-	tRasterizerDesc.AntialiasedLineEnable = false;	
+	tRasterizerDesc.DepthClipEnable = true; // 깊이 클리핑 
+	tRasterizerDesc.ScissorEnable = false; // 시저 테스트
+	tRasterizerDesc.MultisampleEnable = false; // 멀티 샘플링
+	tRasterizerDesc.AntialiasedLineEnable = false;	// 라인 안티 앨리어싱
 	
 	pGrapicDevice->m_pDevice->CreateRasterizerState(
 		&tRasterizerDesc, // 생성하고자 하는 래스터화기 상태 집합을 서술하는 D3D11_RASTERIZER_DESC 구조체

@@ -1,4 +1,8 @@
 
+// float vs half 에대해서 자세히 알아보자 셰이더 최적화 단계에서 필요하게 될가능성이 있다
+// float : 고도로 정밀한 부동 소수점. 일반적으로 32비트
+// half : 중간 정도로 정밀한 부동 소수점. 일반적으로 16비트
+
 Texture2D txDiffuse : register(t0);
 SamplerState samLinear : register(s0);
 
@@ -12,14 +16,14 @@ cbuffer ConstantBuffer : register(b0) //컨스턴트 버퍼 넘기면 여기로 꽂힘
 //--------------------------------------------------------------------------------------
 struct VS_INPUT
 {
-	float4 Pos : POSITION; // 정점 데이터에서 위치 정보를 가져와서 Pos에 대입
-	float2 Tex : TEXCOORD0;
+	half4 Pos : POSITION; // 정점 데이터에서 위치 정보를 가져와서 Pos에 대입
+	half2 Tex : TEXCOORD0;
 };
 
 struct VS_OUT
 {
-	float4 Pos : SV_POSITION; // 투영공간으로 변환된 위치 정보
-	float2 Tex : TEXCOORD0;
+	half4 Pos : SV_POSITION; // 투영공간으로 변환된 위치 정보
+	half2 Tex : TEXCOORD0;
 };
 
 //--------------------------------------------------------------------------------------

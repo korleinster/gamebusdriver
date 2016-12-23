@@ -32,14 +32,14 @@ cbuffer ConstantBuffer : register(b0) //컨스턴트 버퍼 넘기면 여기로 꽂힘
 //--------------------------------------------------------------------------------------
 struct VS_INPUT
 {
-	float4 Pos : POSITION; // 정점 데이터에서 위치 정보를 가져와서 Pos에 대입
-	float2 Tex : TEXCOORD0;
+	half4 Pos : POSITION; // 정점 데이터에서 위치 정보를 가져와서 Pos에 대입
+	half2 Tex : TEXCOORD0;
 };
 
 struct VS_OUT
 {
-	float4 Pos : SV_POSITION; // 투영공간으로 변환된 위치 정보
-	float2 Tex : TEXCOORD0;
+	half4 Pos : SV_POSITION; // 투영공간으로 변환된 위치 정보
+	half2 Tex : TEXCOORD0;
 };
 
 //--------------------------------------------------------------------------------------

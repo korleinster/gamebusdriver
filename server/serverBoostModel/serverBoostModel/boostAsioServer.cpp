@@ -74,6 +74,11 @@ void player_session::Init()
 {
 	m_connect_state = true;
 
+	/*
+		근처 플레이어에게, 현재 플레이어의 입장을 알리며
+		view list 같은 곳에서도 추가하자 ~ !!
+	*/
+
 	m_recv_packet();
 }
 
@@ -91,8 +96,8 @@ void player_session::m_recv_packet()
 			m_socket.close();
 
 			/*
-				모든 플레이어에게, 현재 플레이어의 퇴장을 알리며
-				view list 같은 곳에서도 빼주자~ !!
+				근처 플레이어에게, 현재 플레이어의 퇴장을 알리며
+				view list 같은 곳에서도 빼주자 ~ !!
 			*/
 
 			return;

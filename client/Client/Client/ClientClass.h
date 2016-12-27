@@ -46,4 +46,8 @@ private:
 	unsigned int m_recvbytes{ 0 };
 	unsigned int m_sendbytes{ 0 };
 	bool m_recvdelayed{ 0 };
+
+	// 실제 ingame에 사용할 멤버 변수 데이터
+	player_data m_player;
+	unordered_map<UINT, player_data> m_other_players;
 };

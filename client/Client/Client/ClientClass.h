@@ -9,8 +9,11 @@ public:
 	void Init(const HWND&);
 
 	void ProcessWinMessage(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	void sendPacket(const BYTE data_size, const BYTE type, BYTE* data_start_pointer);
 	void sendPacket_TEST();
 
+	unordered_map<UINT, player_data>* getOtherPlayers() { return &m_other_players; }
+	player_data* getPlayerData(){ return &m_player; }
 private:
 	// member Function
 	void inputServerIP();
@@ -23,8 +26,6 @@ private:
 
 	SOCKET* getServerSocket();
 	void processPacket();
-
-	void sendPacket(const BYTE data_size, const BYTE type, BYTE* data_start_pointer);
 
 	// 윈도우 창 관련 멤버 변수
 	WNDCLASS m_wndclass;

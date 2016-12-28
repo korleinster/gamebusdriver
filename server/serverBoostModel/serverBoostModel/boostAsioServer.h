@@ -21,11 +21,11 @@ public:
 	void Init();
 
 	bool get_current_connect_state() { return m_connect_state; }
+	void send_packet(Packet *packet);
 private:
 	// Function
 	void m_recv_packet();
 	void m_process_packet(const unsigned int& id, Packet buf[]);
-	void send_packet(const unsigned int& id, Packet *packet);
 
 	// 통신용 변수
 	tcp::socket		m_socket;

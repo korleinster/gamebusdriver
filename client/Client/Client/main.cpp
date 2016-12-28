@@ -2,6 +2,12 @@
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
+// 그리기 위한 변수 - WM_PAINT
+int view_range{ 150 };
+int value{ 10 };
+// ------------------------------
+
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 	
 	// 윈도우 클래스 등록
@@ -60,6 +66,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 // 윈도우 프로시저
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+
+	// 그리기 위한 변수 - WM_PAINT
+	HDC hdc;
+	PAINTSTRUCT ps;
+	// ------------------------------
+
 	switch (uMsg)
 	{
 	case WM_CREATE:
@@ -80,13 +92,50 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 			PostQuitMessage(0);
 			return 0;
 			break;
-		default:	// 디버깅 모드에서 예외되는 키를 입력할 경우, 서버와 기본 연결 테스트 통신을 하게 된다.
+		case VK_RIGHT:
+			g_client.getPlayerData()->pos.x += value;
+			break;
+		case VK_LEFT:
+			g_client.getPlayerData()->pos.x -= value;
+			break;
+		case VK_DOWN:
+			g_client.getPlayerData()->pos.y += value;
+			break;
+		case VK_UP:
+			g_client.getPlayerData()->pos.y -= value;
+			break;
+
+		default:
 #ifdef _DEBUG
-			g_client.sendPacket_TEST();
+			// 디버깅 모드에서 예외되는 키를 입력할 경우, 서버와 기본 연결 테스트 통신을 하게 된다.
+			//g_client.sendPacket_TEST();
 #endif // _DEBUG
 			return 0;
 			break;
 		}
+		InvalidateRect(hWnd, NULL, TRUE);
+
+		// 1. 작업해야 하는 것들, 맨 처음 클라이언트 통신 후 주고받아야 하는 데이터들 주고 받기
+		// 2. 다른 플레이어 데이터 벡터에 저장하기
+		// 3. 시야 범위 내에 있는 플레이어 노출시키기
+		{
+			player_data temp;
+			temp = *(g_client.getPlayerData());
+			g_client.sendPacket(sizeof(player_data), KEYINPUT, reinterpret_cast<BYTE*>(&temp));
+		}
+		break;
+
+	case WM_PAINT:
+		hdc = BeginPaint(hWnd, &ps);
+		
+		Ellipse(hdc, g_client.getPlayerData()->pos.x - view_range, g_client.getPlayerData()->pos.y - view_range, g_client.getPlayerData()->pos.x + view_range, g_client.getPlayerData()->pos.y + view_range);
+		Ellipse(hdc, g_client.getPlayerData()->pos.x - value, g_client.getPlayerData()->pos.y - value, g_client.getPlayerData()->pos.x + value, g_client.getPlayerData()->pos.y + value);
+
+		for (auto players : *(g_client.getOtherPlayers())) {
+			Ellipse(hdc, players.second.pos.x - value, players.second.pos.y - value, players.second.pos.x + value, players.second.pos.y + value);
+		}
+
+		EndPaint(hWnd, &ps);
 		break;
 
 	case WM_SOCKET:

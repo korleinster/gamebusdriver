@@ -15,18 +15,19 @@
 // process protocol
 enum PacketProtocolType {
 	TEST = 1,		// 받은 패킷 그대로 돌려주기용. ( 보낸 내용이 그대로 돌아오지 않는다면, 클라나 서버에 문제가 있다는 뜻 )
-	DUMMY_CLIENT,	// dummy client 용 프로토콜
+	//DUMMY_CLIENT,	// dummy client 용 프로토콜
+	INIT_CLIENT,
+	PLAYER_DISCONNECTED,
 	KEYINPUT,		// 클라이언트에서 키 입력을 받았을 경우
-
-};	
+};
 
 using Packet = unsigned char;
 
 // 캐릭터 기본 정보 struct
 /// 기본 좌표계
 using position = struct Position {
-	float x{ 0 };
-	float y{ 0 };
+	float x{ 400 };
+	float y{ 300 };
 };
 /// 플레이어 전체 정보
 using player_data = struct Player_data {

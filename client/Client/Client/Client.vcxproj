@@ -149,6 +149,7 @@
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\server\serverBoostModel\serverBoostModel\protocol.h" />
     <ClInclude Include="ClientClass.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>

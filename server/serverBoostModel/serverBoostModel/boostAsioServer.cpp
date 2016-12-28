@@ -68,16 +68,52 @@ void boostAsioServer::acceptThread()
 }
 
 
-// player_session class
+// player_session class ------------------------------------------------------------------------------------------------------------------------
 
 void player_session::Init()
 {
 	m_connect_state = true;
 
+	// 기본 초기화 정보 보내기
+	Packet temp_buf[MAX_BUF_SIZE];
+
+	temp_buf[0] = sizeof(player_data) + 2;
+	temp_buf[1] = INIT_CLIENT;
+
+	m_player_data.id = m_id;
+	m_player_data.pos.x = 400;
+	m_player_data.pos.y = 300;
+
+	memcpy(&temp_buf[2], &m_player_data, temp_buf[0]);
+	send_packet(temp_buf);
+	
 	/*
 		근처 플레이어에게, 현재 플레이어의 입장을 알리며
 		view list 같은 곳에서도 추가하자 ~ !!
 	*/
+
+	temp_buf[1] = KEYINPUT;
+	
+	// 다른 애들 정보를 이 플레이어 한테 보내기 ( 왠지 모르게 작동을 안한다....??? ) 심지어 cout 도 출력이 안됨... 뭐가 문제인지;;
+	for (auto players : g_clients)
+	{
+		if (DISCONNECTED == players->m_connect_state) { continue; }
+		if (m_id == players->m_id) { continue; }
+
+		memcpy(&temp_buf[2], &(players->m_player_data), temp_buf[0] - 2);
+		cout << "플레이어 " << players->m_player_data.id << " 정보를, 플레이어 " << m_id << " 에게 보냈다.\n";
+		send_packet(temp_buf);
+	}
+
+	// 현재 접속한 애한테 다른 플레이어 정보 보내기
+	memcpy(&temp_buf[2], &m_player_data, temp_buf[0]);
+	for (auto players : g_clients)
+	{
+		if (DISCONNECTED == players->m_connect_state) { continue; }
+		if (m_id == players->m_id) { continue; }
+
+		players->send_packet(temp_buf);
+	}
 
 	m_recv_packet();
 }
@@ -95,10 +131,23 @@ void player_session::m_recv_packet()
 			m_socket.shutdown(m_socket.shutdown_both);
 			m_socket.close();
 
+			m_connect_state = false;
+
 			/*
 				근처 플레이어에게, 현재 플레이어의 퇴장을 알리며
 				view list 같은 곳에서도 빼주자 ~ !!
 			*/
+
+			Packet temp_buf[MAX_BUF_SIZE] = { sizeof(player_data) + 2, PLAYER_DISCONNECTED };
+			memcpy(&temp_buf[2], &m_player_data, temp_buf[0]);
+
+			for (auto players : g_clients)
+			{
+				if (DISCONNECTED == players->m_connect_state) { continue; }
+				if (m_id == players->m_id) { continue; }
+
+				players->send_packet(temp_buf);
+			}
 
 			return;
 		}
@@ -137,7 +186,7 @@ void player_session::m_recv_packet()
 	});
 }
 
-void player_session::send_packet(const unsigned int& id, Packet *packet)
+void player_session::send_packet(Packet *packet)
 {
 	int packet_size = packet[0];
 	Packet *sendBuf = new Packet[packet_size];
@@ -150,4 +199,41 @@ void player_session::send_packet(const unsigned int& id, Packet *packet)
 			delete[] sendBuf;
 		}
 	});
+}
+
+void player_session::m_process_packet(const unsigned int& id, Packet buf[])
+{
+	// packet[0] = packet size		> 0번째 자리에는 무조건, 패킷의 크기가 들어가야만 한다.
+	// packet[1] = type				> 1번째 자리에는 현재 패킷이 무슨 패킷인지 속성을 정해주는 값이다.
+	// packet[...] = data			> 2번째 부터는 속성에 맞는 순대로 처리를 해준다.
+
+	// buf[1] 번째의 속성으로 분류를 한 뒤에, 내부에서 2번째 부터 데이터를 처리하기 시작한다.
+
+	{
+		switch (buf[1])
+		{
+		case TEST:
+			// 받은 패킷을 그대로 돌려준다.
+			cout << "Client No. [ " << m_id << " ] TEST Packet Recived !!\n";
+			printf("buf[0] = %d, buf[1] = %d, buf[2] = %d\n\n", buf[0], buf[1], buf[2]);
+			g_clients[id]->send_packet(buf);
+			break;
+
+		case KEYINPUT:
+			g_clients[id]->m_player_data.pos = reinterpret_cast<player_data*>(&buf[2])->pos;
+
+			// 필요한 애들한테 이동 정보를 뿌려주자
+			for (auto players : g_clients)
+			{
+				if (DISCONNECTED == players->m_connect_state) { continue; }
+				if (id == players->m_id) { continue; }
+
+				players->send_packet(buf);
+			}
+
+			break;
+		default:
+			break;
+		}
+	}
 }

@@ -44,6 +44,9 @@
     <ClInclude Include="ClientClass.h">
       <Filter>Source Files\Client_Main_Class</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\server\serverBoostModel\serverBoostModel\protocol.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ServerIP.txt">

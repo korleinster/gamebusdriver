@@ -1,3 +1,4 @@
+// boost asio 설치시 참고 내역 --->	http://cattool.tistory.com/94
 // 디렉토리 파일 위치				..\boost_1_62_0\boost_1_62_0;				%(AdditionalIncludeDirectories)
 // 링커 추가 라이브러리 디렉토리	..\boost_1_62_0\boost_1_62_0\stage\lib;		%(AdditionalLibraryDirectories)
 

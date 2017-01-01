@@ -264,9 +264,6 @@
     <ClInclude Include="..\Code\AniBuffer.h">
       <Filter>97.Resources\01.Buffer\5.Mesh\DynamicMesh\AnimationBuffer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Headers\vld.h">
-      <Filter>98.Header</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\MainApp.cpp">

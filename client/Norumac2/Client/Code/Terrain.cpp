@@ -48,11 +48,11 @@ HRESULT CTerrain::Initialize(void)
 	m_pVerTex = new VTXTEX[VERTEXCOUNTX * VERTEXCOUNTZ];
 
 	//m_pGrapicDevice->m_pDeviceContext->GetData
-	D3D11_MAPPED_SUBRESOURCE MapResource;
+	/*D3D11_MAPPED_SUBRESOURCE MapResource;
 
 	m_pGrapicDevice->m_pDeviceContext->Map(m_pTerrainBuffer->m_VertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &MapResource);
 	memcpy(m_pVerTex,(VTXTEX*)MapResource.pData, sizeof(VTXTEX) * (VERTEXCOUNTX * VERTEXCOUNTZ));
-	m_pGrapicDevice->m_pDeviceContext->Unmap(m_pTerrainBuffer->m_VertexBuffer, 0);
+	m_pGrapicDevice->m_pDeviceContext->Unmap(m_pTerrainBuffer->m_VertexBuffer, 0);*/
 
 	return S_OK;
 }

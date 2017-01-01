@@ -13,6 +13,7 @@
 #include "TerrainCol.h"
 #include "Device.h"
 #include "Camera.h"
+#include "DynamicMesh.h"
 
 
 
@@ -43,28 +44,55 @@ HRESULT CPlayer::Initialize(void)
 
 int CPlayer::Update(void)
 {
-	m_pInfo->m_fAngle[ANGLE_X] = D3DX_PI / 2 * -1.f;//;D3DXToRadian(-90);
-	m_pInfo->m_vScale = D3DXVECTOR3(0.1f, 0.1f, 0.1f);
+	if (m_pBuffer->m_bAniEnd == true)
+		m_pBuffer->m_bAniEnd = false;
+	//m_pInfo->m_fAngle[ANGLE_X] = D3DX_PI / 2 * -1.f;//;D3DXToRadian(-90);
+	//m_pInfo->m_vScale = D3DXVECTOR3(0.00001f, 0.00001f, 0.00001f);
+
 	CObj::Update();
 	return 0;
 }
 
 void CPlayer::Render(void)
 {
+	
+
+	//vector<Animation*>::iterator iter = m_pBuffer->m_vecAni.begin();
+
 	ConstantBuffer cb;
 	D3DXMatrixTranspose(&cb.matWorld, &m_pInfo->m_matWorld);
 	D3DXMatrixTranspose(&cb.matView, &CCamera::GetInstance()->m_matView);
 	D3DXMatrixTranspose(&cb.matProjection, &CCamera::GetInstance()->m_matProj);
-	m_pGrapicDevice->m_pDeviceContext->UpdateSubresource(m_pBuffer->m_ConstantBuffer, 0, NULL, &cb, 0, 0);
 
-	m_pGrapicDevice->m_pDeviceContext->VSSetShader(m_pVertexShader->m_pVertexShader, NULL, 0);
-	m_pGrapicDevice->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pBuffer->m_ConstantBuffer);
-	//////////////////
-	m_pGrapicDevice->m_pDeviceContext->PSSetShader(m_pPixelShader->m_pPixelShader, NULL, 0);
-	m_pGrapicDevice->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
-	m_pGrapicDevice->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
+	m_pBuffer->PlayAnimation(0,m_pVertexShader,m_pPixelShader, &cb, m_pTexture);
+
+	//m_pGrapicDevice->m_pDeviceContext->UpdateSubresource((*iter)->pBoneMatrixBuffer, 0, NULL, &cb, 0, 0);
+
+	//m_pGrapicDevice->m_pDeviceContext->VSSetShader(m_pVertexShader->m_pVertexShader, NULL, 0);
+	//m_pGrapicDevice->m_pDeviceContext->VSSetConstantBuffers(0, 1, &(*iter)->pBoneMatrixBuffer);
+	////////////////////
+	//m_pGrapicDevice->m_pDeviceContext->PSSetShader(m_pPixelShader->m_pPixelShader, NULL, 0);
+	//m_pGrapicDevice->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
+	//m_pGrapicDevice->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear)
 	
-	m_pBuffer->Render();
+	//m_pBuffer->Render();
+
+
+	//ConstantBuffer cb;
+	//D3DXMatrixTranspose(&cb.matWorld, &m_pInfo->m_matWorld);
+	//D3DXMatrixTranspose(&cb.matView, &CCamera::GetInstance()->m_matView);
+	//D3DXMatrixTranspose(&cb.matProjection, &CCamera::GetInstance()->m_matProj);
+	//m_pGrapicDevice->m_pDeviceContext->UpdateSubresource(m_pBuffer->m_ConstantBuffer, 0, NULL, &cb, 0, 0);
+
+	//m_pGrapicDevice->m_pDeviceContext->VSSetShader(m_pVertexShader->m_pVertexShader, NULL, 0);
+	//m_pGrapicDevice->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pBuffer->m_ConstantBuffer);
+	////////////////////
+	//m_pGrapicDevice->m_pDeviceContext->PSSetShader(m_pPixelShader->m_pPixelShader, NULL, 0);
+	//m_pGrapicDevice->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
+	//m_pGrapicDevice->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
+
+	//m_pBuffer->Render();
+
 }
 
 CPlayer * CPlayer::Create(void)
@@ -83,8 +111,15 @@ void CPlayer::Release(void)
 HRESULT CPlayer::AddComponent(void)
 {
 	CComponent* pComponent = NULL;
-	char cModelPath[MAX_PATH] = "../Resource/Mesh/windmill.FBX";
-	m_pBuffer = CStaticMesh::Create(cModelPath);
+	char cModelPath[MAX_PATH] = "../Resource/";
+
+	//////////////임시 다이나믹 ///////////////
+
+	vecAniName.push_back("bird");
+
+	///////////////////////////////////////////
+
+	m_pBuffer = CDynamicMesh::Create(cModelPath,vecAniName);
 	pComponent = m_pBuffer;
 	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Buffer", pComponent));
 
@@ -94,7 +129,7 @@ HRESULT CPlayer::AddComponent(void)
 		return E_FAIL;
 	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Info", pComponent));
 
-	m_pTexture = CTexture::Create(L"../Resource/MeshImage/windmill.png");
+	m_pTexture = CTexture::Create(L"../Resource/bird.png");
 	pComponent = m_pTexture;
 	if (pComponent == NULL)
 		return E_FAIL;

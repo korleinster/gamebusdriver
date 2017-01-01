@@ -54,8 +54,6 @@ int CFlower::Update(void)
 	D3DXMATRIX		matBill;
 	D3DXMatrixIdentity(&matBill);
 
-
-
 	matBill = CCamera::GetInstance()->m_matView;
 	ZeroMemory(&matBill.m[3][0], sizeof(D3DXVECTOR3));
 

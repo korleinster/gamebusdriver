@@ -88,3 +88,21 @@ void CVIBuffer::CreateRasterizerState()
 	tRasterizerDesc.FillMode = D3D11_FILL_SOLID;
 	pGrapicDevice->m_pDevice->CreateRasterizerState(&tRasterizerDesc, &m_pRasterizerState);
 }
+
+
+void VertexAni::AddBone(int _iIdx, float _fWeight)
+{
+	for (int i = 0; i < BONE_NUM; ++i)
+	{
+		if (fBoneWeight[i] <= 0.0f)
+		{
+			iBoneIdx[i] = _iIdx;
+			fBoneWeight[i] = _fWeight;
+			return;
+		}
+	}
+
+	fBoneWeight[0] += _fWeight;
+}
+
+

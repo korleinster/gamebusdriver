@@ -124,6 +124,12 @@
     <Filter Include="04.Manager\07.SoundMgr">
       <UniqueIdentifier>{7806e50f-6e83-4b77-bdb2-0b38fc2b0464}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97.Resources\01.Buffer\5.Mesh\DynamicMesh\FbxParser">
+      <UniqueIdentifier>{b2b743ce-8a4b-4998-a5c0-417ae6f73eff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Resources\01.Buffer\5.Mesh\DynamicMesh\AnimationBuffer">
+      <UniqueIdentifier>{c62de12e-6dde-4abc-af96-3d81921fb76c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -249,6 +255,18 @@
     <ClInclude Include="..\Code\VIBuffer.h">
       <Filter>97.Resources\01.Buffer</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\DynamicMesh.h">
+      <Filter>97.Resources\01.Buffer\5.Mesh\DynamicMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\FbxParser.h">
+      <Filter>97.Resources\01.Buffer\5.Mesh\DynamicMesh\FbxParser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\AniBuffer.h">
+      <Filter>97.Resources\01.Buffer\5.Mesh\DynamicMesh\AnimationBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Headers\vld.h">
+      <Filter>98.Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\MainApp.cpp">
@@ -349,6 +367,15 @@
     </ClCompile>
     <ClCompile Include="..\Code\VIBuffer.cpp">
       <Filter>97.Resources\01.Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\DynamicMesh.cpp">
+      <Filter>97.Resources\01.Buffer\5.Mesh\DynamicMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\FbxParser.cpp">
+      <Filter>97.Resources\01.Buffer\5.Mesh\DynamicMesh\FbxParser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\AniBuffer.cpp">
+      <Filter>97.Resources\01.Buffer\5.Mesh\DynamicMesh\AnimationBuffer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

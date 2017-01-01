@@ -5,6 +5,7 @@ class CShader;
 class CVIBuffer;
 class CTexture;
 class CTerrainCol;
+class CDynamicMesh;
 class CPlayer :
 	public CObj
 {
@@ -13,12 +14,13 @@ public:
 	virtual ~CPlayer();
 
 private:
-	CVIBuffer*		m_pBuffer;
+	CDynamicMesh*		m_pBuffer;
 	CShader*		m_pVertexShader;
 	CShader*		m_pPixelShader;
 	CTexture*		m_pTexture;
 	VTXTEX*			m_pVerTex;
 	CTerrainCol*	m_pTerrainCol;
+
 
 public:
 	virtual HRESULT Initialize(void);

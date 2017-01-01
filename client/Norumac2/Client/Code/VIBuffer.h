@@ -2,6 +2,29 @@
 #include "Resources.h"
 #include "Include.h"
 
+const WORD BONE_NUM = 8;
+const WORD BONE_MATRIX_NUM = 128;
+
+struct VertexAni
+{
+	D3DXVECTOR3		vPos;
+	D3DXVECTOR3		vNormal;
+	D3DXVECTOR2		vTextureUV;
+
+	int				iBoneIdx[BONE_NUM];
+	float			fBoneWeight[BONE_NUM];
+
+	VertexAni() {}
+	VertexAni(D3DXVECTOR3 _vPos, D3DXVECTOR3 _vNormal)
+		: vPos(_vPos), vNormal(_vNormal) {}
+	VertexAni(D3DXVECTOR3 _vPos, D3DXVECTOR3 _vNormal, D3DXVECTOR2 _vTextureUV)
+		: vPos(_vPos), vNormal(_vNormal), vTextureUV(_vTextureUV) {}
+
+	void SetPos(float _x, float _y, float _z) { vPos.x = _x; vPos.y = _y; vPos.z = _z; }
+	void SetNormal(float _x, float _y, float _z) { vNormal.x = _x; vNormal.y = _y; vNormal.z = _z; }
+	void AddBone(int _iIdx, float _fWeight);
+};
+
 
 class CVIBuffer :
 	public CResources

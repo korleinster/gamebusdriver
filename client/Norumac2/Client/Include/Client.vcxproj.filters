@@ -130,6 +130,9 @@
     <Filter Include="97.Resources\01.Buffer\5.Mesh\DynamicMesh\AnimationBuffer">
       <UniqueIdentifier>{c62de12e-6dde-4abc-af96-3d81921fb76c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="96.Utility\03.RenderTarget">
+      <UniqueIdentifier>{08bbd010-3b9b-4b9f-84e5-af3820e90e4d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -264,6 +267,9 @@
     <ClInclude Include="..\Code\AniBuffer.h">
       <Filter>97.Resources\01.Buffer\5.Mesh\DynamicMesh\AnimationBuffer</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\RenderTarget.h">
+      <Filter>96.Utility\03.RenderTarget</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\MainApp.cpp">
@@ -373,6 +379,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\AniBuffer.cpp">
       <Filter>97.Resources\01.Buffer\5.Mesh\DynamicMesh\AnimationBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\RenderTaget.cpp">
+      <Filter>96.Utility\03.RenderTarget</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

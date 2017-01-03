@@ -44,4 +44,14 @@ typedef struct tagIndex32
 }INDEX32;
 
 
-
+typedef struct tagLightInfo
+{
+	LIGHT_TYPE eLightType;
+	D3DXVECTOR3 vPosition;
+	D3DXVECTOR3 vDirection;
+	float fRange;
+	float fLength;
+	float fOuterAngle;
+	float fInnerAngle;
+	D3DXVECTOR3 vColor;
+} LIGHTINFO;

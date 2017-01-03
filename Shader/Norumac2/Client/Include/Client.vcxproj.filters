@@ -133,8 +133,14 @@
     <Filter Include="96.Utility\03.RenderTarget">
       <UniqueIdentifier>{0fff0a72-ad9b-4284-abea-d27980b49262}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Manager\08.TagetMgr">
+    <Filter Include="04.Manager\09.LightMgr">
+      <UniqueIdentifier>{672ef1e0-ae75-4606-ad21-8d7d3b2d4a66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Manager\08.RenderTargetMgr">
       <UniqueIdentifier>{798d24a3-3a5c-4e54-9e0b-81b97f6ad979}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Manager\09.LightMgr\Light">
+      <UniqueIdentifier>{dbbbf780-adf5-4de8-8bb8-e4722b660334}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -273,6 +279,12 @@
     <ClInclude Include="..\Code\RenderTarget.h">
       <Filter>96.Utility\03.RenderTarget</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\LightMgr.h">
+      <Filter>04.Manager\09.LightMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Light.h">
+      <Filter>04.Manager\09.LightMgr\Light</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\MainApp.cpp">
@@ -383,8 +395,14 @@
     <ClCompile Include="..\Code\AniBuffer.cpp">
       <Filter>97.Resources\01.Buffer\5.Mesh\DynamicMesh\AnimationBuffer</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\RenderTaget.cpp">
+    <ClCompile Include="..\Code\RenderTarget.cpp">
       <Filter>96.Utility\03.RenderTarget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\LightMgr.cpp">
+      <Filter>04.Manager\09.LightMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Light.cpp">
+      <Filter>04.Manager\09.LightMgr\Light</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

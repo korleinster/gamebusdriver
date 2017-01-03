@@ -158,6 +158,8 @@
     <ClInclude Include="..\Code\Flower.h" />
     <ClInclude Include="..\Code\Info.h" />
     <ClInclude Include="..\Code\Input.h" />
+    <ClInclude Include="..\Code\Light.h" />
+    <ClInclude Include="..\Code\LightMgr.h" />
     <ClInclude Include="..\Code\Logo.h" />
     <ClInclude Include="..\Code\MainApp.h" />
     <ClInclude Include="..\Code\Mesh.h" />
@@ -204,6 +206,8 @@
     <ClCompile Include="..\Code\Flower.cpp" />
     <ClCompile Include="..\Code\Info.cpp" />
     <ClCompile Include="..\Code\Input.cpp" />
+    <ClCompile Include="..\Code\Light.cpp" />
+    <ClCompile Include="..\Code\LightMgr.cpp" />
     <ClCompile Include="..\Code\Logo.cpp" />
     <ClCompile Include="..\Code\MainApp.cpp" />
     <ClCompile Include="..\Code\Mesh.cpp" />
@@ -214,7 +218,7 @@
     <ClCompile Include="..\Code\RcTerrain.cpp" />
     <ClCompile Include="..\Code\RcTex.cpp" />
     <ClCompile Include="..\Code\RenderMgr.cpp" />
-    <ClCompile Include="..\Code\RenderTaget.cpp" />
+    <ClCompile Include="..\Code\RenderTarget.cpp" />
     <ClCompile Include="..\Code\Resources.cpp" />
     <ClCompile Include="..\Code\ResourcesMgr.cpp" />
     <ClCompile Include="..\Code\Scene.cpp" />

@@ -139,9 +139,6 @@
     <Filter Include="04.Manager\08.RenderTargetMgr">
       <UniqueIdentifier>{798d24a3-3a5c-4e54-9e0b-81b97f6ad979}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Manager\09.LightMgr\Light">
-      <UniqueIdentifier>{dbbbf780-adf5-4de8-8bb8-e4722b660334}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -282,9 +279,6 @@
     <ClInclude Include="..\Code\LightMgr.h">
       <Filter>04.Manager\09.LightMgr</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\Light.h">
-      <Filter>04.Manager\09.LightMgr\Light</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\MainApp.cpp">
@@ -401,9 +395,6 @@
     <ClCompile Include="..\Code\LightMgr.cpp">
       <Filter>04.Manager\09.LightMgr</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\Light.cpp">
-      <Filter>04.Manager\09.LightMgr\Light</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -420,6 +411,24 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\ShaderCode\Shader.fx">
+      <Filter>97.Resources\03.Shader\ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderCode\common.fx">
+      <Filter>97.Resources\03.Shader\ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderCode\DeferredShading.fx">
+      <Filter>97.Resources\03.Shader\ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderCode\DirLight.fx">
+      <Filter>97.Resources\03.Shader\ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderCode\GBufferVis.fx">
+      <Filter>97.Resources\03.Shader\ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderCode\PointLight.fx">
+      <Filter>97.Resources\03.Shader\ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderCode\SpotLight.fx">
       <Filter>97.Resources\03.Shader\ShaderCode</Filter>
     </FxCompile>
   </ItemGroup>

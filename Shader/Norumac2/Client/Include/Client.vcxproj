@@ -98,6 +98,12 @@
       <AdditionalDependencies>dinput8.lib;d3d11.lib;d3dcompiler.lib;d3dx11d.lib;d3dx9d.lib;dxerr.lib;dxguid.lib;winmm.lib;comctl32.lib;DirectXTex.lib;libfbxsdk-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../Library</AdditionalLibraryDirectories>
     </Link>
+    <FxCompile>
+      <ShaderType>Effect</ShaderType>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -158,7 +164,6 @@
     <ClInclude Include="..\Code\Flower.h" />
     <ClInclude Include="..\Code\Info.h" />
     <ClInclude Include="..\Code\Input.h" />
-    <ClInclude Include="..\Code\Light.h" />
     <ClInclude Include="..\Code\LightMgr.h" />
     <ClInclude Include="..\Code\Logo.h" />
     <ClInclude Include="..\Code\MainApp.h" />
@@ -206,7 +211,6 @@
     <ClCompile Include="..\Code\Flower.cpp" />
     <ClCompile Include="..\Code\Info.cpp" />
     <ClCompile Include="..\Code\Input.cpp" />
-    <ClCompile Include="..\Code\Light.cpp" />
     <ClCompile Include="..\Code\LightMgr.cpp" />
     <ClCompile Include="..\Code\Logo.cpp" />
     <ClCompile Include="..\Code\MainApp.cpp" />
@@ -248,9 +252,15 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\ShaderCode\common.fx" />
+    <FxCompile Include="..\ShaderCode\DeferredShading.fx" />
+    <FxCompile Include="..\ShaderCode\DirLight.fx" />
+    <FxCompile Include="..\ShaderCode\GBufferVis.fx" />
+    <FxCompile Include="..\ShaderCode\PointLight.fx" />
     <FxCompile Include="..\ShaderCode\Shader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">VS</EntryPointName>
     </FxCompile>
+    <FxCompile Include="..\ShaderCode\SpotLight.fx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

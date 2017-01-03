@@ -46,8 +46,8 @@ int CPlayer::Update(void)
 {
 	if (m_pBuffer->m_bAniEnd == true)
 		m_pBuffer->m_bAniEnd = false;
-	//m_pInfo->m_fAngle[ANGLE_X] = D3DX_PI / 2 * -1.f;//;D3DXToRadian(-90);
-	//m_pInfo->m_vScale = D3DXVECTOR3(0.00001f, 0.00001f, 0.00001f);
+	m_pInfo->m_fAngle[ANGLE_X] = D3DX_PI / 2 * -1.f;//;D3DXToRadian(-90);
+	m_pInfo->m_vScale = D3DXVECTOR3(0.01f, 0.01f, 0.01f);
 
 	CObj::Update();
 	return 0;
@@ -135,8 +135,8 @@ HRESULT CPlayer::AddComponent(void)
 		return E_FAIL;
 	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Texture", pComponent));
 
-	m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"VS");
-	m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"PS");;
+	m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"VS_ANI");
+	m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"PS");
 
 
 	return S_OK;

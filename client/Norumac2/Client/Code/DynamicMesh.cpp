@@ -260,10 +260,10 @@ void CDynamicMesh::PlayAnimation(int _iIdx, CShader* pVertexShader, CShader* pPi
 
 	if (m_vecAni[_iIdx]->pBoneMatrixBuffer != NULL)
 	{
-		CDevice::GetInstance()->m_pDeviceContext->UpdateSubresource(m_vecAni[_iIdx]->pBoneMatrixBuffer, 0, NULL, &cb, 0, 0);
+		//CDevice::GetInstance()->m_pDeviceContext->UpdateSubresource(m_vecAni[_iIdx]->pBoneMatrixBuffer, 0, NULL, &cb, 0, 0);
 		CDevice::GetInstance()->m_pDeviceContext->VSSetShader(pVertexShader->m_pVertexShader, NULL, 0);
 		CDevice::GetInstance()->m_pDeviceContext->VSSetConstantBuffers(
-			VS_SLOT_BONE_MATRIX, 1, &m_vecAni[_iIdx]->pBoneMatrixBuffer);
+			0, 1, &m_vecAni[_iIdx]->pBoneMatrixBuffer);
 		CDevice::GetInstance()->m_pDeviceContext->PSSetShader(pPixelShader->m_pPixelShader, NULL, 0);
 		CDevice::GetInstance()->m_pDeviceContext->PSSetShaderResources(0, 1, &pTexture->m_pTextureRV);
 		CDevice::GetInstance()->m_pDeviceContext->PSSetSamplers(0, 1, &pTexture->m_pSamplerLinear);

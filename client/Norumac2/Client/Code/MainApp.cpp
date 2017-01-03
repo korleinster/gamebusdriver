@@ -76,24 +76,35 @@ HRESULT CMainApp::Initialize(void)
 	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"VS", L"../ShaderCode/Shader.fx", "VS", "vs_5_0", SHADER_VS);
 	if (FAILED(hr))
 	{
-		MessageBox(NULL, L"System Message", L"Vertex Shader Create Failed", MB_OK);
+		MessageBox(NULL, L"System Message", L"Vertex Shader(Default) Create Failed", MB_OK);
 		return hr;
 	}
 
 	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"PS", L"../ShaderCode/Shader.fx", "PS", "ps_5_0", SHADER_PS);
 	if (FAILED(hr))
 	{
-		MessageBox(NULL, L"System Message", L"PIXEL Shader Create Failed", MB_OK);
+		MessageBox(NULL, L"System Message", L"PIXEL Shader(Default) Create Failed", MB_OK);
 		return hr;
 	}
+	//////////////////////////////////////////////////////////////////////////
 
 	//로고용
 	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"VS_Logo", L"../ShaderCode/Shader.fx", "VS_Logo", "vs_5_0", SHADER_VS);
 	if (FAILED(hr))
 	{
-		MessageBox(NULL, L"System Message", L"Vertex Shader Create Failed", MB_OK);
+		MessageBox(NULL, L"System Message", L"Vertex Shader(LOGO) Create Failed", MB_OK);
 		return hr;
 	}
+	/////////////////////////////////////////////////////////////////////////
+
+	//다이나믹 매쉬용
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"VS_ANI", L"../ShaderCode/Shader.fx", "VS_ANI", "vs_5_0", SHADER_VS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"Vertex Shader(Ani) Create Failed", MB_OK);
+		return hr;
+	}
+	////////////////////////////////////////////////////////////////////////
 
 	hr = CInput::GetInstance()->InitInputDevice(g_hInst, g_hWnd);
 	if (FAILED(hr))

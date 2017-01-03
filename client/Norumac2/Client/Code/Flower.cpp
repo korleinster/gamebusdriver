@@ -62,7 +62,7 @@ int CFlower::Update(void)
 	CObj::Update();
 	m_pInfo->m_matWorld = matBill * m_pInfo->m_matWorld;
 
-	cout << m_pInfo->m_vPos.x << "/" << m_pInfo->m_vPos.y << "/" << m_pInfo->m_vPos.z << endl;
+	//cout << m_pInfo->m_vPos.x << "/" << m_pInfo->m_vPos.y << "/" << m_pInfo->m_vPos.z << endl;
 	return 0;
 }
 

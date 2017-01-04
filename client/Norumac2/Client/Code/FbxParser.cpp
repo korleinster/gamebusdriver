@@ -87,14 +87,15 @@ void CFbxParser::ParsingVertex(FbxNode* _pNode, Animation* _pAnimation)
 
 					int Index = _pAnimation->mapIndexByName[BoneName];
 
-					FbxAMatrix LinkBoneMtx;
-					FbxAMatrix TransBoneMtx;
-					FbxAMatrix ResultMatrix;
+					FbxAMatrix LinkBoneMtx;//연결 본매트릭스
+					FbxAMatrix TransBoneMtx;//이동 본매트릭스
+					FbxAMatrix ResultMatrix;//최종 본매트릭스
 
 					pCluster->GetTransformLinkMatrix(LinkBoneMtx);
 					pCluster->GetTransformMatrix(TransBoneMtx);
 
-					ResultMatrix = LinkBoneMtx.Inverse() *  TransBoneMtx;
+
+					ResultMatrix = LinkBoneMtx.Inverse() *  TransBoneMtx; //연결 본매트릭스를 역으로 만들고 이를 이동 본과 곱한다.
 
 					for (int m = 0; m < 4; ++m)
 						for (int n = 0; n < 4; ++n)

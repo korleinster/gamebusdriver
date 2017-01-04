@@ -8,8 +8,12 @@ cbuffer ConstantBuffer : register( b0 ) //컨스턴트 버퍼
 	matrix World;
 	matrix View;
 	matrix Projection;
-	row_major matrix Bone[MAX];
 }
+
+cbuffer cbBoneWorldMatrix : register( b1 )
+{
+	row_major matrix Bone[MAX];
+};
 
 struct VS_INPUT
 {

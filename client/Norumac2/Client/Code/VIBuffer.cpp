@@ -100,6 +100,7 @@ void VertexAni::AddBone(int _iIdx, float _fWeight)
 			fBoneWeight[i] = _fWeight;
 			return;
 		}
+		
 	}
 
 	fBoneWeight[0] += _fWeight;

@@ -47,7 +47,7 @@ HRESULT CMainApp::Initialize(void)
 {
 	srand(UINT(time(NULL)));
 
-	m_pInfo = CInfo::Create(D3DXVECTOR3(0,0,1));
+	//m_pInfo = CInfo::Create(D3DXVECTOR3(0,0,1));
 
 	CDevice::GetInstance()->CreateDevice();
 	m_pGrapicDevcie = CDevice::GetInstance();

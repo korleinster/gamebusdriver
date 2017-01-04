@@ -14,7 +14,7 @@ public:
 	virtual ~CPlayer();
 
 private:
-	CDynamicMesh*		m_pBuffer;
+	CVIBuffer*		m_pBuffer;
 	CShader*		m_pVertexShader;
 	CShader*		m_pPixelShader;
 	CTexture*		m_pTexture;
@@ -26,6 +26,7 @@ public:
 	virtual HRESULT Initialize(void);
 	virtual int		Update(void);
 	virtual void	Render(void);
+	void			KeyInput(void);
 
 public:
 	static CPlayer* Create(void);

@@ -14,6 +14,8 @@
 #include "Device.h"
 #include "Camera.h"
 #include "DynamicMesh.h"
+#include "Input.h"
+#include "TimeMgr.h"
 
 
 
@@ -44,11 +46,15 @@ HRESULT CPlayer::Initialize(void)
 
 int CPlayer::Update(void)
 {
-	if (m_pBuffer->m_bAniEnd == true)
-		m_pBuffer->m_bAniEnd = false;
-	m_pInfo->m_fAngle[ANGLE_X] = D3DX_PI / 2 * -1.f;//;D3DXToRadian(-90);
+	/*if (m_pBuffer->m_bAniEnd == true)
+		m_pBuffer->m_bAniEnd = false;*/
+	//m_pInfo->m_fAngle[ANGLE_X] = D3DX_PI / 2 * -1.f;//;D3DXToRadian(-90);
 	m_pInfo->m_vScale = D3DXVECTOR3(0.01f, 0.01f, 0.01f);
+	D3DXVec3TransformNormal(&m_pInfo->m_vDir, &g_vLook, &m_pInfo->m_matWorld);
 
+	cout << m_pInfo->m_vDir.x << "/" << m_pInfo->m_vDir.y << "/" << m_pInfo->m_vDir.z << endl;
+
+	KeyInput();
 	CObj::Update();
 	return 0;
 }
@@ -64,7 +70,7 @@ void CPlayer::Render(void)
 	D3DXMatrixTranspose(&cb.matView, &CCamera::GetInstance()->m_matView);
 	D3DXMatrixTranspose(&cb.matProjection, &CCamera::GetInstance()->m_matProj);
 
-	m_pBuffer->PlayAnimation(0,m_pVertexShader,m_pPixelShader, &cb, m_pTexture);
+	//m_pBuffer->PlayAnimation(0,m_pVertexShader,m_pPixelShader, &cb, m_pTexture);
 
 	//m_pGrapicDevice->m_pDeviceContext->UpdateSubresource((*iter)->pBoneMatrixBuffer, 0, NULL, &cb, 0, 0);
 
@@ -82,16 +88,16 @@ void CPlayer::Render(void)
 	//D3DXMatrixTranspose(&cb.matWorld, &m_pInfo->m_matWorld);
 	//D3DXMatrixTranspose(&cb.matView, &CCamera::GetInstance()->m_matView);
 	//D3DXMatrixTranspose(&cb.matProjection, &CCamera::GetInstance()->m_matProj);
-	//m_pGrapicDevice->m_pDeviceContext->UpdateSubresource(m_pBuffer->m_ConstantBuffer, 0, NULL, &cb, 0, 0);
+	m_pGrapicDevice->m_pDeviceContext->UpdateSubresource(m_pBuffer->m_ConstantBuffer, 0, NULL, &cb, 0, 0);
 
-	//m_pGrapicDevice->m_pDeviceContext->VSSetShader(m_pVertexShader->m_pVertexShader, NULL, 0);
-	//m_pGrapicDevice->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pBuffer->m_ConstantBuffer);
-	////////////////////
-	//m_pGrapicDevice->m_pDeviceContext->PSSetShader(m_pPixelShader->m_pPixelShader, NULL, 0);
-	//m_pGrapicDevice->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
-	//m_pGrapicDevice->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
+	m_pGrapicDevice->m_pDeviceContext->VSSetShader(m_pVertexShader->m_pVertexShader, NULL, 0);
+	m_pGrapicDevice->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pBuffer->m_ConstantBuffer);
+	//////////////////
+	m_pGrapicDevice->m_pDeviceContext->PSSetShader(m_pPixelShader->m_pPixelShader, NULL, 0);
+	m_pGrapicDevice->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
+	m_pGrapicDevice->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
 
-	//m_pBuffer->Render();
+	m_pBuffer->Render();
 
 }
 
@@ -111,7 +117,7 @@ void CPlayer::Release(void)
 HRESULT CPlayer::AddComponent(void)
 {
 	CComponent* pComponent = NULL;
-	char cModelPath[MAX_PATH] = "../Resource/";
+	char cModelPath[MAX_PATH] = "../Resource/bird.fbx";
 
 	//////////////임시 다이나믹 ///////////////
 
@@ -119,7 +125,7 @@ HRESULT CPlayer::AddComponent(void)
 
 	///////////////////////////////////////////
 
-	m_pBuffer = CDynamicMesh::Create(cModelPath,vecAniName);
+	m_pBuffer = CStaticMesh::Create(cModelPath);
 	pComponent = m_pBuffer;
 	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Buffer", pComponent));
 
@@ -135,9 +141,36 @@ HRESULT CPlayer::AddComponent(void)
 		return E_FAIL;
 	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Texture", pComponent));
 
-	m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"VS_ANI");
+	m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"VS");
 	m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"PS");
 
 
 	return S_OK;
+}
+
+
+void CPlayer::KeyInput()
+{
+	float		fTime = CTimeMgr::GetInstance()->GetTime();
+
+
+	if (CInput::GetInstance()->GetDIKeyState(DIK_UP) & 0x80)
+	{
+		m_pInfo->m_vPos += m_pInfo->m_vDir * 50.f * fTime;
+	}
+
+	if (CInput::GetInstance()->GetDIKeyState(DIK_DOWN) & 0x80)
+	{
+		m_pInfo->m_vPos -= m_pInfo->m_vDir * 50.f * fTime;
+	}
+
+	if (CInput::GetInstance()->GetDIKeyState(DIK_LEFT) & 0x80)
+	{
+		m_pInfo->m_fAngle[ANGLE_Y] -= D3DXToRadian(90.f * fTime);
+	}
+
+	if (CInput::GetInstance()->GetDIKeyState(DIK_RIGHT) & 0x80)
+	{
+		m_pInfo->m_fAngle[ANGLE_Y] += D3DXToRadian(90.f * fTime);
+	}
 }

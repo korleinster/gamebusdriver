@@ -8,7 +8,7 @@ const UINT VERTEXCOUNTX = 129;
 const UINT VERTEXCOUNTZ = 129;
 const UINT VERTEXINTERVAL = 1;
 
-const D3DXVECTOR3 g_vLook(0.f, 0.f, 1.f);
+const D3DXVECTOR3 g_vLook(0.f, -1.f, 0.f);
 
 #define VS_SLOT_VIEW_MATRIX			0x00
 #define VS_SLOT_PROJECTION_MATRIX	0x01

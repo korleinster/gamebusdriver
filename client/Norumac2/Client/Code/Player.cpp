@@ -46,33 +46,6 @@ HRESULT CPlayer::Initialize(void)
 
 int CPlayer::Update(void)
 {
-	bool test = false;
-
-	if (test == false)
-	{
-		D3DXQUATERNION quatRot;
-		D3DXQuaternionIdentity(&quatRot);
-		D3DXQuaternionRotationYawPitchRoll(&quatRot, 0.f, 0.f, D3DXToRadian(-90.f));
-		D3DXMATRIX matOrientation;
-		D3DXMatrixIdentity(&matOrientation);
-		D3DXMatrixAffineTransformation(&matOrientation, 1.25f, NULL, &quatRot, &CCamera::GetInstance()->m_vEye);
-
-		D3DXMatrixInverse(&m_pInfo->m_matWorld, NULL, &matOrientation);
-
-		test = true;
-
-	}
-
-	D3DXQUATERNION quatRot;
-	D3DXQuaternionIdentity(&quatRot);
-	D3DXQuaternionRotationYawPitchRoll(&quatRot, -m_pInfo->m_fAngle[ANGLE_Y], 0.f, 0.f);
-	D3DXMATRIX matOrientation;
-	D3DXMatrixIdentity(&matOrientation);
-	D3DXMatrixAffineTransformation(&matOrientation, 1.25f, NULL, &quatRot, &CCamera::GetInstance()->m_vEye);
-
-	D3DXMatrixInverse(&m_pInfo->m_matWorld, NULL, &matOrientation);
-	
-
 	/*if (m_pBuffer->m_bAniEnd == true)
 		m_pBuffer->m_bAniEnd = false;*/
 	m_pInfo->m_fAngle[ANGLE_X] = /*D3DX_PI / 2 * -1.f;*/D3DXToRadian(-90);
@@ -183,12 +156,12 @@ void CPlayer::KeyInput()
 
 	if (CInput::GetInstance()->GetDIKeyState(DIK_UP) & 0x80)
 	{
-		m_pInfo->m_vPos += m_pInfo->m_vDir * 5.f * fTime;
+		m_pInfo->m_vPos += m_pInfo->m_vDir * 50.f * fTime;
 	}
 
 	if (CInput::GetInstance()->GetDIKeyState(DIK_DOWN) & 0x80)
 	{
-		m_pInfo->m_vPos -= m_pInfo->m_vDir * 5.f * fTime;
+		m_pInfo->m_vPos -= m_pInfo->m_vDir * 50.f * fTime;
 	}
 
 	if (CInput::GetInstance()->GetDIKeyState(DIK_LEFT) & 0x80)

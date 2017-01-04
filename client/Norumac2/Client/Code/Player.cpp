@@ -83,7 +83,7 @@ void CPlayer::Release(void)
 HRESULT CPlayer::AddComponent(void)
 {
 	CComponent* pComponent = NULL;
-	char cModelPath[MAX_PATH] = "../Resource/Mesh/windmill.FBX";
+	char cModelPath[MAX_PATH] = "../Resource/bird.FBX";
 	m_pBuffer = CStaticMesh::Create(cModelPath);
 	pComponent = m_pBuffer;
 	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Buffer", pComponent));
@@ -94,7 +94,7 @@ HRESULT CPlayer::AddComponent(void)
 		return E_FAIL;
 	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Info", pComponent));
 
-	m_pTexture = CTexture::Create(L"../Resource/MeshImage/windmill.png");
+	m_pTexture = CTexture::Create(L"../Resource/bird.png");
 	pComponent = m_pTexture;
 	if (pComponent == NULL)
 		return E_FAIL;

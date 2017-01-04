@@ -145,8 +145,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
+    <Text Include="ServerIP.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\server\serverBoostModel\serverBoostModel\protocol.h" />
     <ClInclude Include="..\Code\AniBuffer.h" />
     <ClInclude Include="..\Code\Camera.h" />
     <ClInclude Include="..\Code\Collision.h" />
@@ -187,6 +189,7 @@
     <ClInclude Include="..\Headers\Macro.h" />
     <ClInclude Include="..\Headers\Struct.h" />
     <ClInclude Include="..\Headers\Value.h" />
+    <ClInclude Include="..\Server_Code\ClientClass.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -228,6 +231,9 @@
     <ClCompile Include="..\Code\Texture.cpp" />
     <ClCompile Include="..\Code\TimeMgr.cpp" />
     <ClCompile Include="..\Code\VIBuffer.cpp" />
+    <ClCompile Include="..\Server_Code\ClientClass.cpp" />
+    <ClCompile Include="..\Server_Code\processPacket.cpp" />
+    <ClCompile Include="..\Server_Code\ProcessWinMessage_clientClass.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

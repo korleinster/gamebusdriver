@@ -133,9 +133,15 @@
     <Filter Include="96.Utility\03.RenderTarget">
       <UniqueIdentifier>{08bbd010-3b9b-4b9f-84e5-af3820e90e4d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="99.Default\Only for Server">
+      <UniqueIdentifier>{17ab7a26-ec7a-4aa4-aded-0d3a699b0c37}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
+    <Text Include="ServerIP.txt">
+      <Filter>99.Default\Only for Server</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Code\MainApp.h">
@@ -270,6 +276,12 @@
     <ClInclude Include="..\Code\RenderTarget.h">
       <Filter>96.Utility\03.RenderTarget</Filter>
     </ClInclude>
+    <ClInclude Include="..\Server_Code\ClientClass.h">
+      <Filter>99.Default\Only for Server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\server\serverBoostModel\serverBoostModel\protocol.h">
+      <Filter>99.Default\Only for Server</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\MainApp.cpp">
@@ -382,6 +394,15 @@
     </ClCompile>
     <ClCompile Include="..\Code\RenderTaget.cpp">
       <Filter>96.Utility\03.RenderTarget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server_Code\ClientClass.cpp">
+      <Filter>99.Default\Only for Server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server_Code\processPacket.cpp">
+      <Filter>99.Default\Only for Server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server_Code\ProcessWinMessage_clientClass.cpp">
+      <Filter>99.Default\Only for Server</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

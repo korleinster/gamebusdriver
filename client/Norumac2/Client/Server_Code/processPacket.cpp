@@ -1,4 +1,7 @@
+#pragma once
 #include"stdafx.h"
+#include"../../../../server/serverBoostModel/serverBoostModel/protocol.h"
+#include"../Server_Code/ClientClass.h"
 
 void AsynchronousClientClass::processPacket()
 {
@@ -20,7 +23,7 @@ void AsynchronousClientClass::processPacket()
 
 		InvalidateRect(m_hWnd, NULL, TRUE);
 	}
-		break;
+							  break;
 	case KEYINPUT: {
 #ifdef _DEBUG
 		cout << "KEYINPUT , player id : " << reinterpret_cast<player_data*>(&m_recvbuf[2])->id << endl;

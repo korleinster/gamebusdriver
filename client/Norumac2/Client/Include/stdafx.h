@@ -5,6 +5,12 @@
 
 #pragma once
 
+// 서버와 관련된 헤더 파일들
+#pragma comment(lib, "ws2_32")
+
+#include<WinSock2.h>
+
+
 #include "targetver.h"
 
 #define WIN32_LEAN_AND_MEAN             // 거의 사용되지 않는 내용은 Windows 헤더에서 제외합니다.
@@ -44,10 +50,20 @@
 #include <iostream>
 #include <process.h>
 #include <assert.h>
+#include <unordered_map>
 
 #include "Include.h"
 
 using namespace std;
+
+// 서버와 관련된 프로토콜
+#include"../../../../server/serverBoostModel/serverBoostModel/protocol.h"
+
+// client 통신 관련 class
+#include<fstream>
+#include"../Server_Code/ClientClass.h"
+
+static AsynchronousClientClass g_client;
 
 #pragma warning(disable : 4005)
 #include <crtdbg.h>

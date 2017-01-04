@@ -47,13 +47,17 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     {
         return FALSE;
     }
-
+	
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_CLIENT));
 
     MSG msg;
 	msg.message = WM_NULL;
 
 	CMainApp*		pMainApp = CMainApp::Create();
+
+	// 서버와 통신을 위해서, 윈도우 핸들 값을 받아온다.
+	g_client.Init(g_hWnd);
+
 	// 기본 메시지 루프입니다.
 	while (msg.message != WM_QUIT)
 	{
@@ -177,6 +181,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_DESTROY:
         PostQuitMessage(0);
         break;
+	case WM_SOCKET:
+		g_client.ProcessWinMessage(hWnd, message, wParam, lParam);
+		return 0;
+		break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }

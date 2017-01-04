@@ -15,7 +15,7 @@ boostAsioServer::boostAsioServer() : m_acceptor(g_io_service, tcp::endpoint(tcp:
 boostAsioServer::~boostAsioServer()
 {
 	// make_shared 를 썼기 때문에, 삭제할 필요가 없다아 ?
-	//for (auto ptr : g_clients) { delete ptr; }
+	for (auto ptr : g_clients) { delete ptr; }
 }
 
 void boostAsioServer::getMyServerIP()
@@ -57,10 +57,10 @@ void boostAsioServer::start_io_service()
 
 void boostAsioServer::acceptThread()
 {
-	m_acceptor.async_accept(m_socket, [this](boost::system::error_code error_code) {
+	m_acceptor.async_accept(m_socket, [&](boost::system::error_code error_code) {
 		if (true == (!error_code)) {
 			cout << "Client No. [ " << ++m_playerIndex << " ] Connected \t:: IP = " << m_socket.remote_endpoint().address().to_string() << ", Port = " << m_socket.remote_endpoint().port() << "\n";
-			g_clients.emplace_back(make_shared<player_session>(std::move(m_socket), m_playerIndex));
+			g_clients.emplace_back(new player_session (std::move(m_socket), m_playerIndex));
 			g_clients[m_playerIndex]->Init();
 		}
 		if (false == m_ServerShutdown) { acceptThread(); }		
@@ -76,6 +76,7 @@ void player_session::Init()
 
 	// 기본 초기화 정보 보내기
 	Packet temp_buf[MAX_BUF_SIZE];
+	//Packet *temp_buf = new Packet[MAX_BUF_SIZE];
 
 	temp_buf[0] = sizeof(player_data) + 2;
 	temp_buf[1] = INIT_CLIENT;
@@ -90,38 +91,54 @@ void player_session::Init()
 	/*
 		근처 플레이어에게, 현재 플레이어의 입장을 알리며
 		view list 같은 곳에서도 추가하자 ~ !!
-	*/
+	*/	
 
-	temp_buf[1] = KEYINPUT;
-	
 	// 다른 애들 정보를 이 플레이어 한테 보내기 ( 왠지 모르게 작동을 안한다....??? ) 심지어 cout 도 출력이 안됨... 뭐가 문제인지;;
+	vector<Packet *> temp_vector;
 	for (auto players : g_clients)
 	{
 		if (DISCONNECTED == players->m_connect_state) { continue; }
 		if (m_id == players->m_id) { continue; }
 
-		memcpy(&temp_buf[2], &(players->m_player_data), temp_buf[0] - 2);
-		cout << "플레이어 " << players->m_player_data.id << " 정보를, 플레이어 " << m_id << " 에게 보냈다.\n";
-		send_packet(temp_buf);
+		// 기본 초기화 정보 보내기 2
+		Packet temp_buf2[MAX_BUF_SIZE];
+		//Packet *temp_buf2 = new Packet[MAX_BUF_SIZE];
+
+		temp_buf2[0] = sizeof(player_data) + 2;
+		temp_buf2[1] = KEYINPUT;
+		memcpy(&temp_buf2[2], &(players->m_player_data), temp_buf2[0] - 2);
+		//temp_vector.emplace_back(temp_buf2);
+
+		send_packet(temp_buf2);
 	}
+
+	// 기본 초기화 정보 보내기 2
+	Packet temp_buf3[MAX_BUF_SIZE];
+
+	temp_buf3[0] = sizeof(player_data) + 2;
+	temp_buf3[1] = KEYINPUT;
 
 	// 현재 접속한 애한테 다른 플레이어 정보 보내기
-	memcpy(&temp_buf[2], &m_player_data, temp_buf[0]);
+	memcpy(&temp_buf3[2], &m_player_data, temp_buf3[0]);
+
 	for (auto players : g_clients)
 	{
 		if (DISCONNECTED == players->m_connect_state) { continue; }
 		if (m_id == players->m_id) { continue; }
 
-		players->send_packet(temp_buf);
+		players->send_packet(temp_buf3);
 	}
+
+	/*delete[] temp_buf;
+	for (auto ptr : temp_vector) { delete[] ptr; }*/
 
 	m_recv_packet();
 }
 
 void player_session::m_recv_packet()
 {
-	auto self(shared_from_this());
-	m_socket.async_read_some(boost::asio::buffer(m_recv_buf, MAX_BUF_SIZE), [this, self](boost::system::error_code error_code, std::size_t length) -> void {
+	//auto self(shared_from_this());
+	m_socket.async_read_some(boost::asio::buffer(m_recv_buf, MAX_BUF_SIZE), [&](boost::system::error_code error_code, std::size_t length) -> void {
 		if (error_code) {
 			if (error_code.value() == boost::asio::error::operation_aborted) { return; }
 			// client was disconnected
@@ -192,8 +209,8 @@ void player_session::send_packet(Packet *packet)
 	Packet *sendBuf = new Packet[packet_size];
 	memcpy(sendBuf, packet, packet_size);
 
-	auto self(shared_from_this());
-	m_socket.async_write_some(boost::asio::buffer(sendBuf, packet_size), [this, self, sendBuf, packet_size](boost::system::error_code error_code, std::size_t bytes_transferred) -> void {
+	//auto self(shared_from_this());
+	m_socket.async_write_some(boost::asio::buffer(sendBuf, packet_size), [=](boost::system::error_code error_code, std::size_t bytes_transferred) -> void {
 		if (!error_code) {
 			if (packet_size != bytes_transferred) { cout << "Client No. [ " << m_id << " ] async_write_some packet bytes was NOT SAME !!\n"; }
 			delete[] sendBuf;

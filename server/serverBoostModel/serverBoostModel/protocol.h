@@ -4,6 +4,8 @@
 #define MAX_BUF_SIZE 256
 #define MAX_USER 500
 
+#define WM_SOCKET (WM_USER + 1)
+
 // packet[1] operation
 #define DISCONNECTED 0
 #define CONNECTED 1

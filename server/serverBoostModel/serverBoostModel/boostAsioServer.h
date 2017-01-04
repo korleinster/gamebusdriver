@@ -13,7 +13,7 @@ static boost::asio::io_service g_io_service;
 
 using boost::asio::ip::tcp;
 
-class player_session : public std::enable_shared_from_this<player_session>
+class player_session //: public std::enable_shared_from_this<player_session>
 {
 public:
 	player_session(tcp::socket s, const unsigned int& index) : m_socket(std::move(s)), m_id(index) {};
@@ -79,4 +79,5 @@ private:
 };
 
 // 플레이어가 담긴 변수
-static vector<shared_ptr<player_session>> g_clients;
+static mutex g_clients_lock;
+static vector<player_session*> g_clients;

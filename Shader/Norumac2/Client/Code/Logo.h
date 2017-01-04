@@ -10,7 +10,6 @@ class CLogo :
 public:
 	CLogo();
 	virtual ~CLogo();
-
 private:
 	CShader*	m_pVertexShader;
 	CShader*	m_pPixelShader;

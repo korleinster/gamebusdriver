@@ -119,6 +119,8 @@ HRESULT CMainApp::Initialize(void)
 	wireframeDesc.CullMode = D3D11_CULL_BACK;
 	wireframeDesc.FrontCounterClockwise = false;
 	wireframeDesc.DepthClipEnable = true;*/
+
+
 			
 	return S_OK;
 }

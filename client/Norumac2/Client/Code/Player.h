@@ -27,6 +27,9 @@ public:
 	virtual int		Update(void);
 	virtual void	Render(void);
 	void			KeyInput(void);
+	void			QuanternionY(void);
+	void			QuanternionX(void);
+	void			QuanternionZ(void);
 
 public:
 	static CPlayer* Create(void);

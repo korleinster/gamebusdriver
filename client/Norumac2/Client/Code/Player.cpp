@@ -200,4 +200,24 @@ void CPlayer::KeyInput()
 	{
 		m_pInfo->m_fAngle[ANGLE_Y] += D3DXToRadian(90.f * fTime);
 	}
+
+	if (CInput::GetInstance()->GetDIKeyState(DIK_PGUP) & 0x80)
+	{
+		m_pInfo->m_fAngle[ANGLE_Z] += D3DXToRadian(90.f * fTime);
+	}
+
+	if (CInput::GetInstance()->GetDIKeyState(DIK_PGDN) & 0x80)
+	{
+		m_pInfo->m_fAngle[ANGLE_Z] -= D3DXToRadian(90.f * fTime);
+	}
+
+	if (CInput::GetInstance()->GetDIKeyState(DIK_HOME) & 0x80)
+	{
+		m_pInfo->m_fAngle[ANGLE_X] += D3DXToRadian(90.f * fTime);
+	}
+
+	if (CInput::GetInstance()->GetDIKeyState(DIK_END) & 0x80)
+	{
+		m_pInfo->m_fAngle[ANGLE_X] -= D3DXToRadian(90.f * fTime);
+	}
 }

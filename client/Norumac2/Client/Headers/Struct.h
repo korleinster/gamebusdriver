@@ -1,19 +1,6 @@
 #pragma once
 #include "stdafx.h"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 ////콘스턴트 버퍼
 struct ConstantBuffer
 {
@@ -21,10 +8,6 @@ struct ConstantBuffer
 	D3DXMATRIX matView;
 	D3DXMATRIX matProjection;
 };
-
-
-
-
 
 ///////////////////////////////////////////////////////////////////정점 구조체
 typedef struct tagVertexTexture
@@ -59,3 +42,6 @@ typedef struct tagIndex32
 {
 	UINT			_1, _2, _3;
 }INDEX32;
+
+
+

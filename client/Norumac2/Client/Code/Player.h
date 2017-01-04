@@ -5,6 +5,7 @@ class CShader;
 class CVIBuffer;
 class CTexture;
 class CTerrainCol;
+class CDynamicMesh;
 class CPlayer :
 	public CObj
 {
@@ -20,10 +21,15 @@ private:
 	VTXTEX*			m_pVerTex;
 	CTerrainCol*	m_pTerrainCol;
 
+
 public:
 	virtual HRESULT Initialize(void);
 	virtual int		Update(void);
 	virtual void	Render(void);
+	void			KeyInput(void);
+	void			QuanternionY(void);
+	void			QuanternionX(void);
+	void			QuanternionZ(void);
 
 public:
 	static CPlayer* Create(void);

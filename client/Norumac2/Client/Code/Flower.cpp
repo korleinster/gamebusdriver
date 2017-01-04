@@ -48,13 +48,11 @@ HRESULT CFlower::Initialize(void)
 
 int CFlower::Update(void)
 {
-	m_pTerrainCol->CollisionTerrain(&m_pInfo->m_vPos, m_pVerTex);
+	//m_pTerrainCol->CollisionTerrain(&m_pInfo->m_vPos, m_pVerTex);
 
 
 	D3DXMATRIX		matBill;
 	D3DXMatrixIdentity(&matBill);
-
-
 
 	matBill = CCamera::GetInstance()->m_matView;
 	ZeroMemory(&matBill.m[3][0], sizeof(D3DXVECTOR3));
@@ -63,6 +61,8 @@ int CFlower::Update(void)
 
 	CObj::Update();
 	m_pInfo->m_matWorld = matBill * m_pInfo->m_matWorld;
+
+	//cout << m_pInfo->m_vPos.x << "/" << m_pInfo->m_vPos.y << "/" << m_pInfo->m_vPos.z << endl;
 	return 0;
 }
 

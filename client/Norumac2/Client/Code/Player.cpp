@@ -40,15 +40,42 @@ HRESULT CPlayer::Initialize(void)
 	if (FAILED(AddComponent()))
 		return E_FAIL;
 
-
+	
 	return S_OK;
 }
 
 int CPlayer::Update(void)
 {
+	bool test = false;
+
+	if (test == false)
+	{
+		D3DXQUATERNION quatRot;
+		D3DXQuaternionIdentity(&quatRot);
+		D3DXQuaternionRotationYawPitchRoll(&quatRot, 0.f, 0.f, D3DXToRadian(-90.f));
+		D3DXMATRIX matOrientation;
+		D3DXMatrixIdentity(&matOrientation);
+		D3DXMatrixAffineTransformation(&matOrientation, 1.25f, NULL, &quatRot, &CCamera::GetInstance()->m_vEye);
+
+		D3DXMatrixInverse(&m_pInfo->m_matWorld, NULL, &matOrientation);
+
+		test = true;
+
+	}
+
+	D3DXQUATERNION quatRot;
+	D3DXQuaternionIdentity(&quatRot);
+	D3DXQuaternionRotationYawPitchRoll(&quatRot, -m_pInfo->m_fAngle[ANGLE_Y], 0.f, 0.f);
+	D3DXMATRIX matOrientation;
+	D3DXMatrixIdentity(&matOrientation);
+	D3DXMatrixAffineTransformation(&matOrientation, 1.25f, NULL, &quatRot, &CCamera::GetInstance()->m_vEye);
+
+	D3DXMatrixInverse(&m_pInfo->m_matWorld, NULL, &matOrientation);
+	
+
 	/*if (m_pBuffer->m_bAniEnd == true)
 		m_pBuffer->m_bAniEnd = false;*/
-	//m_pInfo->m_fAngle[ANGLE_X] = D3DX_PI / 2 * -1.f;//;D3DXToRadian(-90);
+	m_pInfo->m_fAngle[ANGLE_X] = /*D3DX_PI / 2 * -1.f;*/D3DXToRadian(-90);
 	m_pInfo->m_vScale = D3DXVECTOR3(0.01f, 0.01f, 0.01f);
 	D3DXVec3TransformNormal(&m_pInfo->m_vDir, &g_vLook, &m_pInfo->m_matWorld);
 
@@ -65,10 +92,10 @@ void CPlayer::Render(void)
 
 	//vector<Animation*>::iterator iter = m_pBuffer->m_vecAni.begin();
 
-	ConstantBuffer cb;
-	D3DXMatrixTranspose(&cb.matWorld, &m_pInfo->m_matWorld);
-	D3DXMatrixTranspose(&cb.matView, &CCamera::GetInstance()->m_matView);
-	D3DXMatrixTranspose(&cb.matProjection, &CCamera::GetInstance()->m_matProj);
+	//ConstantBuffer cb;
+	//D3DXMatrixTranspose(&cb.matWorld, &m_pInfo->m_matWorld);
+	//D3DXMatrixTranspose(&cb.matView, &CCamera::GetInstance()->m_matView);
+	//D3DXMatrixTranspose(&cb.matProjection, &CCamera::GetInstance()->m_matProj);
 
 	//m_pBuffer->PlayAnimation(0,m_pVertexShader,m_pPixelShader, &cb, m_pTexture);
 
@@ -84,10 +111,10 @@ void CPlayer::Render(void)
 	//m_pBuffer->Render();
 
 
-	//ConstantBuffer cb;
-	//D3DXMatrixTranspose(&cb.matWorld, &m_pInfo->m_matWorld);
-	//D3DXMatrixTranspose(&cb.matView, &CCamera::GetInstance()->m_matView);
-	//D3DXMatrixTranspose(&cb.matProjection, &CCamera::GetInstance()->m_matProj);
+	ConstantBuffer cb;
+	D3DXMatrixTranspose(&cb.matWorld, &m_pInfo->m_matWorld);
+	D3DXMatrixTranspose(&cb.matView, &CCamera::GetInstance()->m_matView);
+	D3DXMatrixTranspose(&cb.matProjection, &CCamera::GetInstance()->m_matProj);
 	m_pGrapicDevice->m_pDeviceContext->UpdateSubresource(m_pBuffer->m_ConstantBuffer, 0, NULL, &cb, 0, 0);
 
 	m_pGrapicDevice->m_pDeviceContext->VSSetShader(m_pVertexShader->m_pVertexShader, NULL, 0);
@@ -121,7 +148,7 @@ HRESULT CPlayer::AddComponent(void)
 
 	//////////////임시 다이나믹 ///////////////
 
-	vecAniName.push_back("bird");
+	//vecAniName.push_back("bird");
 
 	///////////////////////////////////////////
 
@@ -156,12 +183,12 @@ void CPlayer::KeyInput()
 
 	if (CInput::GetInstance()->GetDIKeyState(DIK_UP) & 0x80)
 	{
-		m_pInfo->m_vPos += m_pInfo->m_vDir * 50.f * fTime;
+		m_pInfo->m_vPos += m_pInfo->m_vDir * 5.f * fTime;
 	}
 
 	if (CInput::GetInstance()->GetDIKeyState(DIK_DOWN) & 0x80)
 	{
-		m_pInfo->m_vPos -= m_pInfo->m_vDir * 50.f * fTime;
+		m_pInfo->m_vPos -= m_pInfo->m_vDir * 5.f * fTime;
 	}
 
 	if (CInput::GetInstance()->GetDIKeyState(DIK_LEFT) & 0x80)

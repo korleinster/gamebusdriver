@@ -165,6 +165,7 @@
     <ClInclude Include="..\Code\Mesh.h" />
     <ClInclude Include="..\Code\Obj.h" />
     <ClInclude Include="..\Code\ObjMgr.h" />
+    <ClInclude Include="..\Code\OtherPlayer.h" />
     <ClInclude Include="..\Code\Player.h" />
     <ClInclude Include="..\Code\RcCol.h" />
     <ClInclude Include="..\Code\RcTerrain.h" />
@@ -212,6 +213,7 @@
     <ClCompile Include="..\Code\Mesh.cpp" />
     <ClCompile Include="..\Code\Obj.cpp" />
     <ClCompile Include="..\Code\ObjMgr.cpp" />
+    <ClCompile Include="..\Code\OtherPlayer.cpp" />
     <ClCompile Include="..\Code\Player.cpp" />
     <ClCompile Include="..\Code\RcCol.cpp" />
     <ClCompile Include="..\Code\RcTerrain.cpp" />

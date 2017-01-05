@@ -2,6 +2,8 @@
 #include"stdafx.h"
 #include"../../../../server/serverBoostModel/serverBoostModel/protocol.h"
 #include"../Server_Code/ClientClass.h"
+#include "ObjMgr.h"
+#include "Obj.h"
 
 void AsynchronousClientClass::processPacket()
 {
@@ -9,31 +11,30 @@ void AsynchronousClientClass::processPacket()
 	{
 	case TEST:
 #ifdef _DEBUG
+		// 이건 테스트 용이니까 그냥 냅두면 되고 ㅇㅇ
 		cout << "Server is Running. TEST Packet Recived Successfully.\n";
 #endif
 		break;
 	case INIT_CLIENT: {
-		m_player = *(reinterpret_cast<player_data*>(&m_recvbuf[2]));
+		//m_player = *(reinterpret_cast<player_data*>(&m_recvbuf[2]));
+		// 여기는 주체가 되는, 내가 직접 조작을 하는 플레이어의 데이터가 들어오니까
+		// 아이템이라던가 위치정보라던가 일단 다 여기로 들어온다잉
 	}
 		break;
 	case PLAYER_DISCONNECTED: {
-		unordered_map<UINT, player_data>::iterator ptr = m_other_players.find(reinterpret_cast<player_data*>(&m_recvbuf[2])->id);
-
-		if (m_other_players.end() != ptr) { m_other_players.erase(ptr->first); }
-
-		InvalidateRect(m_hWnd, NULL, TRUE);
+		// 여기도, id 로 찾아서, 그 아이디 찾으면 그 객체는 삭제 해야겠찌? ㅇㅋㄷㅋ?
 	}
-							  break;
+		break;
 	case KEYINPUT: {
-#ifdef _DEBUG
-		cout << "KEYINPUT , player id : " << reinterpret_cast<player_data*>(&m_recvbuf[2])->id << endl;
-#endif // _DEBUG
-		unordered_map<UINT, player_data>::iterator ptr = m_other_players.find(reinterpret_cast<player_data*>(&m_recvbuf[2])->id);
+		player_data *data = CObjMgr::GetInstance()->Get_PlayerServerData(reinterpret_cast<player_data*>(&m_recvbuf[2])->id);
 
-		if (m_other_players.end() == ptr) { m_other_players.insert(make_pair(reinterpret_cast<player_data*>(&m_recvbuf[2])->id, *(reinterpret_cast<player_data*>(&m_recvbuf[2])))); }
-		else { ptr->second.pos = reinterpret_cast<player_data*>(&m_recvbuf[2])->pos; }
-
-		InvalidateRect(m_hWnd, NULL, TRUE);
+		if (nullptr != data) { memcpy(data, &m_recvbuf[2], m_recvbuf[0]); }
+		else {
+			// 데이터 추가 해줘야 됨 이해 했음?
+			// 저기 data 가 만약 end 위치라면, 데이터가 없는데 넣으려고 하는거잖아
+			// 그럼 새로운 플레이어가 감지되었다는 뜻이니까
+			// 새로 객체 추가해서 저 값을 넣어줘야겠찌? ㅇㅋ?
+		}
 	}
 		break;
 	default:

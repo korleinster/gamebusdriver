@@ -6,12 +6,12 @@ class CVIBuffer;
 class CTexture;
 class CTerrainCol;
 class CDynamicMesh;
-class CPlayer :
+class COtherPlayer :
 	public CObj
 {
 public:
-	CPlayer();
-	virtual ~CPlayer();
+	COtherPlayer();
+	virtual ~COtherPlayer();
 
 private:
 	CVIBuffer*		m_pBuffer;
@@ -20,7 +20,7 @@ private:
 	CTexture*		m_pTexture;
 	VTXTEX*			m_pVerTex;
 	CTerrainCol*	m_pTerrainCol;
-	Packet*			m_Packet;
+	player_data		m_ServerInfo;
 
 
 public:
@@ -28,10 +28,10 @@ public:
 	virtual int		Update(void);
 	virtual void	Render(void);
 	void			KeyInput(void);
-	Packet*			GetPacket(void);
+	player_data*	GetPacketData(void);
 
 public:
-	static CPlayer* Create(void);
+	static COtherPlayer* Create(void);
 
 private:
 	void	Release(void);

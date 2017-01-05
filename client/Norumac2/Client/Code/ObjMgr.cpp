@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "ObjMgr.h"
 #include "Obj.h"
+#include "OtherPlayer.h"
 
 IMPLEMENT_SINGLETON(CObjMgr)
 
@@ -82,3 +83,20 @@ void CObjMgr::Update(void)
 	}
 
 }
+
+player_data*  CObjMgr::Get_PlayerServerData(UINT uID)
+{
+	map<wstring, list<CObj*>>::iterator iter = m_mapObj.find(L"OtherPlayer");
+
+	for (auto ptr : iter->second)
+	{
+		UINT uCompareId = ((COtherPlayer*)ptr)->GetPacketData()->id;
+
+		if (uCompareId == uID)
+			return ((COtherPlayer*)ptr)->GetPacketData();
+	}
+
+	return NULL;
+}
+
+

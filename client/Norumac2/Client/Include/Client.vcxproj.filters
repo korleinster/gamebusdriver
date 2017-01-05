@@ -85,12 +85,6 @@
     <Filter Include="02.Object\01.Player">
       <UniqueIdentifier>{7b53df79-60cb-49b2-9cad-e67cfd9b7fa2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Object\02.Terrain">
-      <UniqueIdentifier>{f805015c-d66a-4602-b13a-5b3b69a1c216}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.Object\03.Flower">
-      <UniqueIdentifier>{4e436726-15b2-45e4-bd58-fe4c2d323335}</UniqueIdentifier>
-    </Filter>
     <Filter Include="96.Utility\02.Component">
       <UniqueIdentifier>{731562bd-e332-48e1-abe0-f90e30c51df5}</UniqueIdentifier>
     </Filter>
@@ -135,6 +129,15 @@
     </Filter>
     <Filter Include="99.Default\Only for Server">
       <UniqueIdentifier>{17ab7a26-ec7a-4aa4-aded-0d3a699b0c37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\02.OtherPlayer">
+      <UniqueIdentifier>{7776e028-249d-4088-a3c4-fe2efe5a06af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\03.Terrain">
+      <UniqueIdentifier>{f805015c-d66a-4602-b13a-5b3b69a1c216}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\04.Flower">
+      <UniqueIdentifier>{4e436726-15b2-45e4-bd58-fe4c2d323335}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -232,10 +235,10 @@
       <Filter>02.Object\01.Player</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\Terrain.h">
-      <Filter>02.Object\02.Terrain</Filter>
+      <Filter>02.Object\03.Terrain</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\Flower.h">
-      <Filter>02.Object\03.Flower</Filter>
+      <Filter>02.Object\04.Flower</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\Component.h">
       <Filter>96.Utility\02.Component</Filter>
@@ -281,6 +284,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\server\serverBoostModel\serverBoostModel\protocol.h">
       <Filter>99.Default\Only for Server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\OtherPlayer.h">
+      <Filter>02.Object\02.OtherPlayer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -351,10 +357,10 @@
       <Filter>02.Object\01.Player</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\Terrain.cpp">
-      <Filter>02.Object\02.Terrain</Filter>
+      <Filter>02.Object\03.Terrain</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\Flower.cpp">
-      <Filter>02.Object\03.Flower</Filter>
+      <Filter>02.Object\04.Flower</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\Component.cpp">
       <Filter>96.Utility\02.Component</Filter>
@@ -403,6 +409,9 @@
     </ClCompile>
     <ClCompile Include="..\Server_Code\ProcessWinMessage_clientClass.cpp">
       <Filter>99.Default\Only for Server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\OtherPlayer.cpp">
+      <Filter>02.Object\02.OtherPlayer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

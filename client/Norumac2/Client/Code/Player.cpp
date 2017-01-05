@@ -19,6 +19,7 @@
 
 
 
+
 CPlayer::CPlayer()
 {
 	m_pBuffer = NULL;
@@ -27,6 +28,8 @@ CPlayer::CPlayer()
 	m_pTexture = NULL;
 	m_pVerTex = NULL;
 	m_pTerrainCol = NULL;
+
+	m_Packet = new Packet[MAX_BUF_SIZE];
 }
 
 
@@ -39,29 +42,33 @@ HRESULT CPlayer::Initialize(void)
 {
 	if (FAILED(AddComponent()))
 		return E_FAIL;
-
+	m_pInfo->m_fAngle[ANGLE_X] = /*D3DX_PI / 2 * -1.f;*/D3DXToRadian(-90);
+	//m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
+	//m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 	
 	return S_OK;
 }
 
 int CPlayer::Update(void)
 {
+
 	/*if (m_pBuffer->m_bAniEnd == true)
 		m_pBuffer->m_bAniEnd = false;*/
-	m_pInfo->m_fAngle[ANGLE_X] = /*D3DX_PI / 2 * -1.f;*/D3DXToRadian(-90);
+	
 	m_pInfo->m_vScale = D3DXVECTOR3(0.01f, 0.01f, 0.01f);
 	D3DXVec3TransformNormal(&m_pInfo->m_vDir, &g_vLook, &m_pInfo->m_matWorld);
 
-	cout << m_pInfo->m_vDir.x << "/" << m_pInfo->m_vDir.y << "/" << m_pInfo->m_vDir.z << endl;
+	//cout << m_pInfo->m_vDir.x << "/" << m_pInfo->m_vDir.y << "/" << m_pInfo->m_vDir.z << endl;
 
 	KeyInput();
 	CObj::Update();
+	//m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
+	//m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 	return 0;
 }
 
 void CPlayer::Render(void)
 {
-	
 
 	//vector<Animation*>::iterator iter = m_pBuffer->m_vecAni.begin();
 
@@ -112,12 +119,13 @@ CPlayer * CPlayer::Create(void)
 
 void CPlayer::Release(void)
 {
+	Safe_Delete_Array(m_Packet);
 }
 
 HRESULT CPlayer::AddComponent(void)
 {
 	CComponent* pComponent = NULL;
-	char cModelPath[MAX_PATH] = "../Resource/Mesh/windmill.FBX";
+	char cModelPath[MAX_PATH] = "../Resource/bird.FBX";
 	m_pBuffer = CStaticMesh::Create(cModelPath);
 	pComponent = m_pBuffer;
 	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Buffer", pComponent));
@@ -146,7 +154,7 @@ void CPlayer::KeyInput()
 {
 	float		fTime = CTimeMgr::GetInstance()->GetTime();
 
-
+	//g_client->m_recvbuf
 	if (CInput::GetInstance()->GetDIKeyState(DIK_UP) & 0x80)
 	{
 		m_pInfo->m_vPos += m_pInfo->m_vDir * 50.f * fTime;
@@ -186,4 +194,10 @@ void CPlayer::KeyInput()
 	{
 		m_pInfo->m_fAngle[ANGLE_X] -= D3DXToRadian(90.f * fTime);
 	}
+}
+
+
+Packet* CPlayer::GetPacket()
+{
+	return m_Packet;
 }

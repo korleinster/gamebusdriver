@@ -19,6 +19,10 @@ CStage::~CStage()
 
 HRESULT CStage::Initialize(void)
 {
+
+	if (FAILED(CreateSeverData()))
+		return E_FAIL;
+
 	if (FAILED(CreateObj()))
 		return E_FAIL;
 
@@ -31,6 +35,12 @@ int CStage::Update(void)
 		CSceneMgr::GetInstance()->ChangeScene(SCENE_LOGO);
 
 	CObjMgr::GetInstance()->Update();
+
+
+	if (GetAsyncKeyState('0'))
+	{
+		
+	}
 
 	return 0;
 }
@@ -88,6 +98,13 @@ HRESULT CStage::CreateObj(void)
 	CObjMgr::GetInstance()->AddObject(L"Player", pObj);
 	pRenderer->AddRenderGroup(TYPE_NONEALPHA, pObj);
 	
+
+
+	return S_OK;
+}
+
+HRESULT CStage::CreateSeverData()
+{
 
 
 	return S_OK;

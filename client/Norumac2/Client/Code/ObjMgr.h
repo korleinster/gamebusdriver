@@ -17,6 +17,7 @@ public:
 	HRESULT SceneChange(void);
 	HRESULT AddObject(wstring wstrKey, CObj* pObj);
 	void	Update(void);
+	player_data* 	Get_PlayerServerData(UINT uID);
 
 };
 

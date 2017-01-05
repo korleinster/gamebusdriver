@@ -33,6 +33,7 @@ public:
 	const float&	GetViewZ(void) const;
 	CInfo*			GetInfo(void) { return m_pInfo; }
 	ReleaseType&	GetReleaseType(void) { return m_eReleaseType; }
+	
 
 public:
 	void			SetPos(D3DXVECTOR3 vPos);

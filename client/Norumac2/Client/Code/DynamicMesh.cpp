@@ -4,51 +4,39 @@
 #include <assert.h>
 #include "ResourcesMgr.h"
 #include "AniBuffer.h"
+
 #include "FbxParser.h"
 #include "TimeMgr.h"
 #include <conio.h>
 #include "Device.h"
 #include "Shader.h"
-#include "Texture.h"
-
 
 
 CDynamicMesh::CDynamicMesh()
-	:m_wCurrentAniIndex(-1)
-	, m_fAniPlayTimer(0.f)
-	, m_iRepeatTime(0)
+:m_wCurrenAniIdx(-1),
+ m_fAniPlayTimer(0.f)
 {
-
 }
+
 
 CDynamicMesh::~CDynamicMesh()
 {
-
+	Release();
 }
 
-CDynamicMesh* CDynamicMesh::Create(const char* szFilePath, vector<string> _vecAniName)
+CDynamicMesh* CDynamicMesh::Create(const char* _pPath, vector<string> _vecAniName)
 {
-	CDynamicMesh* pComponent = new CDynamicMesh();
+	CDynamicMesh* pComponent = new CDynamicMesh;
 
-	if (FAILED(pComponent->Initialize(szFilePath, _vecAniName)))
+	if (FAILED(pComponent->Initialize(_pPath, _vecAniName)))
 		::Safe_Delete(pComponent);
 
 	return pComponent;
 }
 
-CResources * CDynamicMesh::CloneResource()
-{
-	CResources* pResource = new CDynamicMesh(*this);
-
-	pResource->AddRef();
-
-	return pResource;
-}
-
 HRESULT CDynamicMesh::Initialize(const char* _pPath, vector<string> _vecAniName)
 {
-	m_eDrawType = DRAW_VERTEX;
-	FbxManager* pFBXManager = FbxManager::Create();
+	FbxManager*	pFBXManager = FbxManager::Create();
 	FbxIOSettings* pIOsettings = FbxIOSettings::Create(pFBXManager, IOSROOT);
 	pFBXManager->SetIOSettings(pIOsettings);
 	FbxScene* pFBXScene = FbxScene::Create(pFBXManager, "");
@@ -56,11 +44,10 @@ HRESULT CDynamicMesh::Initialize(const char* _pPath, vector<string> _vecAniName)
 	FbxImporter* pImporter = FbxImporter::Create(pFBXManager, "");
 	//fbx를 임포트 초기화.
 
-	FAILED_CHECK_RETURN(
-		Load_Model(_pPath, _vecAniName, pFBXManager, pIOsettings, pFBXScene, pImporter),
-		E_FAIL);
+	FAILED_CHECK_RETURN(Load_Model(_pPath, _vecAniName, pFBXManager, pIOsettings, pFBXScene, pImporter), E_FAIL);
 
-	CVIBuffer::CreateRasterizerState();
+	CMesh::CreateRasterizerState();
+
 
 	pFBXScene->Destroy();
 	pImporter->Destroy();
@@ -68,15 +55,35 @@ HRESULT CDynamicMesh::Initialize(const char* _pPath, vector<string> _vecAniName)
 	pFBXManager->Destroy();
 
 	m_bAniEnd = false;
+	Yamae = false;
+
+	HRESULT hr;
+
+	D3D11_BUFFER_DESC cbd;
+	cbd.Usage = D3D11_USAGE_DEFAULT;
+	cbd.ByteWidth = sizeof(ConstantBuffer);
+	cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	cbd.CPUAccessFlags = 0;
+	cbd.MiscFlags = 0;
+	cbd.StructureByteStride = 0;
+	hr = CDevice::GetInstance()->m_pDevice->CreateBuffer(&cbd, NULL, &m_ConstantBuffer);
+
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"Constant Buffer Error", MB_OK);
+		return hr;
+	}
 
 	return S_OK;
 }
 
-HRESULT CDynamicMesh::Load_Model(const char* _pPath, vector<string> _vecAniName, FbxManager* _pFBXManager, FbxIOSettings* _pIOsettings, FbxScene* _pFBXScene, FbxImporter* _pImporter)
+
+HRESULT CDynamicMesh::Load_Model(const char* _pPath, vector<string> _vecAniName, FbxManager* _pFBXManager, FbxIOSettings* _pIOsettings,
+									FbxScene* _pFBXScene, FbxImporter* _pImporter)
 {
-	int iFileFormat = EOF;
-	string strFullPath;
-	string strExtenstion = ".FBX";
+	int		iFileFormat = EOF;
+	string	strFullPath;
+	string	strExtenstion = ".FBX";
 
 	FbxAxisSystem CurrAxisSystem;//현재 fbx씬내에서의 좌표축을 가져올 변수
 	FbxAxisSystem DestAxisSystem = FbxAxisSystem::eMayaYUp;//클라내에서 좌표축을 설정.
@@ -84,6 +91,7 @@ HRESULT CDynamicMesh::Load_Model(const char* _pPath, vector<string> _vecAniName,
 
 	FbxNode*		pFbxRootNode;
 	Animation*		pAni;
+
 
 	for (unsigned int i = 0; i < _vecAniName.size(); ++i)
 	{
@@ -96,12 +104,12 @@ HRESULT CDynamicMesh::Load_Model(const char* _pPath, vector<string> _vecAniName,
 		strFullPath += _vecAniName[i];//경로에 파일이름 추가
 		strFullPath += strExtenstion;//파일이름 추가한거에 확장자명 추가.
 
-		_pFBXManager->GetIOPluginRegistry()->DetectReaderFileFormat(strFullPath.c_str(), iFileFormat);
-		//파일이 있는지 확인.
+		_pFBXManager->GetIOPluginRegistry()->DetectReaderFileFormat(strFullPath.c_str(), iFileFormat);//파일이 있는지 확인.
 
-		FAILED_CHECK_MSG(
-			_pImporter->Initialize(strFullPath.c_str(), iFileFormat),
-			L"No Find Fbx Path");
+		//FALSE_CHECK_MSG(_pImporter->Initialize(strFullPath.c_str(), iFileFormat), L"No Find Fbx Path");
+		if (_pImporter->Initialize(strFullPath.c_str(), iFileFormat) == false)
+			MessageBox(NULL, L"No Find Fbx Path", L"System Error", MB_OK);
+
 
 		_pImporter->Import(_pFBXScene);
 		//파일이 있으면 fbx씬에 추가를 한다.
@@ -119,8 +127,7 @@ HRESULT CDynamicMesh::Load_Model(const char* _pPath, vector<string> _vecAniName,
 		//루트노드를 가져오고 확인작업.
 
 		//pAni->pBaseBoneMatrix = new XMMATRIX[BONE_MATRIX_NUM];
-		pAni->pBaseBoneMatrix = (XMMATRIX*)_aligned_malloc(
-			sizeof(XMMATRIX) * BONE_MATRIX_NUM, 16);// 본의 행렬을 행렬*본행렬의 사이즈만큼 해서 초기화.
+		pAni->pBaseBoneMatrix = (XMMATRIX*)_aligned_malloc(	sizeof(XMMATRIX) * BONE_MATRIX_NUM, 16);// 본의 행렬을 행렬*본행렬의 사이즈만큼 해서 초기화.
 		//new (pAni->pBaseBoneMatrix)XMMATRIX();
 
 		for (int i = 0; i < BONE_MATRIX_NUM; ++i)
@@ -131,10 +138,8 @@ HRESULT CDynamicMesh::Load_Model(const char* _pPath, vector<string> _vecAniName,
 		pAni->pAniBuffer->SetFbxBoneIndex(&(pAni->mapIndexByName), pFbxRootNode);
 		//본들을 세팅한다. 부모-자식노드간의 연결.
 
-
 		CFbxParser::ParsingVertex(pFbxRootNode, pAni);
 		//버텍스와 uv , 노말을 파싱한다.
-
 
 		// Animation -----------------------
 		auto AnimStack = _pFBXScene->GetSrcObject<FbxAnimStack>();
@@ -158,35 +163,27 @@ HRESULT CDynamicMesh::Load_Model(const char* _pPath, vector<string> _vecAniName,
 				sizeof(XMMATRIX) * pAni->nAniNodeIdxCnt, 16);
 		}
 
-		//Animation 상수 버퍼(컨스턴트버퍼) 생성
+		//Animation 상수 버퍼 생성
+		{
+			//최초 상수버퍼를 생성한다.
+			D3D11_BUFFER_DESC BD;
+			::ZeroMemory(&BD, sizeof(D3D11_BUFFER_DESC));
+			BD.Usage = D3D11_USAGE::D3D11_USAGE_DYNAMIC;
+			BD.ByteWidth = sizeof(VS_CB_BONE_MATRIX);
+			BD.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+			BD.CPUAccessFlags = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE;
 
+			m_pGrapicDevice->m_pDevice->CreateBuffer(&BD, NULL, &pAni->pBoneMatrixBuffer);
 
-		//최초 상수버퍼를 생성한다.
-		D3D11_BUFFER_DESC BD;
-		::ZeroMemory(&BD, sizeof(D3D11_BUFFER_DESC));
-		BD.Usage = D3D11_USAGE::D3D11_USAGE_DYNAMIC;
-		BD.ByteWidth = sizeof(VS_CB_BONE_MATRIX);
-		BD.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		BD.CPUAccessFlags = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE;
+			m_pGrapicDevice->m_pDeviceContext->Map(pAni->pBoneMatrixBuffer,	NULL, D3D11_MAP::D3D11_MAP_WRITE_DISCARD, NULL, &pAni->tMappedResource);//맵을 하여 버퍼를 갱신.
 
-		CDevice::GetInstance()->m_pDevice->CreateBuffer(&BD, NULL, &pAni->pBoneMatrixBuffer);
+			pAni->pBoneMatrix = (VS_CB_BONE_MATRIX *)pAni->tMappedResource.pData;
 
+			for (int i = 0; i < BONE_MATRIX_NUM; i++)
+				pAni->pBoneMatrix->m_XMmtxBone[i] = XMMatrixIdentity();
 
-		CDevice::GetInstance()->m_pDeviceContext->Map(
-			pAni->pBoneMatrixBuffer,
-			NULL,
-			D3D11_MAP::D3D11_MAP_WRITE_DISCARD,
-			NULL,
-			&pAni->tMappedResource);//맵을 하여 버퍼를 갱신.
-
-		pAni->pBoneMatrix = (VS_CB_BONE_MATRIX *)pAni->tMappedResource.pData;
-
-		for (int i = 0; i < BONE_MATRIX_NUM; i++)
-			pAni->pBoneMatrix->m_XMmtxBone[i] = XMMatrixIdentity();
-
-		CDevice::GetInstance()->m_pDeviceContext->Unmap(
-			pAni->pBoneMatrixBuffer,
-			NULL);//갱신이 끝나면 언맵을 하여 닫는다.
+			m_pGrapicDevice->m_pDeviceContext->Unmap(pAni->pBoneMatrixBuffer, NULL);//갱신이 끝나면 언맵을 하여 닫는다.
+		}
 
 		CFbxParser::ParsingAnimation(pFbxRootNode, pAni, AnimStack);
 
@@ -205,26 +202,46 @@ HRESULT CDynamicMesh::Load_Model(const char* _pPath, vector<string> _vecAniName,
 	}
 
 	return S_OK;
-
 }
 
-void CDynamicMesh::PlayAnimation(int _iIdx, CShader* pVertexShader, CShader* pPixelShader, ConstantBuffer* cb, CTexture* pTexture)
+
+
+CResources * CDynamicMesh::CloneResource(void)
 {
+	return nullptr;
+}
+
+int CDynamicMesh::Update()
+{
+	return 0;
+}
+
+DWORD CDynamicMesh::Release()
+{
+	return 0;
+}
+
+void CDynamicMesh::Release_Animation()
+{
+}
+
+
+void CDynamicMesh::PlayAnimation(int _iIdx)
+{
+
 	if (_iIdx < 0 || (unsigned)_iIdx > m_vecAni.size())
 		return;
 
-
-	//m_pShader->Render();
-	//
+	m_pGrapicDevice->m_pDeviceContext->RSSetState(m_pRasterizerState);
 
 	//m_vecAni[_iIdx]->fAniPlayTimer
-	m_fAniPlayTimer
-		+= m_vecAni[_iIdx]->fAniPlaySpeed * CTimeMgr::GetInstance()->GetTime();
+	m_fAniPlayTimer	+= m_vecAni[_iIdx]->fAniPlaySpeed * CTimeMgr::GetInstance()->GetTime();
 
 	//if (m_vecAni[_iIdx]->fAniPlayTimer > m_vecAni[_iIdx]->llAniMaxTime / 10)
-	//	m_vecAni[_iIdx]->fAniPlayTimer = 0;
+		//m_vecAni[_iIdx]->fAniPlayTimer = 0;
 
 	//애니메이션 스테이트 체크해서 어디서부터 반복할지 넣어준다
+
 	/*switch (_iIdx)
 	{
 	case CPlayingInfo::ANI_STATE_BOOSTER:
@@ -232,77 +249,67 @@ void CDynamicMesh::PlayAnimation(int _iIdx, CShader* pVertexShader, CShader* pPi
 	case CPlayingInfo::ANI_STATE_BREAK:
 		if (m_fAniPlayTimer > m_vecAni[_iIdx]->llAniMaxTime / 10) {
 			m_fAniPlayTimer = (m_vecAni[_iIdx]->llAniMaxTime / 10) - 1.f;
-			Animend = true;
+			m_bAniEnd = true;
 		}
 		break;
 	default:
 		if (m_fAniPlayTimer > m_vecAni[_iIdx]->llAniMaxTime / 10) {
 			m_fAniPlayTimer = 0;
-			Animend = true;
+			m_bAniEnd = true;
 		}
 		break;
 	}*/
 
-	///////////임시임////////
-	if (m_fAniPlayTimer > m_vecAni[_iIdx]->llAniMaxTime / 10) {
+	if (m_fAniPlayTimer > m_vecAni[_iIdx]->llAniMaxTime/10)
+	{
 		m_fAniPlayTimer = 0;
 		m_bAniEnd = true;
 	}
-	////////////////////////
+
+	//여기까지
 
 	for (unsigned int i = 0; i < m_vecAni[_iIdx]->nAniNodeIdxCnt; ++i)
 	{
-		m_vecAni[_iIdx]->pBoneMatrix->m_XMmtxBone[i]
+		m_vecAni[_iIdx]->pBoneMatrix->m_XMmtxBone[i] = m_vecAni[_iIdx]->ppResultMatrix[int(m_fAniPlayTimer)][i];
 			//= m_vecAni[_iIdx]->ppResultMatrix[int(m_vecAni[_iIdx]->fAniPlayTimer)][i];
-			= m_vecAni[_iIdx]->ppResultMatrix[int(m_fAniPlayTimer)][i];
 	}
 
 
 	if (m_vecAni[_iIdx]->pBoneMatrixBuffer != NULL)
 	{
-		//CDevice::GetInstance()->m_pDeviceContext->UpdateSubresource(m_vecAni[_iIdx]->pBoneMatrixBuffer, 0, NULL, &cb, 0, 0);
-		CDevice::GetInstance()->m_pDeviceContext->VSSetShader(pVertexShader->m_pVertexShader, NULL, 0);
-		CDevice::GetInstance()->m_pDeviceContext->VSSetConstantBuffers(
-			VS_SLOT_BONE_MATRIX, 1, &m_vecAni[_iIdx]->pBoneMatrixBuffer);
-		CDevice::GetInstance()->m_pDeviceContext->PSSetShader(pPixelShader->m_pPixelShader, NULL, 0);
-		CDevice::GetInstance()->m_pDeviceContext->PSSetShaderResources(0, 1, &pTexture->m_pTextureRV);
-		CDevice::GetInstance()->m_pDeviceContext->PSSetSamplers(0, 1, &pTexture->m_pSamplerLinear);
-
-		//cout << cb->matProjection._41 << "/" << cb->matProjection._42 << "/" << cb->matProjection._43 << endl;
+		m_pGrapicDevice->m_pDeviceContext->VSSetConstantBuffers(1, 1, &m_vecAni[_iIdx]->pBoneMatrixBuffer);
 	}
 
 	m_vecAni[_iIdx]->pAniBuffer->Render();
-	m_wCurrentAniIndex = _iIdx;
+	m_wCurrenAniIdx = _iIdx;
 }
+
 
 void CDynamicMesh::BWPlayAnim(int _iIdx)
 {
 	//애니메이션 스테이트 체크해서 어디서부터 반복할지 넣어준다
-	/*switch (_iIdx)
+	switch (_iIdx)
 	{
-	case CPlayingInfo::ANI_STATE_BOOSTER:
-		m_iRepeatTime = 120;
-		break;
-	case CPlayingInfo::ANI_STATE_DEAD:
-		m_iRepeatTime = 100;
-		break;
-	case CPlayingInfo::ANI_STATE_BREAK:
-		m_iRepeatTime = 50;
-		break;
-	default:
-		m_iRepeatTime = 0;
-		break;
-	}*/
-
-	
-	m_iRepeatTime = 0;
+	//case CPlayingInfo::ANI_STATE_BOOSTER:
+	//	m_iRepeatTime = 120;
+	//	break;
+	//case CPlayingInfo::ANI_STATE_DEAD:
+	//	m_iRepeatTime = 100;
+	//	break;
+	//case CPlayingInfo::ANI_STATE_BREAK:
+	//	m_iRepeatTime = 50;
+	//	break;
+	//default:
+	//	m_iRepeatTime = 0;
+	//	break;
+	}
 
 	if (_iIdx < 0 || (unsigned)_iIdx > m_vecAni.size())
 		return;
 
 
 	//m_pShader->Render();
-	CDevice::GetInstance()->m_pDeviceContext->RSSetState(m_pRasterizerState);
+	m_pGrapicDevice->m_pDeviceContext->RSSetState(m_pRasterizerState);
 
 
 
@@ -330,11 +337,10 @@ void CDynamicMesh::BWPlayAnim(int _iIdx)
 
 	if (m_vecAni[_iIdx]->pBoneMatrixBuffer != NULL)
 	{
-		CDevice::GetInstance()->m_pDeviceContext->VSSetConstantBuffers(
-			VS_SLOT_BONE_MATRIX, 1, &m_vecAni[_iIdx]->pBoneMatrixBuffer);
+		m_pGrapicDevice->m_pDeviceContext->VSSetConstantBuffers(1, 1, &m_vecAni[_iIdx]->pBoneMatrixBuffer);
 	}
 
 	m_vecAni[_iIdx]->pAniBuffer->Render();
-	m_wCurrentAniIndex = _iIdx;
+	m_wCurrenAniIdx = _iIdx;
 	//return false;
 }

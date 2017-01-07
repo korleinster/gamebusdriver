@@ -1,7 +1,10 @@
 #pragma once
-
-#include <xnamath.h>
 #include "Mesh.h"
+
+struct VS_CB_BONE_MATRIX
+{
+	XMMATRIX m_XMmtxBone[BONE_MATRIX_NUM];// 본의 행렬. 128개가 넘어가면 vtf문제가 생김
+};
 
 /*
 //애니메이션 관련 변수들 입니다.
@@ -19,22 +22,16 @@ D3D11_MAPPED_SUBRESOURCE g_d3dMappedResource;
 VS_CB_BONE_MATRIX *g_pcbBoneMatrix = nullptr;
 */
 
+
+
 class CAniBuffer;
-class CShader;
-class CTexture;
-
-struct VS_CB_BONE_MATRIX
-{
-	XMMATRIX m_XMmtxBone[BONE_MATRIX_NUM]; // 본의 행렬
-};
-
-struct Animation//애니메이션을 구성하는 구조채
+struct Animation
 {
 	string			strAniName;// 애니매이션의 이름. 즉 사용할 fbx의 확장자를 제외한 파일 이름.
 	CAniBuffer*		pAniBuffer;//부모 및 자식노드용 버퍼.
 
 	long long		llAniMaxTime;//애니매이션의 최대시간
-	//float			fAniPlayTimer;
+								 //float			fAniPlayTimer;
 	float			fAniPlaySpeed;//애니매이션의 속도
 
 	XMMATRIX**		ppAniMatrix;//애니매니션의 행렬
@@ -64,32 +61,47 @@ struct Animation//애니메이션을 구성하는 구조채
 		, pBoneMatrix(NULL)
 	{}
 };
-class CDynamicMesh : public CMesh
+
+
+class CDynamicMesh :public CMesh
 {
-public:
-	WORD m_wCurrentAniIndex;//현재 애니인덱스
-	vector<Animation*> m_vecAni;//애니메이션 구조채를 담는 벡터
-	int m_iRepeatTime;//애니매이션을 반복할 횟수
-public:
-	float m_fAniPlayTimer;//현재 재생하고 있는 애니매이션의 시간
-	bool m_bAniEnd;//애니매이션이 끝낫는지의 여부를 알려주는 Bool값
-
-public:
-	static CDynamicMesh* Create(const char* szFilePath, vector<string> _vecAniName);
-	virtual CResources* CloneResource();
-
-public:
-	virtual HRESULT		Load_Model(const char* _pPath, vector<string> _vecAniName, FbxManager* _pFBXManager, FbxIOSettings* _pIOsettings, FbxScene* _pFBXScene, FbxImporter* _pImporter);
-
-public:
-	virtual HRESULT		Initialize(const char* _pPath, vector<string> _vecAniName);
-	void PlayAnimation(int _iIdx, CShader* pVertexShader, CShader* pPixelShader, ConstantBuffer* cb, CTexture* pTexture);//애니매이션과 함깨 랜더링도 겸함.
-	void BWPlayAnim(int _iIdx);
-
 public:
 	CDynamicMesh();
 	virtual ~CDynamicMesh();
 
+private:
+	WORD					m_wCurrenAniIdx;//현재 애니인덱스
+	vector<Animation*>		m_vecAni;//애니메이션 구조채를 담는 벡터
+	int						m_iRepeatTime;//애니매이션을 반복할 횟수
 
+public:
+	static CDynamicMesh*		Create(const char* _pPath, vector<string> _vecAniName);
+	//virtual CResource*		Clone();
+	float					m_fAniPlayTimer;//현재 재생하고 있는 애니매이션의 시간
+	bool					m_bAniEnd;//애니매이션이 끝낫는지의 여부를 알려주는 Bool값
+	bool					Yamae;
+
+protected:
+	virtual HRESULT		Load_Model(const char*, vector<string> _vecAniName, FbxManager*, FbxIOSettings*, FbxScene*, FbxImporter*);
+
+
+public:
+	virtual HRESULT		Initialize(const char* _pPath, vector<string> _vecAniName);
+public:
+	virtual int		Update();
+
+private:
+	virtual DWORD Release();
+	void Release_Animation();
+
+
+public:
+	void		PlayAnimation(int _iIdx);
+	void		BWPlayAnim(int _iIdx);
+
+
+	// CMesh을(를) 통해 상속됨
+	virtual CResources * CloneResource(void) override;
 
 };
+

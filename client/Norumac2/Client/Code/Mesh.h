@@ -1,7 +1,7 @@
 #pragma once
 #include "VIBuffer.h"
 
-
+class CDevice;
 class CShader;
 class CMesh :
 	public CVIBuffer
@@ -12,6 +12,7 @@ public:
 
 public:
 	CShader* m_pShader;
+	CDevice* m_pGrapicDevice;
 
 public:
 	virtual void Render();

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "AniBuffer.h"
 #include "DynamicMesh.h"
 
 class CFbxParser

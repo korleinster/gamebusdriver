@@ -4,11 +4,14 @@
 const UINT WINCX = 800;
 const UINT WINCY = 600;
 
+const UINT	BONE_NUM = 8;
+const UINT	BONE_MATRIX_NUM = 128;
+
 const UINT VERTEXCOUNTX = 129;
 const UINT VERTEXCOUNTZ = 129;
 const UINT VERTEXINTERVAL = 1;
 
-const D3DXVECTOR3 g_vLook(0.f, -1.f, 0.f);
+const D3DXVECTOR3 g_vLook(0.f, 0.f, 1.f);
 
 #define VS_SLOT_VIEW_MATRIX			0x00
 #define VS_SLOT_PROJECTION_MATRIX	0x01

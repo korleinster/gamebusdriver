@@ -1,18 +1,17 @@
 #include "stdafx.h"
 #include "AniBuffer.h"
-#include "Include.h"
-#include "VIBuffer.h"
 #include "Device.h"
 
 
 CAniBuffer::CAniBuffer()
-	:m_nOffset(0)
+	: m_nOffset(0)
 	, m_nStride(sizeof(VertexAni))
 	, m_nStartIndex(0)
 	, m_nBaseVertex(0)
 	, m_nVertices(0)
+	, m_pDevice(CDevice::GetInstance())
 {
-	this->m_VertexBuffer = nullptr;
+	this->m_pVertexBuffer = nullptr;
 }
 
 CAniBuffer::~CAniBuffer()
@@ -20,10 +19,10 @@ CAniBuffer::~CAniBuffer()
 	for (auto iter : this->m_vecChildBuffer)
 		delete iter;
 
-	if (this->m_VertexBuffer != nullptr)
+	if (this->m_pVertexBuffer != nullptr)
 	{
-		this->m_VertexBuffer->Release();
-		this->m_VertexBuffer = nullptr;
+		this->m_pVertexBuffer->Release();
+		this->m_pVertexBuffer = nullptr;
 	}
 }
 
@@ -72,7 +71,7 @@ void CAniBuffer::CreateBuffer()
 		ZeroMemory(&SD, sizeof(D3D11_SUBRESOURCE_DATA));
 		SD.pSysMem = this->m_pVertex;
 
-		if (FAILED(CDevice::GetInstance()->m_pDevice->CreateBuffer(&BD, &SD, &this->m_VertexBuffer)))
+		if (FAILED(m_pDevice->m_pDevice->CreateBuffer(&BD, &SD, &this->m_pVertexBuffer)))
 		{
 			MSG_BOX(L"Vertex Buffer Create Failed!");
 			getchar();
@@ -83,12 +82,12 @@ void CAniBuffer::CreateBuffer()
 
 void CAniBuffer::SetBuffer()
 {
-	if (this->m_VertexBuffer)
+	if (this->m_pVertexBuffer)
 	{
-		CDevice::GetInstance()->m_pDeviceContext->IASetVertexBuffers(
+		m_pDevice->m_pDeviceContext->IASetVertexBuffers(
 			0,
 			1,
-			&this->m_VertexBuffer,
+			&this->m_pVertexBuffer,
 			&this->m_nStride,
 			&this->m_nOffset);
 	}
@@ -99,8 +98,7 @@ void CAniBuffer::Render()
 	if (this->m_nVertices != 0)
 	{
 		this->SetBuffer();
-		CDevice::GetInstance()->m_pDeviceContext->RSSetState(m_pRasterizerState);
-		CDevice::GetInstance()->m_pDeviceContext->Draw(this->m_nVertices, this->m_nStartIndex);
+		m_pDevice->m_pDeviceContext->Draw(this->m_nVertices, this->m_nStartIndex);
 	}
 
 	for (auto iter : this->m_vecChildBuffer)
@@ -114,13 +112,4 @@ void CAniBuffer::SetFbxBoneIndex(map<std::string, unsigned int>* _pIndexByName,
 
 	for (int i = 0; i < _pNode->GetChildCount(); ++i)
 		this->SetFbxBoneIndex(_pIndexByName, _pNode->GetChild(i));
-}
-
-CResources* CAniBuffer::CloneResource()
-{
-	CResources* pResource = new CAniBuffer(*this);
-
-	pResource->AddRef();
-
-	return pResource;
 }

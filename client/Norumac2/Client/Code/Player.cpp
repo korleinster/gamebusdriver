@@ -42,7 +42,7 @@ HRESULT CPlayer::Initialize(void)
 {
 	if (FAILED(AddComponent()))
 		return E_FAIL;
-	m_pInfo->m_fAngle[ANGLE_X] = /*D3DX_PI / 2 * -1.f;*/D3DXToRadian(-90);
+	//m_pInfo->m_fAngle[ANGLE_X] = /*D3DX_PI / 2 * -1.f;*/D3DXToRadian(-90);
 	//m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 	//m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 	
@@ -70,27 +70,6 @@ int CPlayer::Update(void)
 void CPlayer::Render(void)
 {
 
-	//vector<Animation*>::iterator iter = m_pBuffer->m_vecAni.begin();
-
-	//ConstantBuffer cb;
-	//D3DXMatrixTranspose(&cb.matWorld, &m_pInfo->m_matWorld);
-	//D3DXMatrixTranspose(&cb.matView, &CCamera::GetInstance()->m_matView);
-	//D3DXMatrixTranspose(&cb.matProjection, &CCamera::GetInstance()->m_matProj);
-
-	//m_pBuffer->PlayAnimation(0,m_pVertexShader,m_pPixelShader, &cb, m_pTexture);
-
-	//m_pGrapicDevice->m_pDeviceContext->UpdateSubresource((*iter)->pBoneMatrixBuffer, 0, NULL, &cb, 0, 0);
-
-	//m_pGrapicDevice->m_pDeviceContext->VSSetShader(m_pVertexShader->m_pVertexShader, NULL, 0);
-	//m_pGrapicDevice->m_pDeviceContext->VSSetConstantBuffers(0, 1, &(*iter)->pBoneMatrixBuffer);
-	////////////////////
-	//m_pGrapicDevice->m_pDeviceContext->PSSetShader(m_pPixelShader->m_pPixelShader, NULL, 0);
-	//m_pGrapicDevice->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
-	//m_pGrapicDevice->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear)
-	
-	//m_pBuffer->Render();
-
-
 	ConstantBuffer cb;
 	D3DXMatrixTranspose(&cb.matWorld, &m_pInfo->m_matWorld);
 	D3DXMatrixTranspose(&cb.matView, &CCamera::GetInstance()->m_matView);
@@ -104,7 +83,8 @@ void CPlayer::Render(void)
 	m_pGrapicDevice->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
 	m_pGrapicDevice->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
 
-	m_pBuffer->Render();
+	//m_pBuffer->Render();
+	dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(0);
 
 }
 
@@ -125,8 +105,16 @@ void CPlayer::Release(void)
 HRESULT CPlayer::AddComponent(void)
 {
 	CComponent* pComponent = NULL;
-	char cModelPath[MAX_PATH] = "../Resource/bird.FBX";
-	m_pBuffer = CStaticMesh::Create(cModelPath);
+	char cModelPath[MAX_PATH] = "../Resource/";
+
+	vecAniName.push_back("Bird");
+	//vecName.push_back("Fall");
+	//vecName.push_back("Dead");
+	//vecName.push_back("Damage");
+	//vecAniName.push_back("Booster");
+	//vecName.push_back("Break");
+
+	m_pBuffer = CDynamicMesh::Create(cModelPath, vecAniName);
 	pComponent = m_pBuffer;
 	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Buffer", pComponent));
 
@@ -142,8 +130,8 @@ HRESULT CPlayer::AddComponent(void)
 		return E_FAIL;
 	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Texture", pComponent));
 
-	m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"VS");
-	m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"PS");
+	m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"VS_ANI");
+	m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"PS");;
 
 
 	return S_OK;

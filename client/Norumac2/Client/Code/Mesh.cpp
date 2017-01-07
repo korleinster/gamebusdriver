@@ -1,9 +1,12 @@
 #include "stdafx.h"
 #include "Mesh.h"
 #include "Shader.h"
+#include "Device.h"
+
 
 CMesh::CMesh()
-	: m_pShader(NULL)
+	: m_pShader(NULL),
+	m_pGrapicDevice(CDevice::GetInstance())
 {
 }
 

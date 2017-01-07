@@ -44,4 +44,36 @@ typedef struct tagIndex32
 }INDEX32;
 
 
+struct VertexAni
+{
+	D3DXVECTOR3		vPos;
+	D3DXVECTOR3		vNormal;
+	D3DXVECTOR2		vTextureUV;
 
+	int				iBoneIdx[BONE_NUM];
+	float			fBoneWeight[BONE_NUM];
+
+	VertexAni() {}
+	VertexAni(D3DXVECTOR3 _vPos, D3DXVECTOR3 _vNormal)
+		: vPos(_vPos), vNormal(_vNormal) {}
+	VertexAni(D3DXVECTOR3 _vPos, D3DXVECTOR3 _vNormal, D3DXVECTOR2 _vTextureUV)
+		: vPos(_vPos), vNormal(_vNormal), vTextureUV(_vTextureUV) {}
+
+	void SetPos(float _x, float _y, float _z) { vPos.x = _x; vPos.y = _y; vPos.z = _z; }
+	void SetNormal(float _x, float _y, float _z) { vNormal.x = _x; vNormal.y = _y; vNormal.z = _z; }
+	void AddBone(int _iIdx, float _fWeight)
+	{
+		for (int i = 0; i < BONE_NUM; ++i)
+		{
+			if (fBoneWeight[i] <= 0.0f)
+			{
+				iBoneIdx[i] = _iIdx;
+				fBoneWeight[i] = _fWeight;
+				return;
+			}
+		}
+
+		fBoneWeight[0] += _fWeight;
+	};
+
+};

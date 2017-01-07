@@ -98,7 +98,7 @@ HRESULT CMainApp::Initialize(void)
 	/////////////////////////////////////////////////////////////////////////
 
 	//다이나믹 매쉬용
-	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"VS_ANI", L"../ShaderCode/Shader.fx", "VS_ANI", "vs_5_0", SHADER_VS);
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"VS_ANI", L"../ShaderCode/Shader.fx", "VS_ANI", "vs_5_0", SHADER_ANI);
 	if (FAILED(hr))
 	{
 		MessageBox(NULL, L"System Message", L"Vertex Shader(Ani) Create Failed", MB_OK);

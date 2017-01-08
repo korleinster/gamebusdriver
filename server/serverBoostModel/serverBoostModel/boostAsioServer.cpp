@@ -81,8 +81,8 @@ void player_session::Init()
 	init_this_player_buf[1] = INIT_CLIENT;
 
 	m_player_data.id = m_id;
-	m_player_data.pos.x = 400;
-	m_player_data.pos.y = 300;
+	m_player_data.pos.x = 100;
+	m_player_data.pos.y = 100;
 
 	memcpy(&init_this_player_buf[2], g_clients[m_id]->get_player_data(), init_this_player_buf[0]);
 	g_clients[m_id]->send_packet(init_this_player_buf);

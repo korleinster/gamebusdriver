@@ -20,15 +20,13 @@ private:
 	CTexture*		m_pTexture;
 	VTXTEX*			m_pVerTex;
 	CTerrainCol*	m_pTerrainCol;
-	player_data		m_ServerInfo;
 
 
 public:
 	virtual HRESULT Initialize(void);
 	virtual int		Update(void);
 	virtual void	Render(void);
-	void			KeyInput(void);
-	player_data*	GetPacketData(void);
+	
 
 public:
 	static COtherPlayer* Create(void);

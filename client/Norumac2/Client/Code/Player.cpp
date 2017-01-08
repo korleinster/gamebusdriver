@@ -16,8 +16,15 @@
 #include "DynamicMesh.h"
 #include "Input.h"
 #include "TimeMgr.h"
+#include"../../../../server/serverBoostModel/serverBoostModel/protocol.h"
 
-
+//
+// 그리고 좀 이상한게, 너가 만들어준 이 틀 왜 앞에 헤더에 다 선언 되어있는데
+// 죄다 앞쪽에 선언 안했다고 에러뜸?
+// 보통 .h 랑 .cpp 만들어놓으면, 아무런 문제 없이 인식해서 잘 돌아가는데
+// 너가 만들어 준거는 인식을 못해서 일일이 헤더폴더 위에 다 추가해줘야됨
+// 왜그런거져? 그리고 주석에도 빨간줄이야 기분나쁘게
+// 사퇴하세요. 클라 하야 하세요.
 
 
 CPlayer::CPlayer()
@@ -28,6 +35,8 @@ CPlayer::CPlayer()
 	m_pTexture = NULL;
 	m_pVerTex = NULL;
 	m_pTerrainCol = NULL;
+	m_fSeverTime = 0.f;
+	test = false;
 
 	m_Packet = new Packet[MAX_BUF_SIZE];
 }
@@ -45,23 +54,45 @@ HRESULT CPlayer::Initialize(void)
 	//m_pInfo->m_fAngle[ANGLE_X] = /*D3DX_PI / 2 * -1.f;*/D3DXToRadian(-90);
 	//m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 	//m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
+	m_pInfo->m_vScale = D3DXVECTOR3(0.01f, 0.01f, 0.01f);
+
+	
 	
 	return S_OK;
 }
 
 int CPlayer::Update(void)
 {
-
+	m_fSeverTime += CTimeMgr::GetInstance()->GetTime();
 	/*if (m_pBuffer->m_bAniEnd == true)
 		m_pBuffer->m_bAniEnd = false;*/
+
+	if (test == false)
+	{
+		m_pInfo->m_ServerInfo = *g_client.getPlayerData();
+		test = true;
+	}
 	
-	m_pInfo->m_vScale = D3DXVECTOR3(0.01f, 0.01f, 0.01f);
+
 	D3DXVec3TransformNormal(&m_pInfo->m_vDir, &g_vLook, &m_pInfo->m_matWorld);
 
 	//cout << m_pInfo->m_vDir.x << "/" << m_pInfo->m_vDir.y << "/" << m_pInfo->m_vDir.z << endl;
 
 	KeyInput();
 	CObj::Update();
+
+
+
+	if (m_fSeverTime > 1.0f)
+	{
+		m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
+		m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
+		g_client.sendPacket(sizeof(player_data), KEYINPUT, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo));
+
+		m_fSeverTime = 0.f;
+		cout << "packet send" << endl;
+	}
+
 	//m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 	//m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 	return 0;
@@ -145,12 +176,12 @@ void CPlayer::KeyInput()
 	//g_client->m_recvbuf
 	if (CInput::GetInstance()->GetDIKeyState(DIK_UP) & 0x80)
 	{
-		m_pInfo->m_vPos += m_pInfo->m_vDir * 50.f * fTime;
+		m_pInfo->m_vPos += m_pInfo->m_vDir * 100.f * fTime;
 	}
 
 	if (CInput::GetInstance()->GetDIKeyState(DIK_DOWN) & 0x80)
 	{
-		m_pInfo->m_vPos -= m_pInfo->m_vDir * 50.f * fTime;
+		m_pInfo->m_vPos -= m_pInfo->m_vDir * 100.f * fTime;
 	}
 
 	if (CInput::GetInstance()->GetDIKeyState(DIK_LEFT) & 0x80)

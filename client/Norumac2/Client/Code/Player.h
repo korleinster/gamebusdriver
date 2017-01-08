@@ -21,6 +21,8 @@ private:
 	VTXTEX*			m_pVerTex;
 	CTerrainCol*	m_pTerrainCol;
 	Packet*			m_Packet;
+	float			m_fSeverTime;
+	bool			test;
 
 
 public:

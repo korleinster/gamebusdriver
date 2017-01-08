@@ -94,3 +94,13 @@ const float & CObj::GetViewZ(void) const
 	return m_fViewZ;
 }
 
+
+player_data* CObj::GetPacketData()
+{
+	return &m_pInfo->m_ServerInfo;
+}
+
+void CObj::SetPacketData(player_data* pPacketData)
+{
+	m_pInfo->m_ServerInfo = *pPacketData;
+}

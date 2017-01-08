@@ -88,6 +88,9 @@ player_data*  CObjMgr::Get_PlayerServerData(UINT uID)
 {
 	map<wstring, list<CObj*>>::iterator iter = m_mapObj.find(L"OtherPlayer");
 
+	if (iter == m_mapObj.end())
+		return NULL;
+
 	for (auto ptr : iter->second)
 	{
 		UINT uCompareId = ((COtherPlayer*)ptr)->GetPacketData()->id;
@@ -97,6 +100,16 @@ player_data*  CObjMgr::Get_PlayerServerData(UINT uID)
 	}
 
 	return NULL;
+}
+
+list<CObj*>*  CObjMgr::Get_ObjList(wstring wstrKey)
+{
+	map<wstring, list<CObj*>>::iterator iter = m_mapObj.find(wstrKey);
+
+	if (iter == m_mapObj.end())
+		return NULL;
+
+	return &(*iter).second;
 }
 
 

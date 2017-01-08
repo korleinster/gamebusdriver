@@ -70,6 +70,11 @@ void CSceneMgr::Render(void)
 	m_pScene->Render();
 }
 
+Scene_Tyep CSceneMgr::GetScene(void)
+{
+	return m_eType;
+}
+
 void CSceneMgr::Release(void)
 {
 	map<Scene_Tyep, CScene*>::iterator iter = m_mapScene.begin();

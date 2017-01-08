@@ -20,6 +20,7 @@ WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름입니다.
 HWND	g_hWnd;
 DWORD	g_dwLightIndex = 0;
 D3DXVECTOR3 g_vLightDir = D3DXVECTOR3(1.f, -1.f, 1.f);
+AsynchronousClientClass g_client;
 
 // 이 코드 모듈에 들어 있는 함수의 정방향 선언입니다.
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -57,6 +58,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	// 서버와 통신을 위해서, 윈도우 핸들 값을 받아온다.
 	g_client.Init(g_hWnd);
+
+	// 이걸 너가 옮겨야됨, 새가 날아왔을 이후로
+	// g_hWnd 는 윈도우 창 핸들값이니까
+	// 하긴 어차피 둘다 글로벌이니 상관 없겠다
+	// 여튼 거기 서 부르면 됨 이거, 여기는 삭제하고 ㅇㅋ?
 
 	// 기본 메시지 루프입니다.
 	while (msg.message != WM_QUIT)

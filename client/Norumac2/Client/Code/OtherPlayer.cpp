@@ -41,7 +41,7 @@ HRESULT COtherPlayer::Initialize(void)
 		return E_FAIL;
 
 	m_pInfo->m_vScale = D3DXVECTOR3(0.01f, 0.01f, 0.01f);
-	m_pInfo->m_fAngle[ANGLE_X] = /*D3DX_PI / 2 * -1.f;*/D3DXToRadian(-90);
+	//m_pInfo->m_fAngle[ANGLE_X] = /*D3DX_PI / 2 * -1.f;*/D3DXToRadian(-90);
 
 	return S_OK;
 }
@@ -55,6 +55,9 @@ int COtherPlayer::Update(void)
 	//m_pInfo->m_vPos.x = reinterpret_cast<player_data *>(&m_Packet[2])->pos.x;
 	//m_pInfo->m_vPos.z = reinterpret_cast<player_data *>(&m_Packet[2])->pos.y;
 
+	m_pInfo->m_vPos.x = m_pInfo->m_ServerInfo.pos.x;
+	m_pInfo->m_vPos.z = m_pInfo->m_ServerInfo.pos.y;
+
 	D3DXVec3TransformNormal(&m_pInfo->m_vDir, &g_vLook, &m_pInfo->m_matWorld);
 
 
@@ -67,28 +70,7 @@ int COtherPlayer::Update(void)
 void COtherPlayer::Render(void)
 {
 
-		//vector<Animation*>::iterator iter = m_pBuffer->m_vecAni.begin();
-
-		//ConstantBuffer cb;
-		//D3DXMatrixTranspose(&cb.matWorld, &m_pInfo->m_matWorld);
-		//D3DXMatrixTranspose(&cb.matView, &CCamera::GetInstance()->m_matView);
-		//D3DXMatrixTranspose(&cb.matProjection, &CCamera::GetInstance()->m_matProj);
-
-		//m_pBuffer->PlayAnimation(0,m_pVertexShader,m_pPixelShader, &cb, m_pTexture);
-
-		//m_pGrapicDevice->m_pDeviceContext->UpdateSubresource((*iter)->pBoneMatrixBuffer, 0, NULL, &cb, 0, 0);
-
-		//m_pGrapicDevice->m_pDeviceContext->VSSetShader(m_pVertexShader->m_pVertexShader, NULL, 0);
-		//m_pGrapicDevice->m_pDeviceContext->VSSetConstantBuffers(0, 1, &(*iter)->pBoneMatrixBuffer);
-		////////////////////
-		//m_pGrapicDevice->m_pDeviceContext->PSSetShader(m_pPixelShader->m_pPixelShader, NULL, 0);
-		//m_pGrapicDevice->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
-		//m_pGrapicDevice->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear)
-
-		//m_pBuffer->Render();
-
-
-		ConstantBuffer cb;
+	ConstantBuffer cb;
 	D3DXMatrixTranspose(&cb.matWorld, &m_pInfo->m_matWorld);
 	D3DXMatrixTranspose(&cb.matView, &CCamera::GetInstance()->m_matView);
 	D3DXMatrixTranspose(&cb.matProjection, &CCamera::GetInstance()->m_matProj);
@@ -101,7 +83,8 @@ void COtherPlayer::Render(void)
 	m_pGrapicDevice->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
 	m_pGrapicDevice->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
 
-	m_pBuffer->Render();
+	//m_pBuffer->Render();
+	dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(0);
 
 }
 
@@ -121,8 +104,16 @@ void COtherPlayer::Release(void)
 HRESULT COtherPlayer::AddComponent(void)
 {
 	CComponent* pComponent = NULL;
-	char cModelPath[MAX_PATH] = "../Resource/bird.FBX";
-	m_pBuffer = CStaticMesh::Create(cModelPath);
+	char cModelPath[MAX_PATH] = "../Resource/";
+
+	vecAniName.push_back("Bird");
+	//vecName.push_back("Fall");
+	//vecName.push_back("Dead");
+	//vecName.push_back("Damage");
+	//vecAniName.push_back("Booster");
+	//vecName.push_back("Break");
+
+	m_pBuffer = CDynamicMesh::Create(cModelPath, vecAniName);
 	pComponent = m_pBuffer;
 	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Buffer", pComponent));
 
@@ -138,14 +129,10 @@ HRESULT COtherPlayer::AddComponent(void)
 		return E_FAIL;
 	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Texture", pComponent));
 
-	m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"VS");
-	m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"PS");
+	m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"VS_ANI");
+	m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"PS");;
 
 
 	return S_OK;
 }
 
-player_data* COtherPlayer::GetPacketData()
-{
-	return &m_ServerInfo;
-}

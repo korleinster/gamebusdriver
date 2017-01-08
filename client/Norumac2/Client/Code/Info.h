@@ -22,6 +22,7 @@ public:
 	D3DXVECTOR3			m_vPos;
 	D3DXVECTOR3			m_vDir;
 	D3DXMATRIX			m_matWorld;
+	player_data			m_ServerInfo;
 
 
 };

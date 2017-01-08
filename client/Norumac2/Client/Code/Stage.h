@@ -18,6 +18,5 @@ public:
 
 public:
 	HRESULT	CreateObj(void);
-	HRESULT CreateSeverData(void);
 };
 

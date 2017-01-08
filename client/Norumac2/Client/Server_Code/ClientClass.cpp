@@ -28,7 +28,7 @@ void AsynchronousClientClass::Init(const HWND& hwnd)
 	m_sock = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, NULL, 0, 0);
 	if (INVALID_SOCKET == m_sock) {
 		int err_no = WSAGetLastError();
-		error_quit(L"socket()", err_no);
+		error_quit(L"WSASocket()", err_no);
 	}
 		
 	// connect
@@ -43,7 +43,7 @@ void AsynchronousClientClass::Init(const HWND& hwnd)
 		// 비동기 소켓이라 그냥 리턴, 검사 해주어야 함
 		if (WSAGetLastError() != WSAEWOULDBLOCK) {
 			int err_no = WSAGetLastError();
-			error_quit(L"connect()", err_no);
+			error_quit(L"WSAConnect()", err_no);
 		}
 	}
 
@@ -171,7 +171,7 @@ void AsynchronousClientClass::sendPacket(const BYTE data_size, const BYTE type, 
 			// 비동기 소켓이라 그냥 리턴, 검사 해주어야 함
 			if (WSAGetLastError() != WSAEWOULDBLOCK) {
 				int err_no = WSAGetLastError();
-				error_quit(L"connect()", err_no);
+				error_quit(L"sendPacket()", err_no);
 			}
 		}
 	}
@@ -192,7 +192,7 @@ void AsynchronousClientClass::sendPacket_TEST() {
 		// 비동기 소켓이라 그냥 리턴, 검사 해주어야 함
 		if (WSAGetLastError() != WSAEWOULDBLOCK) {
 			int err_no = WSAGetLastError();
-			error_quit(L"connect()", err_no);
+			error_quit(L"sendPacket_TEST()", err_no);
 		}
 	}
 }

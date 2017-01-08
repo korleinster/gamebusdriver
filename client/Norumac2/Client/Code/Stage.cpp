@@ -19,12 +19,10 @@ CStage::~CStage()
 
 HRESULT CStage::Initialize(void)
 {
-
-	if (FAILED(CreateSeverData()))
-		return E_FAIL;
-
 	if (FAILED(CreateObj()))
 		return E_FAIL;
+
+
 
 	return S_OK;
 }
@@ -103,9 +101,3 @@ HRESULT CStage::CreateObj(void)
 	return S_OK;
 }
 
-HRESULT CStage::CreateSeverData()
-{
-
-
-	return S_OK;
-}

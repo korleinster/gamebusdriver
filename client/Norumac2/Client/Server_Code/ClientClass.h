@@ -17,6 +17,8 @@ public:
 
 	unordered_map<UINT, player_data>* getOtherPlayers() { return &m_other_players; }
 	player_data* getPlayerData(){ return &m_player; }
+
+
 private:
 	// member Function
 	void inputServerIP();

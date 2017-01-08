@@ -63,7 +63,7 @@ using namespace std;
 #include<fstream>
 #include"../Server_Code/ClientClass.h"
 
-static AsynchronousClientClass g_client;
+extern AsynchronousClientClass g_client;
 
 #pragma warning(disable : 4005)
 #include <crtdbg.h>

@@ -36,7 +36,8 @@ public:
 	
 
 public:
-	void			SetPos(D3DXVECTOR3 vPos);
+	void SetPos(D3DXVECTOR3 vPos); player_data*	GetPacketData(void);
+	void SetPacketData(player_data* pPacketData);
 
 protected:
 	void Compute_ViewZ(const D3DXVECTOR3* pPos);

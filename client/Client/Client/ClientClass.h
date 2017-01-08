@@ -25,7 +25,7 @@ private:
 	void error_quit(wchar_t *msg, int err_no);
 
 	SOCKET* getServerSocket();
-	void processPacket();
+	void processPacket(Packet*);
 
 	// 윈도우 창 관련 멤버 변수
 	WNDCLASS m_wndclass;
@@ -48,6 +48,9 @@ private:
 	unsigned int m_sendbytes{ 0 };
 	bool m_recvdelayed{ 0 };
 
+	// 최초 초기화를 했는가?
+	bool am_i_inited{ false };
+	
 	// 실제 ingame에 사용할 멤버 변수 데이터
 	player_data m_player;
 	unordered_map<UINT, player_data> m_other_players;

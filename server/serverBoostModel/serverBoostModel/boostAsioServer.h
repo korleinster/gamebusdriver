@@ -21,7 +21,9 @@ public:
 
 	void Init();
 
+	unsigned int get_id() { return m_id; }
 	bool get_current_connect_state() { return m_connect_state; }
+	player_data* get_player_data() { return &m_player_data; }
 	void send_packet(Packet *packet);
 private:
 	// Function

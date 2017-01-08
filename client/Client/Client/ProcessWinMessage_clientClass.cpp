@@ -25,8 +25,13 @@ void AsynchronousClientClass::ProcessWinMessage(HWND hwnd, UINT uMsg, WPARAM wPa
 		}
 		m_recvbytes = m_retval;
 
+		Packet *temp_recv_buf = new Packet[MAX_BUF_SIZE];
+		memcpy(temp_recv_buf, m_recvbuf, MAX_BUF_SIZE);
+
 		// recvbuf 에 받은 내용을 토대로 데이터 처리
-		processPacket();
+		processPacket(temp_recv_buf);
+
+		delete[] temp_recv_buf;
 	}
 		break;
 	case FD_WRITE:	// 데이터 송신

@@ -74,63 +74,49 @@ void player_session::Init()
 {
 	m_connect_state = true;
 
-	// 기본 초기화 정보 보내기
-	Packet temp_buf[MAX_BUF_SIZE];
-	//Packet *temp_buf = new Packet[MAX_BUF_SIZE];
+	// 기본 셋팅 초기화 정보 보내기
+	Packet init_this_player_buf[MAX_BUF_SIZE];
 
-	temp_buf[0] = sizeof(player_data) + 2;
-	temp_buf[1] = INIT_CLIENT;
+	init_this_player_buf[0] = sizeof(player_data) + 2;
+	init_this_player_buf[1] = INIT_CLIENT;
 
 	m_player_data.id = m_id;
 	m_player_data.pos.x = 400;
 	m_player_data.pos.y = 300;
 
-	memcpy(&temp_buf[2], &m_player_data, temp_buf[0]);
-	send_packet(temp_buf);
+	memcpy(&init_this_player_buf[2], g_clients[m_id]->get_player_data(), init_this_player_buf[0]);
+	g_clients[m_id]->send_packet(init_this_player_buf);
+
+	// 초기화 정보 보내기 2 - 얘 정보를 다른 애들한테 보내고, 다른 애들 정보를 얘한테 보내기
+	/*Packet other_info_to_me_buf[MAX_BUF_SIZE];*/
+	Packet my_info_to_other_buf[MAX_BUF_SIZE];
+
+	/*other_info_to_me_buf[0] =*/ my_info_to_other_buf[0] = sizeof(player_data) + 2;
+	/*other_info_to_me_buf[1] =*/ my_info_to_other_buf[1] = KEYINPUT;
+	my_info_to_other_buf[1] = INIT_CLIENT;
+
+	// 현재 접속한 애한테 다른 플레이어 정보 보내기
+	memcpy(&my_info_to_other_buf[2], &m_player_data, my_info_to_other_buf[0]);
+
+	for (auto players : g_clients)
+	{
+		if (DISCONNECTED == players->get_current_connect_state()) { continue; }
+		if (m_id == players->get_id()) { continue; }
+
+		// 다른 애들 정보를 복사해서 넣고, 얘한테 먼저 보내고... ( 얘 왜 못받는건지 알수가 읎다 도대체... )
+		/*memcpy(&other_info_to_me_buf[2], players->get_player_data(), other_info_to_me_buf[0] - 2);
+		send_packet(other_info_to_me_buf);*/
+
+		// 얘 정보를 이제 다른 애들한테 보내면 되는데..
+		players->send_packet(my_info_to_other_buf);
+	}
 	
 	/*
 		근처 플레이어에게, 현재 플레이어의 입장을 알리며
 		view list 같은 곳에서도 추가하자 ~ !!
-	*/	
+	*/
 
-	// 다른 애들 정보를 이 플레이어 한테 보내기 ( 왠지 모르게 작동을 안한다....??? ) 심지어 cout 도 출력이 안됨... 뭐가 문제인지;;
-	vector<Packet *> temp_vector;
-	for (auto players : g_clients)
-	{
-		if (DISCONNECTED == players->m_connect_state) { continue; }
-		if (m_id == players->m_id) { continue; }
-
-		// 기본 초기화 정보 보내기 2
-		Packet temp_buf2[MAX_BUF_SIZE];
-		//Packet *temp_buf2 = new Packet[MAX_BUF_SIZE];
-
-		temp_buf2[0] = sizeof(player_data) + 2;
-		temp_buf2[1] = KEYINPUT;
-		memcpy(&temp_buf2[2], &(players->m_player_data), temp_buf2[0] - 2);
-		//temp_vector.emplace_back(temp_buf2);
-
-		send_packet(temp_buf2);
-	}
-
-	// 기본 초기화 정보 보내기 2
-	Packet temp_buf3[MAX_BUF_SIZE];
-
-	temp_buf3[0] = sizeof(player_data) + 2;
-	temp_buf3[1] = KEYINPUT;
-
-	// 현재 접속한 애한테 다른 플레이어 정보 보내기
-	memcpy(&temp_buf3[2], &m_player_data, temp_buf3[0]);
-
-	for (auto players : g_clients)
-	{
-		if (DISCONNECTED == players->m_connect_state) { continue; }
-		if (m_id == players->m_id) { continue; }
-
-		players->send_packet(temp_buf3);
-	}
-
-	/*delete[] temp_buf;
-	for (auto ptr : temp_vector) { delete[] ptr; }*/
+	
 
 	m_recv_packet();
 }

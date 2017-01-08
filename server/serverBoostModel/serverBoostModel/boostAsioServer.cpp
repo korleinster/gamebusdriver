@@ -116,8 +116,6 @@ void player_session::Init()
 		view list 같은 곳에서도 추가하자 ~ !!
 	*/
 
-	
-
 	m_recv_packet();
 }
 

@@ -49,7 +49,7 @@ private:
 	bool m_recvdelayed{ 0 };
 
 	// 최초 초기화를 했는가?
-	bool am_i_inited{ false };
+	//bool am_i_inited{ false };
 	
 	// 실제 ingame에 사용할 멤버 변수 데이터
 	player_data m_player;

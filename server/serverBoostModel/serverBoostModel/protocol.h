@@ -28,8 +28,8 @@ using Packet = unsigned char;
 // 캐릭터 기본 정보 struct
 /// 기본 좌표계
 using position = struct Position {
-	float x{ 400 };
-	float y{ 300 };
+	float x{ 100 };
+	float y{ 100 };
 };
 /// 플레이어 전체 정보
 using player_data = struct Player_data {

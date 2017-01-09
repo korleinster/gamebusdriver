@@ -28,8 +28,6 @@ public:
 public:
 	void	BeginDevice(void);
 	void	EndDevice(void);
-
-private:
 	void Release(void);
 };
 

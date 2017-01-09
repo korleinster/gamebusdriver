@@ -22,12 +22,11 @@ public:
 	virtual HRESULT Initialize(void);
 	virtual int		Update(void);
 	virtual void	Render(void) {};
+	virtual void Release(void);
 
 public:
 	static CObj* Create(ReleaseType _eType);
-
-private:
-	virtual void Release(void);
+	
 
 public:
 	const float&	GetViewZ(void) const;

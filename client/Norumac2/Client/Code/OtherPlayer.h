@@ -30,9 +30,9 @@ public:
 
 public:
 	static COtherPlayer* Create(void);
+	void	Release(void);
 
 private:
-	void	Release(void);
 	HRESULT	AddComponent(void);
 };
 

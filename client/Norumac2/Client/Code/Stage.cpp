@@ -37,6 +37,16 @@ int CStage::Update(void)
 
 	if (GetAsyncKeyState('0'))
 	{
+		list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"Flower")->begin();
+		list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"Flower")->end();
+
+		for (iter; iter != iter_end;)
+		{
+			CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
+			::Safe_Release(*iter);
+			CObjMgr::GetInstance()->Get_ObjList(L"Flower")->erase(iter++);
+			cout << CObjMgr::GetInstance()->Get_ObjList(L"Flower")->size() << endl;
+		}		
 		
 	}
 

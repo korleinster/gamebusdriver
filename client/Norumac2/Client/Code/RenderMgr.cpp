@@ -28,6 +28,21 @@ void CRenderMgr::AddRenderGroup(RENDERGROUP eRednerID, CObj* pObj)
 	m_RenderGroup[eRednerID].push_back(pObj);
 }
 
+void CRenderMgr::DelRenderGroup(RENDERGROUP eRednerID, CObj* pObj)
+{
+	list<CObj*>::iterator	iter = m_RenderGroup[eRednerID].begin();
+	list<CObj*>::iterator	iter_end = m_RenderGroup[eRednerID].end();
+
+	for (; iter != iter_end; )
+	{
+		if ((*iter) == pObj)
+			m_RenderGroup[eRednerID].erase(iter++);
+		else
+			++iter;
+	
+	}
+}
+
 HRESULT CRenderMgr::InitScene(void)
 {
 	return S_OK;
@@ -52,7 +67,10 @@ void CRenderMgr::Render_Priority(void)
 
 	for (; iter != iter_end; ++iter)
 	{
-		(*iter)->Render();
+		if ((*iter) == NULL)
+			m_RenderGroup[TYPE_PRIORITY].erase(iter++);
+		else
+			(*iter)->Render();
 	}
 
 	//m_pDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
@@ -66,7 +84,10 @@ void CRenderMgr::Render_NoneAlpha(void)
 
 	for (; iter != iter_end; ++iter)
 	{
-		(*iter)->Render();
+		if ((*iter) == NULL)
+			m_RenderGroup[TYPE_NONEALPHA].erase(iter++);
+		else
+			(*iter)->Render();
 	}
 }
 
@@ -92,7 +113,10 @@ void CRenderMgr::Render_Alpha(void)
 
 	for (; iter != iter_end; ++iter)
 	{
-		(*iter)->Render();
+		if ((*iter) == NULL)
+			m_RenderGroup[TYPE_ALPHA].erase(iter++);
+		else
+			(*iter)->Render();
 	}
 }
 
@@ -105,7 +129,10 @@ void CRenderMgr::Render_UI(void)
 
 	for (; iter != iter_end; ++iter)
 	{
-		(*iter)->Render();
+		if ((*iter) == NULL)
+			m_RenderGroup[TYPE_UI].erase(iter++);
+		else
+			(*iter)->Render();
 	}
 	//m_pDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 	//m_pDevice->SetRenderState(D3DRS_ZENABLE, TRUE);

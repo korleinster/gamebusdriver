@@ -24,9 +24,8 @@ public:
 	int		Update(void);
 	void	Render(void);
 	Scene_Tyep GetScene(void);
-
-private:
 	void Release(void);
+
 
 
 	

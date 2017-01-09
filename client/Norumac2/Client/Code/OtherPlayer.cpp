@@ -99,6 +99,9 @@ COtherPlayer * COtherPlayer::Create(void)
 
 void COtherPlayer::Release(void)
 {
+	Safe_Delete(m_pBuffer);
+	Safe_Delete(m_pTexture);
+	Safe_Release(m_pInfo);
 }
 
 HRESULT COtherPlayer::AddComponent(void)

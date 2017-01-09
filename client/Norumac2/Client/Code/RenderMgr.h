@@ -22,6 +22,7 @@ public:
 
 public:
 	void AddRenderGroup(RENDERGROUP eRednerID, CObj* pObj);
+	void DelRenderGroup(RENDERGROUP eRednerID, CObj* pObj);
 
 private:
 	void Render_Priority(void);

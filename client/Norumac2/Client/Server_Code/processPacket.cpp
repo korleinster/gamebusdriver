@@ -28,10 +28,25 @@ void AsynchronousClientClass::processPacket()
 		// 여기도, id 로 찾아서, 그 아이디 찾으면 그 객체는 삭제 해야겠찌? ㅇㅋㄷㅋ?
 		player_data *data = CObjMgr::GetInstance()->Get_PlayerServerData(reinterpret_cast<player_data*>(&m_recvbuf[2])->id);
 
-		//CObjMgr::GetInstance()->Get_ObjList()
+		list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->begin();
+		list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->end();
+
+		for (iter; iter != iter_end;)
+		{
+			if ((*iter)->GetPacketData()->id == reinterpret_cast<player_data*>(data)->id)
+			{
+				CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
+				::Safe_Release(*iter);
+				CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->erase(iter++);
+			}
+			else
+				++iter;
+
+		}
+
 	}
 		break;
-	case KEYINPUT: {
+	case CHANGED_POSITION: {
 
 		if (CSceneMgr::GetInstance()->GetScene() != SCENE_LOGO)
 		{

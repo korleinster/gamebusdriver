@@ -38,13 +38,13 @@ private:
 public:
 	HRESULT Initialize(void);
 	int		Update(void);
+	void	Release(void);
 
 public:
 	void MakeView(void);
 	void MakeProjection(void);
 
 private:
-	void Release(void);
 	void KeyState(void);
 	void FixMouse(void);
 	void MouseMove(void);

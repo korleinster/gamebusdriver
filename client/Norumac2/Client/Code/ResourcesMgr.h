@@ -34,9 +34,9 @@ public:
 
 public:
 	void ResourceReset(const WORD& wContainerIndex);
-
-private:
 	void Release(void);
+
+	
 
 };
 

@@ -17,12 +17,11 @@ private:
 public:
 	HRESULT	AddShaderFiles(wstring wstrShaderTag, wstring wstrFilePath, LPCSTR wstrShaderName, LPCSTR wstrShaderVersion, ShaderType _eType);
 	CShader* Clone_Shader(wstring wstrShaderTag);
+	void Release(void);
 
 
 private:
 	CShader* Find_Shader(wstring wstrShaderTag);
 	
-private:
-	void Release(void);
 };
 

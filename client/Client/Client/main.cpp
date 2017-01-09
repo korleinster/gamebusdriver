@@ -121,7 +121,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 		{
 			player_data temp;
 			temp = *(g_client.getPlayerData());
-			g_client.sendPacket(sizeof(player_data), KEYINPUT, reinterpret_cast<BYTE*>(&temp));
+			g_client.sendPacket(sizeof(player_data), CHANGED_POSITION, reinterpret_cast<BYTE*>(&temp));
 		}
 		break;
 

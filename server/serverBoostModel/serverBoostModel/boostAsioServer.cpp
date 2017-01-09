@@ -92,7 +92,7 @@ void player_session::Init()
 	Packet my_info_to_other_buf[MAX_BUF_SIZE];
 
 	/*other_info_to_me_buf[0] =*/ my_info_to_other_buf[0] = sizeof(player_data) + 2;
-	/*other_info_to_me_buf[1] =*/ my_info_to_other_buf[1] = KEYINPUT;
+	/*other_info_to_me_buf[1] =*/ my_info_to_other_buf[1] = CHANGED_POSITION;
 	//my_info_to_other_buf[1] = INIT_CLIENT;
 
 	// 현재 접속한 애한테 다른 플레이어 정보 보내기
@@ -235,7 +235,7 @@ void player_session::m_process_packet(Packet buf[])
 				//temp_vector.push_back(other_info_to_me_buf);
 
 				other_info_to_me_buf[0] = sizeof(player_data) + 2;
-				other_info_to_me_buf[1] = KEYINPUT;
+				other_info_to_me_buf[1] = CHANGED_POSITION;
 
 				// 다른 애들 정보를 복사해서 넣고, 얘한테 먼저 보내고... ( 얘 왜 못받는건지 알수가 읎다 도대체... )
 				memcpy(&other_info_to_me_buf[2], players->get_player_data(), other_info_to_me_buf[0] - 2);
@@ -249,7 +249,7 @@ void player_session::m_process_packet(Packet buf[])
 		}
 			break;
 
-		case KEYINPUT:
+		case CHANGED_POSITION:
 			m_player_data = *(reinterpret_cast<player_data*>(&buf[2]));
 
 			// 필요한 애들한테 이동 정보를 뿌려주자 - 현재는 애들 다 뿌린다.

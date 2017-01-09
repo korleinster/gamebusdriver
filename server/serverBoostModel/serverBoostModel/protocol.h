@@ -20,7 +20,10 @@ enum PacketProtocolType {
 	//DUMMY_CLIENT,	// dummy client 용 프로토콜
 	INIT_CLIENT,
 	PLAYER_DISCONNECTED,
-	KEYINPUT,		// 클라이언트에서 키 입력을 받았을 경우
+	//KEYINPUT,		// 클라이언트에서 키 입력을 받았을 경우
+	CHANGED_POSITION,
+	CHANGED_DIRECTION,
+	CHANGED_SIZE_RATIO,
 };
 
 using Packet = unsigned char;
@@ -31,8 +34,16 @@ using position = struct Position {
 	float x{ 100 };
 	float y{ 100 };
 };
+/// 방향 좌표계
+using direction = struct Direction {
+	float x;
+	float y;
+	float z;
+};
 /// 플레이어 전체 정보
 using player_data = struct Player_data {
 	unsigned int id{ 0 };
 	position pos;
+	direction dir;
+	float size_ratio;
 };

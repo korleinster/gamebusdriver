@@ -27,7 +27,7 @@ void AsynchronousClientClass::processPacket(Packet *buf)
 		InvalidateRect(m_hWnd, NULL, TRUE);
 	}
 		break;
-	case KEYINPUT: {
+	case CHANGED_POSITION: {
 #ifdef _DEBUG
 		//cout << "KEYINPUT , player id : " << reinterpret_cast<player_data*>(&buf[2])->id << endl;
 #endif // _DEBUG

@@ -2,12 +2,13 @@
 #include "Shader.h"
 #include "Device.h"
 
-
 CShader::CShader()
 {
 	m_pVertexShader = NULL;
 	m_pPixelShader = NULL;
 	m_pVertexLayout = NULL;
+	m_pHullShader = NULL;
+	m_pDomainShader = NULL;
 	m_dwRefCount = 1;
 }
 
@@ -16,6 +17,8 @@ CShader::CShader(const CShader & rhs)
 	m_pVertexShader = rhs.m_pVertexShader;
 	m_pVertexLayout = rhs.m_pVertexLayout;
 	m_pPixelShader = rhs.m_pPixelShader;
+	m_pHullShader = rhs.m_pHullShader;
+	m_pDomainShader = rhs.m_pDomainShader;
 	m_dwRefCount = rhs.m_dwRefCount;
 	++m_dwRefCount;
 }
@@ -52,8 +55,6 @@ HRESULT CShader::Ready_ShaderFile(wstring wstrFilePath, LPCSTR wstrShaderName, L
 	}
 	if (pErrorBlob) pErrorBlob->Release();
 
-
-
 	if (_SType == SHADER_VS)
 	{
 
@@ -67,9 +68,12 @@ HRESULT CShader::Ready_ShaderFile(wstring wstrFilePath, LPCSTR wstrShaderName, L
 
 		D3D11_INPUT_ELEMENT_DESC layout[] =
 		{
-			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+			/*{ "POSITION",  0, DXGI_FORMAT_R32G32B32_FLOAT,    0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "NORMAL",     0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "TEXCOORD",  0, DXGI_FORMAT_R32G32_FLOAT,       0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },*/
+			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,    0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 			//{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 
 		};
@@ -77,21 +81,26 @@ HRESULT CShader::Ready_ShaderFile(wstring wstrFilePath, LPCSTR wstrShaderName, L
 		UINT numElements = ARRAYSIZE(layout);
 
 		hr = CDevice::GetInstance()->m_pDevice->CreateInputLayout(layout, numElements, pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), &m_pVertexLayout);
-		pShaderBlob->Release();
-		if (FAILED(hr))
-			return hr;
 
 		CDevice::GetInstance()->m_pDeviceContext->IASetInputLayout(m_pVertexLayout);
 	}
-
 	else if (_SType == SHADER_PS)
 	{
 		hr = CDevice::GetInstance()->m_pDevice->CreatePixelShader(pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), NULL, &m_pPixelShader);
-		pShaderBlob->Release();
-
-		if (FAILED(hr))
-			return hr;
 	}
+	else if (_SType == SHADER_HS)
+	{
+		hr = CDevice::GetInstance()->m_pDevice->CreateHullShader(pShaderBlob->GetBufferPointer(),pShaderBlob->GetBufferSize(), NULL, &m_pHullShader);
+	}
+	else if (_SType == SHADER_DS)
+	{
+		hr = CDevice::GetInstance()->m_pDevice->CreateDomainShader(pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), NULL, &m_pDomainShader);
+	}
+
+	pShaderBlob->Release();
+	
+	if (FAILED(hr))
+		return hr;
 
 	return S_OK;
 }

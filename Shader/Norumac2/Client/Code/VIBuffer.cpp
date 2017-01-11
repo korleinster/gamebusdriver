@@ -54,8 +54,6 @@ void CVIBuffer::Render(void)
 	if(m_IndexBuffer)
 		pGrapicDevice->m_pDeviceContext->IASetIndexBuffer(m_IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 	pGrapicDevice->m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	//pGrapicDevice->m_pDeviceContext->Draw(4, 0);
-	//pGrapicDevice->m_pDeviceContext->RSSetState(m_pd3dRasterizerState);
 
 	if (m_pRasterizerState)
 		pGrapicDevice->m_pDeviceContext->RSSetState(m_pRasterizerState);
@@ -65,6 +63,9 @@ void CVIBuffer::Render(void)
 
 	else
 		pGrapicDevice->m_pDeviceContext->Draw(m_iVertices, m_iStartVertex);
+
+	if(m_pRasterizerState)
+		pGrapicDevice->m_pDeviceContext->RSSetState(NULL);
 }
 
 DWORD CVIBuffer::Release(void)
@@ -88,21 +89,3 @@ void CVIBuffer::CreateRasterizerState()
 	tRasterizerDesc.FillMode = D3D11_FILL_SOLID;
 	pGrapicDevice->m_pDevice->CreateRasterizerState(&tRasterizerDesc, &m_pRasterizerState);
 }
-
-
-void VertexAni::AddBone(int _iIdx, float _fWeight)
-{
-	for (int i = 0; i < BONE_NUM; ++i)
-	{
-		if (fBoneWeight[i] <= 0.0f)
-		{
-			iBoneIdx[i] = _iIdx;
-			fBoneWeight[i] = _fWeight;
-			return;
-		}
-	}
-
-	fBoneWeight[0] += _fWeight;
-}
-
-

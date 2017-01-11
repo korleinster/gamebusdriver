@@ -43,14 +43,14 @@ int CLogo::Update(void)
 
 void CLogo::Render(void)
 {
-	CDevice::GetInstance()->m_pDeviceContext->VSSetShader(m_pVertexShader->m_pVertexShader, NULL, 0);
-	CDevice::GetInstance()->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pPolygon->m_ConstantBuffer);
+	//CDevice::GetInstance()->m_pDeviceContext->VSSetShader(m_pVertexShader->m_pVertexShader, NULL, 0);
+	//CDevice::GetInstance()->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pPolygon->m_ConstantBuffer);
 	//////////////////
-	CDevice::GetInstance()->m_pDeviceContext->PSSetShader(m_pPixelShader->m_pPixelShader, NULL, 0);
-	CDevice::GetInstance()->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
-	CDevice::GetInstance()->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
+	//CDevice::GetInstance()->m_pDeviceContext->PSSetShader(m_pPixelShader->m_pPixelShader, NULL, 0);
+	//CDevice::GetInstance()->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
+	//CDevice::GetInstance()->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
 
-	m_pPolygon->Render();
+	//m_pPolygon->Render();
 }
 
 void CLogo::Release(void)

@@ -74,7 +74,7 @@ void player_session::Init()
 {
 	m_connect_state = true;
 
-	// 기본 셋팅 초기화 정보 보내기
+	// 기본 셋팅 초기화 정보 보내기 *****************>>>> size_ratio 와 direction 도 차후에 수정해주어야 한다.
 	Packet init_this_player_buf[MAX_BUF_SIZE];
 
 	init_this_player_buf[0] = sizeof(player_data) + 2;
@@ -87,7 +87,7 @@ void player_session::Init()
 	memcpy(&init_this_player_buf[2], g_clients[m_id]->get_player_data(), init_this_player_buf[0]);
 	g_clients[m_id]->send_packet(init_this_player_buf);
 
-	// 초기화 정보 보내기 2 - 얘 정보를 다른 애들한테 보내고, 다른 애들 정보를 얘한테 보내기
+	// 초기화 정보 보내기 2 - 얘 정보를 다른 애들한테 보내고, 다른 애들 정보를 얘한테 보내기  *****************>>>> size_ratio 와 direction 도 차후에 수정해주어야 한다.
 	/*Packet other_info_to_me_buf[MAX_BUF_SIZE];*/
 	Packet my_info_to_other_buf[MAX_BUF_SIZE];
 

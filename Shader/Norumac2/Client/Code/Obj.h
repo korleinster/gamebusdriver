@@ -16,7 +16,6 @@ protected:
 	bool						m_bZSort;
 	CDevice*					m_pGrapicDevice;
 	ReleaseType					m_eReleaseType;
-	vector<string>				vecAniName;
 
 public:
 	virtual HRESULT Initialize(void);

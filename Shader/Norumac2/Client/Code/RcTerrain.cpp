@@ -27,9 +27,9 @@ HRESULT CRcTerrain::CreateBuffer(UINT iCountX, UINT iCountZ, UINT iInterval)
 
 	int		iIndex = 0;
 
-	for (UINT z = 0; z < iCountZ; ++z)
+	for (int z = 0; z < iCountZ; ++z)
 	{
-		for (UINT x = 0; x < iCountX; ++x)
+		for (int x = 0; x < iCountX; ++x)
 		{
 			iIndex = z * iCountX + x;
 
@@ -43,10 +43,10 @@ HRESULT CRcTerrain::CreateBuffer(UINT iCountX, UINT iCountZ, UINT iInterval)
 	
 	D3D11_BUFFER_DESC vbd;
 	ZeroMemory(&vbd, sizeof(vbd));
-	vbd.Usage = D3D11_USAGE_DEFAULT;
+	vbd.Usage = D3D11_USAGE_DYNAMIC;
 	vbd.ByteWidth = sizeof(VTXTEX) * iVertexCount;
 	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vbd.CPUAccessFlags = 0;
+	vbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	vbd.MiscFlags = 0;
 	vbd.StructureByteStride = 0;
 
@@ -69,9 +69,9 @@ HRESULT CRcTerrain::CreateBuffer(UINT iCountX, UINT iCountZ, UINT iInterval)
 
 	int	iTriCnt = 0;
 
-	for (UINT z = 0; z < iCountZ - 1; ++z)
+	for (int z = 0; z < iCountZ - 1; ++z)
 	{
-		for (UINT x = 0; x < iCountX - 1; ++x)
+		for (int x = 0; x < iCountX - 1; ++x)
 		{
 			iIndex = z * iCountX + x;
 

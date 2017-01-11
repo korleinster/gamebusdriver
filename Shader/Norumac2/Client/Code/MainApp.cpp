@@ -30,9 +30,9 @@ CMainApp::CMainApp()
 	: m_pRcCol(NULL),
 	m_pInfo(NULL)
 {
-	AllocConsole();
-	freopen("CONOUT$", "wt", stdout);
-	SetConsoleTitleA("Debug");
+	//AllocConsole();
+	//freopen("CONOUT$", "wt", stdout);
+	//SetConsoleTitleA("Debug");
 }
 
 
@@ -53,7 +53,6 @@ HRESULT CMainApp::Initialize(void)
 	m_pGrapicDevcie = CDevice::GetInstance();
 
 	CTimeMgr::GetInstance()->InitTime();
-	CRenderMgr::GetInstance()->InitScene();
 
 	
 	//m_pRcCol = CRcTerrain::Create(VERTEXCOUNTX, VERTEXCOUNTZ, VERTEXINTERVAL);
@@ -96,6 +95,140 @@ HRESULT CMainApp::Initialize(void)
 		return hr;
 	}
 
+	//디퍼드용
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"GBufferVisVS", L"../ShaderCode/GBufferVis.fx", "GBufferVisVS", "vs_5_0", SHADER_VS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"GBuffer Vertex Shader Create Failed", MB_OK);
+		return hr;
+	}
+
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"GBufferVisPS", L"../ShaderCode/GBufferVis.fx", "GBufferVisPS", "ps_5_0", SHADER_PS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"GBuffer Pixel Shader Create Failed", MB_OK);
+		return hr;
+	}
+
+	//디퍼드 오브젝트용
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"RenderSceneVS", L"../ShaderCode/DeferredShading.fx", "RenderSceneVS", "vs_5_0", SHADER_VS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"Render Scene Vertex Shader Create Failed", MB_OK);
+		return hr;
+	}
+
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"RenderScenePS", L"../ShaderCode/DeferredShading.fx", "RenderScenePS", "ps_5_0", SHADER_PS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"Render Scene Pixel Shader Create Failed", MB_OK);
+		return hr;
+	}
+	
+	//조명 쉐이더
+	//Directional
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"DirLightVS", L"../ShaderCode/DirLight.fx", "DirLightVS", "vs_5_0", SHADER_VS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"DirLight Vertex Shader Create Failed", MB_OK);
+		return hr;
+	}
+
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"DirLightPS", L"../ShaderCode/DirLight.fx", "DirLightPS", "ps_5_0", SHADER_PS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"DirLight Pixel Shader Create Failed", MB_OK);
+		return hr;
+	}
+
+	//Point
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"PointLightVS", L"../ShaderCode/PointLight.fx", "PointLightVS", "vs_5_0", SHADER_VS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"PointLight Vertex Shader Create Failed", MB_OK);
+		return hr;
+	}
+
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"PointLightHS", L"../ShaderCode/PointLight.fx", "PointLightHS", "hs_5_0", SHADER_HS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"PointLight Pixel Shader Create Failed", MB_OK);
+		return hr;
+	}
+
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"PointLightDS", L"../ShaderCode/PointLight.fx", "PointLightDS", "ds_5_0", SHADER_DS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"PointLight Vertex Shader Create Failed", MB_OK);
+		return hr;
+	}
+
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"PointLightPS", L"../ShaderCode/PointLight.fx", "PointLightPS", "ps_5_0", SHADER_PS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"PointLight Pixel Shader Create Failed", MB_OK);
+		return hr;
+	}
+
+	//Spot
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"SpotLightVS", L"../ShaderCode/SpotLight.fx", "SpotLightVS", "vs_5_0", SHADER_VS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"SpotLight Vertex Shader Create Failed", MB_OK);
+		return hr;
+	}
+
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"SpotLightHS", L"../ShaderCode/SpotLight.fx", "SpotLightHS", "hs_5_0", SHADER_HS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"SpotLight Pixel Shader Create Failed", MB_OK);
+		return hr;
+	}
+
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"SpotLightDS", L"../ShaderCode/SpotLight.fx", "SpotLightDS", "ds_5_0", SHADER_DS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"SpotLight Vertex Shader Create Failed", MB_OK);
+		return hr;
+	}
+
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"SpotLightPS", L"../ShaderCode/SpotLight.fx", "SpotLightPS", "ps_5_0", SHADER_PS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"SpotLight Pixel Shader Create Failed", MB_OK);
+		return hr;
+	}
+	//Capsule
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"CapsuleLightVS", L"../ShaderCode/CapsuleLight.fx", "CapsuleLightVS", "vs_5_0", SHADER_VS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"Capsule Vertex Shader Create Failed", MB_OK);
+		return hr;
+	}
+
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"CapsuleLightHS", L"../ShaderCode/CapsuleLight.fx", "CapsuleLightHS", "hs_5_0", SHADER_HS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"Capsule Pixel Shader Create Failed", MB_OK);
+		return hr;
+	}
+
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"CapsuleLightDS", L"../ShaderCode/CapsuleLight.fx", "CapsuleLightDS", "ds_5_0", SHADER_DS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"CapsuleLight Vertex Shader Create Failed", MB_OK);
+		return hr;
+	}
+
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"CapsuleLightPS", L"../ShaderCode/CapsuleLight.fx", "CapsuleLightPS", "ps_5_0", SHADER_PS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"CapsuleLight Pixel Shader Create Failed", MB_OK);
+		return hr;
+	}
+
+
+	//인풋
 	hr = CInput::GetInstance()->InitInputDevice(g_hInst, g_hWnd);
 	if (FAILED(hr))
 	{
@@ -113,14 +246,14 @@ HRESULT CMainApp::Initialize(void)
 
 	CSceneMgr::GetInstance()->ChangeScene(SCENE_LOGO);
 
-	/*D3D11_RASTERIZER_DESC wireframeDesc;
+	/*
+	D3D11_RASTERIZER_DESC wireframeDesc;
 	ZeroMemory(&wireframeDesc, sizeof(D3D11_RASTERIZER_DESC));
 	wireframeDesc.FillMode = D3D11_FILL_WIREFRAME;
 	wireframeDesc.CullMode = D3D11_CULL_BACK;
 	wireframeDesc.FrontCounterClockwise = false;
-	wireframeDesc.DepthClipEnable = true;*/
-
-
+	wireframeDesc.DepthClipEnable = true;
+	*/
 			
 	return S_OK;
 }

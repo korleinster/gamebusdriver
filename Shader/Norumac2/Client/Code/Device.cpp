@@ -37,6 +37,7 @@ HRESULT CDevice::CreateDevice(void)
 	vp.TopLeftY = 0;
 	m_pDeviceContext->RSSetViewports(1, &vp);
 
+
 	return S_OK;
 }
 
@@ -89,6 +90,7 @@ bool CDevice::CreateSwapChain(void)
 
 	if (!CreateRenderTargetStanciView()) return(false);
 
+
 	return true;
 }
 
@@ -127,13 +129,14 @@ bool CDevice::CreateRenderTargetStanciView(void)
 
 	m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
 
+
 	return true;
 }
 
 void CDevice::BeginDevice(void)
 {
-	D3DXCOLOR DevcieColor(0, 0, 1, 1);
-	m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView, DevcieColor);
+	D3DXCOLOR DeviceColor(0, 0, 0, 0);
+	m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView, DeviceColor);
 	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 

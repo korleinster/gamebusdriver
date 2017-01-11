@@ -124,20 +124,14 @@
     <Filter Include="04.Manager\07.SoundMgr">
       <UniqueIdentifier>{7806e50f-6e83-4b77-bdb2-0b38fc2b0464}</UniqueIdentifier>
     </Filter>
-    <Filter Include="97.Resources\01.Buffer\5.Mesh\DynamicMesh\FbxParser">
-      <UniqueIdentifier>{b2b743ce-8a4b-4998-a5c0-417ae6f73eff}</UniqueIdentifier>
+    <Filter Include="04.Manager\08.LightMgr">
+      <UniqueIdentifier>{d18e5f8c-5ecf-4201-a749-05bbaed057c4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="97.Resources\01.Buffer\5.Mesh\DynamicMesh\AnimationBuffer">
-      <UniqueIdentifier>{c62de12e-6dde-4abc-af96-3d81921fb76c}</UniqueIdentifier>
+    <Filter Include="04.Manager\09.TargetMgr">
+      <UniqueIdentifier>{16af94ef-0134-4b1e-ba61-5eb450eef8d4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="96.Utility\03.RenderTarget">
-      <UniqueIdentifier>{0fff0a72-ad9b-4284-abea-d27980b49262}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Manager\09.LightMgr">
-      <UniqueIdentifier>{672ef1e0-ae75-4606-ad21-8d7d3b2d4a66}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Manager\08.RenderTargetMgr">
-      <UniqueIdentifier>{798d24a3-3a5c-4e54-9e0b-81b97f6ad979}</UniqueIdentifier>
+    <Filter Include="04.Manager\09.TargetMgr\MultiRenderTarget">
+      <UniqueIdentifier>{249d96a6-378e-4428-a448-e87d908641c4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -264,20 +258,14 @@
     <ClInclude Include="..\Code\VIBuffer.h">
       <Filter>97.Resources\01.Buffer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\DynamicMesh.h">
-      <Filter>97.Resources\01.Buffer\5.Mesh\DynamicMesh</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Code\FbxParser.h">
-      <Filter>97.Resources\01.Buffer\5.Mesh\DynamicMesh\FbxParser</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Code\AniBuffer.h">
-      <Filter>97.Resources\01.Buffer\5.Mesh\DynamicMesh\AnimationBuffer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Code\RenderTarget.h">
-      <Filter>96.Utility\03.RenderTarget</Filter>
+    <ClInclude Include="..\Code\TargetMgr.h">
+      <Filter>04.Manager\09.TargetMgr</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\LightMgr.h">
-      <Filter>04.Manager\09.LightMgr</Filter>
+      <Filter>04.Manager\08.LightMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\MultiRenderTarget.h">
+      <Filter>04.Manager\09.TargetMgr\MultiRenderTarget</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -380,20 +368,14 @@
     <ClCompile Include="..\Code\VIBuffer.cpp">
       <Filter>97.Resources\01.Buffer</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\DynamicMesh.cpp">
-      <Filter>97.Resources\01.Buffer\5.Mesh\DynamicMesh</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\FbxParser.cpp">
-      <Filter>97.Resources\01.Buffer\5.Mesh\DynamicMesh\FbxParser</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\AniBuffer.cpp">
-      <Filter>97.Resources\01.Buffer\5.Mesh\DynamicMesh\AnimationBuffer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\RenderTarget.cpp">
-      <Filter>96.Utility\03.RenderTarget</Filter>
+    <ClCompile Include="..\Code\TargetMgr.cpp">
+      <Filter>04.Manager\09.TargetMgr</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\LightMgr.cpp">
-      <Filter>04.Manager\09.LightMgr</Filter>
+      <Filter>04.Manager\08.LightMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\MultiRenderTarget.cpp">
+      <Filter>04.Manager\09.TargetMgr\MultiRenderTarget</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -413,22 +395,25 @@
     <FxCompile Include="..\ShaderCode\Shader.fx">
       <Filter>97.Resources\03.Shader\ShaderCode</Filter>
     </FxCompile>
-    <FxCompile Include="..\ShaderCode\common.fx">
-      <Filter>97.Resources\03.Shader\ShaderCode</Filter>
-    </FxCompile>
-    <FxCompile Include="..\ShaderCode\DeferredShading.fx">
-      <Filter>97.Resources\03.Shader\ShaderCode</Filter>
-    </FxCompile>
-    <FxCompile Include="..\ShaderCode\DirLight.fx">
-      <Filter>97.Resources\03.Shader\ShaderCode</Filter>
-    </FxCompile>
-    <FxCompile Include="..\ShaderCode\GBufferVis.fx">
+    <FxCompile Include="..\ShaderCode\SpotLight.fx">
       <Filter>97.Resources\03.Shader\ShaderCode</Filter>
     </FxCompile>
     <FxCompile Include="..\ShaderCode\PointLight.fx">
       <Filter>97.Resources\03.Shader\ShaderCode</Filter>
     </FxCompile>
-    <FxCompile Include="..\ShaderCode\SpotLight.fx">
+    <FxCompile Include="..\ShaderCode\GBufferVis.fx">
+      <Filter>97.Resources\03.Shader\ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderCode\DirLight.fx">
+      <Filter>97.Resources\03.Shader\ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderCode\DeferredShading.fx">
+      <Filter>97.Resources\03.Shader\ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderCode\common.fx">
+      <Filter>97.Resources\03.Shader\ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderCode\CapsuleLight.fx">
       <Filter>97.Resources\03.Shader\ShaderCode</Filter>
     </FxCompile>
   </ItemGroup>

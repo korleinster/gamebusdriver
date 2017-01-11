@@ -2,25 +2,38 @@
 #include "RenderMgr.h"
 #include "Obj.h"
 #include "Scene.h"
-#include "RenderTarget.h"
+#include "Device.h"
+#include "TargetMgr.h"
+#include "LightMgr.h"
+#include "MultiRenderTarget.h"
 
 IMPLEMENT_SINGLETON(CRenderMgr)
 
 CRenderMgr::CRenderMgr()
-	:m_fTime(0.f)
+	: m_fTime(0.f)
 	, m_dwCount(0)
+	, m_pDevice(CDevice::GetInstance())
+	, m_pTargetMgr(CTargetMgr::GetInstance())
+	, m_pLightMgr(CLightMgr::GetInstance())
 {
 	ZeroMemory(m_szFps, sizeof(TCHAR) * 128);
+	m_pTargetMgr->Initialize();
+	m_pLightMgr->Initialize();
+
+	m_pLightMgr->SetAmbient(D3DXVECTOR3(0.1f, 0.2f, 0.1f), D3DXVECTOR3(0.1f, 0.2f, 0.2f));
+	m_pLightMgr->SetDirectional(D3DXVECTOR3(1.0f, -1.0f, 1.0f), D3DXVECTOR3(0.8f, 0.8f, 0.0f));
 }
 
 
 CRenderMgr::~CRenderMgr()
 {
+	m_pTargetMgr->DestroyInstance();
+	m_pLightMgr->DestroyInstance();
 }
 
-void CRenderMgr::SetCurrentScene(CScene * pScene)
-{
-}
+//void CRenderMgr::SetCurrentScene(CScene * pScene)
+//{
+//}
 
 void CRenderMgr::AddRenderGroup(RENDERGROUP eRednerID, CObj* pObj)
 {
@@ -31,17 +44,39 @@ void CRenderMgr::AddRenderGroup(RENDERGROUP eRednerID, CObj* pObj)
 
 HRESULT CRenderMgr::InitScene(void)
 {
-	/*if (FAILED(CRenderTarget::Create(800, 600, DXGI_FORMAT_R8G8B8A8_UNORM, D3DXCOLOR(1.f, 1.f, 1.f, 1.f))))
-	{
-		return E_FAIL;
-	}*/
 	return S_OK;
 }
 
 void CRenderMgr::Render(const float & fTime)
 {
+	ID3D11DepthStencilState* pPrevDepthState;
+	UINT nPrevStencil;
+	m_pDevice->m_pDeviceContext->OMGetDepthStencilState(&pPrevDepthState, &nPrevStencil);
+
+	// Set render resources
+	//m_pDevice->m_pDeviceContext->PSSetSamplers(0, 1, &g_pSampLinear);
+
+	// GBuffer
+	m_pTargetMgr->GetGBuffer()->Begin_MRT(m_pDevice->m_pDeviceContext);
+
 	Render_Priority();
 	Render_NoneAlpha();
+
+	m_pTargetMgr->GetGBuffer()->End_MRT(m_pDevice->m_pDeviceContext);
+
+	// Set the render target and do the lighting
+	m_pDevice->m_pDeviceContext->OMSetRenderTargets(1, &m_pDevice->m_pRenderTargetView, m_pTargetMgr->GetGBuffer()->GetDepthReadOnlyDSV());
+	
+	m_pTargetMgr->GetGBuffer()->PrepareForUnpack(m_pDevice->m_pDeviceContext);
+	m_pLightMgr->DoLighting(m_pDevice->m_pDeviceContext, m_pTargetMgr->GetGBuffer());
+	
+	m_pDevice->m_pDeviceContext->OMSetRenderTargets(1, &m_pDevice->m_pRenderTargetView, NULL);
+	m_pTargetMgr->RenderGBuffer(m_pDevice->m_pDeviceContext);
+	m_pDevice->m_pDeviceContext->OMSetRenderTargets(1, &m_pDevice->m_pRenderTargetView, m_pTargetMgr->GetGBuffer()->GetDepthDSV());
+
+	m_pDevice->m_pDeviceContext->OMSetDepthStencilState(pPrevDepthState, nPrevStencil);
+	Safe_Release(pPrevDepthState);
+
 	Render_Alpha();
 	Render_UI();
 	Render_FPS(fTime);

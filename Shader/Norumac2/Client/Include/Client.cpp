@@ -1,10 +1,6 @@
 // Client.cpp : 응용 프로그램에 대한 진입점을 정의합니다.
 //
 
-#ifdef _DEBUG
-#include <vld.h>
-#endif
-
 #include "stdafx.h"
 #include "Client.h"
 #include "MainApp.h"
@@ -114,7 +110,6 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
 	HWND hWnd;
-
 	RECT	rc = { 0,0,WINCX, WINCY };
 
    g_hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
@@ -122,12 +117,13 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    hWnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
 	   CW_USEDEFAULT, 0, rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, hInstance, NULL);
 
-
    g_hWnd = hWnd;
 
 
    if (!hWnd)
+   {
       return FALSE;
+   }
 
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);

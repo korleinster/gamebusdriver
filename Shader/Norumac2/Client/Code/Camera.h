@@ -43,6 +43,9 @@ public:
 	void MakeView(void);
 	void MakeProjection(void);
 
+	const D3DXMATRIX* GetViewMatrix() { return &m_matView; }
+	const D3DXMATRIX* GetProjMatrix() { return &m_matProj; }
+
 private:
 	void Release(void);
 	void KeyState(void);

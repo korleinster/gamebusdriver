@@ -1,19 +1,25 @@
-/////////////////////////////////////////////////////////////////////////////
 // GBuffer textures and Samplers
-/////////////////////////////////////////////////////////////////////////////
 Texture2D<float> DepthTexture         : register( t0 );
 Texture2D<float4> ColorSpecIntTexture : register( t1 );
 Texture2D<float3> NormalTexture       : register( t2 );
 Texture2D<float4> SpecPowTexture      : register( t3 );
 SamplerState PointSampler             : register( s0 );
 
-/////////////////////////////////////////////////////////////////////////////
 // constants
-/////////////////////////////////////////////////////////////////////////////
 cbuffer cbGBufferUnpack : register( b0 )
 {
   float4 PerspectiveValues : packoffset( c0 );
   float4x4 ViewInv         : packoffset( c1 );
+}
+
+cbuffer cbFog : register( b2 )
+{
+	float3 FogColor          : packoffset( c0 );
+	float FogStartDepth      : packoffset( c0.w );
+	float3 FogHighlightColor : packoffset( c1 );
+	float FogGlobalDensity   : packoffset( c1.w );
+	float3 FogSunDir	     : packoffset( c2 );
+	float FogStartHeight     : packoffset( c2.w );
 }
 
 #define EyePosition (ViewInv[3].xyz)

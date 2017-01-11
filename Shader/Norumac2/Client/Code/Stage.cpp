@@ -62,6 +62,7 @@ HRESULT CStage::CreateObj(void)
 	CRenderMgr* pRenderer = CRenderMgr::GetInstance();
 	//ÅÍ·¹ÀÎ
 	CObj* pObj = NULL;
+	/*
 	pObj = CTerrain::Create();
 	if (pObj == NULL)
 		return E_FAIL;
@@ -82,7 +83,7 @@ HRESULT CStage::CreateObj(void)
 
 		CObjMgr::GetInstance()->AddObject(L"Flower", pObj);
 		pRenderer->AddRenderGroup(TYPE_NONEALPHA, pObj);
-	}
+	}*/
 
 	pObj = CPlayer::Create();
 	CObjMgr::GetInstance()->AddObject(L"Player", pObj);

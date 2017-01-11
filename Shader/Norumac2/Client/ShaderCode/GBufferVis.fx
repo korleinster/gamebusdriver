@@ -1,19 +1,22 @@
 #include "common.fx"
 
+// 좌표
 static float2 arrOffsets[4] = {
-	float2(-0.75, -0.75),
-	float2(-0.25, -0.75),
-	float2(0.25, -0.75),
-	float2(0.75, -0.75),
+	float2(-0.89, 0.89),
+	float2(-0.68, 0.89),
+	float2(-0.47, 0.89),
+	float2(-0.26, 0.89),
 };
 
+// 버텍스 버퍼
 static const float2 arrBasePos[4] = {
-	float2(1.0, 1.0),
-	float2(1.0, -1.0),
-	float2(-1.0, 1.0),
-	float2(-1.0, -1.0),
+	float2(0.5, 0.5),
+	float2(0.5, -0.5),
+	float2(-0.5, 0.5),
+	float2(-0.5, -0.5),
 };
 
+// 렌더타겟 그릴 uv
 static const float2 arrUV[4] = {
 	float2(1.0, 0.0),
 	float2(1.0, 1.0),
@@ -30,23 +33,23 @@ static const float4 arrMask[4] = {
 
 struct VS_OUTPUT
 {
-    float4 Position	: SV_Position; // vertex position 
-    float2 UV		: TEXCOORD0;   // vertex texture coords
+	float4 Position	: SV_Position; // 버텍스 포지션 
+	float2 UV		: TEXCOORD0;   // 버텍스 texture coords
 	float4 sampMask	: TEXCOORD1;
 };
 
-VS_OUTPUT GBufferVisVS( uint VertexID : SV_VertexID )
+VS_OUTPUT GBufferVisVS(uint VertexID : SV_VertexID)
 {
-    VS_OUTPUT Output;
+	VS_OUTPUT Output;
 
-    Output.Position = float4( arrBasePos[VertexID % 4].xy * 0.2 + arrOffsets[VertexID / 4], 0.0, 1.0);
-    Output.UV = arrUV[VertexID % 4].xy;
+	Output.Position = float4(arrBasePos[VertexID % 4].xy * 0.2 + arrOffsets[VertexID / 4], 0.0, 1.0);
+	Output.UV = arrUV[VertexID % 4].xy;
 	Output.sampMask = arrMask[VertexID / 4].xyzw;
-    
-    return Output;    
+
+	return Output;
 }
 
-float4 GBufferVisPS( VS_OUTPUT In ) : SV_TARGET
+float4 GBufferVisPS(VS_OUTPUT In) : SV_TARGET
 {
 	SURFACE_DATA gbd = UnpackGBuffer(In.UV.xy);
 	float4 finalColor = float4(0.0, 0.0, 0.0, 1.0);
@@ -58,18 +61,18 @@ float4 GBufferVisPS( VS_OUTPUT In ) : SV_TARGET
 	return finalColor;
 }
 
-VS_OUTPUT TextureVisVS( uint VertexID : SV_VertexID )
+VS_OUTPUT TextureVisVS(uint VertexID : SV_VertexID)
 {
-    VS_OUTPUT Output;
+	VS_OUTPUT Output;
 
-    Output.Position = float4(arrBasePos[VertexID].xy, 0.0, 1.0);
-    Output.UV = arrUV[VertexID].xy;
+	Output.Position = float4(arrBasePos[VertexID].xy, 0.0, 1.0);
+	Output.UV = arrUV[VertexID].xy;
 	Output.sampMask = 0;
-    
-    return Output;
+
+	return Output;
 }
 
-float4 TextureVisPS( VS_OUTPUT In ) : SV_TARGET
+float4 TextureVisPS(VS_OUTPUT In) : SV_TARGET
 {
-	return float4(DepthTexture.Sample( PointSampler, In.UV.xy ).x, 0.0, 0.0, 1.0);
+	return float4(DepthTexture.Sample(PointSampler, In.UV.xy).x, 0.0, 0.0, 1.0);
 }

@@ -1,83 +1,51 @@
 #pragma once
-
 #include "Include.h"
 
+class CShader;
+class CMultiRenderTarget;
 class CLightMgr
 {
 public:
+	DECLARE_SINGLETON(CLightMgr)
 
+public:
 	CLightMgr();
-	~CLightMgr();
+	virtual ~CLightMgr();
 
-	HRESULT Init();
-	void Deinit();
-
-	void Update();
+public:
+	HRESULT Initialize();
+	void Release();
+	void DoLighting(ID3D11DeviceContext* pd3dImmediateContext, CMultiRenderTarget* pGBuffer);
+	//void DoDebugLightVolume(ID3D11DeviceContext* pd3dImmediateContext);
 
 	// Set the ambient values
-	void SetAmbient(const D3DXVECTOR3& vAmbientLowerColor, const D3DXVECTOR3& vAmbientUpperColor)
-	{
-		m_vAmbientLowerColor = vAmbientLowerColor;
-		m_vAmbientUpperColor = vAmbientUpperColor;
-	}
+	void SetAmbient(const D3DXVECTOR3& vAmbientLowerColor, const D3DXVECTOR3& vAmbientUpperColor);
 
 	// Set the directional light values
-	void SetDirectional(const D3DXVECTOR3& vDirectionalDir, const D3DXVECTOR3& vDirectionalCorol)
-	{
-		D3DXVec3Normalize(&m_vDirectionalDir, &vDirectionalDir);
-		m_vDirectionalColor = vDirectionalCorol;
-	}
+	void SetDirectional(const D3DXVECTOR3& vDirectionalDir, const D3DXVECTOR3& vDirectionalColor);
 
 	// Clear the lights from the previous frame
 	void ClearLights() { m_arrLights.clear(); }
 
 	// Add a single point light
-	void AddPointLight(const D3DXVECTOR3& vPointPosition, float fPointRange, const D3DXVECTOR3& vPointColor)
-	{
-		LIGHT pointLight;
+	void AddPointLight(const D3DXVECTOR3& vPointPosition, float fPointRange, const D3DXVECTOR3& vPointColor);
+	void AddSpotLight(const D3DXVECTOR3& vSpotPosition, const D3DXVECTOR3& vSpotDirection, float fSpotRange, float fSpotOuterAngle, float fSpotInnerAngle, const D3DXVECTOR3& vSpotColor);
+	void AddCapsuleLight(const D3DXVECTOR3& vCapsulePosition, const D3DXVECTOR3& vCapsuleDirection, float fCapsuleRange, float fCapsuleLength, const D3DXVECTOR3& vCapsuleColor);
 
-		pointLight.eLightType = TYPE_POINT;
-		pointLight.vPosition = vPointPosition;
-		pointLight.fRange = fPointRange;
-		pointLight.vColor = vPointColor;
 
-		m_arrLights.push_back(pointLight);
-	}
+private:
+	// Do the directional light calculation
+	void DirectionalLight(ID3D11DeviceContext* pd3dImmediateContext);
 
-	void AddSpotLight(const D3DXVECTOR3& vSpotPosition, const D3DXVECTOR3& vSpotDirection, float fSpotRange,
-		float fSpotOuterAngle, float fSpotInnerAngle, const D3DXVECTOR3& vSpotColor)
-	{
-		LIGHT spotLight;
+	// Based on the value of bWireframe, either do the lighting or render the volume
+	void PointLight(ID3D11DeviceContext* pd3dImmediateContext, const D3DXVECTOR3& vPos, float fRange, const D3DXVECTOR3& vColor);
 
-		spotLight.eLightType = TYPE_SPOT;
-		spotLight.vPosition = vSpotPosition;
-		spotLight.vDirection = vSpotDirection;
-		spotLight.fRange = fSpotRange;
-		spotLight.fOuterAngle = D3DX_PI * fSpotOuterAngle / 180.0f;
-		spotLight.fInnerAngle = D3DX_PI * fSpotInnerAngle / 180.0f;
-		spotLight.vColor = vSpotColor;
+	// Based on the value of bWireframe, either do the lighting or render the volume
+	void SpotLight(ID3D11DeviceContext* pd3dImmediateContext, const D3DXVECTOR3& vPos, const D3DXVECTOR3& vDir, float fRange, float fInnerAngle, float fOuterAngle, const D3DXVECTOR3& vColor);
 
-		m_arrLights.push_back(spotLight);
-	}
+	// Based on the value of bWireframe, either do the lighting or render the volume
+	void CapsuleLight(ID3D11DeviceContext* pd3dImmediateContext, const D3DXVECTOR3& vPos, const D3DXVECTOR3& vDir, float fRange, float fLen, const D3DXVECTOR3& vColor);
 
-	void AddCapsuleLight(const D3DXVECTOR3& vCapsulePosition, const D3DXVECTOR3& vCapsuleDirection, float fCapsuleRange,
-		float fCapsuleLength, const D3DXVECTOR3& vCapsuleColor)
-	{
-		LIGHT capsuleLight;
-
-		capsuleLight.eLightType = TYPE_CAPSULE;
-		capsuleLight.vPosition = vCapsulePosition;
-		capsuleLight.vDirection = vCapsuleDirection;
-		capsuleLight.fRange = fCapsuleRange;
-		capsuleLight.fLength = fCapsuleLength;
-		capsuleLight.vColor = vCapsuleColor;
-
-		m_arrLights.push_back(capsuleLight);
-	}
-
-	void DoLighting(ID3D11DeviceContext* pd3dImmediateContext);
-
-	void DoDebugLightVolume(ID3D11DeviceContext* pd3dImmediateContext);
 
 private:
 
@@ -101,38 +69,37 @@ private:
 		D3DXVECTOR3 vColor;
 	} LIGHT;
 
-	// Do the directional light calculation
-	void DirectionalLight(ID3D11DeviceContext* pd3dImmediateContext);
-
-	// Based on the value of bWireframe, either do the lighting or render the volume
-	void PointLight(ID3D11DeviceContext* pd3dImmediateContext, const D3DXVECTOR3& vPos, float fRange, const D3DXVECTOR3& vColor, bool bWireframe);
-
-	// Based on the value of bWireframe, either do the lighting or render the volume
-	void SpotLight(ID3D11DeviceContext* pd3dImmediateContext, const D3DXVECTOR3& vPos, const D3DXVECTOR3& vDir, float fRange, float fInnerAngle, float fOuterAngle, const D3DXVECTOR3& vColor, bool bWireframe);
-
 	// Directional light
-	ID3D11VertexShader* m_pDirLightVertexShader;
-	ID3D11PixelShader* m_pDirLightPixelShader;
-	ID3D11Buffer* m_pDirLightCB;
+	CShader*			m_pDirLightVertexShader;
+	CShader*			m_pDirLightPixelShader;
+	ID3D11Buffer*		m_pDirLightCB;
 
 	// Point light
-	ID3D11VertexShader* m_pPointLightVertexShader;
-	ID3D11HullShader* m_pPointLightHullShader;
-	ID3D11DomainShader* m_pPointLightDomainShader;
-	ID3D11PixelShader* m_pPointLightPixelShader;
-	ID3D11Buffer* m_pPointLightDomainCB;
-	ID3D11Buffer* m_pPointLightPixelCB;
+	CShader*			m_pPointLightVertexShader;
+	CShader*			m_pPointLightHullShader;
+	CShader*			m_pPointLightDomainShader;
+	CShader*			m_pPointLightPixelShader;
+	ID3D11Buffer*		m_pPointLightDomainCB;
+	ID3D11Buffer*		m_pPointLightPixelCB;
 
 	// Spot light
-	ID3D11VertexShader* m_pSpotLightVertexShader;
-	ID3D11HullShader* m_pSpotLightHullShader;
-	ID3D11DomainShader* m_pSpotLightDomainShader;
-	ID3D11PixelShader* m_pSpotLightPixelShader;
-	ID3D11Buffer* m_pSpotLightDomainCB;
-	ID3D11Buffer* m_pSpotLightPixelCB;
+	CShader*			m_pSpotLightVertexShader;
+	CShader*			m_pSpotLightHullShader;
+	CShader*			m_pSpotLightDomainShader;
+	CShader*			m_pSpotLightPixelShader;
+	ID3D11Buffer*		m_pSpotLightDomainCB;
+	ID3D11Buffer*		m_pSpotLightPixelCB;
+
+	// Capsule light
+	CShader*			m_pCapsuleLightVertexShader;
+	CShader*			m_pCapsuleLightHullShader;
+	CShader*			m_pCapsuleLightDomainShader;
+	CShader*			m_pCapsuleLightPixelShader;
+	ID3D11Buffer*		m_pCapsuleLightDomainCB;
+	ID3D11Buffer*		m_pCapsuleLightPixelCB;
 
 	// Light volume debug shader
-	ID3D11PixelShader* m_pDebugLightPixelShader;
+	//ID3D11PixelShader* m_pDebugLightPixelShader;
 
 	// Depth state with no writes and stencil test on
 	ID3D11DepthStencilState* m_pNoDepthWriteLessStencilMaskState;
@@ -148,7 +115,7 @@ private:
 	ID3D11RasterizerState* m_pWireframeRS;
 
 	// Visualize the lights volume
-	bool m_bShowLightVolume;
+	bool		m_bShowLightVolume;
 
 	// Ambient light information
 	D3DXVECTOR3 m_vAmbientLowerColor;
@@ -159,5 +126,6 @@ private:
 	D3DXVECTOR3 m_vDirectionalColor;
 
 	// Linked list with the active lights
-	vector<LIGHT> m_arrLights;
+	std::vector<LIGHT> m_arrLights;
 };
+

@@ -1,8 +1,6 @@
 #include "common.fx"
 
-/////////////////////////////////////////////////////////////////////////////
 // Constant Buffers
-/////////////////////////////////////////////////////////////////////////////
 cbuffer cbPerObjectVS : register( b0 ) // Model vertex shader constants
 {
     float4x4 WorldViewProjection	: packoffset( c0 );
@@ -15,15 +13,11 @@ cbuffer cbPerObjectPS : register( b0 ) // Model pixel shader constants
 	float specIntensity	: packoffset( c0.y );
 }
 
-/////////////////////////////////////////////////////////////////////////////
 // Diffuse texture and linear sampler
-/////////////////////////////////////////////////////////////////////////////
 Texture2D    DiffuseTexture	: register( t0 );
 SamplerState LinearSampler	: register( s0 );
 
-/////////////////////////////////////////////////////////////////////////////
 // shader input/output structure
-/////////////////////////////////////////////////////////////////////////////
 struct VS_INPUT
 {
     float4 Position	: POSITION;		// vertex position 
@@ -38,10 +32,7 @@ struct VS_OUTPUT
 	float3 Normal	: TEXCOORD1;	// vertex normal
 };
 
-/////////////////////////////////////////////////////////////////////////////
 // Vertex shader
-/////////////////////////////////////////////////////////////////////////////
-
 VS_OUTPUT RenderSceneVS( VS_INPUT input )
 {
     VS_OUTPUT Output;
@@ -59,10 +50,7 @@ VS_OUTPUT RenderSceneVS( VS_INPUT input )
     return Output;    
 }
 
-/////////////////////////////////////////////////////////////////////////////
 // Pixel shader
-/////////////////////////////////////////////////////////////////////////////
-
 struct PS_GBUFFER_OUT
 {
 	float4 ColorSpecInt : SV_TARGET0;
@@ -74,10 +62,11 @@ PS_GBUFFER_OUT PackGBuffer(float3 BaseColor, float3 Normal, float SpecIntensity,
 {
 	PS_GBUFFER_OUT Out;
 
-	// Normalize the specular power
-	float SpecPowerNorm = max(0.0001, (SpecPower - g_SpecPowerRange.x) / g_SpecPowerRange.y);
+	// 스펙큘러 파워 정규화
+	float SpecPowerNorm = max(0.0001, (250 - 10) / 250);
+	//float SpecPowerNorm = max(0.0001, (SpecPower - g_SpecPowerRange.x) / g_SpecPowerRange.y);
 
-	// Pack all the data into the GBuffer structure
+	// GBuffer 구조체에 데이터 패킹
 	Out.ColorSpecInt = float4(BaseColor.rgb, SpecIntensity);
 	Out.Normal = float4(Normal * 0.5 + 0.5, 0.0);
 	Out.SpecPow = float4(SpecPowerNorm, 0.0, 0.0, 0.0);

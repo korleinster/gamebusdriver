@@ -277,9 +277,9 @@ void CRenderMgr::Input(float fTime)
 		D3DXVECTOR3 vUp = D3DXVECTOR3(viewInvMat._21, viewInvMat._22, viewInvMat._23);
 		D3DXVECTOR3 vForward = D3DXVECTOR3(viewInvMat._31, viewInvMat._32, viewInvMat._33);
 
-		m_vDirLight -= vRight * fDX * CTimeMgr::GetInstance()->GetTime();
-		m_vDirLight -= vUp * fDY * CTimeMgr::GetInstance()->GetTime();
-		m_vDirLight += vForward * fDY * CTimeMgr::GetInstance()->GetTime();
+		m_vDirLight -= vRight * fDX * fTime;
+		m_vDirLight -= vUp * fDY * fTime;
+		m_vDirLight += vForward * fDY * fTime;
 
 		D3DXVec3Normalize(&m_vDirLight, &m_vDirLight);
 

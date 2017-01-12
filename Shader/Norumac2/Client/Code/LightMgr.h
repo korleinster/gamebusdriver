@@ -16,7 +16,7 @@ public:
 	HRESULT Initialize();
 	void Release();
 	void DoLighting(ID3D11DeviceContext* pd3dImmediateContext, CMultiRenderTarget* pGBuffer);
-	//void DoDebugLightVolume(ID3D11DeviceContext* pd3dImmediateContext);
+	void DoDebugLightVolume(ID3D11DeviceContext* pd3dImmediateContext);
 
 	// Set the ambient values
 	void SetAmbient(const D3DXVECTOR3& vAmbientLowerColor, const D3DXVECTOR3& vAmbientUpperColor);
@@ -126,6 +126,6 @@ private:
 	D3DXVECTOR3 m_vDirectionalColor;
 
 	// Linked list with the active lights
-	std::vector<LIGHT> m_arrLights;
+	vector<LIGHT> m_arrLights;
 };
 

@@ -30,6 +30,7 @@ CRenderMgr::CRenderMgr()
 	m_vDirLight = D3DXVECTOR3(1.0f, -1.0f, 1.0f);
 
 	//m_pLightMgr->SetAmbient(D3DXVECTOR3(0.0f, 0.0f, 1.f), D3DXVECTOR3(0.0f, 1.f, 0.0f));
+		
 	m_pLightMgr->SetAmbient(D3DXVECTOR3(0.3f, 0.4f, 0.3f), D3DXVECTOR3(0.3f, 0.4f, 0.4f));
 	m_pLightMgr->SetDirectional(
 		D3DXVECTOR3(m_vDirLight.x, -m_vDirLight.y, m_vDirLight.z),
@@ -62,9 +63,14 @@ HRESULT CRenderMgr::InitScene(void)
 void CRenderMgr::Render(const float & fTime)
 {
 	Input(fTime);
+
 	m_pLightMgr->SetDirectional(
 		D3DXVECTOR3(m_vDirLight.x, m_vDirLight.y, m_vDirLight.z),
 		D3DXVECTOR3(m_fDirColor[RGB_RED], m_fDirColor[RGB_GREEN], m_fDirColor[RGB_BLUE]));
+
+	//m_pLightMgr->ClearLights();
+	// 점조명 하는중
+	//m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f, 150.f, -20.f), 155.f, D3DXVECTOR3(1.0f, 0.0f, 0.0f));
 
 	ID3D11DepthStencilState* pPrevDepthState;
 	UINT nPrevStencil;

@@ -51,20 +51,20 @@ VS_OUTPUT RenderSceneVS( VS_INPUT input )
 }
 
 // Pixel shader
-struct PS_GBUFFER_OUT
+struct PS_GBUFFER_OUT // GBuffer가 렌더링하는 순서대로 배열해 놓음
 {
 	float4 ColorSpecInt : SV_TARGET0;
 	float4 Normal : SV_TARGET1;
 	float4 SpecPow : SV_TARGET2;
 };
 
+// 알베도, 노멀, 스펙큘러 세기, 스펙큘러 정도를 입력받아 이를 포함한 GBuffer형식을 반환
 PS_GBUFFER_OUT PackGBuffer(float3 BaseColor, float3 Normal, float SpecIntensity, float SpecPower)
 {
 	PS_GBUFFER_OUT Out;
 
 	// 스펙큘러 파워 정규화
-	float SpecPowerNorm = max(0.0001, (250 - 10) / 250);
-	//float SpecPowerNorm = max(0.0001, (SpecPower - g_SpecPowerRange.x) / g_SpecPowerRange.y);
+	float SpecPowerNorm = max(0.0001, (SpecPower - g_SpecPowerRange.x) / g_SpecPowerRange.y);
 
 	// GBuffer 구조체에 데이터 패킹
 	Out.ColorSpecInt = float4(BaseColor.rgb, SpecIntensity);

@@ -289,11 +289,32 @@ void CLightMgr::DoLighting(ID3D11DeviceContext * pd3dImmediateContext, CMultiRen
 	pd3dImmediateContext->PSSetShaderResources(0, 4, arrViews);
 }
 
-/*
+
 void CLightMgr::DoDebugLightVolume(ID3D11DeviceContext * pd3dImmediateContext)
 {
+	ID3D11RasterizerState* pPrevRSState;
+	pd3dImmediateContext->RSGetState(&pPrevRSState);
+	pd3dImmediateContext->RSSetState(m_pWireframeRS);
+
+	for (vector<LIGHT>::iterator itrCurLight = m_arrLights.begin(); itrCurLight != m_arrLights.end(); itrCurLight++)
+	{
+		if ((*itrCurLight).eLightType == TYPE_POINT)
+		{
+			//PointLight(pd3dImmediateContext, (*itrCurLight).vPosition, (*itrCurLight).fRange, (*itrCurLight).vColor, true);
+		}
+	}
+
+	// Cleanup
+	pd3dImmediateContext->VSSetShader(NULL, NULL, 0);
+	pd3dImmediateContext->HSSetShader(NULL, NULL, 0);
+	pd3dImmediateContext->DSSetShader(NULL, NULL, 0);
+	pd3dImmediateContext->PSSetShader(NULL, NULL, 0);
+
+	// Restore the states
+	pd3dImmediateContext->RSSetState(pPrevRSState);
+	Safe_Release(pPrevRSState);
 }
-*/
+
 
 void CLightMgr::SetAmbient(const D3DXVECTOR3& vAmbientLowerColor, const D3DXVECTOR3& vAmbientUpperColor)
 {

@@ -1,9 +1,6 @@
 #include "common.fx"
 
-/////////////////////////////////////////////////////////////////////////////
 // shader input/output structure
-/////////////////////////////////////////////////////////////////////////////
-
 cbuffer cbDirLight : register( b1 )
 {
   float3 AmbientDown	: packoffset( c0 );
@@ -12,6 +9,7 @@ cbuffer cbDirLight : register( b1 )
   float3 DirLightColor	: packoffset( c3 );
 }
 
+// 각 버텍스의 클리핑 공간 위치를 가늠하기 위해 버텍스 셰이더에 상수 배열 정의
 static const float2 arrBasePos[4] = {
 	float2(-1.0, 1.0),
 	float2(1.0, 1.0),
@@ -19,15 +17,14 @@ static const float2 arrBasePos[4] = {
 	float2(1.0, -1.0),
 };
 
-/////////////////////////////////////////////////////////////////////////////
 // Vertex shader
-/////////////////////////////////////////////////////////////////////////////
 struct VS_OUTPUT
 {
     float4 Position : SV_Position; // vertex position 
 	float2 cpPos	: TEXCOORD0;
 };
 
+// 버텍스 인덱스를 취해 버텍스 투영위치와 클리핑 공간 xy위치를 반환
 VS_OUTPUT DirLightVS( uint VertexID : SV_VertexID )
 {
 	VS_OUTPUT Output;
@@ -38,10 +35,7 @@ VS_OUTPUT DirLightVS( uint VertexID : SV_VertexID )
 	return Output;    
 }
 
-/////////////////////////////////////////////////////////////////////////////
 // Pixel shaders
-/////////////////////////////////////////////////////////////////////////////
-
 // Ambient light calculation helper function
 float3 CalcAmbient(float3 normal, float3 color)
 {
@@ -72,22 +66,23 @@ float3 CalcDirectional(float3 position, Material material)
    return finalColor * material.diffuseColor.rgb;
 }
 
+// 버텍스 셰이더에서 반환한 값 중 픽셀 텍스처 위치와 클리핑 공간 위치를 취해 해당 셰이더의 색상 값을 반환
 float4 DirLightPS(VS_OUTPUT In) : SV_TARGET
 {
-	// Unpack the GBuffer
+	// GBuffer 언패킹
 	SURFACE_DATA gbd = UnpackGBuffer_Loc(In.Position.xy);
 	
-	// Convert the data into the material structure
+	// 데이터를 재질 구조체로 반환
 	Material mat;
 	MaterialFromGBuffer(gbd, mat);
 
-	// Reconstruct the world position
+	// 월드 위치 복원
 	float3 position = CalcWorldPos(In.cpPos, gbd.LinearDepth);
 
-	// Calculate the ambient color
+	// 앰비언트 라이트 비중 계산
 	float3 finalColor = CalcAmbient(mat.normal, mat.diffuseColor.rgb);
 
-	// Calculate the directional light
+	// 디렉셔널 라이트 비중 계산
 	finalColor += CalcDirectional(position, mat);
 
 	// Return the final color

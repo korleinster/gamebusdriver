@@ -1,8 +1,6 @@
 #include "common.fx"
 
-/////////////////////////////////////////////////////////////////////////////
 // constants
-/////////////////////////////////////////////////////////////////////////////
 cbuffer cbPointLightDomain : register( b0 )
 {
 	float4x4 LightProjection : packoffset( c0 );
@@ -16,23 +14,21 @@ cbuffer cbPointLightPixel : register( b1 )
 	float2 LightPerspectiveValues : packoffset( c2 );
 }
 
-/////////////////////////////////////////////////////////////////////////////
 // Vertex shader
-/////////////////////////////////////////////////////////////////////////////
+// 입력을 받지 않고 위치 값 하나를 출력
 float4 PointLightVS() : SV_Position
 {
     return float4(0.0, 0.0, 0.0, 1.0); 
 }
 
-/////////////////////////////////////////////////////////////////////////////
 // Hull shader
-/////////////////////////////////////////////////////////////////////////////
 struct HS_CONSTANT_DATA_OUTPUT
 {
 	float Edges[4] : SV_TessFactor;
 	float Inside[2] : SV_InsideTessFactor;
 };
 
+// 입력을 받지 않고 패치에 적용하기 원하는 테셀레이션 값에 대한 구조체를 출력
 HS_CONSTANT_DATA_OUTPUT PointLightConstantHS()
 {
 	HS_CONSTANT_DATA_OUTPUT Output;
@@ -48,7 +44,7 @@ struct HS_OUTPUT
 {
 	float3 HemiDir : POSITION;
 };
-
+// 버텍스 셰이더와 마찬가지로 헐 셰이더는 구의 양면을 오가기 위해서 위치 값을 출력해야한다.
 static const float3 HemilDir[2] = {
 	float3(1.0, 1.0,1.0),
 	float3(-1.0, 1.0, -1.0)
@@ -68,43 +64,41 @@ HS_OUTPUT PointLightHS(uint PatchID : SV_PrimitiveID)
 	return Output;
 }
 
-/////////////////////////////////////////////////////////////////////////////
-// Domain Shader shader
-/////////////////////////////////////////////////////////////////////////////
+// Domain Shader
 struct DS_OUTPUT
 {
 	float4 Position : SV_POSITION;
 	float2 cpPos	: TEXCOORD0;
 };
 
+
+// 테셀레이션 과정에서 생성된 UV좌표를 입력받아 버텍스의 투영 또는 클리핑 공간 위치를 반환한다
 [domain("quad")]
 DS_OUTPUT PointLightDS( HS_CONSTANT_DATA_OUTPUT input, float2 UV : SV_DomainLocation, const OutputPatch<HS_OUTPUT, 4> quad)
 {
-	// Transform the UV's into clip-space
+	// UV를 클리핑 공간으로 변환
 	float2 posClipSpace = UV.xy * 2.0 - 1.0;
 
-	// Find the absulate maximum distance from the center
+	// 중심에서 가장 먼 지점의 절댓값 거리 계산
 	float2 posClipSpaceAbs = abs(posClipSpace.xy);
 	float maxLen = max(posClipSpaceAbs.x, posClipSpaceAbs.y);
 
-	// Generate the final position in clip-space
+	// 클리핑 공간에서의 최종 위치 생성
 	float3 normDir = normalize(float3(posClipSpace.xy, (maxLen - 1.0)) * quad[0].HemiDir);
 	float4 posLS = float4(normDir.xyz, 1.0);
 	
-	// Transform all the way to projected space
+	// 프로젝션 공간에 대해 모두 변환한 후
+	// UV 좌표 생성
 	DS_OUTPUT Output;
 	Output.Position = mul( posLS, LightProjection );
 
-	// Store the clip space position
+	// 클리핑 공간 위치 저장
 	Output.cpPos = Output.Position.xy / Output.Position.w;
 
 	return Output;
 }
 
-/////////////////////////////////////////////////////////////////////////////
 // Pixel shader
-/////////////////////////////////////////////////////////////////////////////
-
 float3 CalcPoint(float3 position, Material material, bool bUseShadow)
 {
    float3 ToLight = PointLightPos - position;
@@ -132,17 +126,17 @@ float3 CalcPoint(float3 position, Material material, bool bUseShadow)
 
 float4 PointLightCommonPS(DS_OUTPUT In, bool bUseShadow) : SV_TARGET
 {
-	// Unpack the GBuffer
+	// GBuffer 언패킹
 	SURFACE_DATA gbd = UnpackGBuffer_Loc(In.Position.xy);
 	
-	// Convert the data into the material structure
+	// 재질 구조체로 데이터 변환
 	Material mat;
 	MaterialFromGBuffer(gbd, mat);
 
-	// Reconstruct the world position
+	// 월드 위치 복원
 	float3 position = CalcWorldPos(In.cpPos, gbd.LinearDepth);
 
-	// Calculate the light contribution
+	// 조명 분포 계산
 	float3 finalColor = CalcPoint(position, mat, bUseShadow);
 
 	// return the final color

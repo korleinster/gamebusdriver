@@ -71,7 +71,9 @@ int CPlayer::Update(void)
 {
 	m_pInfo->m_fAngle[ANGLE_X] = D3DX_PI / 2 * -1.f;//;D3DXToRadian(-90);
 	m_pInfo->m_vScale = D3DXVECTOR3(0.1f, 0.1f, 0.1f);
+
 	CObj::Update();
+
 	return 0;
 }
 

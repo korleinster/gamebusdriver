@@ -6,6 +6,9 @@
 #include "TargetMgr.h"
 #include "LightMgr.h"
 #include "MultiRenderTarget.h"
+#include "TimeMgr.h"
+#include "Input.h"
+#include "camera.h"
 
 IMPLEMENT_SINGLETON(CRenderMgr)
 
@@ -20,8 +23,17 @@ CRenderMgr::CRenderMgr()
 	m_pTargetMgr->Initialize();
 	m_pLightMgr->Initialize();
 
-	m_pLightMgr->SetAmbient(D3DXVECTOR3(0.1f, 0.2f, 0.1f), D3DXVECTOR3(0.1f, 0.2f, 0.2f));
-	m_pLightMgr->SetDirectional(D3DXVECTOR3(1.0f, -1.0f, 1.0f), D3DXVECTOR3(0.8f, 0.8f, 0.0f));
+	m_fDirColor[RGB_RED] = 0.8f;
+	m_fDirColor[RGB_GREEN] = 0.8f;
+	m_fDirColor[RGB_BLUE] = 0.0f;
+
+	m_vDirLight = D3DXVECTOR3(1.0f, -1.0f, 1.0f);
+
+	//m_pLightMgr->SetAmbient(D3DXVECTOR3(0.0f, 0.0f, 1.f), D3DXVECTOR3(0.0f, 1.f, 0.0f));
+	m_pLightMgr->SetAmbient(D3DXVECTOR3(0.3f, 0.4f, 0.3f), D3DXVECTOR3(0.3f, 0.4f, 0.4f));
+	m_pLightMgr->SetDirectional(
+		D3DXVECTOR3(m_vDirLight.x, -m_vDirLight.y, m_vDirLight.z),
+		D3DXVECTOR3(m_fDirColor[RGB_RED], m_fDirColor[RGB_GREEN], m_fDirColor[RGB_BLUE]));
 }
 
 
@@ -49,6 +61,11 @@ HRESULT CRenderMgr::InitScene(void)
 
 void CRenderMgr::Render(const float & fTime)
 {
+	Input(fTime);
+	m_pLightMgr->SetDirectional(
+		D3DXVECTOR3(m_vDirLight.x, m_vDirLight.y, m_vDirLight.z),
+		D3DXVECTOR3(m_fDirColor[RGB_RED], m_fDirColor[RGB_GREEN], m_fDirColor[RGB_BLUE]));
+
 	ID3D11DepthStencilState* pPrevDepthState;
 	UINT nPrevStencil;
 	m_pDevice->m_pDeviceContext->OMGetDepthStencilState(&pPrevDepthState, &nPrevStencil);
@@ -174,5 +191,98 @@ void CRenderMgr::ListClear(void)
 	for (UINT i = 0; i < TYPE_END; ++i)
 	{
 		m_RenderGroup[i].clear();
+	}
+}
+
+void CRenderMgr::Input(float fTime)
+{
+	// For.Red
+	if (CInput::GetInstance()->GetDIKeyState(DIK_R) & 0x80)
+	{
+		if (CInput::GetInstance()->GetDIKeyState(DIK_UP) & 0x80)
+		{
+			if (1.0f <= m_fDirColor[RGB_RED])
+				m_fDirColor[RGB_RED] = 1.0f;
+			else
+				m_fDirColor[RGB_RED] += 0.1f * fTime;
+
+			cout << "Red : " << m_fDirColor[RGB_RED] << "\t" << "Green : " << m_fDirColor[RGB_GREEN] << "\t" << "Blue : " << m_fDirColor[RGB_BLUE] <<  endl;
+		}
+		if (CInput::GetInstance()->GetDIKeyState(DIK_DOWN) & 0x80)
+		{
+			if (0.0f >= m_fDirColor[RGB_RED])
+				m_fDirColor[RGB_RED] = 0.0f;
+			else
+				m_fDirColor[RGB_RED] -= 0.1f * fTime;
+
+			cout << "Red : " << m_fDirColor[RGB_RED] << "\t" << "Green : " << m_fDirColor[RGB_GREEN] << "\t" << "Blue : " << m_fDirColor[RGB_BLUE] << endl;
+		}
+	}
+
+	// For.Green
+	if (CInput::GetInstance()->GetDIKeyState(DIK_G) & 0x80)
+	{
+		if (CInput::GetInstance()->GetDIKeyState(DIK_UP) & 0x80)
+		{
+			if (1.0f <= m_fDirColor[RGB_GREEN])
+				m_fDirColor[RGB_GREEN] = 1.0f;
+			else
+				m_fDirColor[RGB_GREEN] += 0.1f * fTime;
+
+			cout << "Red : " << m_fDirColor[RGB_RED] << "\t" << "Green : " << m_fDirColor[RGB_GREEN] << "\t" << "Blue : " << m_fDirColor[RGB_BLUE] << endl;
+		}
+		if (CInput::GetInstance()->GetDIKeyState(DIK_DOWN) & 0x80)
+		{
+			if (0.0f >= m_fDirColor[RGB_GREEN])
+				m_fDirColor[RGB_GREEN] = 0.0f;
+			else
+				m_fDirColor[RGB_GREEN] -= 0.1f * fTime;
+
+			cout << "Red : " << m_fDirColor[RGB_RED] << "\t" << "Green : " << m_fDirColor[RGB_GREEN] << "\t" << "Blue : " << m_fDirColor[RGB_BLUE] << endl;
+		}
+	}
+
+	// For.Blue
+	if (CInput::GetInstance()->GetDIKeyState(DIK_B) & 0x80)
+	{
+		if (CInput::GetInstance()->GetDIKeyState(DIK_UP) & 0x80)
+		{
+			if (1.0f <= m_fDirColor[RGB_BLUE])
+				m_fDirColor[RGB_BLUE] = 1.0f;
+			else
+				m_fDirColor[RGB_BLUE] += 0.1f * fTime;
+
+			cout << "Red : " << m_fDirColor[RGB_RED] << "\t" << "Green : " << m_fDirColor[RGB_GREEN] << "\t" << "Blue : " << m_fDirColor[RGB_BLUE] << endl;
+		}
+		if (CInput::GetInstance()->GetDIKeyState(DIK_DOWN) & 0x80)
+		{
+			if (0.0f >= m_fDirColor[RGB_BLUE])
+				m_fDirColor[RGB_BLUE] = 0.0f;
+			else
+				m_fDirColor[RGB_BLUE] -= 0.1f * fTime;
+
+			cout << "Red : " << m_fDirColor[RGB_RED] << "\t" << "Green : " << m_fDirColor[RGB_GREEN] << "\t" << "Blue : " << m_fDirColor[RGB_BLUE] << endl;
+		}
+	}
+
+	if (CInput::GetInstance()->GetDIMouseState(CInput::DIM_RBUTTON))
+	{	
+
+		float fDX = (float)CInput::GetInstance()->GetDIMouseMove(CInput::DIM_X);
+		float fDY = (float)CInput::GetInstance()->GetDIMouseMove(CInput::DIM_Y);
+
+		D3DXMATRIX viewInvMat;
+		D3DXMatrixInverse(&viewInvMat, NULL, CCamera::GetInstance()->GetViewMatrix());
+		D3DXVECTOR3 vRight = D3DXVECTOR3(viewInvMat._11, viewInvMat._12, viewInvMat._13);
+		D3DXVECTOR3 vUp = D3DXVECTOR3(viewInvMat._21, viewInvMat._22, viewInvMat._23);
+		D3DXVECTOR3 vForward = D3DXVECTOR3(viewInvMat._31, viewInvMat._32, viewInvMat._33);
+
+		m_vDirLight -= vRight * fDX * CTimeMgr::GetInstance()->GetTime();
+		m_vDirLight -= vUp * fDY * CTimeMgr::GetInstance()->GetTime();
+		m_vDirLight += vForward * fDY * CTimeMgr::GetInstance()->GetTime();
+
+		D3DXVec3Normalize(&m_vDirLight, &m_vDirLight);
+
+		cout << "m_vDirLight.x : " << m_vDirLight.x << " " << "m_vDirLight.y : " << m_vDirLight.y << " " << "m_vDirLight.z : " << m_vDirLight.z << endl;
 	}
 }

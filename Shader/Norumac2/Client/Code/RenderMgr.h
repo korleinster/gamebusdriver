@@ -8,6 +8,14 @@ class CTargetMgr;
 class CLightMgr;
 class CRenderMgr
 {
+public:
+	enum RGB_COLOR
+	{
+		RGB_RED,
+		RGB_GREEN,
+		RGB_BLUE,
+		RGB_END
+	};
 private:
 	CRenderMgr();
 	virtual ~CRenderMgr();
@@ -33,7 +41,6 @@ public:
 	void ListClear(void);
 private:
 	CScene*			m_pScene;
-
 	CDevice*		m_pDevice;
 	CTargetMgr*		m_pTargetMgr;
 	CLightMgr*		m_pLightMgr;
@@ -42,5 +49,9 @@ private:
 	TCHAR			m_szFps[128];
 	DWORD			m_dwCount;
 	list<CObj*>		m_RenderGroup[TYPE_END];
+private:
+	void Input(float fTime);
+	D3DXVECTOR3		m_vDirLight;
+	float			m_fDirColor[RGB_END];
 };
 

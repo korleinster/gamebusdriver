@@ -30,9 +30,9 @@ CMainApp::CMainApp()
 	: m_pRcCol(NULL),
 	m_pInfo(NULL)
 {
-	//AllocConsole();
-	//freopen("CONOUT$", "wt", stdout);
-	//SetConsoleTitleA("Debug");
+	AllocConsole();
+	freopen("CONOUT$", "wt", stdout);
+	SetConsoleTitleA("Debug");
 }
 
 

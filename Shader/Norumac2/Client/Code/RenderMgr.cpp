@@ -94,7 +94,10 @@ void CRenderMgr::Render(const float & fTime)
 	m_pLightMgr->DoLighting(m_pDevice->m_pDeviceContext, m_pTargetMgr->GetGBuffer());
 	
 	m_pDevice->m_pDeviceContext->OMSetRenderTargets(1, &m_pDevice->m_pRenderTargetView, NULL);
-	m_pTargetMgr->RenderGBuffer(m_pDevice->m_pDeviceContext);
+	
+	if (CInput::GetInstance()->GetDIKeyState(DIK_TAB) & 0x80)
+			m_pTargetMgr->RenderGBuffer(m_pDevice->m_pDeviceContext);
+
 	m_pDevice->m_pDeviceContext->OMSetRenderTargets(1, &m_pDevice->m_pRenderTargetView, m_pTargetMgr->GetGBuffer()->GetDepthDSV());
 
 	m_pDevice->m_pDeviceContext->OMSetDepthStencilState(pPrevDepthState, nPrevStencil);

@@ -31,7 +31,7 @@ CRenderMgr::CRenderMgr()
 
 	//m_pLightMgr->SetAmbient(D3DXVECTOR3(0.0f, 0.0f, 1.f), D3DXVECTOR3(0.0f, 1.f, 0.0f));
 		
-	m_pLightMgr->SetAmbient(D3DXVECTOR3(0.3f, 0.4f, 0.3f), D3DXVECTOR3(0.3f, 0.4f, 0.4f));
+	m_pLightMgr->SetAmbient(D3DXVECTOR3(0.4f, 0.5f, 0.4f), D3DXVECTOR3(0.4f, 0.5f, 0.4f));
 	m_pLightMgr->SetDirectional(
 		D3DXVECTOR3(m_vDirLight.x, -m_vDirLight.y, m_vDirLight.z),
 		D3DXVECTOR3(m_fDirColor[RGB_RED], m_fDirColor[RGB_GREEN], m_fDirColor[RGB_BLUE]));
@@ -95,8 +95,7 @@ void CRenderMgr::Render(const float & fTime)
 	
 	m_pDevice->m_pDeviceContext->OMSetRenderTargets(1, &m_pDevice->m_pRenderTargetView, NULL);
 	
-	if (CInput::GetInstance()->GetDIKeyState(DIK_TAB) & 0x80)
-			m_pTargetMgr->RenderGBuffer(m_pDevice->m_pDeviceContext);
+	m_pTargetMgr->RenderGBuffer(m_pDevice->m_pDeviceContext);
 
 	m_pDevice->m_pDeviceContext->OMSetRenderTargets(1, &m_pDevice->m_pRenderTargetView, m_pTargetMgr->GetGBuffer()->GetDepthDSV());
 

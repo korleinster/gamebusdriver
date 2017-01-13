@@ -150,7 +150,7 @@ void CPlayer::Release(void)
 HRESULT CPlayer::AddComponent(void)
 {
 	CComponent* pComponent = NULL;
-	char cModelPath[MAX_PATH] = "../Resource/Bird.FBX";
+	char cModelPath[MAX_PATH] = "../Resource/Mesh/samplehumanani.FBX";
 	m_pBuffer = CStaticMesh::Create(cModelPath);
 	pComponent = m_pBuffer;
 	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Buffer", pComponent));
@@ -161,7 +161,7 @@ HRESULT CPlayer::AddComponent(void)
 		return E_FAIL;
 	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Info", pComponent));
 
-	m_pTexture = CTexture::Create(L"../Resource/Bird.PNG");
+	m_pTexture = CTexture::Create(L"../Resource/MeshImage/samplehumanani.PNG");
 	pComponent = m_pTexture;
 	if (pComponent == NULL)
 		return E_FAIL;

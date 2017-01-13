@@ -55,6 +55,8 @@ float3 CalcDirectional(float3 position, Material material)
    // Phong diffuse
    float NDotL = dot(DirToLight, material.normal);
    float3 finalColor = DirLightColor.rgb * saturate(NDotL);
+   // Å÷
+   //finalColor = ceil(finalColor * 2) / 2.f;
    
    // Blinn specular
    float3 ToEye = EyePosition - position;

@@ -10,14 +10,14 @@ void AsynchronousClientClass::processPacket(Packet *buf)
 #endif
 		break;
 	case INIT_CLIENT: {
+#if 0
+		cout << "Client was INITED\n";
+#endif
 		m_player = *(reinterpret_cast<player_data*>(&buf[2]));
-
-		// 초기화 잘 받았습니다.
-		//sendPacket(buf[0] - 2, INIT_CLIENT, &buf[2]);
 	}
 		break;
 	case PLAYER_DISCONNECTED: {
-#ifdef _DEBUG
+#if 0
 		cout << "Player " << reinterpret_cast<player_data*>(&buf[2])->id << " is Disconnected\n";
 #endif // _DEBUG
 		unordered_map<UINT, player_data>::iterator ptr = m_other_players.find(reinterpret_cast<player_data*>(&buf[2])->id);
@@ -28,8 +28,8 @@ void AsynchronousClientClass::processPacket(Packet *buf)
 	}
 		break;
 	case CHANGED_POSITION: {
-#ifdef _DEBUG
-		//cout << "KEYINPUT , player id : " << reinterpret_cast<player_data*>(&buf[2])->id << endl;
+#if 0
+		cout << "CHANGED_POSITION , player id : " << reinterpret_cast<player_data*>(&buf[2])->id << endl;
 #endif // _DEBUG
 		unordered_map<UINT, player_data>::iterator ptr = m_other_players.find(reinterpret_cast<player_data*>(&buf[2])->id);
 

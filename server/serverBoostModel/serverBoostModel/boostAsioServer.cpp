@@ -93,7 +93,6 @@ void player_session::Init()
 
 	other_info_to_me_buf[0] = my_info_to_other_buf[0] = sizeof(player_data) + 2;
 	other_info_to_me_buf[1] = my_info_to_other_buf[1] = CHANGED_POSITION;
-	//my_info_to_other_buf[1] = INIT_CLIENT;
 
 	// 현재 접속한 애한테 다른 플레이어 정보 보내기
 	memcpy(&my_info_to_other_buf[2], &m_player_data, my_info_to_other_buf[0]);
@@ -193,7 +192,25 @@ void player_session::send_packet(Packet *packet)
 	Packet *sendBuf = new Packet[packet_size];
 	memcpy(sendBuf, packet, packet_size);
 
-	cout << "PACKET To:" << this->get_id() << "Data of : " << static_cast<int>(packet[2]) << endl;
+#if 0
+	cout << "Server Sended Packet to No.[ " << m_id << " ] player for ";
+	switch (sendBuf[1])
+	{
+	case INIT_CLIENT:
+		cout << " INIT_CLIENT\n";
+		break;
+	case PLAYER_DISCONNECTED:
+		cout << " PLAYER_DISCONNECTED\n";
+		break;
+	case CHANGED_POSITION:
+		cout << " CHANGED_POSITION\n";
+		break;
+	default:
+		cout << " [ you didn't set protocol to debug ]\n";
+		break;
+	}
+#endif // _DEBUG
+
 
 	//auto self(shared_from_this());
 	m_socket.async_write_some(boost::asio::buffer(sendBuf, packet_size), [=](boost::system::error_code error_code, std::size_t bytes_transferred) -> void {
@@ -220,35 +237,6 @@ void player_session::m_process_packet(Packet buf[])
 			cout << "Client No. [ " << m_id << " ] TEST Packet Recived !!\n";
 			printf("buf[0] = %d, buf[1] = %d, buf[2] = %d\n\n", buf[0], buf[1], buf[2]);
 			send_packet(buf);
-			break;
-
-		case INIT_CLIENT:
-		{
-			//vector<Packet*> temp_vector;
-
-			//for (auto players : g_clients)
-			//{
-			//	if (DISCONNECTED == players->get_current_connect_state()) { continue; }
-			//	if (m_id == players->get_id()) { continue; }
-
-			//	// 초기화 정보 보내기 2 - 다른 애들 정보를 얘한테 보내기
-			//	Packet other_info_to_me_buf[MAX_BUF_SIZE];
-			//	//Packet *other_info_to_me_buf = new Packet[MAX_BUF_SIZE];
-			//	//temp_vector.push_back(other_info_to_me_buf);
-
-			//	other_info_to_me_buf[0] = sizeof(player_data) + 2;
-			//	other_info_to_me_buf[1] = CHANGED_POSITION;
-
-			//	// 다른 애들 정보를 복사해서 넣고, 얘한테 먼저 보내고... ( 얘 왜 못받는건지 알수가 읎다 도대체... )
-			//	memcpy(&other_info_to_me_buf[2], players->get_player_data(), other_info_to_me_buf[0] - 2);
-			//	send_packet(other_info_to_me_buf);	// 얘가 안받아졌는데, 아래 께 받아졌다는게 이해가 안되네;;
-
-			//	// 아래 cout 없으면, 다른 애들 전송 받을 확률 갑소... 이유를 못찾겠음...
-			//	cout << "inited Sended info " << players->m_id << " to " << m_id << "\n";
-			//}
-
-			//for (auto ptr : temp_vector) { delete[] ptr; }
-		}
 			break;
 
 		case CHANGED_POSITION:

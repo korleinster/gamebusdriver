@@ -8,9 +8,9 @@
 #include "OtherPlayer.h"
 #include "SceneMgr.h"
 
-void AsynchronousClientClass::processPacket()
+void AsynchronousClientClass::processPacket(Packet* buf)
 {
-	switch (m_recvbuf[1])
+	switch (buf[1])
 	{
 	case TEST:
 #ifdef _DEBUG
@@ -19,14 +19,14 @@ void AsynchronousClientClass::processPacket()
 #endif
 		break;
 	case INIT_CLIENT: {
-		m_player = *(reinterpret_cast<player_data*>(&m_recvbuf[2]));
+		m_player = *(reinterpret_cast<player_data*>(&buf[2]));
 		// 여기는 주체가 되는, 내가 직접 조작을 하는 플레이어의 데이터가 들어오니까
 		// 아이템이라던가 위치정보라던가 일단 다 여기로 들어온다잉
 	}
 		break;
 	case PLAYER_DISCONNECTED: {
 		// 여기도, id 로 찾아서, 그 아이디 찾으면 그 객체는 삭제 해야겠찌? ㅇㅋㄷㅋ?
-		player_data *data = CObjMgr::GetInstance()->Get_PlayerServerData(reinterpret_cast<player_data*>(&m_recvbuf[2])->id);
+		player_data *data = CObjMgr::GetInstance()->Get_PlayerServerData(reinterpret_cast<player_data*>(&buf[2])->id);
 
 		list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->begin();
 		list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->end();
@@ -50,9 +50,9 @@ void AsynchronousClientClass::processPacket()
 
 		if (CSceneMgr::GetInstance()->GetScene() != SCENE_LOGO)
 		{
-			player_data *data = CObjMgr::GetInstance()->Get_PlayerServerData(reinterpret_cast<player_data*>(&m_recvbuf[2])->id);
+			player_data *data = CObjMgr::GetInstance()->Get_PlayerServerData(reinterpret_cast<player_data*>(&buf[2])->id);
 
-			if (nullptr != data) { memcpy(data, &m_recvbuf[2], m_recvbuf[0]); }
+			if (nullptr != data) { memcpy(data, &buf[2], buf[0]); }
 			else {
 				// 데이터 추가 해줘야 됨 이해 했음?
 				// 저기 data 가 만약 end 위치라면, 데이터가 없는데 넣으려고 하는거잖아
@@ -62,7 +62,7 @@ void AsynchronousClientClass::processPacket()
 				CObj* pObj = NULL;
 				pObj = COtherPlayer::Create();
 				pObj->SetPos(D3DXVECTOR3(m_player.pos.x, 1.f, m_player.pos.y));
-				pObj->SetPacketData(reinterpret_cast<player_data*>(&m_recvbuf[2]));
+				pObj->SetPacketData(reinterpret_cast<player_data*>(&buf[2]));
 				CObjMgr::GetInstance()->AddObject(L"OtherPlayer", pObj);
 				CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, pObj);
 

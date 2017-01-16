@@ -13,7 +13,7 @@ void AsynchronousClientClass::processPacket(Packet *buf)
 		m_player = *(reinterpret_cast<player_data*>(&buf[2]));
 
 		// 초기화 잘 받았습니다.
-		sendPacket(buf[0] - 2, INIT_CLIENT, &buf[2]);
+		//sendPacket(buf[0] - 2, INIT_CLIENT, &buf[2]);
 	}
 		break;
 	case PLAYER_DISCONNECTED: {

@@ -64,7 +64,19 @@ int CPlayer::Update(void)
 		m_pInfo->m_ServerInfo = *g_client.getPlayerData();
 		test = true;
 	}
-	
+
+
+	if (m_fSeverTime > 0.5f)
+	{
+		m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
+		m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
+		m_pInfo->m_ServerInfo.dir.x = m_pInfo->m_vDir.x;
+		m_pInfo->m_ServerInfo.dir.y = m_pInfo->m_vDir.y;
+		m_pInfo->m_ServerInfo.dir.z = m_pInfo->m_vDir.z;
+		g_client.sendPacket(sizeof(player_data), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo));
+
+		m_fSeverTime = 0.f;
+	}
 
 	D3DXVec3TransformNormal(&m_pInfo->m_vDir, &g_vLook, &m_pInfo->m_matWorld);
 
@@ -75,15 +87,7 @@ int CPlayer::Update(void)
 
 
 
-	if (m_fSeverTime > 0.5f)
-	{
-		m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
-		m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
-		g_client.sendPacket(sizeof(player_data), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo));
-
-		m_fSeverTime = 0.f;
-		cout << "packet send" << endl;
-	}
+	
 
 	//m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 	//m_ServerInfo.pos.y = m_pInfo->m_vPos.z;

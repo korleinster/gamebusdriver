@@ -7,6 +7,7 @@
 #include "ObjMgr.h"
 #include "Flower.h"
 #include "Player.h"
+#include "..\Include\StaticObject.h"
 
 CStage::CStage()
 {
@@ -80,11 +81,11 @@ HRESULT CStage::CreateObj(void)
 	CRenderMgr* pRenderer = CRenderMgr::GetInstance();
 	//ÅÍ·¹ÀÎ
 	CObj* pObj = NULL;
-	pObj = CTerrain::Create();
+	pObj = CStaticObject::Create();
 	if (pObj == NULL)
 		return E_FAIL;
 
-	CObjMgr::GetInstance()->AddObject(L"Terrain", pObj);
+	CObjMgr::GetInstance()->AddObject(L"StaticObject", pObj);
 	pRenderer->AddRenderGroup(TYPE_NONEALPHA, pObj);
 
 	for (int i = 0; i < 20; ++i)

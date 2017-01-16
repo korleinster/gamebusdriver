@@ -19,10 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{EED83F53-0E8D-46C0-8301-A9C471B5369A}</ProjectGuid>
-    <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Client</RootNamespace>
+    <ProjectGuid>{24F0E269-F3E4-40E7-B016-A3EC284B69AB}</ProjectGuid>
+    <RootNamespace>MapTool</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <Keyword>MFCProj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -30,6 +30,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -37,12 +38,14 @@
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -50,6 +53,7 @@
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -71,9 +75,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Program Files (x86)\Visual Leak Detector\include;D:\Program Files\Autodesk\FBX\FBX SDK\2016.1.1\include;C:\Program Files\Autodesk\FBX\FBX SDK\2016.1.1\include;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;D:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Program Files (x86)\Visual Leak Detector\lib\Win32;C:\Program Files\Autodesk\FBX\FBX SDK\2016.1.1\lib\vs2015\x86\debug;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;D:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86;D:\Program Files\Autodesk\FBX\FBX SDK\2016.1.1\lib\vs2015\x86\debug;$(LibraryPath)</LibraryPath>
-    <OutDir>../bin/</OutDir>
+    <IncludePath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;C:\Program Files\Autodesk\FBX\FBX SDK\2016.1.1\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;C:\Program Files\Autodesk\FBX\FBX SDK\2016.1.1\lib\vs2015\x86\debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -89,27 +92,43 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../ShaderCode;../Headers;../Code;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>dinput8.lib;d3d11.lib;d3dcompiler.lib;d3dx11d.lib;d3dx9d.lib;dxerr.lib;dxguid.lib;winmm.lib;comctl32.lib;DirectXTex.lib;libfbxsdk-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../Library</AdditionalLibraryDirectories>
+      <AdditionalDependencies>dinput8.lib;d3d11.lib;d3dcompiler.lib;d3dx11d.lib;d3dx9d.lib;dxerr.lib;dxguid.lib;winmm.lib;comctl32.lib;libfbxsdk-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0412</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0412</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -118,14 +137,23 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0412</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -134,110 +162,100 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0412</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
-    <Text Include="ServerIP.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\server\serverBoostModel\serverBoostModel\protocol.h" />
-    <ClInclude Include="..\Code\AniBuffer.h" />
-    <ClInclude Include="..\Code\Camera.h" />
-    <ClInclude Include="..\Code\Collision.h" />
-    <ClInclude Include="..\Code\Component.h" />
-    <ClInclude Include="..\Code\CubeCol.h" />
-    <ClInclude Include="..\Code\Device.h" />
-    <ClInclude Include="..\Code\DynamicMesh.h" />
-    <ClInclude Include="..\Code\FbxParser.h" />
-    <ClInclude Include="..\Code\Flower.h" />
-    <ClInclude Include="..\Code\Info.h" />
-    <ClInclude Include="..\Code\Input.h" />
-    <ClInclude Include="..\Code\Logo.h" />
-    <ClInclude Include="..\Code\MainApp.h" />
-    <ClInclude Include="..\Code\Mesh.h" />
-    <ClInclude Include="..\Code\Obj.h" />
-    <ClInclude Include="..\Code\ObjMgr.h" />
-    <ClInclude Include="..\Code\OtherPlayer.h" />
-    <ClInclude Include="..\Code\Player.h" />
-    <ClInclude Include="..\Code\RcCol.h" />
-    <ClInclude Include="..\Code\RcTerrain.h" />
-    <ClInclude Include="..\Code\RcTex.h" />
-    <ClInclude Include="..\Code\RenderMgr.h" />
-    <ClInclude Include="..\Code\RenderTarget.h" />
-    <ClInclude Include="..\Code\Resources.h" />
-    <ClInclude Include="..\Code\ResourcesMgr.h" />
-    <ClInclude Include="..\Code\Scene.h" />
-    <ClInclude Include="..\Code\SceneMgr.h" />
-    <ClInclude Include="..\Code\Shader.h" />
-    <ClInclude Include="..\Code\ShaderMgr.h" />
-    <ClInclude Include="..\Code\Stage.h" />
-    <ClInclude Include="..\Code\StaticMesh.h" />
-    <ClInclude Include="..\Code\Terrain.h" />
-    <ClInclude Include="..\Code\TerrainCol.h" />
-    <ClInclude Include="..\Code\Texture.h" />
-    <ClInclude Include="..\Code\TimeMgr.h" />
-    <ClInclude Include="..\Code\VIBuffer.h" />
-    <ClInclude Include="..\Headers\Enum.h" />
-    <ClInclude Include="..\Headers\Include.h" />
-    <ClInclude Include="..\Headers\Macro.h" />
-    <ClInclude Include="..\Headers\Struct.h" />
-    <ClInclude Include="..\Headers\Value.h" />
-    <ClInclude Include="..\Server_Code\ClientClass.h" />
-    <ClInclude Include="Client.h" />
+    <ClInclude Include="AniBuffer.h" />
+    <ClInclude Include="Back.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="Component.h" />
+    <ClInclude Include="CubeCol.h" />
+    <ClInclude Include="Device.h" />
+    <ClInclude Include="DynamicMesh.h" />
+    <ClInclude Include="Enum.h" />
+    <ClInclude Include="FbxParser.h" />
+    <ClInclude Include="Include.h" />
+    <ClInclude Include="Info.h" />
+    <ClInclude Include="Input.h" />
+    <ClInclude Include="Macro.h" />
+    <ClInclude Include="MainFrm.h" />
+    <ClInclude Include="MapTool.h" />
+    <ClInclude Include="MapToolDoc.h" />
+    <ClInclude Include="MapToolView.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="MyForm.h" />
+    <ClInclude Include="Obj.h" />
+    <ClInclude Include="ObjMgr.h" />
+    <ClInclude Include="RcCol.h" />
+    <ClInclude Include="RcTerrain.h" />
+    <ClInclude Include="RcTex.h" />
+    <ClInclude Include="RenderMgr.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="Resources.h" />
+    <ClInclude Include="ResourcesMgr.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneMgr.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="ShaderMgr.h" />
+    <ClInclude Include="StaticMesh.h" />
     <ClInclude Include="StaticObject.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Struct.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="Texture.h" />
+    <ClInclude Include="TimeMgr.h" />
+    <ClInclude Include="Value.h" />
+    <ClInclude Include="VIBuffer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Code\AniBuffer.cpp" />
-    <ClCompile Include="..\Code\Camera.cpp" />
-    <ClCompile Include="..\Code\Collision.cpp" />
-    <ClCompile Include="..\Code\Component.cpp" />
-    <ClCompile Include="..\Code\CubeCol.cpp" />
-    <ClCompile Include="..\Code\Device.cpp" />
-    <ClCompile Include="..\Code\DynamicMesh.cpp" />
-    <ClCompile Include="..\Code\FbxParser.cpp" />
-    <ClCompile Include="..\Code\Flower.cpp" />
-    <ClCompile Include="..\Code\Info.cpp" />
-    <ClCompile Include="..\Code\Input.cpp" />
-    <ClCompile Include="..\Code\Logo.cpp" />
-    <ClCompile Include="..\Code\MainApp.cpp" />
-    <ClCompile Include="..\Code\Mesh.cpp" />
-    <ClCompile Include="..\Code\Obj.cpp" />
-    <ClCompile Include="..\Code\ObjMgr.cpp" />
-    <ClCompile Include="..\Code\OtherPlayer.cpp" />
-    <ClCompile Include="..\Code\Player.cpp" />
-    <ClCompile Include="..\Code\RcCol.cpp" />
-    <ClCompile Include="..\Code\RcTerrain.cpp" />
-    <ClCompile Include="..\Code\RcTex.cpp" />
-    <ClCompile Include="..\Code\RenderMgr.cpp" />
-    <ClCompile Include="..\Code\RenderTaget.cpp" />
-    <ClCompile Include="..\Code\Resources.cpp" />
-    <ClCompile Include="..\Code\ResourcesMgr.cpp" />
-    <ClCompile Include="..\Code\Scene.cpp" />
-    <ClCompile Include="..\Code\SceneMgr.cpp" />
-    <ClCompile Include="..\Code\Shader.cpp" />
-    <ClCompile Include="..\Code\ShaderMgr.cpp" />
-    <ClCompile Include="..\Code\Stage.cpp" />
-    <ClCompile Include="..\Code\StaticMesh.cpp" />
-    <ClCompile Include="..\Code\Terrain.cpp" />
-    <ClCompile Include="..\Code\TerrainCol.cpp" />
-    <ClCompile Include="..\Code\Texture.cpp" />
-    <ClCompile Include="..\Code\TimeMgr.cpp" />
-    <ClCompile Include="..\Code\VIBuffer.cpp" />
-    <ClCompile Include="..\Server_Code\ClientClass.cpp" />
-    <ClCompile Include="..\Server_Code\processPacket.cpp" />
-    <ClCompile Include="..\Server_Code\ProcessWinMessage_clientClass.cpp" />
-    <ClCompile Include="Client.cpp" />
+    <ClCompile Include="AniBuffer.cpp" />
+    <ClCompile Include="Back.cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Component.cpp" />
+    <ClCompile Include="CubeCol.cpp" />
+    <ClCompile Include="Device.cpp" />
+    <ClCompile Include="DynamicMesh.cpp" />
+    <ClCompile Include="FbxParser.cpp" />
+    <ClCompile Include="Info.cpp" />
+    <ClCompile Include="Input.cpp" />
+    <ClCompile Include="MainFrm.cpp" />
+    <ClCompile Include="MapTool.cpp" />
+    <ClCompile Include="MapToolDoc.cpp" />
+    <ClCompile Include="MapToolView.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="MyForm.cpp" />
+    <ClCompile Include="Obj.cpp" />
+    <ClCompile Include="ObjMgr.cpp" />
+    <ClCompile Include="RcCol.cpp" />
+    <ClCompile Include="RcTerrain.cpp" />
+    <ClCompile Include="RcTex.cpp" />
+    <ClCompile Include="RenderMgr.cpp" />
+    <ClCompile Include="Resources.cpp" />
+    <ClCompile Include="ResourcesMgr.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SceneMgr.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="ShaderMgr.cpp" />
+    <ClCompile Include="StaticMesh.cpp" />
     <ClCompile Include="StaticObject.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -245,16 +263,23 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TimeMgr.cpp" />
+    <ClCompile Include="VIBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Client.rc" />
+    <ResourceCompile Include="MapTool.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Client.ico" />
-    <Image Include="small.ico" />
+    <None Include="res\MapTool.rc2" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\ShaderCode\Shader.fx">
+    <Image Include="res\MapTool.ico" />
+    <Image Include="res\MapToolDoc.ico" />
+    <Image Include="res\Toolbar.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">VS</EntryPointName>
       <DisableOptimizations Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</DisableOptimizations>
       <EnableDebuggingInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</EnableDebuggingInformation>
@@ -264,4 +289,9 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties RESOURCE_FILE="MapTool.rc" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>

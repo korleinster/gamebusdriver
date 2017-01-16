@@ -1,0 +1,395 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="00.MainFrm">
+      <UniqueIdentifier>{5da6bdf2-7762-4a8d-bb6a-cba303ca3be1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Default">
+      <UniqueIdentifier>{dbda9b58-7c78-4088-bc2b-26544ef5aac9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Default\리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="99.Default\소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="99.Default\헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="01.View">
+      <UniqueIdentifier>{59e6ac19-e7d3-4101-a280-c6ea3470596e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.Header">
+      <UniqueIdentifier>{d70fb0d7-8182-48ef-8f75-f88a7de4fb17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Resources">
+      <UniqueIdentifier>{f719e12a-d06d-490e-9778-81af06a932ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.View\FormView">
+      <UniqueIdentifier>{c26d7850-fde8-4699-9762-7b63a2ab0c87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Scene">
+      <UniqueIdentifier>{8699ba46-9e90-4820-8901-9b3f43ba08c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Scene\Back">
+      <UniqueIdentifier>{64bfe84f-9c1b-413e-bf2a-192ada8cbee8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Object">
+      <UniqueIdentifier>{4a53d8ba-873c-4709-9fb6-4f934e19616a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Dialog">
+      <UniqueIdentifier>{cde98472-4047-4140-9835-04667cbe0f7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Manager">
+      <UniqueIdentifier>{0349309b-c1fc-47b2-8d30-1a51adf8897e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Manager\1.ObjMgr">
+      <UniqueIdentifier>{4987a699-2d18-49e1-bdb3-849b2cfdbcb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Manager\2.ResourcesMgr">
+      <UniqueIdentifier>{feb10892-933c-4e55-8892-db1d288113c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Manager\3.ShaderMgr">
+      <UniqueIdentifier>{76080a5f-823a-4c14-81d2-c486020cf1c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Manager\4.RenderMgr">
+      <UniqueIdentifier>{b0146834-4fd4-4356-bddb-7e967743df95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Manager\5.SceneMgr">
+      <UniqueIdentifier>{53fc0639-35e0-4f53-8be4-525df7e5ba78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.Etc">
+      <UniqueIdentifier>{e43c3d67-57e2-44c4-853d-058fb08913fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95.System">
+      <UniqueIdentifier>{b737b024-4fae-4bcb-b9ed-3211dcebb405}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95.System\1.Device">
+      <UniqueIdentifier>{70eab54e-8391-4027-b036-c8904879dc4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.Utility">
+      <UniqueIdentifier>{781e08da-f866-4f72-a6b0-b3b180aef505}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95.System\2.Time">
+      <UniqueIdentifier>{6d6bad41-4e4d-4db6-b29b-6b43c703c9f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95.System\3.Font">
+      <UniqueIdentifier>{02608d1b-9154-4ab2-9491-8285565e8812}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95.System\4.Input">
+      <UniqueIdentifier>{6c3ff91b-78f9-44ff-8408-5b31e19b326d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.Utility\1.Component">
+      <UniqueIdentifier>{e14da385-7254-43e1-9087-f848520b5589}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.Utility\1.Component\Info">
+      <UniqueIdentifier>{fb6437f8-c8aa-4538-8d5e-fc454fc53060}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Resources\1.Buffer">
+      <UniqueIdentifier>{81ddb368-14e1-41d3-98ce-307776e149c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Resources\2.Texture">
+      <UniqueIdentifier>{2e38ce8c-42c4-4048-b431-8dfc28663064}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Resources\3.Shader">
+      <UniqueIdentifier>{0489d8dc-7edd-4b94-a51f-dd4c44f35a83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Resources\1.Buffer\1.RcCol">
+      <UniqueIdentifier>{924540f5-beef-4868-971d-aed7f460cabc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Resources\1.Buffer\2.RcTex">
+      <UniqueIdentifier>{1b65155d-e711-4d14-b25f-03eb41ad55a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Resources\1.Buffer\3.RcTerrain">
+      <UniqueIdentifier>{443e528d-e9b6-4328-8189-832af27d6dfe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Resources\1.Buffer\4.CubeCol">
+      <UniqueIdentifier>{16d694b6-5e45-46e6-a4a5-245e5819ea21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Resources\1.Buffer\5.Mesh">
+      <UniqueIdentifier>{a6e43a62-a9a7-4544-93eb-ead651d91c2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Resources\1.Buffer\5.Mesh\StaticMesh">
+      <UniqueIdentifier>{da40412b-dc52-4117-8fab-d769b7b657e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Resources\1.Buffer\5.Mesh\DynamicMesh">
+      <UniqueIdentifier>{9584328f-0686-4683-a426-89332723de5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Resources\1.Buffer\5.Mesh\DynamicMesh\FbxParser">
+      <UniqueIdentifier>{7a32fd38-99c2-4a73-a42e-84142e61c2ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Resources\1.Buffer\5.Mesh\DynamicMesh\AnimationBuffer">
+      <UniqueIdentifier>{39f17e57-1717-4b0e-a9eb-bde01b97b742}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Resources\3.Shader\ShaderCode">
+      <UniqueIdentifier>{eaa663f6-fa7e-491d-b945-e1403d0c0a0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Object\99Camera">
+      <UniqueIdentifier>{0357131e-0635-4536-8d44-cce37afe328c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Object\01.StaticObject">
+      <UniqueIdentifier>{373b62ae-05b2-42cf-b920-ca80bf006b88}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MapTool.h">
+      <Filter>99.Default\헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>99.Default\헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>99.Default\헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="MapToolDoc.h">
+      <Filter>99.Default\헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>99.Default\헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="MainFrm.h">
+      <Filter>00.MainFrm</Filter>
+    </ClInclude>
+    <ClInclude Include="MapToolView.h">
+      <Filter>01.View</Filter>
+    </ClInclude>
+    <ClInclude Include="Device.h">
+      <Filter>95.System\1.Device</Filter>
+    </ClInclude>
+    <ClInclude Include="Enum.h">
+      <Filter>98.Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Include.h">
+      <Filter>98.Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Macro.h">
+      <Filter>98.Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Struct.h">
+      <Filter>98.Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Value.h">
+      <Filter>98.Header</Filter>
+    </ClInclude>
+    <ClInclude Include="MyForm.h">
+      <Filter>01.View\FormView</Filter>
+    </ClInclude>
+    <ClInclude Include="Back.h">
+      <Filter>02.Scene\Back</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>02.Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Obj.h">
+      <Filter>03.Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>03.Object\99Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjMgr.h">
+      <Filter>06.Manager\1.ObjMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourcesMgr.h">
+      <Filter>06.Manager\2.ResourcesMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderMgr.h">
+      <Filter>06.Manager\3.ShaderMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderMgr.h">
+      <Filter>06.Manager\4.RenderMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneMgr.h">
+      <Filter>06.Manager\5.SceneMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeMgr.h">
+      <Filter>95.System\2.Time</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>95.System\4.Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Info.h">
+      <Filter>96.Utility\1.Component\Info</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>96.Utility\1.Component</Filter>
+    </ClInclude>
+    <ClInclude Include="RcCol.h">
+      <Filter>97.Resources\1.Buffer\1.RcCol</Filter>
+    </ClInclude>
+    <ClInclude Include="RcTex.h">
+      <Filter>97.Resources\1.Buffer\2.RcTex</Filter>
+    </ClInclude>
+    <ClInclude Include="RcTerrain.h">
+      <Filter>97.Resources\1.Buffer\3.RcTerrain</Filter>
+    </ClInclude>
+    <ClInclude Include="CubeCol.h">
+      <Filter>97.Resources\1.Buffer\4.CubeCol</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicMesh.h">
+      <Filter>97.Resources\1.Buffer\5.Mesh\DynamicMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="FbxParser.h">
+      <Filter>97.Resources\1.Buffer\5.Mesh\DynamicMesh\FbxParser</Filter>
+    </ClInclude>
+    <ClInclude Include="AniBuffer.h">
+      <Filter>97.Resources\1.Buffer\5.Mesh\DynamicMesh\AnimationBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticMesh.h">
+      <Filter>97.Resources\1.Buffer\5.Mesh\StaticMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>97.Resources\1.Buffer\5.Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>97.Resources\2.Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>97.Resources\3.Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="VIBuffer.h">
+      <Filter>97.Resources\1.Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources.h">
+      <Filter>97.Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticObject.h">
+      <Filter>03.Object\01.StaticObject</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="MapTool.cpp">
+      <Filter>99.Default\소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>99.Default\소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="MapToolDoc.cpp">
+      <Filter>99.Default\소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="MainFrm.cpp">
+      <Filter>00.MainFrm</Filter>
+    </ClCompile>
+    <ClCompile Include="MapToolView.cpp">
+      <Filter>01.View</Filter>
+    </ClCompile>
+    <ClCompile Include="Device.cpp">
+      <Filter>95.System\1.Device</Filter>
+    </ClCompile>
+    <ClCompile Include="MyForm.cpp">
+      <Filter>01.View\FormView</Filter>
+    </ClCompile>
+    <ClCompile Include="Back.cpp">
+      <Filter>02.Scene\Back</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>02.Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Obj.cpp">
+      <Filter>03.Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>03.Object\99Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjMgr.cpp">
+      <Filter>06.Manager\1.ObjMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourcesMgr.cpp">
+      <Filter>06.Manager\2.ResourcesMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderMgr.cpp">
+      <Filter>06.Manager\3.ShaderMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderMgr.cpp">
+      <Filter>06.Manager\4.RenderMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneMgr.cpp">
+      <Filter>06.Manager\5.SceneMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeMgr.cpp">
+      <Filter>95.System\2.Time</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>95.System\4.Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Info.cpp">
+      <Filter>96.Utility\1.Component\Info</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>96.Utility\1.Component</Filter>
+    </ClCompile>
+    <ClCompile Include="RcCol.cpp">
+      <Filter>97.Resources\1.Buffer\1.RcCol</Filter>
+    </ClCompile>
+    <ClCompile Include="RcTex.cpp">
+      <Filter>97.Resources\1.Buffer\2.RcTex</Filter>
+    </ClCompile>
+    <ClCompile Include="RcTerrain.cpp">
+      <Filter>97.Resources\1.Buffer\3.RcTerrain</Filter>
+    </ClCompile>
+    <ClCompile Include="CubeCol.cpp">
+      <Filter>97.Resources\1.Buffer\4.CubeCol</Filter>
+    </ClCompile>
+    <ClCompile Include="DynamicMesh.cpp">
+      <Filter>97.Resources\1.Buffer\5.Mesh\DynamicMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="FbxParser.cpp">
+      <Filter>97.Resources\1.Buffer\5.Mesh\DynamicMesh\FbxParser</Filter>
+    </ClCompile>
+    <ClCompile Include="AniBuffer.cpp">
+      <Filter>97.Resources\1.Buffer\5.Mesh\DynamicMesh\AnimationBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticMesh.cpp">
+      <Filter>97.Resources\1.Buffer\5.Mesh\StaticMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>97.Resources\1.Buffer\5.Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>97.Resources\2.Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>97.Resources\3.Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="VIBuffer.cpp">
+      <Filter>97.Resources\1.Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources.cpp">
+      <Filter>97.Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticObject.cpp">
+      <Filter>03.Object\01.StaticObject</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="MapTool.rc">
+      <Filter>99.Default\리소스 파일</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\MapTool.rc2">
+      <Filter>99.Default\리소스 파일</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\MapToolDoc.ico">
+      <Filter>99.Default\리소스 파일</Filter>
+    </Image>
+    <Image Include="res\MapTool.ico">
+      <Filter>99.Default\리소스 파일</Filter>
+    </Image>
+    <Image Include="res\Toolbar.bmp">
+      <Filter>99.Default\리소스 파일</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shader.fx">
+      <Filter>97.Resources\3.Shader\ShaderCode</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>

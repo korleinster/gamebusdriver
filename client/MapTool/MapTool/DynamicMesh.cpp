@@ -13,8 +13,8 @@
 
 
 CDynamicMesh::CDynamicMesh()
-:m_wCurrenAniIdx(-1),
- m_fAniPlayTimer(0.f)
+	:m_wCurrenAniIdx(-1),
+	m_fAniPlayTimer(0.f)
 {
 }
 
@@ -79,7 +79,7 @@ HRESULT CDynamicMesh::Initialize(const char* _pPath, vector<string> _vecAniName)
 
 
 HRESULT CDynamicMesh::Load_Model(const char* _pPath, vector<string> _vecAniName, FbxManager* _pFBXManager, FbxIOSettings* _pIOsettings,
-									FbxScene* _pFBXScene, FbxImporter* _pImporter)
+	FbxScene* _pFBXScene, FbxImporter* _pImporter)
 {
 	int		iFileFormat = EOF;
 	string	strFullPath;
@@ -106,7 +106,7 @@ HRESULT CDynamicMesh::Load_Model(const char* _pPath, vector<string> _vecAniName,
 
 		_pFBXManager->GetIOPluginRegistry()->DetectReaderFileFormat(strFullPath.c_str(), iFileFormat);//파일이 있는지 확인.
 
-		//FALSE_CHECK_MSG(_pImporter->Initialize(strFullPath.c_str(), iFileFormat), L"No Find Fbx Path");
+																									  //FALSE_CHECK_MSG(_pImporter->Initialize(strFullPath.c_str(), iFileFormat), L"No Find Fbx Path");
 		if (_pImporter->Initialize(strFullPath.c_str(), iFileFormat) == false)
 			MessageBox(NULL, L"No Find Fbx Path", L"System Error", MB_OK);
 
@@ -127,8 +127,8 @@ HRESULT CDynamicMesh::Load_Model(const char* _pPath, vector<string> _vecAniName,
 		//루트노드를 가져오고 확인작업.
 
 		//pAni->pBaseBoneMatrix = new XMMATRIX[BONE_MATRIX_NUM];
-		pAni->pBaseBoneMatrix = (XMMATRIX*)_aligned_malloc(	sizeof(XMMATRIX) * BONE_MATRIX_NUM, 16);// 본의 행렬을 행렬*본행렬의 사이즈만큼 해서 초기화.
-		//new (pAni->pBaseBoneMatrix)XMMATRIX();
+		pAni->pBaseBoneMatrix = (XMMATRIX*)_aligned_malloc(sizeof(XMMATRIX) * BONE_MATRIX_NUM, 16);// 본의 행렬을 행렬*본행렬의 사이즈만큼 해서 초기화.
+																								   //new (pAni->pBaseBoneMatrix)XMMATRIX();
 
 		for (int i = 0; i < BONE_MATRIX_NUM; ++i)
 			pAni->pBaseBoneMatrix[i] = XMMatrixIdentity();
@@ -151,8 +151,8 @@ HRESULT CDynamicMesh::Load_Model(const char* _pPath, vector<string> _vecAniName,
 		int numLayers = AnimStack->GetMemberCount();
 		for (int layerIndex = 0; layerIndex < numLayers; layerIndex++)
 		{
-			FbxAnimLayer* animLayer = (FbxAnimLayer*)AnimStack->GetMember(layerIndex);
-			FbxAnimCurve* translationCurve = pFbxRootNode->LclTranslation.GetCurve(animLayer);
+		FbxAnimLayer* animLayer = (FbxAnimLayer*)AnimStack->GetMember(layerIndex);
+		FbxAnimCurve* translationCurve = pFbxRootNode->LclTranslation.GetCurve(animLayer);
 
 
 		}*/
@@ -188,7 +188,7 @@ HRESULT CDynamicMesh::Load_Model(const char* _pPath, vector<string> _vecAniName,
 
 			m_pGrapicDevice->m_pDevice->CreateBuffer(&BD, NULL, &pAni->pBoneMatrixBuffer);
 
-			m_pGrapicDevice->m_pDeviceContext->Map(pAni->pBoneMatrixBuffer,	NULL, D3D11_MAP::D3D11_MAP_WRITE_DISCARD, NULL, &pAni->tMappedResource);//맵을 하여 버퍼를 갱신.
+			m_pGrapicDevice->m_pDeviceContext->Map(pAni->pBoneMatrixBuffer, NULL, D3D11_MAP::D3D11_MAP_WRITE_DISCARD, NULL, &pAni->tMappedResource);//맵을 하여 버퍼를 갱신.
 
 			pAni->pBoneMatrix = (VS_CB_BONE_MATRIX *)pAni->tMappedResource.pData;
 
@@ -248,10 +248,10 @@ void CDynamicMesh::PlayAnimation(int _iIdx)
 	m_pGrapicDevice->m_pDeviceContext->RSSetState(m_pRasterizerState);
 
 	//m_vecAni[_iIdx]->fAniPlayTimer
-	m_fAniPlayTimer	+= m_vecAni[_iIdx]->fAniPlaySpeed * CTimeMgr::GetInstance()->GetTime();
+	m_fAniPlayTimer += m_vecAni[_iIdx]->fAniPlaySpeed * CTimeMgr::GetInstance()->GetTime();
 
 	//if (m_vecAni[_iIdx]->fAniPlayTimer > m_vecAni[_iIdx]->llAniMaxTime / 10)
-		//m_vecAni[_iIdx]->fAniPlayTimer = 0;
+	//m_vecAni[_iIdx]->fAniPlayTimer = 0;
 
 	//애니메이션 스테이트 체크해서 어디서부터 반복할지 넣어준다
 
@@ -260,20 +260,20 @@ void CDynamicMesh::PlayAnimation(int _iIdx)
 	case CPlayingInfo::ANI_STATE_BOOSTER:
 	case CPlayingInfo::ANI_STATE_DEAD:
 	case CPlayingInfo::ANI_STATE_BREAK:
-		if (m_fAniPlayTimer > m_vecAni[_iIdx]->llAniMaxTime / 10) {
-			m_fAniPlayTimer = (m_vecAni[_iIdx]->llAniMaxTime / 10) - 1.f;
-			m_bAniEnd = true;
-		}
-		break;
+	if (m_fAniPlayTimer > m_vecAni[_iIdx]->llAniMaxTime / 10) {
+	m_fAniPlayTimer = (m_vecAni[_iIdx]->llAniMaxTime / 10) - 1.f;
+	m_bAniEnd = true;
+	}
+	break;
 	default:
-		if (m_fAniPlayTimer > m_vecAni[_iIdx]->llAniMaxTime / 10) {
-			m_fAniPlayTimer = 0;
-			m_bAniEnd = true;
-		}
-		break;
+	if (m_fAniPlayTimer > m_vecAni[_iIdx]->llAniMaxTime / 10) {
+	m_fAniPlayTimer = 0;
+	m_bAniEnd = true;
+	}
+	break;
 	}*/
 
-	if (m_fAniPlayTimer > m_vecAni[_iIdx]->llAniMaxTime/10)
+	if (m_fAniPlayTimer > m_vecAni[_iIdx]->llAniMaxTime / 10)
 	{
 		m_fAniPlayTimer = 0;
 		m_bAniEnd = true;
@@ -284,7 +284,7 @@ void CDynamicMesh::PlayAnimation(int _iIdx)
 	for (unsigned int i = 0; i < m_vecAni[_iIdx]->nAniNodeIdxCnt; ++i)
 	{
 		m_vecAni[_iIdx]->pBoneMatrix->m_XMmtxBone[i] = m_vecAni[_iIdx]->ppResultMatrix[int(m_fAniPlayTimer)][i];
-			//= m_vecAni[_iIdx]->ppResultMatrix[int(m_vecAni[_iIdx]->fAniPlayTimer)][i];
+		//= m_vecAni[_iIdx]->ppResultMatrix[int(m_vecAni[_iIdx]->fAniPlayTimer)][i];
 	}
 
 
@@ -303,18 +303,18 @@ void CDynamicMesh::BWPlayAnim(int _iIdx)
 	//애니메이션 스테이트 체크해서 어디서부터 반복할지 넣어준다
 	switch (_iIdx)
 	{
-	//case CPlayingInfo::ANI_STATE_BOOSTER:
-	//	m_iRepeatTime = 120;
-	//	break;
-	//case CPlayingInfo::ANI_STATE_DEAD:
-	//	m_iRepeatTime = 100;
-	//	break;
-	//case CPlayingInfo::ANI_STATE_BREAK:
-	//	m_iRepeatTime = 50;
-	//	break;
-	//default:
-	//	m_iRepeatTime = 0;
-	//	break;
+		//case CPlayingInfo::ANI_STATE_BOOSTER:
+		//	m_iRepeatTime = 120;
+		//	break;
+		//case CPlayingInfo::ANI_STATE_DEAD:
+		//	m_iRepeatTime = 100;
+		//	break;
+		//case CPlayingInfo::ANI_STATE_BREAK:
+		//	m_iRepeatTime = 50;
+		//	break;
+		//default:
+		//	m_iRepeatTime = 0;
+		//	break;
 	}
 
 	if (_iIdx < 0 || (unsigned)_iIdx > m_vecAni.size())

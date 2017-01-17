@@ -300,7 +300,7 @@ void CLightMgr::DoDebugLightVolume(ID3D11DeviceContext * pd3dImmediateContext)
 	{
 		if ((*itrCurLight).eLightType == TYPE_POINT)
 		{
-			//PointLight(pd3dImmediateContext, (*itrCurLight).vPosition, (*itrCurLight).fRange, (*itrCurLight).vColor, true);
+			PointLight(pd3dImmediateContext, (*itrCurLight).vPosition, (*itrCurLight).fRange, (*itrCurLight).vColor/*, true*/);
 		}
 	}
 

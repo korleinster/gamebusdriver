@@ -109,6 +109,8 @@ float3 CalcPoint(float3 position, Material material, bool bUseShadow)
    ToLight /= DistToLight; // Normalize
    float NDotL = saturate(dot(ToLight, material.normal));
    float3 finalColor = material.diffuseColor.rgb * NDotL;
+   // Å÷
+   finalColor = ceil(finalColor * 2) / 2.f;
    
    // Blinn specular
    ToEye = normalize(ToEye);

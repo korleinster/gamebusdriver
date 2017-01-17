@@ -68,9 +68,10 @@ void CRenderMgr::Render(const float & fTime)
 		D3DXVECTOR3(m_vDirLight.x, m_vDirLight.y, m_vDirLight.z),
 		D3DXVECTOR3(m_fDirColor[RGB_RED], m_fDirColor[RGB_GREEN], m_fDirColor[RGB_BLUE]));
 
-	//m_pLightMgr->ClearLights();
+	m_pLightMgr->ClearLights();
 	// 점조명 하는중
-	//m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f, 150.f, -20.f), 155.f, D3DXVECTOR3(1.0f, 0.0f, 0.0f));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f, -20.f, 100.f), 30.f, D3DXVECTOR3(1.0f, 0.0f, 0.0f));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f, -20.f, 120.f), 30.f, D3DXVECTOR3(0.0f, 1.0f, 0.0f));
 
 	ID3D11DepthStencilState* pPrevDepthState;
 	UINT nPrevStencil;
@@ -92,6 +93,9 @@ void CRenderMgr::Render(const float & fTime)
 	
 	m_pTargetMgr->GetGBuffer()->PrepareForUnpack(m_pDevice->m_pDeviceContext);
 	m_pLightMgr->DoLighting(m_pDevice->m_pDeviceContext, m_pTargetMgr->GetGBuffer());
+
+	if (CInput::GetInstance()->GetDIKeyState(DIK_TAB) & 0x80)
+		m_pLightMgr->DoDebugLightVolume(m_pDevice->m_pDeviceContext);
 	
 	m_pDevice->m_pDeviceContext->OMSetRenderTargets(1, &m_pDevice->m_pRenderTargetView, NULL);
 	

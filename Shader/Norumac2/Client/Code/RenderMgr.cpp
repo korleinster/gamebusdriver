@@ -62,14 +62,17 @@ HRESULT CRenderMgr::InitScene(void)
 
 void CRenderMgr::Render(const float & fTime)
 {
+	// 키세팅
 	Input(fTime);
 
+	// 디렉셔널 갱신
 	m_pLightMgr->SetDirectional(
 		D3DXVECTOR3(m_vDirLight.x, m_vDirLight.y, m_vDirLight.z),
 		D3DXVECTOR3(m_fDirColor[RGB_RED], m_fDirColor[RGB_GREEN], m_fDirColor[RGB_BLUE]));
 
+	// 조명 클리어
 	m_pLightMgr->ClearLights();
-	// 점조명 하는중
+	// 점조명 갱신
 	m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f, -20.f, 100.f), 30.f, D3DXVECTOR3(1.0f, 0.0f, 0.0f));
 	m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f, -20.f, 120.f), 30.f, D3DXVECTOR3(0.0f, 1.0f, 0.0f));
 

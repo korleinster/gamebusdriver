@@ -391,7 +391,10 @@ void CLightMgr::DirectionalLight(ID3D11DeviceContext* pd3dImmediateContext)
 	pd3dImmediateContext->VSSetShader(m_pDirLightVertexShader->m_pVertexShader, NULL, 0);
 	pd3dImmediateContext->GSSetShader(NULL, NULL, 0);
 	pd3dImmediateContext->PSSetShader(m_pDirLightPixelShader->m_pPixelShader, NULL, 0);
-	pd3dImmediateContext->Draw(4, 0);
+	// gpu에게 현재 버텍스버퍼, 버텍스레이아웃, 프리미티브 토폴로지를 사용해서 렌더링하라는 함수
+	pd3dImmediateContext->Draw(
+		4, // gpu로 보낸 버텍스의 갯수
+		0); // 처음시작할 버텍스의 인덱스
 
 	// Cleanup
 	ID3D11ShaderResourceView *arrRV[1] = { NULL };

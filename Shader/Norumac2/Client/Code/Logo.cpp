@@ -43,14 +43,18 @@ int CLogo::Update(void)
 
 void CLogo::Render(void)
 {
-	//CDevice::GetInstance()->m_pDeviceContext->VSSetShader(m_pVertexShader->m_pVertexShader, NULL, 0);
-	//CDevice::GetInstance()->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pPolygon->m_ConstantBuffer);
-	//////////////////
-	//CDevice::GetInstance()->m_pDeviceContext->PSSetShader(m_pPixelShader->m_pPixelShader, NULL, 0);
-	//CDevice::GetInstance()->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
-	//CDevice::GetInstance()->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
+	CDevice::GetInstance()->m_pDeviceContext->VSSetShader(m_pVertexShader->m_pVertexShader, NULL, 0);
+	CDevice::GetInstance()->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pPolygon->m_ConstantBuffer);
+	////////////////
+	CDevice::GetInstance()->m_pDeviceContext->PSSetShader(m_pPixelShader->m_pPixelShader, NULL, 0);
+	CDevice::GetInstance()->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
+	// 생성된 샘플러를 해당 셰이더 스테이지에 등록한다
+	CDevice::GetInstance()->m_pDeviceContext->PSSetSamplers(
+		0, // 샘플러를 설정할 처음 슬롯번호(0~15)
+		1, // 설정할 샘플러의 수
+		&m_pTexture->m_pSamplerLinear); // 설정할 샘플러 주소
 
-	//m_pPolygon->Render();
+	m_pPolygon->Render();
 }
 
 void CLogo::Release(void)

@@ -50,9 +50,22 @@ void CVIBuffer::Render(void)
 {
 	CDevice* pGrapicDevice = CDevice::GetInstance();
 	
-	pGrapicDevice->m_pDeviceContext->IASetVertexBuffers(m_iSlot, 1, &m_VertexBuffer, &m_iVertexStrides, &m_iVertexOffsets);
+	// 버텍스 버퍼를 설정
+	pGrapicDevice->m_pDeviceContext->IASetVertexBuffers(
+		m_iSlot, // 처음 설정할 입력 슬롯 번호
+		1, // 설정할 버텍스 버퍼 개수
+		&m_VertexBuffer, // 설정할 버텍스 버퍼의 배열
+		&m_iVertexStrides, // 각 버텍스 버퍼의 사이즈
+		&m_iVertexOffsets); // 각 버텍스 버퍼의 오프셋
+
+	// 인덱스 버퍼의 설정
 	if(m_IndexBuffer)
-		pGrapicDevice->m_pDeviceContext->IASetIndexBuffer(m_IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+		pGrapicDevice->m_pDeviceContext->IASetIndexBuffer(
+			m_IndexBuffer, // 설정할 인덱스 버퍼
+			DXGI_FORMAT_R32_UINT, // 인덱스 버퍼의 포맷
+			0); // 인덱스 버퍼의 오프셋
+
+				// 삼각형을 렌더링할때 필요한 버텍스들을 gpu가 가져오는 방식을 정의한다
 	pGrapicDevice->m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	if (m_pRasterizerState)

@@ -136,12 +136,15 @@ bool CDevice::CreateRenderTargetStanciView(void)
 void CDevice::BeginDevice(void)
 {
 	D3DXCOLOR DeviceColor(0, 0, 1, 0);
+	// 백버퍼의 내용을 지움
 	m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView, DeviceColor);
+	// 깊이 버퍼를 지움
 	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
 void CDevice::EndDevice(void)
 {
+	// 빠르게 표시
 	m_pSwapChain->Present(0, 0);
 }
 

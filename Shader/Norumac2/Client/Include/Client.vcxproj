@@ -149,6 +149,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <Text Include="..\ShaderCode\HLSL내장함수.txt" />
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>

@@ -1,22 +1,23 @@
 #include "common.fx"
 
-// 좌표
-static float2 arrOffsets[4] = {
+// 버텍스 위치들을 컨트롤
+static float2 arrOffsets[5] = {
 	float2(-0.89, 0.89),
 	float2(-0.68, 0.89),
 	float2(-0.47, 0.89),
 	float2(-0.26, 0.89),
+	float2(-0.05, 0.89),
 };
 
-// 버텍스 버퍼
+// 버텍스 위치
 static const float2 arrBasePos[4] = {
-	float2(0.5, 0.5),
-	float2(0.5, -0.5),
-	float2(-0.5, 0.5),
-	float2(-0.5, -0.5),
+	float2(1.0, 1.0),
+	float2(1.0, -1.0),
+	float2(-1.0, 1.0),
+	float2(-1.0, -1.0),
 };
 
-// 렌더타겟 그릴 uv
+// uv
 static const float2 arrUV[4] = {
 	float2(1.0, 0.0),
 	float2(1.0, 1.0),
@@ -29,6 +30,7 @@ static const float4 arrMask[4] = {
 	float4(0.0, 1.0, 0.0, 0.0),
 	float4(0.0, 0.0, 1.0, 0.0),
 	float4(0.0, 0.0, 0.0, 1.0),
+	// float4(1.0, 0.0, 0.0, 0.0),
 };
 
 struct VS_OUTPUT
@@ -42,21 +44,27 @@ VS_OUTPUT GBufferVisVS(uint VertexID : SV_VertexID)
 {
 	VS_OUTPUT Output;
 
-	Output.Position = float4(arrBasePos[VertexID % 4].xy * 0.2 + arrOffsets[VertexID / 4], 0.0, 1.0);
-	Output.UV = arrUV[VertexID % 4].xy;
+	// arrBasePos에다가 * 0.1을 함으로써 화면크기에 0.1크기만큼으로 만듬
+	// [n % 4] - 0, 1, 2, 3 을 계속 반복
+	// [n / 4] - 기본적으로 내림이기 때문에 결과가 4번씩 같은값이 나오면서 계속 1씩 증가 ex) 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2 ....
+	Output.Position = float4(arrBasePos[VertexID % 4].xy * 0.1f + arrOffsets[VertexID / 4], 0.0, 1.0);
+	Output.UV = arrUV[VertexID % 4].xy; // uv는 손볼 것 없음
 	Output.sampMask = arrMask[VertexID / 4].xyzw;
 
 	return Output;
 }
 
-float4 GBufferVisPS(VS_OUTPUT In) : SV_TARGET
+float4 GBufferVisPS(VS_OUTPUT In) : SV_TARGET // SV_Target이라는 의미소는 이 함수의 반환값 형식이 렌더 대상 형식과 일치해야함을 뜻한다
 {
 	SURFACE_DATA gbd = UnpackGBuffer(In.UV.xy);
 	float4 finalColor = float4(0.0, 0.0, 0.0, 1.0);
+
+	// saturate : 0보다 작으면 0, 1보다 크면 1, 그외는 그값
 	finalColor += float4(1.0 - saturate(gbd.LinearDepth / 75.0), 1.0 - saturate(gbd.LinearDepth / 125.0), 1.0 - saturate(gbd.LinearDepth / 200.0), 0.0) * In.sampMask.xxxx;
 	finalColor += float4(gbd.Color.xyz, 0.0) * In.sampMask.yyyy;
 	finalColor += float4(gbd.Normal.xyz * 0.5 + 0.5, 0.0) * In.sampMask.zzzz;
 	finalColor += float4(gbd.SpecIntensity, gbd.SpecPow, 0.0, 0.0) * In.sampMask.wwww;
+	//finalColor += float4(gbd.Sobel, gbd.Sobel, 0, 0) * In.sampMask.wwww;
 
 	return finalColor;
 }

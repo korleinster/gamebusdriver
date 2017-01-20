@@ -72,7 +72,9 @@ HRESULT CMainApp::Initialize(void)
 	}
 
 
-	//일반
+	// ShaderMgr 사용법
+	// 셰이더를 탐색할 Tag, 파일 경로, 진입함수, 버전, 셰이더종류
+	// 일반
 	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"VS", L"../ShaderCode/Shader.fx", "VS", "vs_5_0", SHADER_VS);
 	if (FAILED(hr))
 	{
@@ -83,11 +85,11 @@ HRESULT CMainApp::Initialize(void)
 	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"PS", L"../ShaderCode/Shader.fx", "PS", "ps_5_0", SHADER_PS);
 	if (FAILED(hr))
 	{
-		MessageBox(NULL, L"System Message", L"PIXEL Shader Create Failed", MB_OK);
+		MessageBox(NULL, L"System Message", L"Pixel Shader Create Failed", MB_OK);
 		return hr;
 	}
 
-	//로고용
+	// 로고용
 	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"VS_Logo", L"../ShaderCode/Shader.fx", "VS_Logo", "vs_5_0", SHADER_VS);
 	if (FAILED(hr))
 	{
@@ -95,7 +97,7 @@ HRESULT CMainApp::Initialize(void)
 		return hr;
 	}
 
-	//디퍼드용
+	// 디퍼드용
 	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"GBufferVisVS", L"../ShaderCode/GBufferVis.fx", "GBufferVisVS", "vs_5_0", SHADER_VS);
 	if (FAILED(hr))
 	{
@@ -110,7 +112,7 @@ HRESULT CMainApp::Initialize(void)
 		return hr;
 	}
 
-	//디퍼드 오브젝트용
+	// 디퍼드 오브젝트용
 	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"RenderSceneVS", L"../ShaderCode/DeferredShading.fx", "RenderSceneVS", "vs_5_0", SHADER_VS);
 	if (FAILED(hr))
 	{
@@ -125,8 +127,8 @@ HRESULT CMainApp::Initialize(void)
 		return hr;
 	}
 	
-	//조명 쉐이더
-	//Directional
+	// 조명 쉐이더
+	// Directional
 	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"DirLightVS", L"../ShaderCode/DirLight.fx", "DirLightVS", "vs_5_0", SHADER_VS);
 	if (FAILED(hr))
 	{
@@ -141,7 +143,7 @@ HRESULT CMainApp::Initialize(void)
 		return hr;
 	}
 
-	//Point
+	// Point
 	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"PointLightVS", L"../ShaderCode/PointLight.fx", "PointLightVS", "vs_5_0", SHADER_VS);
 	if (FAILED(hr))
 	{
@@ -170,7 +172,7 @@ HRESULT CMainApp::Initialize(void)
 		return hr;
 	}
 
-	//Spot
+	// Spot
 	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"SpotLightVS", L"../ShaderCode/SpotLight.fx", "SpotLightVS", "vs_5_0", SHADER_VS);
 	if (FAILED(hr))
 	{
@@ -198,7 +200,7 @@ HRESULT CMainApp::Initialize(void)
 		MessageBox(NULL, L"System Message", L"SpotLight Pixel Shader Create Failed", MB_OK);
 		return hr;
 	}
-	//Capsule
+	// Capsule
 	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"CapsuleLightVS", L"../ShaderCode/CapsuleLight.fx", "CapsuleLightVS", "vs_5_0", SHADER_VS);
 	if (FAILED(hr))
 	{
@@ -228,7 +230,7 @@ HRESULT CMainApp::Initialize(void)
 	}
 
 
-	//인풋
+	// 인풋
 	hr = CInput::GetInstance()->InitInputDevice(g_hInst, g_hWnd);
 	if (FAILED(hr))
 	{
@@ -244,16 +246,7 @@ HRESULT CMainApp::Initialize(void)
 	pScene = CStage::Create();
 	CSceneMgr::GetInstance()->AddScene(SCENE_STAGE, pScene);
 
-	CSceneMgr::GetInstance()->ChangeScene(SCENE_LOGO);
-
-	/*
-	D3D11_RASTERIZER_DESC wireframeDesc;
-	ZeroMemory(&wireframeDesc, sizeof(D3D11_RASTERIZER_DESC));
-	wireframeDesc.FillMode = D3D11_FILL_WIREFRAME;
-	wireframeDesc.CullMode = D3D11_CULL_BACK;
-	wireframeDesc.FrontCounterClockwise = false;
-	wireframeDesc.DepthClipEnable = true;
-	*/
+	CSceneMgr::GetInstance()->ChangeScene(SCENE_LOGO);	
 			
 	return S_OK;
 }

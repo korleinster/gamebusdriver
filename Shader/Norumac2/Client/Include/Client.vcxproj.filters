@@ -136,6 +136,9 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
+    <Text Include="..\ShaderCode\HLSL내장함수.txt">
+      <Filter>97.Resources\03.Shader\ShaderCode</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Code\MainApp.h">

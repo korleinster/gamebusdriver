@@ -44,7 +44,19 @@ HRESULT CShader::Ready_ShaderFile(wstring wstrFilePath, LPCSTR wstrShaderName, L
 	ID3DBlob* pErrorBlob = NULL;
 	ID3DBlob* pShaderBlob = NULL;
 	
-	hr = D3DX11CompileFromFile(wstrFilePath.c_str(), NULL, NULL, wstrShaderName, wstrShaderVersion, dwShaderFlags, 0, NULL, &pShaderBlob, &pErrorBlob, NULL);
+	// hlsl 컴파일
+	hr = D3DX11CompileFromFile(
+		wstrFilePath.c_str(), // 셰이더 파일 경로
+		NULL,
+		NULL, 
+		wstrShaderName, // 셰이더 실행이 시작되는 진입 점 함수의 이름
+		wstrShaderVersion, // 셰이더 버전
+		dwShaderFlags,
+		0,
+		NULL,
+		&pShaderBlob,
+		&pErrorBlob,
+		NULL);
 
 	if (FAILED(hr))
 	{
@@ -53,11 +65,12 @@ HRESULT CShader::Ready_ShaderFile(wstring wstrFilePath, LPCSTR wstrShaderName, L
 		if (pErrorBlob) pErrorBlob->Release();
 		return hr;
 	}
+
 	if (pErrorBlob) pErrorBlob->Release();
 
 	if (_SType == SHADER_VS)
 	{
-
+		// 정점 셰이더 객체를 만듬
 		hr = CDevice::GetInstance()->m_pDevice->CreateVertexShader(pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), NULL, &m_pVertexShader);
 
 		if (FAILED(hr))
@@ -66,6 +79,14 @@ HRESULT CShader::Ready_ShaderFile(wstring wstrFilePath, LPCSTR wstrShaderName, L
 			return E_FAIL;
 		}
 
+		// D3D11_INPUT_ELEMENT_DESC는 다음의 필드를 가짐
+		// SemanticName - 시맨틱이름은 이 요소의 본질 또는 목적을 설명하는 단어 ex)버텍스위치를 위한 좋은 시맨틱이름은 POSITION
+		// SemanticIndex - 시맨틱인덱스는 시맨틱이름을 보충한다, 동일한 본질을 여러개 가질경우 시맨틱이름은 같지만 인덱스가 다르다
+		// Format - 잉 요소에 사용하는 데이타 타입을 정의한다
+		// InputSlot - GPU에게 이요소를 어떤 버텍스 버퍼로부터 가져와야 하는지를 말함
+		// AlignedByteOffset - GPU에게 이요소가 메모리덩어리 시작지점부터 얼마나 떨어진 위치에 있는가를 알려준다
+		// InputSlotClass - 인스턴싱을 위해 설정 여기선 디폴트
+		// InstanceDataStepRate - 인스턴싱을 위해 설정 여기선 디폴트
 		D3D11_INPUT_ELEMENT_DESC layout[] =
 		{
 			/*{ "POSITION",  0, DXGI_FORMAT_R32G32B32_FLOAT,    0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -79,7 +100,7 @@ HRESULT CShader::Ready_ShaderFile(wstring wstrFilePath, LPCSTR wstrShaderName, L
 		};
 
 		UINT numElements = ARRAYSIZE(layout);
-
+		// 정점 입력 레이아웃을 생성
 		hr = CDevice::GetInstance()->m_pDevice->CreateInputLayout(layout, numElements, pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), &m_pVertexLayout);
 
 		CDevice::GetInstance()->m_pDeviceContext->IASetInputLayout(m_pVertexLayout);
@@ -97,6 +118,7 @@ HRESULT CShader::Ready_ShaderFile(wstring wstrFilePath, LPCSTR wstrShaderName, L
 		hr = CDevice::GetInstance()->m_pDevice->CreateDomainShader(pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), NULL, &m_pDomainShader);
 	}
 
+	// 버퍼들은 더이상 사용되지 않으므로 할당을 해제
 	pShaderBlob->Release();
 	
 	if (FAILED(hr))

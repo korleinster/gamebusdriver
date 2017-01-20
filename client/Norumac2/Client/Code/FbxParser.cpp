@@ -73,74 +73,101 @@ void CFbxParser::ParsingVertex(FbxNode* _pNode, Animation* _pAnimation)
 				_pAnimation->pAniBuffer->GetVertex(i)->vTextureUV.y = 1.0f - (float)UVArray[i].mData[1];
 			}
 		}
-
+		
 
 		FbxGeometry * pGeo = _pNode->GetGeometry();
 		int SkinCount = pGeo->GetDeformerCount(FbxDeformer::eSkin);
 		//std::cout << _pNode->GetName() << " 스킨의 갯수 : " << SkinCount << std::endl;
+		if (SkinCount == 0)
+		{
+			string BoneName = _pNode->GetName();
+			int INDEX = _pAnimation->mapIndexByName[BoneName];
 
-		for (int i = 0; i < SkinCount; i++) {
-			FbxSkin * pSkin = (FbxSkin*)pGeo->GetDeformer(i, FbxDeformer::eSkin);
-			int ClusterCount = pSkin->GetClusterCount();
+			FbxAMatrix GeometryMtx = FbxAMatrix(_pNode->GetGeometricTranslation(FbxNode::eSourcePivot),
+				_pNode->GetGeometricRotation(FbxNode::eSourcePivot),
+				_pNode->GetGeometricScaling(FbxNode::eSourcePivot));
 
-			//std::cout << _pNode->GetName() << " 클러스터의 갯수 : " << ClusterCount << " " << std::endl;
+			//XMMATRIX ParsingData = XMMatrixIdentity();
+			for (int m = 0; m < 4; ++m)
+				for (int n = 0; n < 4; ++n)
+					_pAnimation->pBaseBoneMatrix[INDEX].m[m][n] = (float)(GeometryMtx.Get(m, n));
 
-			for (int j = 0; j < ClusterCount; j++)
-			{
-				FbxCluster *pCluster = pSkin->GetCluster(j);
 
-				int ClusterIndexCount = pCluster->GetControlPointIndicesCount();
-				int * ClusterIndices = pCluster->GetControlPointIndices();
-				double * ClusterWeights = pCluster->GetControlPointWeights();
+			//_pAnimation->pBaseBoneMatrix[INDEX] *= ParsingData;
 
-				//std::cout << _pNode->GetName() << " 클러스터 인덱스의 갯수 : " << ClusterIndexCount << " " << std::endl;
-				for (int k = 0; k < ClusterIndexCount; k++)
+		}
+		else if(SkinCount != 0)
+		{
+			for (int i = 0; i < SkinCount; i++) {
+				FbxSkin * pSkin = (FbxSkin*)pGeo->GetDeformer(i, FbxDeformer::eSkin);
+				int ClusterCount = pSkin->GetClusterCount();
+
+				//std::cout << _pNode->GetName() << " 클러스터의 갯수 : " << ClusterCount << " " << std::endl;
+
+				for (int j = 0; j < ClusterCount; j++)
 				{
-					std::string BoneName = std::string(pCluster->GetLink()->GetName());
+					FbxCluster *pCluster = pSkin->GetCluster(j);
 
-					int INDEX = _pAnimation->mapIndexByName[BoneName];
+					int ClusterIndexCount = pCluster->GetControlPointIndicesCount();
+					int * ClusterIndices = pCluster->GetControlPointIndices();
+					double * ClusterWeights = pCluster->GetControlPointWeights();
 
-					//std::cout<<m_mIndexByName.size()<<std::endl;
-					FbxAMatrix LinkBoneMtx;
-					FbxAMatrix TransBoneMtx;
-
-					FbxAMatrix ResultMatrix;
-
-					pCluster->GetTransformLinkMatrix(LinkBoneMtx);
-					pCluster->GetTransformMatrix(TransBoneMtx);
-
-					ResultMatrix = LinkBoneMtx.Inverse() *  TransBoneMtx;
-
-					for (int m = 0; m < 4; ++m)
-						for (int n = 0; n < 4; ++n)
-							_pAnimation->pBaseBoneMatrix[INDEX].m[m][n] = (float)(ResultMatrix.Get(m, n));
-
-
-					float BoneWeight = (float)ClusterWeights[k];
-					int BoneIndex = ClusterIndices[k];
-
-					for (auto iter : mVertexByIndex[BoneIndex])
+					//std::cout << _pNode->GetName() << " 클러스터 인덱스의 갯수 : " << ClusterIndexCount << " " << std::endl;
+					for (int k = 0; k < ClusterIndexCount; k++)
 					{
+						std::string BoneName = std::string(pCluster->GetLink()->GetName());
 
-						if (INDEX == 0 || INDEX == -1)
+						int INDEX = _pAnimation->mapIndexByName[BoneName];
+
+						//std::cout<<m_mIndexByName.size()<<std::endl;
+						FbxAMatrix LinkBoneMtx;
+						FbxAMatrix TransBoneMtx;
+						FbxAMatrix GeometryMtx;
+
+						FbxAMatrix ResultMatrix;
+
+						pCluster->GetTransformLinkMatrix(LinkBoneMtx);
+						pCluster->GetTransformMatrix(TransBoneMtx);
+						GeometryMtx = FbxAMatrix(_pNode->GetGeometricTranslation(FbxNode::eSourcePivot),
+							_pNode->GetGeometricRotation(FbxNode::eSourcePivot),
+							_pNode->GetGeometricScaling(FbxNode::eSourcePivot));
+
+						ResultMatrix = LinkBoneMtx.Inverse() *  TransBoneMtx * GeometryMtx;
+
+						for (int m = 0; m < 4; ++m)
+							for (int n = 0; n < 4; ++n)
+								_pAnimation->pBaseBoneMatrix[INDEX].m[m][n] = (float)(ResultMatrix.Get(m, n));
+
+
+						float BoneWeight = (float)ClusterWeights[k];
+						int BoneIndex = ClusterIndices[k];
+
+						for (auto iter : mVertexByIndex[BoneIndex])
 						{
 
+							if (INDEX == 0 || INDEX == -1)
+							{
+
+							}
+							else
+							{
+								_pAnimation->pAniBuffer->m_pVertex[iter].AddBone(INDEX, BoneWeight);
+							}
 						}
-						else
-						{
-							_pAnimation->pAniBuffer->m_pVertex[iter].AddBone(INDEX, BoneWeight);
-						}
+
 					}
 				}
 			}
 		}
+
+		_pAnimation->pAniBuffer->CreateBuffer();
 	}
 	else
 	{
 		//std::cout << "NOT EXIST Attribute in " << _pNode->GetName() << std::endl;
 	}
 
-	_pAnimation->pAniBuffer->CreateBuffer();
+
 
 
 	unsigned int nNodeChild = _pNode->GetChildCount();

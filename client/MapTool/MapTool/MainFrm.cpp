@@ -88,14 +88,22 @@ BOOL CMainFrame::OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext)
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
 
 	m_MainSplitter.CreateStatic(this, 1, 2);
+	m_MainSplitter.CreateView(0, 1, RUNTIME_CLASS(CMapToolView), CSize(WINCX, WINCY), pContext);
+	m_MainSplitter.CreateView(0, 0, RUNTIME_CLASS(CMyForm), CSize(WINCX, WINCY), pContext);
 
+	m_MainSplitter.SetColumnInfo(0, 500, 10);
 
-	m_MainSplitter.CreateView(0, 1,
+	m_pMainView = (CMapToolView*)m_MainSplitter.GetPane(0, 1);
+
+	m_pMyForm = (CMyForm*)m_MainSplitter.GetPane(0, 0);
+	m_pMyForm->m_pView = m_pMainView;
+
+	/*m_MainSplitter.CreateView(0, 1,
 		RUNTIME_CLASS(CMapToolView), CSize(WINCX, WINCY), pContext);
 
 	m_MainSplitter.CreateView(0, 0,
 		RUNTIME_CLASS(CMyForm),
-		CSize(100, 600), pContext);
+		CSize(100, 600), pContext);*/
 
 	return TRUE;//return CFrameWnd::OnCreateClient(lpcs, pContext);
 }

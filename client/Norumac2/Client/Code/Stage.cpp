@@ -81,12 +81,12 @@ HRESULT CStage::CreateObj(void)
 	CRenderMgr* pRenderer = CRenderMgr::GetInstance();
 	//ÅÍ·¹ÀÎ
 	CObj* pObj = NULL;
-	pObj = CStaticObject::Create();
+	/*pObj = CStaticObject::Create();
 	if (pObj == NULL)
 		return E_FAIL;
 
 	CObjMgr::GetInstance()->AddObject(L"StaticObject", pObj);
-	pRenderer->AddRenderGroup(TYPE_NONEALPHA, pObj);
+	pRenderer->AddRenderGroup(TYPE_NONEALPHA, pObj);*/
 
 	for (int i = 0; i < 20; ++i)
 	{

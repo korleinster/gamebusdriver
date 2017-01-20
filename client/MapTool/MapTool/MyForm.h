@@ -1,9 +1,10 @@
 #pragma once
-
+#include "afxcmn.h"
+#include "ObjectTool.h"
 
 
 // CMyForm 폼 뷰입니다.
-
+class CMapToolView;
 class CMyForm : public CFormView
 {
 	DECLARE_DYNCREATE(CMyForm)
@@ -27,6 +28,13 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
 
 	DECLARE_MESSAGE_MAP()
+public:
+	CTabCtrl m_Tab;
+	CWnd*			m_pWndShow;
+	CMapToolView*	m_pView;
+	CObjectTool		m_Tab1;
+	afx_msg void OnToolTabChange(NMHDR *pNMHDR, LRESULT *pResult);
+	virtual void OnInitialUpdate();
 };
 
 

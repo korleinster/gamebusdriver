@@ -133,6 +133,21 @@
     <Filter Include="03.Object\01.StaticObject">
       <UniqueIdentifier>{373b62ae-05b2-42cf-b920-ca80bf006b88}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.Dialog\ObjectTool">
+      <UniqueIdentifier>{9056ae94-dc96-4f50-a381-96864a9b71ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Dialog\TriggerTool">
+      <UniqueIdentifier>{fe92ab8a-5f98-46f8-b21b-ba019fe4b5a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Dialog\NaviMeshTool">
+      <UniqueIdentifier>{1cda5868-f15e-4565-ad91-e44662e4fd3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Dialog\LightTool">
+      <UniqueIdentifier>{59033476-90c7-474c-b454-77beca56fbae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Dialog\StatsTool">
+      <UniqueIdentifier>{1c0f4dfe-6c1d-40cf-8b87-3746a5d2d304}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -261,6 +276,9 @@
     <ClInclude Include="StaticObject.h">
       <Filter>03.Object\01.StaticObject</Filter>
     </ClInclude>
+    <ClInclude Include="ObjectTool.h">
+      <Filter>04.Dialog\ObjectTool</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MapTool.cpp">
@@ -364,6 +382,9 @@
     </ClCompile>
     <ClCompile Include="StaticObject.cpp">
       <Filter>03.Object\01.StaticObject</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectTool.cpp">
+      <Filter>04.Dialog\ObjectTool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

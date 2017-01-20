@@ -46,7 +46,8 @@ HRESULT CPlayer::Initialize(void)
 	//m_pInfo->m_fAngle[ANGLE_X] = /*D3DX_PI / 2 * -1.f;*/D3DXToRadian(-90);
 	//m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 	//m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
-	m_pInfo->m_vScale = D3DXVECTOR3(0.01f, 0.01f, 0.01f);
+	//m_pInfo->m_vScale = D3DXVECTOR3(0.01f, 0.01f, 0.01f);
+	m_pInfo->m_vScale = D3DXVECTOR3(10.f, 10.f, 10.f);
 
 	
 	
@@ -135,9 +136,9 @@ void CPlayer::Release(void)
 HRESULT CPlayer::AddComponent(void)
 {
 	CComponent* pComponent = NULL;
-	char cModelPath[MAX_PATH] = "../Resource/";
+	char cModelPath[MAX_PATH] = "../Resource/Mesh/";
 
-	vecAniName.push_back("Bird");
+	vecAniName.push_back("samplehumanani");
 	//vecName.push_back("Fall");
 	//vecName.push_back("Dead");
 	//vecName.push_back("Damage");
@@ -154,7 +155,7 @@ HRESULT CPlayer::AddComponent(void)
 		return E_FAIL;
 	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Info", pComponent));
 
-	m_pTexture = CTexture::Create(L"../Resource/bird.png");
+	m_pTexture = CTexture::Create(L"../Resource/MeshImage/samplehumanani.png");
 	pComponent = m_pTexture;
 	if (pComponent == NULL)
 		return E_FAIL;

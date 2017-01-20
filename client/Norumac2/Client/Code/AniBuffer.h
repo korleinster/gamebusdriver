@@ -15,6 +15,8 @@ public:
 	long long				m_llAniTime;
 	string					m_strName;
 	vector<CAniBuffer*>		m_vecChildBuffer;
+	vector<ID3D11Buffer*>	m_vecBuffer;
+	vector<UINT>			m_vecStride;
 
 public:
 	VertexAni*				m_pVertex;

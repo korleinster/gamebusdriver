@@ -4,6 +4,8 @@
 
 #pragma once
 
+class CMapToolView;
+class CMyForm;
 class CMainFrame : public CFrameWnd
 {
 	
@@ -14,9 +16,11 @@ protected: // serialization에서만 만들어집니다.
 // 특성입니다.
 public:
 	CSplitterWnd		m_MainSplitter;
+	CSplitterWnd		m_SecondSplitter;
 // 작업입니다.
 public:
-
+	CMapToolView*		m_pMainView;
+	CMyForm*			m_pMyForm;
 // 재정의입니다.
 public:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);

@@ -17,6 +17,7 @@
 #include "Input.h"
 #include "TimeMgr.h"
 #include"../../../../server/serverBoostModel/serverBoostModel/protocol.h"
+#include "RenderMgr.h"
 
 
 CPlayer::CPlayer()
@@ -49,7 +50,7 @@ HRESULT CPlayer::Initialize(void)
 	//m_pInfo->m_vScale = D3DXVECTOR3(0.01f, 0.01f, 0.01f);
 	m_pInfo->m_vScale = D3DXVECTOR3(10.f, 10.f, 10.f);
 
-	
+	CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, this);
 	
 	return S_OK;
 }

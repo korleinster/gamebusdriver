@@ -11,11 +11,11 @@ CStaticMesh::~CStaticMesh()
 {
 }
 
-CStaticMesh * CStaticMesh::Create(const char * szFilePath)
+CStaticMesh * CStaticMesh::Create(const char * szFilePath, const char * szFileName)
 {
 	CStaticMesh* pStaticMesh = new CStaticMesh;
 
-	if (FAILED(pStaticMesh->Initalize(szFilePath)))
+	if (FAILED(pStaticMesh->Initalize(szFilePath, szFileName)))
 	{
 		::Safe_Delete(pStaticMesh);
 	}
@@ -25,20 +25,26 @@ CStaticMesh * CStaticMesh::Create(const char * szFilePath)
 
 CResources * CStaticMesh::CloneResource()
 {
-	CResources* pResource = new CStaticMesh(*this);
+	CResources* pResource = this;
 
 	pResource->AddRef();
 
 	return pResource;
 }
 
-HRESULT CStaticMesh::Load_StaticMesh(const char* szFilePath, FbxManager* _pFBXManager, FbxIOSettings* _pIOsettings, FbxScene* _pFBXScene, FbxImporter* _pImporter)
+HRESULT CStaticMesh::Load_StaticMesh(const char* szFilePath,const char* szFileName, FbxManager* _pFBXManager, FbxIOSettings* _pIOsettings, FbxScene* _pFBXScene, FbxImporter* _pImporter)
 {
 	HRESULT hr = E_FAIL;
 
 	vector<UINT> vecIndeces;
 
-	if (!(_pImporter->Initialize(szFilePath, -1, _pFBXManager->GetIOSettings())))
+	string	strFullPath;
+
+	strFullPath.clear();
+	strFullPath = szFilePath;
+	strFullPath += szFileName;//경로에 파일이름 추가
+
+	if (!(_pImporter->Initialize(strFullPath.c_str(), -1, _pFBXManager->GetIOSettings())))
 		FAILED_CHECK_MSG(E_FAIL, L"Static Mesh Init Failed");
 	if (!(_pImporter->Import(_pFBXScene)))
 		FAILED_CHECK_MSG(E_FAIL, L"Static Mesh Import Failed");
@@ -269,7 +275,7 @@ HRESULT CStaticMesh::Load_StaticMesh(const char* szFilePath, FbxManager* _pFBXMa
 	return S_OK;
 }
 
-HRESULT CStaticMesh::Initalize(const char * szFilePath)
+HRESULT CStaticMesh::Initalize(const char * szFilePath, const char * szFileName)
 {
 
 	m_eDrawType = DRAW_VERTEX;
@@ -281,7 +287,7 @@ HRESULT CStaticMesh::Initalize(const char * szFilePath)
 	FbxImporter* pImporter = FbxImporter::Create(pFBXManager, "");
 
 
-	if (FAILED(Load_StaticMesh(szFilePath, pFBXManager, pIOsettings, pFBXScene, pImporter)))
+	if (FAILED(Load_StaticMesh(szFilePath, szFileName, pFBXManager, pIOsettings, pFBXScene, pImporter)))
 		return E_FAIL;
 
 

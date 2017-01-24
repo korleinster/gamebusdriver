@@ -16,6 +16,7 @@
 #include "DynamicMesh.h"
 #include "Input.h"
 #include "TimeMgr.h"
+#include "RenderMgr.h"
 
 
 
@@ -42,6 +43,8 @@ HRESULT COtherPlayer::Initialize(void)
 
 	m_pInfo->m_vScale = D3DXVECTOR3(0.01f, 0.01f, 0.01f);
 	//m_pInfo->m_fAngle[ANGLE_X] = /*D3DX_PI / 2 * -1.f;*/D3DXToRadian(-90);
+
+	CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, this);
 
 	return S_OK;
 }

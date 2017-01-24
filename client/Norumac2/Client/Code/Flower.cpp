@@ -12,6 +12,8 @@
 #include "TerrainCol.h"
 #include "Device.h"
 #include "Camera.h"
+#include "RenderMgr.h"
+#include "ResourcesMgr.h"
 
 
 CFlower::CFlower()
@@ -42,6 +44,8 @@ HRESULT CFlower::Initialize(void)
 
 	if (iter != iter_end)
 		m_pVerTex = *dynamic_cast<CTerrain*>(*iter)->GetVertex();
+
+	CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, this);
 
 	return S_OK;
 }
@@ -97,35 +101,30 @@ CFlower * CFlower::Create(void)
 
 void CFlower::Release(void)
 {
-	::Safe_Delete(m_pInfo);
-	::Safe_Delete(m_pBuffer);
-	::Safe_Delete(m_pVertexShader);
-	::Safe_Delete(m_pPixelShader);
-	::Safe_Delete(m_pTexture);
+	::Safe_Release(m_pInfo);
+	::Safe_Release(m_pBuffer);
+	::Safe_Release(m_pVertexShader);
+	::Safe_Release(m_pPixelShader);
+	::Safe_Release(m_pTexture);
 }
 
 HRESULT CFlower::AddComponent(void)
 {
 	CComponent* pComponent = NULL;
 
-	m_pInfo = CInfo::Create(g_vLook);
-	pComponent = m_pInfo;
-	if (pComponent == NULL)
-		return E_FAIL;
-	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Info", pComponent));
+	pComponent = m_pInfo = CInfo::Create(g_vLook);
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Transform", pComponent));
 
-	m_pBuffer = CRcTex::Create();
-	pComponent = m_pBuffer;
-	if (pComponent == NULL)
-		return E_FAIL;
-	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Buffer", pComponent));
+	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STATIC, L"Buffer_RcTex");
+	m_pBuffer = dynamic_cast<CVIBuffer*>(pComponent);
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Buffer", pComponent));
 
 
-	m_pTexture = CTexture::Create(L"../Resource/Flower.png");
-	pComponent = m_pTexture;
-	if (pComponent == NULL)
-		return E_FAIL;
-	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Texture", pComponent));
+	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Texture_Flower");
+	m_pTexture = dynamic_cast<CTexture*>(pComponent);
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
 
 	m_pTerrainCol = CTerrainCol::Create();
 	pComponent = m_pTerrainCol;

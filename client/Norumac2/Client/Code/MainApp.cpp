@@ -113,13 +113,16 @@ HRESULT CMainApp::Initialize(void)
 		return E_FAIL;
 	}
 
+	hr = CResourcesMgr::GetInstance()->AddBuffer(RESOURCE_STATIC, BUFFER_RCTEX, L"Buffer_RcTex");
+	FAILED_CHECK_RETURN_MSG(hr, E_FAIL, L"Buffer_RcTex 생성 실패");
+
 	CScene* pScene = NULL;
 
 	pScene = CLogo::Create();
 	CSceneMgr::GetInstance()->AddScene(SCENE_LOGO, pScene);
 
-	pScene = CStage::Create();
-	CSceneMgr::GetInstance()->AddScene(SCENE_STAGE, pScene);
+	/*pScene = CStage::Create();
+	CSceneMgr::GetInstance()->AddScene(SCENE_STAGE, pScene);*/
 
 	CSceneMgr::GetInstance()->ChangeScene(SCENE_LOGO);
 

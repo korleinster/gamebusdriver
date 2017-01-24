@@ -68,7 +68,7 @@ void AsynchronousClientClass::Init(const HWND& hwnd)
 	m_wsa_sendbuf.len = MAX_BUF_SIZE;
 
 #ifdef _DEBUG
-	system("cls");
+	//system("cls");
 	printf("Connected with SERVER\n");
 #endif
 }

@@ -8,13 +8,13 @@ public:
 	virtual ~CStaticMesh();
 
 public:
-	static CStaticMesh* Create(const char* szFilePath);
+	static CStaticMesh* Create(const char* szFilePath, const char* szFileName);
 	virtual CResources* CloneResource();
 
 public:
-	virtual HRESULT Load_StaticMesh(const char* szFilePath, FbxManager* _pFBXManager, FbxIOSettings* _pIOsettings, FbxScene* _pFBXScene, FbxImporter* _pImporter);
+	virtual HRESULT Load_StaticMesh(const char* szFilePath, const char* szFileName, FbxManager* _pFBXManager, FbxIOSettings* _pIOsettings, FbxScene* _pFBXScene, FbxImporter* _pImporter);
 public:
-	virtual HRESULT Initalize(const char* szFilePath);
+	virtual HRESULT Initalize(const char* szFilePath, const char* szFileName);
 
 };
 

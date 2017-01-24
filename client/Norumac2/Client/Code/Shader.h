@@ -19,12 +19,13 @@ private:
 
 private:
 	HRESULT Ready_ShaderFile(wstring wstrFilePath, LPCSTR wstrShaderName, LPCSTR wstrShaderVersion, ShaderType _SType);
-	DWORD	Release(void);
+	
 
 
 public:
 	static CShader*	Create(wstring wstrFilePath, LPCSTR wstrShaderName, LPCSTR wstrShaderVersion, ShaderType _SType);
 	CShader*	CloneShader(void);
+	DWORD	Release(void);
 
 
 };

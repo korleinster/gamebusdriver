@@ -64,9 +64,6 @@
     <Filter Include="95.System\02.Time">
       <UniqueIdentifier>{5e3eb66c-b157-4fba-bb87-001e6cbf98e0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="95.System\03.Font">
-      <UniqueIdentifier>{01546f85-ae6b-4077-9373-01b41f813d7e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="95.System\04.Input">
       <UniqueIdentifier>{b0f999ec-bbd9-44c8-87c6-04865b733ead}</UniqueIdentifier>
     </Filter>
@@ -141,6 +138,18 @@
     </Filter>
     <Filter Include="02.Object\05.StaticObject">
       <UniqueIdentifier>{7a43c6c8-a91b-4655-b9fb-4fde5e60f544}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Scene\03.Loading">
+      <UniqueIdentifier>{721af463-2e4b-459a-be5d-25939eedd99c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95.System\03.FontMgr">
+      <UniqueIdentifier>{01546f85-ae6b-4077-9373-01b41f813d7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95.System\03.FontMgr\Font">
+      <UniqueIdentifier>{402621a1-56cb-4f86-812c-20c135a88881}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\99.LogoBack">
+      <UniqueIdentifier>{d93c1ced-5fd7-4793-b3f2-20186e576f10}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -291,7 +300,19 @@
     <ClInclude Include="..\Code\OtherPlayer.h">
       <Filter>02.Object\02.OtherPlayer</Filter>
     </ClInclude>
-    <ClInclude Include="StaticObject.h">
+    <ClInclude Include="..\Code\Loading.h">
+      <Filter>01.Scene\03.Loading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\FontMgr.h">
+      <Filter>95.System\03.FontMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Font.h">
+      <Filter>95.System\03.FontMgr\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\LogoBack.h">
+      <Filter>02.Object\99.LogoBack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\StaticObject.h">
       <Filter>02.Object\05.StaticObject</Filter>
     </ClInclude>
   </ItemGroup>
@@ -419,7 +440,19 @@
     <ClCompile Include="..\Code\OtherPlayer.cpp">
       <Filter>02.Object\02.OtherPlayer</Filter>
     </ClCompile>
-    <ClCompile Include="StaticObject.cpp">
+    <ClCompile Include="..\Code\Loading.cpp">
+      <Filter>01.Scene\03.Loading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\FontMgr.cpp">
+      <Filter>95.System\03.FontMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Font.cpp">
+      <Filter>95.System\03.FontMgr\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\LogoBack.cpp">
+      <Filter>02.Object\99.LogoBack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\StaticObject.cpp">
       <Filter>02.Object\05.StaticObject</Filter>
     </ClCompile>
   </ItemGroup>

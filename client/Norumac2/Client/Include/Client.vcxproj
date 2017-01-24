@@ -158,9 +158,13 @@
     <ClInclude Include="..\Code\DynamicMesh.h" />
     <ClInclude Include="..\Code\FbxParser.h" />
     <ClInclude Include="..\Code\Flower.h" />
+    <ClInclude Include="..\Code\Font.h" />
+    <ClInclude Include="..\Code\FontMgr.h" />
     <ClInclude Include="..\Code\Info.h" />
     <ClInclude Include="..\Code\Input.h" />
+    <ClInclude Include="..\Code\Loading.h" />
     <ClInclude Include="..\Code\Logo.h" />
+    <ClInclude Include="..\Code\LogoBack.h" />
     <ClInclude Include="..\Code\MainApp.h" />
     <ClInclude Include="..\Code\Mesh.h" />
     <ClInclude Include="..\Code\Obj.h" />
@@ -180,6 +184,7 @@
     <ClInclude Include="..\Code\ShaderMgr.h" />
     <ClInclude Include="..\Code\Stage.h" />
     <ClInclude Include="..\Code\StaticMesh.h" />
+    <ClInclude Include="..\Code\StaticObject.h" />
     <ClInclude Include="..\Code\Terrain.h" />
     <ClInclude Include="..\Code\TerrainCol.h" />
     <ClInclude Include="..\Code\Texture.h" />
@@ -193,7 +198,6 @@
     <ClInclude Include="..\Server_Code\ClientClass.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="StaticObject.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -207,9 +211,13 @@
     <ClCompile Include="..\Code\DynamicMesh.cpp" />
     <ClCompile Include="..\Code\FbxParser.cpp" />
     <ClCompile Include="..\Code\Flower.cpp" />
+    <ClCompile Include="..\Code\Font.cpp" />
+    <ClCompile Include="..\Code\FontMgr.cpp" />
     <ClCompile Include="..\Code\Info.cpp" />
     <ClCompile Include="..\Code\Input.cpp" />
+    <ClCompile Include="..\Code\Loading.cpp" />
     <ClCompile Include="..\Code\Logo.cpp" />
+    <ClCompile Include="..\Code\LogoBack.cpp" />
     <ClCompile Include="..\Code\MainApp.cpp" />
     <ClCompile Include="..\Code\Mesh.cpp" />
     <ClCompile Include="..\Code\Obj.cpp" />
@@ -229,6 +237,7 @@
     <ClCompile Include="..\Code\ShaderMgr.cpp" />
     <ClCompile Include="..\Code\Stage.cpp" />
     <ClCompile Include="..\Code\StaticMesh.cpp" />
+    <ClCompile Include="..\Code\StaticObject.cpp" />
     <ClCompile Include="..\Code\Terrain.cpp" />
     <ClCompile Include="..\Code\TerrainCol.cpp" />
     <ClCompile Include="..\Code\Texture.cpp" />
@@ -238,7 +247,6 @@
     <ClCompile Include="..\Server_Code\processPacket.cpp" />
     <ClCompile Include="..\Server_Code\ProcessWinMessage_clientClass.cpp" />
     <ClCompile Include="Client.cpp" />
-    <ClCompile Include="StaticObject.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

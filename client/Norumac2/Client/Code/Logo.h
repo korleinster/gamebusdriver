@@ -4,6 +4,7 @@
 class CShader;
 class CTexture;
 class CVIBuffer;
+class CLoading;
 class CLogo :
 	public CScene
 {
@@ -12,10 +13,7 @@ public:
 	virtual ~CLogo();
 
 private:
-	CShader*	m_pVertexShader;
-	CShader*	m_pPixelShader;
-	CTexture*	m_pTexture;
-	CVIBuffer*	m_pPolygon;
+	CLoading*	m_pLoading;
 
 public:
 	virtual HRESULT Initialize(void);
@@ -25,9 +23,8 @@ public:
 
 public:
 	static CLogo* Create(void);
-
-public:
-	HRESULT AddBuufer(void);
+	HRESULT Add_Environment_Layer(void);
+	HRESULT Add_GameLogic_Layer(void);
 
 
 };

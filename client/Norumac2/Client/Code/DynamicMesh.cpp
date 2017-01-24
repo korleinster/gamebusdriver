@@ -206,13 +206,6 @@ HRESULT CDynamicMesh::Load_Model(const char* _pPath, vector<string> _vecAniName,
 	return S_OK;
 }
 
-
-
-CResources * CDynamicMesh::CloneResource(void)
-{
-	return nullptr;
-}
-
 int CDynamicMesh::Update()
 {
 	return 0;
@@ -345,4 +338,13 @@ void CDynamicMesh::BWPlayAnim(int _iIdx)
 	m_vecAni[_iIdx]->pAniBuffer->Render();
 	m_wCurrenAniIdx = _iIdx;
 	//return false;
+}
+
+CResources * CDynamicMesh::CloneResource()
+{
+	CResources* pResource = this;
+
+	pResource->AddRef();
+
+	return pResource;
 }

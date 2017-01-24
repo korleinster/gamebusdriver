@@ -17,3 +17,5 @@ enum ReleaseType {Release_Static, Release_Dynamic, Release_End};
 enum Scene_Tyep {SCENE_LOGO, SCENE_STAGE, SCENE_END};
 
 enum DrawType { DRAW_INDEX, DRAW_VERTEX };
+
+enum MESHTYPE{ MESH_STATIC, MESH_DYNAMIC };

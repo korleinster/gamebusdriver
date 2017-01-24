@@ -74,5 +74,8 @@ DWORD CTexture::Release(void)
 		::Safe_Release(m_pSamplerLinear);
 		::Safe_Release(m_pBlendState);
 	}
+	else
+		--m_dwRefCount;
+
 	return 0;
 }

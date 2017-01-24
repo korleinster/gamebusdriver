@@ -92,6 +92,12 @@ void CFbxParser::ParsingVertex(FbxNode* _pNode, Animation* _pAnimation)
 				for (int n = 0; n < 4; ++n)
 					_pAnimation->pBaseBoneMatrix[INDEX].m[m][n] = (float)(GeometryMtx.Get(m, n));
 
+			for (unsigned int i = 0; i < IndexCount; i++)
+			{
+				_pAnimation->pAniBuffer->GetVertex(i)->AddBone(INDEX, 1.f);
+
+			}
+
 
 			//_pAnimation->pBaseBoneMatrix[INDEX] *= ParsingData;
 

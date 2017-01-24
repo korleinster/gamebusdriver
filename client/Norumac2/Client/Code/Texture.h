@@ -20,9 +20,10 @@ public:
 	static CTexture* Create(LPCWSTR szFileFath);
 public:
 	virtual CResources* CloneResource(void);
+	DWORD Release(void);
 
 private:
-	DWORD Release(void);
+	
 
 
 };

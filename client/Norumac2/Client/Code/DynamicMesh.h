@@ -76,7 +76,7 @@ private:
 
 public:
 	static CDynamicMesh*		Create(const char* _pPath, vector<string> _vecAniName);
-	//virtual CResource*		Clone();
+	virtual CResources*			CloneResource();
 	float					m_fAniPlayTimer;//현재 재생하고 있는 애니매이션의 시간
 	bool					m_bAniEnd;//애니매이션이 끝낫는지의 여부를 알려주는 Bool값
 	bool					Yamae;
@@ -101,7 +101,7 @@ public:
 
 
 	// CMesh을(를) 통해 상속됨
-	virtual CResources * CloneResource(void) override;
+	//virtual CResources * CloneResource(void) override;
 
 };
 

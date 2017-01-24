@@ -46,6 +46,8 @@ HRESULT CSceneMgr::ChangeScene(Scene_Tyep _eType)
 		MessageBox(NULL, L"System Message", L"찾는 씬이 없습니다.", MB_OK);
 		return E_FAIL;
 	}
+	if (m_pScene != NULL)
+		::Safe_Release(m_pScene);
 
 	m_eType = _eType;
 	m_pScene = iter->second;

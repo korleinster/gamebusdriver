@@ -7,12 +7,15 @@
 #include "ShaderMgr.h"
 #include "SceneMgr.h"
 #include "Device.h"
+#include "Loading.h"
+#include "ResourcesMgr.h"
+#include "TimeMgr.h"
+#include "RenderMgr.h"
+#include "LogoBack.h"
+#include "ObjMgr.h"
 
 CLogo::CLogo()
-	:m_pPolygon(NULL),
-	m_pVertexShader(NULL),
-	m_pPixelShader(NULL),
-	m_pTexture(NULL)
+	: m_pLoading(NULL)
 {
 }
 
@@ -25,37 +28,60 @@ HRESULT CLogo::Initialize(void)
 {
 	HRESULT hr = NULL;
 
-	hr = AddBuufer();
+
+	hr = CResourcesMgr::GetInstance()->AddTexture(RESOURCE_LOGO,
+		L"Texture_Logo",
+		L"../Resource/Logo.jpg");
 
 	if (FAILED(hr))
 		return E_FAIL;
+
+	m_pLoading = CLoading::Create(CLoading::LOADING_STAGE);
+
+	FAILED_CHECK_RETURN_MSG(Add_Environment_Layer(), E_FAIL, L"Environment_Layer Add false");
+	FAILED_CHECK_RETURN_MSG(Add_GameLogic_Layer(), E_FAIL, L"GameLogic_Layer Add false");
+	//FAILED_CHECK_RETURN_MSG(Add_Light(), E_FAIL, L"Light Add false");
 	
 	return S_OK;
 }
 
 int CLogo::Update(void)
 {
+	/*if (GetAsyncKeyState(VK_RETURN))
+		CSceneMgr::GetInstance()->ChangeScene(SCENE_STAGE);*/
+
 	if (GetAsyncKeyState(VK_RETURN))
-		CSceneMgr::GetInstance()->ChangeScene(SCENE_STAGE);
+	{
+		if (m_pLoading->GetComplete() == true)
+		{
+			CSceneMgr::GetInstance()->ChangeScene(SCENE_STAGE);
+			return 0;
+		}
+	}
 
 	return 0;
 }
 
 void CLogo::Render(void)
 {
-	CDevice::GetInstance()->m_pDeviceContext->VSSetShader(m_pVertexShader->m_pVertexShader, NULL, 0);
-	CDevice::GetInstance()->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pPolygon->m_ConstantBuffer);
-	//////////////////
-	CDevice::GetInstance()->m_pDeviceContext->PSSetShader(m_pPixelShader->m_pPixelShader, NULL, 0);
-	CDevice::GetInstance()->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
-	CDevice::GetInstance()->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
-
-	m_pPolygon->Render();
+	float fTime = CTimeMgr::GetInstance()->GetTime();
+	CRenderMgr::GetInstance()->Render(fTime);
 }
 
 void CLogo::Release(void)
 {
-	::Safe_Delete(m_pPolygon);
+	::Safe_Release(m_pLoading);
+
+	list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"LogoBack")->begin();
+	list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"LogoBack")->end();
+
+	for (iter; iter != iter_end;)
+	{
+		CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
+		::Safe_Release(*iter);
+		CObjMgr::GetInstance()->Get_ObjList(L"LogoBack")->erase(iter++);
+
+	}
 
 }
 
@@ -70,12 +96,21 @@ CLogo * CLogo::Create(void)
 	return pLogo;
 }
 
-HRESULT CLogo::AddBuufer(void)
+HRESULT CLogo::Add_Environment_Layer(void)
 {
-	m_pPolygon = CRcTex::Create();
-	m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"VS_Logo");
-	m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"PS");
-	m_pTexture = CTexture::Create(L"../Resource/Logo.jpg");
+	return S_OK;
+}
+
+HRESULT CLogo::Add_GameLogic_Layer(void)
+{
+	/*CLayer*		pLayer = Engine::CLayer::Create(m_pDevice);
+	NULL_CHECK_RETURN(pLayer, E_FAIL);*/
+
+	CObj*	pObj = NULL;
+
+	pObj = CLogoBack::Create();
+	NULL_CHECK_RETURN_MSG(pObj, E_FAIL, L"CLogoBack 생성 실패");
+	CObjMgr::GetInstance()->AddObject(L"LogoBack", pObj);
 
 	return S_OK;
 }

@@ -69,12 +69,15 @@ void CVIBuffer::Render(void)
 
 DWORD CVIBuffer::Release(void)
 {
-	if (m_dwRefCount == 2)
+	if (m_dwRefCount == 1)
 	{
 		Safe_Release(m_VertexBuffer);
 		Safe_Release(m_IndexBuffer);
 		Safe_Release(m_ConstantBuffer);
 	}
+	else
+		--m_dwRefCount;
+
 	return 0;
 }
 

@@ -23,6 +23,7 @@ public:
 	ID3D11ShaderResourceView* GetColorView() { return m_ColorSpecIntensitySRV; }
 	ID3D11ShaderResourceView* GetNormalView() { return m_NormalSRV; }
 	ID3D11ShaderResourceView* GetSpecPowerView() { return m_SpecPowerSRV; }
+	ID3D11ShaderResourceView* GetSobelView() { return m_SobelSRV; }
 
 private:
 	ID3D11Buffer* m_pGBufferUnpackCB;
@@ -32,6 +33,7 @@ private:
 	ID3D11Texture2D* m_ColorSpecIntensityRT;
 	ID3D11Texture2D* m_NormalRT;
 	ID3D11Texture2D* m_SpecPowerRT;
+	ID3D11Texture2D* m_SobelRT;
 
 	// GBuffer render views
 	ID3D11DepthStencilView* m_DepthStencilDSV;
@@ -39,12 +41,14 @@ private:
 	ID3D11RenderTargetView* m_ColorSpecIntensityRTV;
 	ID3D11RenderTargetView* m_NormalRTV;
 	ID3D11RenderTargetView* m_SpecPowerRTV;
+	ID3D11RenderTargetView* m_SobelRTV;
 
 	// GBuffer shader resource views
 	ID3D11ShaderResourceView* m_DepthStencilSRV;
 	ID3D11ShaderResourceView* m_ColorSpecIntensitySRV;
 	ID3D11ShaderResourceView* m_NormalSRV;
 	ID3D11ShaderResourceView* m_SpecPowerSRV;
+	ID3D11ShaderResourceView* m_SobelSRV;
 
 	ID3D11DepthStencilState *m_DepthStencilState;
 };

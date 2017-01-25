@@ -30,7 +30,7 @@ static const float4 arrMask[5] = {
 	float4(0.0, 1.0, 0.0, 0.0),
 	float4(0.0, 0.0, 1.0, 0.0),
 	float4(0.0, 0.0, 0.0, 1.0),
-	float4(2.0, 0.0, 0.0, 0.0),
+	float4(1.0, 1.0, 1.0, 1.0),
 };
 
 struct VS_OUTPUT
@@ -47,8 +47,12 @@ VS_OUTPUT GBufferVisVS(uint VertexID : SV_VertexID)
 	// arrBasePos에다가 * 0.1을 함으로써 화면크기에 0.1크기만큼으로 만듬
 	// [n % 4] - 0, 1, 2, 3 을 계속 반복
 	// [n / 4] - 기본적으로 내림이기 때문에 결과가 4번씩 같은값이 나오면서 계속 1씩 증가 ex) 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2 ....
-	Output.Position = float4(arrBasePos[VertexID % 4].xy * 0.1f + arrOffsets[VertexID / 4], 0.0, 1.0);
-	Output.UV = arrUV[VertexID % 4].xy; // uv는 손볼 것 없음
+	Output.Position = float4(arrBasePos[VertexID % 4].xy * 0.1 + arrOffsets[VertexID / 4], 0.0, 1.0);
+
+	// UV
+	Output.UV = arrUV[VertexID % 4].xy; 
+	
+	// ??????
 	Output.sampMask = arrMask[VertexID / 4].xyzw;
 
 	return Output;
@@ -64,7 +68,7 @@ float4 GBufferVisPS(VS_OUTPUT In) : SV_TARGET // SV_Target이라는 의미소는 이 함�
 	finalColor += float4(gbd.Color.xyz, 0.0) * In.sampMask.yyyy;
 	finalColor += float4(gbd.Normal.xyz * 0.5 + 0.5, 0.0) * In.sampMask.zzzz;
 	finalColor += float4(gbd.SpecIntensity, gbd.SpecPow, 0.0, 0.0) * In.sampMask.wwww;
-	//finalColor += float4(gbd.Sobel, gbd.Sobel, 0, 0) * In.sampMask.wwww;
+	finalColor += float4(gbd.Sobel, gbd.Sobel, 0, 0) * In.sampMask.zzzz;
 
 	return finalColor;
 }

@@ -7,6 +7,7 @@
 #include "Scene.h"
 #include "Stage.h"
 #include "SceneMgr.h"
+#include "AnimationMgr.h"
 
 CLoading::CLoading(LOADINGID eLoadID)
 	: m_eLoadID(eLoadID)
@@ -62,9 +63,14 @@ void CLoading::StageLoading(void)
 		, L"../Resource/Flower.png");
 	FAILED_CHECK_RETURN(hr, );
 
+	hr = CResourcesMgr::GetInstance()->AddTexture(
+		RESOURCE_STAGE
+		, L"Texture_Player"
+		, L"../Resource/MeshImage/Player.png");
+
 
 	//lstrcpy(m_szLoadMessage, L"버퍼 로딩중...");
-	cout << "BufferLoading" << endl;
+	cout << "StaticBufferLoading" << endl;
 	//Buffer
 	hr = CResourcesMgr::GetInstance()->AddMesh(
 		RESOURCE_STAGE,
@@ -73,7 +79,27 @@ void CLoading::StageLoading(void)
 		, "../Resource/Mesh/"
 		, "Town.FBX");
 	FAILED_CHECK_RETURN(hr, );
+
+
+	cout << "DynamicBufferLoading" << endl;
+	vector<string> vecAni;
+
+	//여기에 아마 메모장통해서 벡터에다가 꼴아박아야할거같음. 일단 가라침
+
+	vecAni.push_back("Player");
+
+	hr = CResourcesMgr::GetInstance()->AddMesh(
+		RESOURCE_STAGE,
+		MESH_DYNAMIC,
+		L"Player_IDLE",
+		"../Resource/Mesh/",
+		"",vecAni);
+	FAILED_CHECK_RETURN(hr, );
 	
+
+	CAnimationMgr::GetInstance()->AddAnimation(L"Player", &vecAni);
+
+	vecAni.clear();
 	
 	cout << "SceneLoading" << endl;
 

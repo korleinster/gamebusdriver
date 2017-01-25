@@ -150,6 +150,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\..\server\serverBoostModel\serverBoostModel\protocol.h" />
     <ClInclude Include="..\Code\AniBuffer.h" />
+    <ClInclude Include="..\Code\AnimationMgr.h" />
     <ClInclude Include="..\Code\Camera.h" />
     <ClInclude Include="..\Code\Collision.h" />
     <ClInclude Include="..\Code\Component.h" />
@@ -203,6 +204,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\AniBuffer.cpp" />
+    <ClCompile Include="..\Code\AnimationMgr.cpp" />
     <ClCompile Include="..\Code\Camera.cpp" />
     <ClCompile Include="..\Code\Collision.cpp" />
     <ClCompile Include="..\Code\Component.cpp" />

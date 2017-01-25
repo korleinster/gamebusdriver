@@ -169,6 +169,7 @@ HRESULT CResourcesMgr::AddMesh(const WORD& wContainerIdx
 	, const char* pFileName
 	, vector<string> _vecAniName /*= vector<string>()*/)//Static은 Vector인자를 NULL로, Dynamic은 pFilename을 NULL로 받을것
 {
+	//Static은 Vector인자를 NULL로, Dynamic은 pFilename을 NULL로 받을것
 	if (m_wReservedSize == NULL)
 		return E_FAIL;
 

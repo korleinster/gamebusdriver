@@ -151,6 +151,9 @@
     <Filter Include="02.Object\99.LogoBack">
       <UniqueIdentifier>{d93c1ced-5fd7-4793-b3f2-20186e576f10}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.Manager\08.AniMgr">
+      <UniqueIdentifier>{284f11ed-edf2-46ac-a400-8bf67915b6c3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -315,6 +318,9 @@
     <ClInclude Include="..\Code\StaticObject.h">
       <Filter>02.Object\05.StaticObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\AnimationMgr.h">
+      <Filter>04.Manager\08.AniMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\MainApp.cpp">
@@ -454,6 +460,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\StaticObject.cpp">
       <Filter>02.Object\05.StaticObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\AnimationMgr.cpp">
+      <Filter>04.Manager\08.AniMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

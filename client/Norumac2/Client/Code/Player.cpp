@@ -18,6 +18,8 @@
 #include "TimeMgr.h"
 #include"../../../../server/serverBoostModel/serverBoostModel/protocol.h"
 #include "RenderMgr.h"
+#include "AnimationMgr.h"
+#include "ResourcesMgr.h"
 
 
 CPlayer::CPlayer()
@@ -137,30 +139,31 @@ void CPlayer::Release(void)
 HRESULT CPlayer::AddComponent(void)
 {
 	CComponent* pComponent = NULL;
-	char cModelPath[MAX_PATH] = "../Resource/Mesh/";
 
-	vecAniName.push_back("samplehumanani");
+	vecAniName = *(CAnimationMgr::GetInstance()->GetAnimaiton(L"Player"));
 	//vecName.push_back("Fall");
 	//vecName.push_back("Dead");
 	//vecName.push_back("Damage");
 	//vecAniName.push_back("Booster");
 	//vecName.push_back("Break");
 
-	m_pBuffer = CDynamicMesh::Create(cModelPath, vecAniName);
-	pComponent = m_pBuffer;
-	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Buffer", pComponent));
+	//TransForm
+	pComponent = m_pInfo = CInfo::Create(g_vLook);
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Transform", pComponent));
 
-	m_pInfo = CInfo::Create(g_vLook);
-	pComponent = m_pInfo;
-	if (pComponent == NULL)
-		return E_FAIL;
-	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Info", pComponent));
 
-	m_pTexture = CTexture::Create(L"../Resource/MeshImage/samplehumanani.png");
-	pComponent = m_pTexture;
-	if (pComponent == NULL)
-		return E_FAIL;
-	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Texture", pComponent));
+	//DynamicMesh
+	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Player_IDLE");
+	m_pBuffer = dynamic_cast<CDynamicMesh*>(pComponent);
+	NULL_CHECK_RETURN(m_pBuffer, E_FAIL);
+	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Mesh", pComponent));
+
+	//Texture
+	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Texture_Player");
+	m_pTexture = dynamic_cast<CTexture*>(pComponent);
+	NULL_CHECK_RETURN(m_pTexture, E_FAIL);
+	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Texture", pComponent));
 
 	m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"VS_ANI");
 	m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"PS");;

@@ -100,8 +100,8 @@ HRESULT CStage::CreateObj(void)
 		CObjMgr::GetInstance()->AddObject(L"Flower", pObj);
 	}
 
-	//pObj = CPlayer::Create();
-	//CObjMgr::GetInstance()->AddObject(L"Player", pObj);
+	pObj = CPlayer::Create();
+	CObjMgr::GetInstance()->AddObject(L"Player", pObj);
 	
 
 

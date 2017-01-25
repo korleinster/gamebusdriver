@@ -35,7 +35,7 @@ public:
 		, const TCHAR* pMeshKey
 		, const char* pFilePath
 		, const char* pFileName
-		, vector<string> _vecAniName = vector<string>());
+		, vector<string> _vecAniName = vector<string>());//Static은 Vector인자를 NULL로, Dynamic은 pFilename을 NULL로 받을것
 
 public:
 	void ResourceReset(const WORD& wContainerIndex);

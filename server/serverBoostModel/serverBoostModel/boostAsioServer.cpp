@@ -74,7 +74,7 @@ void player_session::Init()
 {
 	m_connect_state = true;
 
-	// 기본 셋팅 초기화 정보 보내기 *****************>>>> size_ratio 와 direction 도 차후에 수정해주어야 한다.
+	// 기본 셋팅 초기화 정보 보내기 *****************>>>> direction 도 차후에 수정해주어야 한다.
 	Packet init_this_player_buf[MAX_BUF_SIZE];
 
 	init_this_player_buf[0] = sizeof(player_data) + 2;
@@ -87,7 +87,7 @@ void player_session::Init()
 	memcpy(&init_this_player_buf[2], g_clients[m_id]->get_player_data(), init_this_player_buf[0]);
 	g_clients[m_id]->send_packet(init_this_player_buf);
 
-	// 초기화 정보 보내기 2 - 얘 정보를 다른 애들한테 보내고, 다른 애들 정보를 얘한테 보내기  *****************>>>> size_ratio 와 direction 도 차후에 수정해주어야 한다.
+	// 초기화 정보 보내기 2 - 얘 정보를 다른 애들한테 보내고, 다른 애들 정보를 얘한테 보내기  *****************>>>> direction 도 차후에 수정해주어야 한다.
 	Packet other_info_to_me_buf[MAX_BUF_SIZE];
 	Packet my_info_to_other_buf[MAX_BUF_SIZE];
 
@@ -241,6 +241,29 @@ void player_session::m_process_packet(Packet buf[])
 
 		case CHANGED_POSITION:
 			m_player_data = *(reinterpret_cast<player_data*>(&buf[2]));
+
+			// 필요한 애들한테 이동 정보를 뿌려주자 - 현재는 애들 다 뿌린다.
+			for (auto players : g_clients)
+			{
+				if (DISCONNECTED == players->m_connect_state) { continue; }
+				if (m_id == players->m_id) { continue; }
+
+				players->send_packet(buf);
+			}
+
+			break;
+
+		case KEYINPUT_ATTACK:
+			
+			// 충돌체크 검사하고 난 뒤에..
+
+			// 충돌 범위에 있는 녀석들의 hp 를 깎아 내리자.
+
+
+			Packet temp_sendbuf[MAX_BUF_SIZE]{ 0 };
+			temp_sendbuf[0] = buf[0];
+			temp_sendbuf[1] = KEYINPUT_ATTACK;
+			temp_sendbuf[2] = reinterpret_cast<Packet>(&m_id);
 
 			// 필요한 애들한테 이동 정보를 뿌려주자 - 현재는 애들 다 뿌린다.
 			for (auto players : g_clients)

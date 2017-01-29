@@ -23,7 +23,7 @@ enum PacketProtocolType {
 	//KEYINPUT,		// 클라이언트에서 키 입력을 받았을 경우
 	CHANGED_POSITION,
 	CHANGED_DIRECTION,
-	CHANGED_SIZE_RATIO,
+	KEYINPUT_ATTACK,
 };
 
 using Packet = unsigned char;
@@ -35,15 +35,18 @@ using position = struct Position {
 	float y{ 100 };
 };
 /// 방향 좌표계
-using direction = struct Direction {
-	float x;
-	float y;
-	float z;
+#define KEYINPUT_UP		0b00000001
+#define KEYINPUT_DOWN	0b00000010
+#define KEYINPUT_LEFT	0b00000100
+#define KEYINPUT_RIGHT	0b00001000
+
+using status = struct Status {
+	int hp{ 100 };
 };
 /// 플레이어 전체 정보
 using player_data = struct Player_data {
-	unsigned int id{ 0 };
-	position pos;
-	direction dir;
-	float size_ratio;
+	unsigned int	id{ 0 };
+	position		pos;
+	char			dir;
+	status			sta;
 };

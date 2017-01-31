@@ -19,6 +19,7 @@ enum PacketProtocolType {
 	TEST = 1,		// 받은 패킷 그대로 돌려주기용. ( 보낸 내용이 그대로 돌아오지 않는다면, 클라나 서버에 문제가 있다는 뜻 )
 	//DUMMY_CLIENT,	// dummy client 용 프로토콜
 	INIT_CLIENT,
+	INIT_OTHER_CLIENT,
 	PLAYER_DISCONNECTED,
 	//KEYINPUT,		// 클라이언트에서 키 입력을 받았을 경우
 	CHANGED_POSITION,
@@ -47,6 +48,6 @@ using status = struct Status {
 using player_data = struct Player_data {
 	unsigned int	id{ 0 };
 	position		pos;
-	char			dir;
-	status			sta;
+	char			dir{ KEYINPUT_DOWN };
+	status			state;
 };

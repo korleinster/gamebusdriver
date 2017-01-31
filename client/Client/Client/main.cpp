@@ -5,8 +5,14 @@ LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 // 그리기 위한 변수 - WM_PAINT
 int view_range{ 150 };
 int value{ 10 };
+int dir_value{ 3 };
 // ------------------------------
 
+// 키 조작 관련 함수 - WM_KEYDOWN
+void move_up();
+void move_down();
+void move_left();
+void move_right();
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 	
@@ -85,7 +91,25 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 		return 0;
 		break;
 
+
+
+		// 일반 문자 key 를 입력 받았을 때
+	case WM_CHAR:
+	{
+		switch (wParam)
+		{
+		case 's':	// attack key
+			break;
+		default:
+			break;
+		}
+	}
+		break;
+
+
+		// key 를 입력 받았을 때
 	case WM_KEYDOWN:
+
 		switch (wParam)
 		{
 		case VK_ESCAPE:
@@ -93,24 +117,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 			return 0;
 			break;
 		case VK_RIGHT:
-			g_client.getPlayerData()->pos.x += value;
+			move_right();
 			break;
 		case VK_LEFT:
-			g_client.getPlayerData()->pos.x -= value;
+			move_left();
 			break;
 		case VK_DOWN:
-			g_client.getPlayerData()->pos.y += value;
+			move_down();
 			break;
 		case VK_UP:
-			g_client.getPlayerData()->pos.y -= value;
-			break;
-
-		default:
-#ifdef _DEBUG
-			// 디버깅 모드에서 예외되는 키를 입력할 경우, 서버와 기본 연결 테스트 통신을 하게 된다.
-			//g_client.sendPacket_TEST();
-#endif // _DEBUG
-			return 0;
+			move_up();
 			break;
 		}
 		InvalidateRect(hWnd, NULL, TRUE);
@@ -119,25 +135,75 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 		// 2. 다른 플레이어 데이터 벡터에 저장하기
 		// 3. 시야 범위 내에 있는 플레이어 노출시키기
 		{
-			player_data temp;
-			temp = *(g_client.getPlayerData());
-			g_client.sendPacket(sizeof(player_data), CHANGED_POSITION, reinterpret_cast<BYTE*>(&temp));
+			g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&g_client.getPlayerData()->pos));
+			g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&g_client.getPlayerData()->dir));
 		}
 		break;
 
-	case WM_PAINT:
+
+		// key 를 뗐을 때
+	/*case WM_KEYUP:
+	{
+		switch (wParam)
+		{
+		case VK_RIGHT:
+			g_client.getPlayerData()->dir = g_client.getPlayerData()->dir & (~KEYINPUT_RIGHT);
+			break;
+		case VK_LEFT:
+			g_client.getPlayerData()->dir = g_client.getPlayerData()->dir & (~KEYINPUT_LEFT);
+			break;
+		case VK_DOWN:
+			g_client.getPlayerData()->dir = g_client.getPlayerData()->dir & (~KEYINPUT_DOWN);
+			break;
+		case VK_UP:
+			g_client.getPlayerData()->dir = g_client.getPlayerData()->dir & (~KEYINPUT_UP);
+			break;
+		}
+		InvalidateRect(hWnd, NULL, TRUE);
+		{
+			g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&g_client.getPlayerData()->dir));
+		}
+		break;
+	}*/
+
+
+	// 창에 그릴 때
+	case WM_PAINT: {
 		hdc = BeginPaint(hWnd, &ps);
-		
-		Ellipse(hdc, g_client.getPlayerData()->pos.x - view_range, g_client.getPlayerData()->pos.y - view_range, g_client.getPlayerData()->pos.x + view_range, g_client.getPlayerData()->pos.y + view_range);
-		Ellipse(hdc, g_client.getPlayerData()->pos.x - value, g_client.getPlayerData()->pos.y - value, g_client.getPlayerData()->pos.x + value, g_client.getPlayerData()->pos.y + value);
+
+		char *dir = &(g_client.getPlayerData()->dir);
+		float x = g_client.getPlayerData()->pos.x, y = g_client.getPlayerData()->pos.y;
+
+		/// view circle
+		Ellipse(hdc, x - view_range, y - view_range, x + view_range, y + view_range);
+		/// player circle
+		Ellipse(hdc, x - value, y - value, x + value, y + value);
+
+		/// player direction
+		if ((*dir & KEYINPUT_RIGHT)	== (KEYINPUT_RIGHT)){ x += (value + dir_value); }
+		if ((*dir & KEYINPUT_LEFT)	== (KEYINPUT_LEFT))	{ x -= (value + dir_value); }
+		if ((*dir & KEYINPUT_UP)	== (KEYINPUT_UP))	{ y -= (value + dir_value); }
+		if ((*dir & KEYINPUT_DOWN)	== (KEYINPUT_DOWN))	{ y += (value + dir_value); }
+		Ellipse(hdc, x - dir_value, y - dir_value, x + dir_value, y + dir_value);
+
 
 		for (auto players : *(g_client.getOtherPlayers())) {
-			Ellipse(hdc, players.second.pos.x - value, players.second.pos.y - value, players.second.pos.x + value, players.second.pos.y + value);
+			x = players.second.pos.x;
+			y = players.second.pos.y;
+			Ellipse(hdc, x - value, y - value, x + value, y + value);
+
+			/// player direction
+			dir = &players.second.dir;
+			if ((*dir & KEYINPUT_RIGHT)	== (KEYINPUT_RIGHT))	{ x += (value + dir_value); }
+			if ((*dir & KEYINPUT_LEFT)	== (KEYINPUT_LEFT))		{ x -= (value + dir_value); }
+			if ((*dir & KEYINPUT_UP)	== (KEYINPUT_UP))		{ y -= (value + dir_value); }
+			if ((*dir & KEYINPUT_DOWN)	== (KEYINPUT_DOWN))		{ y += (value + dir_value); }
+			Ellipse(hdc, x - dir_value, y - dir_value, x + dir_value, y + dir_value);
 		}
 
 		EndPaint(hWnd, &ps);
 		break;
-
+	}
 	case WM_SOCKET:
 		g_client.ProcessWinMessage(hWnd, uMsg, wParam, lParam);
 		return 0;
@@ -145,4 +211,35 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
 	}
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);
+}
+
+
+
+void move_up() {
+	g_client.getPlayerData()->pos.y -= value;
+	g_client.getPlayerData()->dir = g_client.getPlayerData()->dir | KEYINPUT_UP;
+	g_client.getPlayerData()->dir = g_client.getPlayerData()->dir & (~KEYINPUT_DOWN);
+	g_client.getPlayerData()->dir = g_client.getPlayerData()->dir & (~KEYINPUT_RIGHT);
+	g_client.getPlayerData()->dir = g_client.getPlayerData()->dir & (~KEYINPUT_LEFT);
+}
+void move_down() {
+	g_client.getPlayerData()->pos.y += value;
+	g_client.getPlayerData()->dir = g_client.getPlayerData()->dir | KEYINPUT_DOWN;
+	g_client.getPlayerData()->dir = g_client.getPlayerData()->dir & (~KEYINPUT_UP);
+	g_client.getPlayerData()->dir = g_client.getPlayerData()->dir & (~KEYINPUT_RIGHT);
+	g_client.getPlayerData()->dir = g_client.getPlayerData()->dir & (~KEYINPUT_LEFT);
+}
+void move_left() {
+	g_client.getPlayerData()->pos.x -= value;
+	g_client.getPlayerData()->dir = g_client.getPlayerData()->dir | KEYINPUT_LEFT;
+	g_client.getPlayerData()->dir = g_client.getPlayerData()->dir & (~KEYINPUT_UP);
+	g_client.getPlayerData()->dir = g_client.getPlayerData()->dir & (~KEYINPUT_DOWN);
+	g_client.getPlayerData()->dir = g_client.getPlayerData()->dir & (~KEYINPUT_RIGHT);
+}
+void move_right() {
+	g_client.getPlayerData()->pos.x += value;
+	g_client.getPlayerData()->dir = g_client.getPlayerData()->dir | KEYINPUT_RIGHT;
+	g_client.getPlayerData()->dir = g_client.getPlayerData()->dir & (~KEYINPUT_UP);
+	g_client.getPlayerData()->dir = g_client.getPlayerData()->dir & (~KEYINPUT_DOWN);
+	g_client.getPlayerData()->dir = g_client.getPlayerData()->dir & (~KEYINPUT_LEFT);
 }

@@ -47,7 +47,6 @@ int CStaticObject::Update(void)
 
 
 	D3DXVec3TransformNormal(&m_pInfo->m_vDir, &g_vLook, &m_pInfo->m_matWorld);
-	m_pBuffer->CreateRasterizerState2();
 	CObj::Update();
 
 	return 0;

@@ -14,6 +14,7 @@ public:
 
 private:
 	CLoading*	m_pLoading;
+	bool		m_bDynamicLoading;
 
 public:
 	virtual HRESULT Initialize(void);
@@ -25,6 +26,7 @@ public:
 	static CLogo* Create(void);
 	HRESULT Add_Environment_Layer(void);
 	HRESULT Add_GameLogic_Layer(void);
+	HRESULT Add_Dynamic_Buffer(void);
 
 
 };

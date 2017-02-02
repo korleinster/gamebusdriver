@@ -74,9 +74,9 @@ int CPlayer::Update(void)
 	{
 		m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 		m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
-		m_pInfo->m_ServerInfo.dir.x = m_pInfo->m_vDir.x;
+		/*m_pInfo->m_ServerInfo.dir.x = m_pInfo->m_vDir.x;
 		m_pInfo->m_ServerInfo.dir.y = m_pInfo->m_vDir.y;
-		m_pInfo->m_ServerInfo.dir.z = m_pInfo->m_vDir.z;
+		m_pInfo->m_ServerInfo.dir.z = m_pInfo->m_vDir.z;*/
 		g_client.sendPacket(sizeof(player_data), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo));
 
 		m_fSeverTime = 0.f;
@@ -180,12 +180,12 @@ void CPlayer::KeyInput()
 	//g_client->m_recvbuf
 	if (CInput::GetInstance()->GetDIKeyState(DIK_UP) & 0x80)
 	{
-		m_pInfo->m_vPos += m_pInfo->m_vDir * 100.f * fTime;
+		m_pInfo->m_vPos += m_pInfo->m_vDir * 50.f * fTime;
 	}
 
 	if (CInput::GetInstance()->GetDIKeyState(DIK_DOWN) & 0x80)
 	{
-		m_pInfo->m_vPos -= m_pInfo->m_vDir * 100.f * fTime;
+		m_pInfo->m_vPos -= m_pInfo->m_vDir * 50 * fTime;
 	}
 
 	if (CInput::GetInstance()->GetDIKeyState(DIK_LEFT) & 0x80)

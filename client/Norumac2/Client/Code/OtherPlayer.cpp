@@ -61,7 +61,7 @@ int COtherPlayer::Update(void)
 
 	m_pInfo->m_vPos.x = m_pInfo->m_ServerInfo.pos.x;
 	m_pInfo->m_vPos.z = m_pInfo->m_ServerInfo.pos.y;
-	m_pInfo->m_vDir = D3DXVECTOR3(m_pInfo->m_ServerInfo.dir.x, m_pInfo->m_ServerInfo.dir.y, m_pInfo->m_ServerInfo.dir.z);
+	//m_pInfo->m_vDir = D3DXVECTOR3(m_pInfo->m_ServerInfo.dir.x, m_pInfo->m_ServerInfo.dir.y, m_pInfo->m_ServerInfo.dir.z);
 
 	D3DXVec3TransformNormal(&m_pInfo->m_vDir, &g_vLook, &m_pInfo->m_matWorld);
 

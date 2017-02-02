@@ -13,9 +13,12 @@
 #include "RenderMgr.h"
 #include "LogoBack.h"
 #include "ObjMgr.h"
+#include "AnimationMgr.h"
+#include "Stage.h"
 
 CLogo::CLogo()
 	: m_pLoading(NULL)
+	, m_bDynamicLoading(false)
 {
 }
 
@@ -50,13 +53,19 @@ int CLogo::Update(void)
 	/*if (GetAsyncKeyState(VK_RETURN))
 		CSceneMgr::GetInstance()->ChangeScene(SCENE_STAGE);*/
 
-	if (GetAsyncKeyState(VK_RETURN))
+	if (m_pLoading->GetComplete() == true)
 	{
-		if (m_pLoading->GetComplete() == true)
+		if (m_bDynamicLoading == false)
+			Add_Dynamic_Buffer();
+
+		if (m_bDynamicLoading == true)
 		{
-			CSceneMgr::GetInstance()->ChangeScene(SCENE_STAGE);
-			return 0;
+			if (GetAsyncKeyState(VK_RETURN))
+				CSceneMgr::GetInstance()->ChangeScene(SCENE_STAGE);
 		}
+		return 0;
+
+		//스테이지마다 하는건 구조좀 바꿔야해서 일단 가라쳐서 로드.
 	}
 
 	return 0;
@@ -111,6 +120,48 @@ HRESULT CLogo::Add_GameLogic_Layer(void)
 	pObj = CLogoBack::Create();
 	NULL_CHECK_RETURN_MSG(pObj, E_FAIL, L"CLogoBack 생성 실패");
 	CObjMgr::GetInstance()->AddObject(L"LogoBack", pObj);
+
+	return S_OK;
+}
+
+HRESULT CLogo::Add_Dynamic_Buffer(void)
+{
+	if (m_bDynamicLoading == false)
+	{
+		HRESULT hr = NULL;
+
+		cout << "DynamicBufferLoading" << endl;
+		vector<string> vecAni;
+
+		//여기에 아마 메모장통해서 벡터에다가 꼴아박아야할거같음. 일단 가라침
+
+		vecAni.push_back("Player");
+
+		hr = CResourcesMgr::GetInstance()->AddMesh(
+			RESOURCE_STAGE,
+			MESH_DYNAMIC,
+			L"Player_IDLE",
+			"../Resource/Mesh/",
+			"", vecAni);
+		FAILED_CHECK_RETURN(hr, E_FAIL);
+
+
+		CAnimationMgr::GetInstance()->AddAnimation(L"Player", &vecAni);
+
+		vecAni.clear();
+
+		cout << "SceneLoading" << endl;
+
+		CScene* pScene = NULL;
+
+		pScene = CStage::Create();
+		CSceneMgr::GetInstance()->AddScene(SCENE_STAGE, pScene);
+
+		//lstrcpy(m_szLoadMessage, L"로딩 완료...");
+		cout << "Loading End" << endl;
+
+		m_bDynamicLoading = true;
+	}
 
 	return S_OK;
 }

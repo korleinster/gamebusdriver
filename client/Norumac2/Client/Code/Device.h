@@ -28,6 +28,8 @@ public:
 public:
 	void	BeginDevice(void);
 	void	EndDevice(void);
+	void	BeginDeferredContext(void);
+	void	EndDeferredContext(ID3D11CommandList* pCommandList);
 	void Release(void);
 };
 

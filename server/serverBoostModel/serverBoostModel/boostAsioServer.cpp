@@ -14,7 +14,7 @@ boostAsioServer::boostAsioServer() : m_acceptor(g_io_service, tcp::endpoint(tcp:
 
 boostAsioServer::~boostAsioServer()
 {
-	// make_shared 를 썼기 때문에, 삭제할 필요가 없다아 ?
+	// make_shared 를 쓸땐, 삭제할 필요가 없지만, 멀티쓰레드 충돌을 막기 위해 현재 일반 vector 를 사용함.. ( 추후 나만의 자료구조를 만들어야 한다 )
 	for (auto ptr : g_clients) { delete ptr; }
 }
 
@@ -74,7 +74,7 @@ void player_session::Init()
 {
 	m_connect_state = true;
 
-	// 기본 셋팅 초기화 정보 보내기 *****************>>>> direction 도 차후에 수정해주어야 한다.
+	// 기본 셋팅 초기화 정보 보내기 *****************>>>> player_data 초기화에 대한 기본 필요 정보 수정시, 여기서 해야함.
 	Packet init_this_player_buf[MAX_BUF_SIZE];
 
 	init_this_player_buf[0] = sizeof(player_data) + 2;
@@ -83,28 +83,30 @@ void player_session::Init()
 	m_player_data.id = m_id;
 	m_player_data.pos.x = 100;
 	m_player_data.pos.y = 100;
+	m_player_data.dir = 0;
+	m_player_data.state.hp = 100;
 
-	memcpy(&init_this_player_buf[2], g_clients[m_id]->get_player_data(), init_this_player_buf[0]);
+	*(reinterpret_cast<player_data*>(&init_this_player_buf[2])) = m_player_data;
 	g_clients[m_id]->send_packet(init_this_player_buf);
 
-	// 초기화 정보 보내기 2 - 얘 정보를 다른 애들한테 보내고, 다른 애들 정보를 얘한테 보내기  *****************>>>> direction 도 차후에 수정해주어야 한다.
+	// 초기화 정보 보내기 2 - 얘 정보를 다른 애들한테 보내고, 다른 애들 정보를 얘한테 보내기  *****************>>>> player_data 에서 추가되는 내용을 전송 시, 수정해주어야 한다.
 	Packet other_info_to_me_buf[MAX_BUF_SIZE];
 	Packet my_info_to_other_buf[MAX_BUF_SIZE];
 
 	other_info_to_me_buf[0] = my_info_to_other_buf[0] = sizeof(player_data) + 2;
-	other_info_to_me_buf[1] = my_info_to_other_buf[1] = CHANGED_POSITION;
+	other_info_to_me_buf[1] = my_info_to_other_buf[1] = INIT_OTHER_CLIENT;
 
 	// 현재 접속한 애한테 다른 플레이어 정보 보내기
-	memcpy(&my_info_to_other_buf[2], &m_player_data, my_info_to_other_buf[0]);
+	*(reinterpret_cast<player_data*>(&my_info_to_other_buf[2])) = m_player_data;
 
 	for (auto players : g_clients)
 	{
 		if (DISCONNECTED == players->get_current_connect_state()) { continue; }
 		if (m_id == players->get_id()) { continue; }
 
-		// 다른 애들 정보를 복사해서 넣고, 얘한테 먼저 보내고... ( 얘 왜 못받는건지 알수가 읎다 도대체... )
-		memcpy(&other_info_to_me_buf[2], players->get_player_data(), other_info_to_me_buf[0] - 2);
-		send_packet(other_info_to_me_buf);	// 얘가 안받아졌는데, 아래 께 받아졌다는게 이해가 안되네;; -> INIT_CLIENT 임시적으로 넣어봤다... 2개 클라이언트 까지는 먹히네.
+		// 다른 애들 정보를 복사해서 넣고, 얘한테 먼저 보내고...
+		*(reinterpret_cast<player_data*>(&other_info_to_me_buf[2])) = *(players->get_player_data());
+		send_packet(other_info_to_me_buf);
 
 		// 얘 정보를 이제 다른 애들한테 보내면 되는데..
 		players->send_packet(my_info_to_other_buf);
@@ -239,8 +241,20 @@ void player_session::m_process_packet(Packet buf[])
 			send_packet(buf);
 			break;
 
-		case CHANGED_POSITION:
-			m_player_data = *(reinterpret_cast<player_data*>(&buf[2]));
+		case CHANGED_POSITION: {
+
+			// [ 0] = size
+			// [ 1] = CHANGED_POSITION type
+			// [ 2] = size of position
+			// [10] = user id
+
+			m_player_data.pos = *(reinterpret_cast<position*>(&buf[2]));
+
+			Packet temp_pos_buf[MAX_BUF_SIZE]{ 0 };
+			temp_pos_buf[0] = sizeof(position) + sizeof(UINT) + 2;
+			temp_pos_buf[1] = CHANGED_POSITION;
+			*(reinterpret_cast<position*>(&temp_pos_buf[2])) = m_player_data.pos;
+			*(reinterpret_cast<UINT*>(&temp_pos_buf[sizeof(position) + 2])) = m_id;
 
 			// 필요한 애들한테 이동 정보를 뿌려주자 - 현재는 애들 다 뿌린다.
 			for (auto players : g_clients)
@@ -248,13 +262,39 @@ void player_session::m_process_packet(Packet buf[])
 				if (DISCONNECTED == players->m_connect_state) { continue; }
 				if (m_id == players->m_id) { continue; }
 
-				players->send_packet(buf);
+				players->send_packet(temp_pos_buf);
 			}
-
+		}
 			break;
 
+		case CHANGED_DIRECTION: {
+
+			// [0] = size
+			// [1] = CHANGED_POSITION type
+			// [2] = size of direction
+			// [3] = user id
+
+			m_player_data.dir = *(reinterpret_cast<char*>(&buf[2]));
+
+			Packet temp_direction_buf[MAX_BUF_SIZE]{ 0 };
+			temp_direction_buf[0] = sizeof(char) + sizeof(UINT) + 2;
+			temp_direction_buf[1] = CHANGED_DIRECTION;
+			*(reinterpret_cast<char*>(&temp_direction_buf[2])) = m_player_data.dir;
+			*(reinterpret_cast<UINT*>(&temp_direction_buf[sizeof(char) + 2])) = m_id;
+
+			// 필요한 애들한테 방향 정보를 뿌려주자 - 현재는 애들 다 뿌린다.
+			for (auto players : g_clients)
+			{
+				if (DISCONNECTED == players->m_connect_state) { continue; }
+				if (m_id == players->m_id) { continue; }
+
+				players->send_packet(temp_direction_buf);
+			}
+		}
+			break;
+		
 		case KEYINPUT_ATTACK:
-			
+		{
 			// 충돌체크 검사하고 난 뒤에..
 
 			// 충돌 범위에 있는 녀석들의 hp 를 깎아 내리자.
@@ -273,7 +313,7 @@ void player_session::m_process_packet(Packet buf[])
 
 				players->send_packet(buf);
 			}
-
+		}
 			break;
 		default:
 			break;

@@ -30,7 +30,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		else { ptr->second.pos = *reinterpret_cast<position*>(&buf[2]); }
 
 		InvalidateRect(m_hWnd, NULL, TRUE);*/
-		if (CSceneMgr::GetInstance()->GetScene() != SCENE_LOGO)
+		//if (CSceneMgr::GetInstance()->GetScene() != SCENE_LOGO)
 		{
 			player_data *data = CObjMgr::GetInstance()->Get_PlayerServerData(reinterpret_cast<player_data*>(&buf[2])->id);
 

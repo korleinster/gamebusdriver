@@ -1,6 +1,6 @@
 // boost asio 설치시 참고 내역 --->	http://cattool.tistory.com/94
-// 디렉토리 파일 위치				..\boost_1_62_0\boost_1_62_0;				%(AdditionalIncludeDirectories)
-// 링커 추가 라이브러리 디렉토리	..\boost_1_62_0\boost_1_62_0\stage\lib;		%(AdditionalLibraryDirectories)
+// C/C++, 일반, 추가 포함 디렉토리 파일 위치	..\boost_1_63_0\boost_1_63_0;				%(AdditionalIncludeDirectories)
+// 링커, 일반, 추가 라이브러리 디렉토리			..\boost_1_63_0\boost_1_63_0\stage\lib;		%(AdditionalLibraryDirectories)
 
 #pragma once
 #include<boost\asio.hpp>
@@ -18,7 +18,7 @@ class player_session //: public std::enable_shared_from_this<player_session>
 public:
 	player_session(tcp::socket s, const unsigned int& index) : m_socket(std::move(s)), m_id(index) {};
 	~player_session() {};
-
+	
 	void Init();
 
 	unsigned int get_id() { return m_id; }
@@ -68,8 +68,8 @@ private:
 	void acceptThread();
 
 	// 통신용 변수
-	tcp::acceptor	m_acceptor;
-	tcp::socket		m_socket;
+	tcp::acceptor		m_acceptor;
+	tcp::socket			m_socket;
 
 	// 플레이어 고유 id 변수
 	unsigned int	m_playerIndex{ UINT_MAX };
@@ -77,7 +77,7 @@ private:
 	// 서버 기본 정보 관련 변수
 	bool			m_ServerShutdown{ false };
 	int				m_cpuCore{ 0 };
-	vector<thread*> m_worker_threads;
+	vector<thread*>	m_worker_threads;
 };
 
 // 플레이어가 담긴 변수

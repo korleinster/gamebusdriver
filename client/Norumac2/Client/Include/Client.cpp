@@ -7,7 +7,7 @@
 #include "Client.h"
 #include "MainApp.h"
 #include "Include.h"
-#include <vld.h>
+//#include <vld.h>
 
 #define MAX_LOADSTRING 100
 

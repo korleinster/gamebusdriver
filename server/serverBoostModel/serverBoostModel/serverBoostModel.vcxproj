@@ -71,6 +71,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <ExecutablePath>$(ExecutablePath)</ExecutablePath>
+    <IncludePath>D:\Program Files (x86)\VS projects\boost_1_63_0\boost_1_63_0;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -87,12 +89,12 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\depot\nhjung-client\boost_1_61_0;D:\Program Files %28x86%29\VS projects\boost_1_62_0\boost_1_62_0;C:\boost_1_62_0\boost_1_62_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\depot\nhjung-client\boost_1_61_0;D:\Program Files (x86)\VS projects\boost_1_62_0\boost_1_62_0;D:\Program Files (x86)\VS projects\boost_1_63_0\boost_1_63_0;C:\boost_1_62_0\boost_1_62_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>D:\depot\nhjung-client\boost_1_61_0\stage\lib;D:\Program Files %28x86%29\VS projects\boost_1_62_0\boost_1_62_0\stage\lib;C:\boost_1_62_0\boost_1_62_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\depot\nhjung-client\boost_1_61_0\stage\lib;D:\Program Files (x86)\VS projects\boost_1_62_0\boost_1_62_0\stage\lib\x64;D:\Program Files (x86)\VS projects\boost_1_62_0\boost_1_62_0\stage\lib\x86;D:\Program Files (x86)\VS projects\boost_1_63_0\boost_1_63_0\stage\lib;C:\boost_1_62_0\boost_1_62_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

@@ -30,7 +30,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		else { ptr->second.pos = *reinterpret_cast<position*>(&buf[2]); }
 
 		InvalidateRect(m_hWnd, NULL, TRUE);*/
-		if (CSceneMgr::GetInstance()->GetScene() != SCENE_LOGO)
+		//if (CSceneMgr::GetInstance()->GetScene() != SCENE_LOGO)
 		{
 			player_data *data = CObjMgr::GetInstance()->Get_PlayerServerData(reinterpret_cast<player_data*>(&buf[2])->id);
 
@@ -78,9 +78,9 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 		if (CSceneMgr::GetInstance()->GetScene() != SCENE_LOGO)
 		{
-			player_data *data = CObjMgr::GetInstance()->Get_PlayerServerData(reinterpret_cast<player_data*>(&buf[2])->id);
+			player_data *data = CObjMgr::GetInstance()->Get_PlayerServerData(*reinterpret_cast<unsigned int*>(&buf[sizeof(position)+2]));
 
-			if (nullptr != data) { memcpy(data, &buf[2], buf[0]); }
+			if (nullptr != data) { memcpy(&data->pos, &buf[2], sizeof(player_data)); }
 			else
 				break;
 		}
@@ -90,9 +90,9 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 		if (CSceneMgr::GetInstance()->GetScene() != SCENE_LOGO)
 		{
-			player_data *data = CObjMgr::GetInstance()->Get_PlayerServerData(reinterpret_cast<player_data*>(&buf[2])->id);
+			player_data *data = CObjMgr::GetInstance()->Get_PlayerServerData(*reinterpret_cast<unsigned int*>(&buf[sizeof(char)+2]));
 
-			if (nullptr != data) { memcpy(data, &buf[2], buf[0]); }
+			if (nullptr != data) { memcpy(&data->dir, &buf[2], sizeof(char)); }
 			else
 				break;
 		}

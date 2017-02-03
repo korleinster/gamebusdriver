@@ -69,6 +69,8 @@ int CPlayer::Update(void)
 		test = true;
 	}
 
+	cout << m_pInfo->m_ServerInfo.id << endl;
+
 
 	if (m_fSeverTime > 0.5f)
 	{

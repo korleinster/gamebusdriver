@@ -24,6 +24,34 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		// 아이템이라던가 위치정보라던가 일단 다 여기로 들어온다잉
 	}
 		break;
+	case INIT_OTHER_CLIENT: {
+		/*unordered_map<UINT, player_data>::iterator ptr = m_other_players.find(reinterpret_cast<player_data*>(&buf[2])->id);
+		if (m_other_players.end() == ptr) { m_other_players.insert(make_pair(reinterpret_cast<player_data*>(&buf[2])->id, *reinterpret_cast<player_data*>(&buf[2]))); }
+		else { ptr->second.pos = *reinterpret_cast<position*>(&buf[2]); }
+
+		InvalidateRect(m_hWnd, NULL, TRUE);*/
+		if (CSceneMgr::GetInstance()->GetScene() != SCENE_LOGO)
+		{
+			player_data *data = CObjMgr::GetInstance()->Get_PlayerServerData(reinterpret_cast<player_data*>(&buf[2])->id);
+
+			if (nullptr != data) { break; }
+			else {
+				// 데이터 추가 해줘야 됨 이해 했음?
+				// 저기 data 가 만약 end 위치라면, 데이터가 없는데 넣으려고 하는거잖아
+				// 그럼 새로운 플레이어가 감지되었다는 뜻이니까
+				// 새로 객체 추가해서 저 값을 넣어줘야겠찌? ㅇㅋ?
+
+				CObj* pObj = NULL;
+				pObj = COtherPlayer::Create();
+				pObj->SetPos(D3DXVECTOR3(m_player.pos.x, 1.f, m_player.pos.y));
+				pObj->SetPacketData(reinterpret_cast<player_data*>(&buf[2]));
+				CObjMgr::GetInstance()->AddObject(L"OtherPlayer", pObj);
+				CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, pObj);
+
+			}
+		}
+	}
+		break;
 	case PLAYER_DISCONNECTED: {
 		// 여기도, id 로 찾아서, 그 아이디 찾으면 그 객체는 삭제 해야겠찌? ㅇㅋㄷㅋ?
 		player_data *data = CObjMgr::GetInstance()->Get_PlayerServerData(reinterpret_cast<player_data*>(&buf[2])->id);
@@ -53,20 +81,20 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			player_data *data = CObjMgr::GetInstance()->Get_PlayerServerData(reinterpret_cast<player_data*>(&buf[2])->id);
 
 			if (nullptr != data) { memcpy(data, &buf[2], buf[0]); }
-			else {
-				// 데이터 추가 해줘야 됨 이해 했음?
-				// 저기 data 가 만약 end 위치라면, 데이터가 없는데 넣으려고 하는거잖아
-				// 그럼 새로운 플레이어가 감지되었다는 뜻이니까
-				// 새로 객체 추가해서 저 값을 넣어줘야겠찌? ㅇㅋ?
+			else
+				break;
+		}
+	}
+		break;
+	case CHANGED_DIRECTION: {
 
-				CObj* pObj = NULL;
-				pObj = COtherPlayer::Create();
-				pObj->SetPos(D3DXVECTOR3(m_player.pos.x, 1.f, m_player.pos.y));
-				pObj->SetPacketData(reinterpret_cast<player_data*>(&buf[2]));
-				CObjMgr::GetInstance()->AddObject(L"OtherPlayer", pObj);
-				CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, pObj);
+		if (CSceneMgr::GetInstance()->GetScene() != SCENE_LOGO)
+		{
+			player_data *data = CObjMgr::GetInstance()->Get_PlayerServerData(reinterpret_cast<player_data*>(&buf[2])->id);
 
-			}
+			if (nullptr != data) { memcpy(data, &buf[2], buf[0]); }
+			else
+				break;
 		}
 	}
 		break;

@@ -55,8 +55,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	CMainApp*		pMainApp = CMainApp::Create();
 
-	// 서버와 통신을 위해서, 윈도우 핸들 값을 받아온다.
-	g_client.Init(g_hWnd);
 
 	// 이걸 너가 옮겨야됨, 새가 날아왔을 이후로
 	// g_hWnd 는 윈도우 창 핸들값이니까

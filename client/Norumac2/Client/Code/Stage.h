@@ -18,5 +18,8 @@ public:
 
 public:
 	HRESULT	CreateObj(void);
+
+public:
+	bool m_bFirstLogin;
 };
 

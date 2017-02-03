@@ -10,6 +10,7 @@
 #include "StaticObject.h"
 
 CStage::CStage()
+	: m_bFirstLogin(false)
 {
 }
 
@@ -23,13 +24,19 @@ HRESULT CStage::Initialize(void)
 	if (FAILED(CreateObj()))
 		return E_FAIL;
 
-
+	// 서버와 통신을 위해서, 윈도우 핸들 값을 받아온다.
+	
 
 	return S_OK;
 }
 
 int CStage::Update(void)
 {
+	if (m_bFirstLogin == false)
+	{
+		
+		m_bFirstLogin = true;
+	}
 
 	CObjMgr::GetInstance()->Update();
 

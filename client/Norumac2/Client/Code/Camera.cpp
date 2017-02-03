@@ -85,17 +85,18 @@ void CCamera::KeyState(void)
 	float fTime = CTimeMgr::GetInstance()->GetTime();
 
 
-	if (CInput::GetInstance()->GetDIKeyState(DIK_Q) & 0x80)
+	if (CInput::GetInstance()->GetDIKeyState(DIK_O) & 0x80)
 	{
-		if (m_dwTime + 150 < GetTickCount())
-		{
-			m_dwTime = GetTickCount();
-			if (m_bMouseFix == true)
-				m_bMouseFix = false;
+		if (m_bMouseFix == true)
+			m_bMouseFix = false;
 
-			else
-				m_bMouseFix = true;
-		}
+			
+	}
+
+	if (CInput::GetInstance()->GetDIKeyState(DIK_P) & 0x80)
+	{
+		if(m_bMouseFix == false)
+			m_bMouseFix = true;
 	}
 
 	if (CInput::GetInstance()->GetDIKeyState(DIK_A) & 0x80)

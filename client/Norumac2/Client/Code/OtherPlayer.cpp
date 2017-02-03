@@ -17,6 +17,8 @@
 #include "Input.h"
 #include "TimeMgr.h"
 #include "RenderMgr.h"
+#include "ResourcesMgr.h"
+#include "AnimationMgr.h"
 
 
 
@@ -41,7 +43,7 @@ HRESULT COtherPlayer::Initialize(void)
 	if (FAILED(AddComponent()))
 		return E_FAIL;
 
-	m_pInfo->m_vScale = D3DXVECTOR3(0.01f, 0.01f, 0.01f);
+	m_pInfo->m_vScale = D3DXVECTOR3(10.f, 10.f, 10.f);
 	//m_pInfo->m_fAngle[ANGLE_X] = /*D3DX_PI / 2 * -1.f;*/D3DXToRadian(-90);
 
 	CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, this);
@@ -104,38 +106,40 @@ COtherPlayer * COtherPlayer::Create(void)
 
 void COtherPlayer::Release(void)
 {
-	Safe_Delete(m_pBuffer);
-	Safe_Delete(m_pTexture);
+	Safe_Release(m_pBuffer);
+	Safe_Release(m_pTexture);
 	Safe_Release(m_pInfo);
+
 }
 
 HRESULT COtherPlayer::AddComponent(void)
 {
 	CComponent* pComponent = NULL;
-	char cModelPath[MAX_PATH] = "../Resource/";
 
-	vecAniName.push_back("Bird");
+	vecAniName = *(CAnimationMgr::GetInstance()->GetAnimaiton(L"Player"));
 	//vecName.push_back("Fall");
 	//vecName.push_back("Dead");
 	//vecName.push_back("Damage");
 	//vecAniName.push_back("Booster");
 	//vecName.push_back("Break");
 
-	m_pBuffer = CDynamicMesh::Create(cModelPath, vecAniName);
-	pComponent = m_pBuffer;
-	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Buffer", pComponent));
+	//TransForm
+	pComponent = m_pInfo = CInfo::Create(g_vLook);
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Transform", pComponent));
 
-	m_pInfo = CInfo::Create(g_vLook);
-	pComponent = m_pInfo;
-	if (pComponent == NULL)
-		return E_FAIL;
-	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Info", pComponent));
 
-	m_pTexture = CTexture::Create(L"../Resource/bird.png");
-	pComponent = m_pTexture;
-	if (pComponent == NULL)
-		return E_FAIL;
-	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Texture", pComponent));
+	//DynamicMesh
+	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Player_IDLE");
+	m_pBuffer = dynamic_cast<CDynamicMesh*>(pComponent);
+	NULL_CHECK_RETURN(m_pBuffer, E_FAIL);
+	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Mesh", pComponent));
+
+	//Texture
+	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Texture_Player");
+	m_pTexture = dynamic_cast<CTexture*>(pComponent);
+	NULL_CHECK_RETURN(m_pTexture, E_FAIL);
+	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Texture", pComponent));
 
 	m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"VS_ANI");
 	m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"PS");;

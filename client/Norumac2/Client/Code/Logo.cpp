@@ -55,13 +55,18 @@ int CLogo::Update(void)
 
 	if (m_pLoading->GetComplete() == true)
 	{
+		// 일단 여기다 넣고 실행해보고, 결과 함 보자 ㄱ
+
+
 		if (m_bDynamicLoading == false)
 			Add_Dynamic_Buffer();
 
 		if (m_bDynamicLoading == true)
 		{
 			if (GetAsyncKeyState(VK_RETURN))
+			{
 				CSceneMgr::GetInstance()->ChangeScene(SCENE_STAGE);
+			}
 		}
 		return 0;
 

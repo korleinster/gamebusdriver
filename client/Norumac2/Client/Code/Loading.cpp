@@ -93,6 +93,12 @@ void CLoading::StageLoading(void)
 
 	cout << "Thread Loading End" << endl;
 	m_bComplete = true;
+
+
+	if (m_serverConnected == false) {
+		g_client.Init(g_hWnd);
+		m_serverConnected = true;
+	}
 }
 
 CLoading* CLoading::Create(LOADINGID eLoadID)

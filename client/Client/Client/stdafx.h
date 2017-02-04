@@ -9,6 +9,9 @@
 #include<unordered_map>
 using namespace std;
 
+#include<chrono>
+using namespace chrono;
+
 // 서버와 연동되는 protocol.h - 수정시 서버에도 바로 적용된다.
 //#include"../../../server/Server/Server/protocol.h"
 #include"../../../server/serverBoostModel/serverBoostModel/protocol.h"

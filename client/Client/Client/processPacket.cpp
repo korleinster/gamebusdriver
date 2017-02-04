@@ -45,12 +45,29 @@ void AsynchronousClientClass::processPacket(Packet *buf)
 
 	case CHANGED_DIRECTION: {
 		unordered_map<UINT, player_data>::iterator ptr = m_other_players.find(*(reinterpret_cast<UINT*>(&buf[sizeof(char) + 2])));
-		//if(m_other_players.end() != ptr){ ptr->second.dir = *(reinterpret_cast<char*>(&buf[2])); }
+		//if(m_other_players.end() != ptr){ ptr->second.dir = *(reinterpret_cast<char*>(&buf[2])); }	// ptr 이 nullptr 이면 이상한 상황이다...
 		ptr->second.dir = *(reinterpret_cast<char*>(&buf[2]));
 
 		InvalidateRect(m_hWnd, NULL, TRUE);
 	}
 		break;
+
+	case KEYINPUT_ATTACK: {
+		// 내가 피해를 입은 것이라면, 내 hp 를 깎고 break;
+		if (m_player.id == *(reinterpret_cast<UINT*>(&buf[sizeof(int) + 2]))) {
+			m_player.state.hp = *(reinterpret_cast<char*>(&buf[2]));
+			InvalidateRect(m_hWnd, NULL, TRUE);
+			break;
+		}
+
+		// 내가 아니라면 다른애 hp 깎기
+		unordered_map<UINT, player_data>::iterator ptr = m_other_players.find(*(reinterpret_cast<UINT*>(&buf[sizeof(int) + 2])));
+		ptr->second.state.hp = *(reinterpret_cast<char*>(&buf[2]));
+
+		InvalidateRect(m_hWnd, NULL, TRUE);
+	}
+		break;
+
 	default:
 		break;
 	}

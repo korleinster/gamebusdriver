@@ -17,14 +17,22 @@
 // process protocol
 enum PacketProtocolType {
 	TEST = 1,		// 받은 패킷 그대로 돌려주기용. ( 보낸 내용이 그대로 돌아오지 않는다면, 클라나 서버에 문제가 있다는 뜻 )
-	//DUMMY_CLIENT,	// dummy client 용 프로토콜
+	
+
 	INIT_CLIENT,
 	INIT_OTHER_CLIENT,
 	PLAYER_DISCONNECTED,
-	//KEYINPUT,		// 클라이언트에서 키 입력을 받았을 경우
+	
+	// 캐릭터 좌표 및 방향 관련
 	CHANGED_POSITION,
 	CHANGED_DIRECTION,
+
+	// 키 입력관련 상호작용
 	KEYINPUT_ATTACK,
+
+	// status 값 변경
+	CHANGED_HP,
+	PASSIVE_HP_ADDED,
 };
 
 using Packet = unsigned char;

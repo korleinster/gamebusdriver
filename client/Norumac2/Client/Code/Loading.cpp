@@ -66,7 +66,7 @@ void CLoading::StageLoading(void)
 	hr = CResourcesMgr::GetInstance()->AddTexture(
 		RESOURCE_STAGE
 		, L"Texture_Player"
-		, L"../Resource/bird.png");
+		, L"../Resource/MeshImage/Player2.png");
 
 
 	//lstrcpy(m_szLoadMessage, L"버퍼 로딩중...");

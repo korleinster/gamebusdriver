@@ -43,7 +43,8 @@ HRESULT COtherPlayer::Initialize(void)
 	if (FAILED(AddComponent()))
 		return E_FAIL;
 
-	m_pInfo->m_vScale = D3DXVECTOR3(10.f, 10.f, 10.f);
+	m_pInfo->m_vScale = D3DXVECTOR3(0.1f, 0.1f, 0.1f);
+	//m_pInfo->m_vScale = D3DXVECTOR3(10.f, 10.f, 10.f);
 	//m_pInfo->m_fAngle[ANGLE_X] = /*D3DX_PI / 2 * -1.f;*/D3DXToRadian(-90);
 
 	CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, this);
@@ -52,6 +53,7 @@ HRESULT COtherPlayer::Initialize(void)
 }
 
 int COtherPlayer::Update(void)
+
 {
 	m_fSeverTime += CTimeMgr::GetInstance()->GetTime();
 	/*if (m_pBuffer->m_bAniEnd == true)

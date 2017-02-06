@@ -29,6 +29,7 @@ private:
 	// Function
 	void m_recv_packet();
 	void m_process_packet(Packet buf[]);
+	void m_passive_hp_adding();
 
 	// 통신용 변수
 	tcp::socket		m_socket;
@@ -43,6 +44,8 @@ private:
 	unsigned int m_packet_size_current{ 0 };
 	unsigned int m_packet_size_previous{ 0 };
 
+	// hp passive 를 위한 bool 변수
+	bool m_is_hp_can_add{ false };
 
 	// 플레이어 캐릭터 관련 정보
 	player_data m_player_data;

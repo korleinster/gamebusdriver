@@ -158,7 +158,7 @@ void AsynchronousClientClass::sendPacket(const BYTE data_size, const BYTE type, 
 		// 패킷 안의 실제 내용 생성
 		m_sendbuf[0] = data_size + 2;
 		m_sendbuf[1] = type;
-		memcpy(&m_sendbuf[2], data_start_pointer, m_sendbuf[0]);
+		if (data_start_pointer != nullptr) { memcpy(&m_sendbuf[2], data_start_pointer, m_sendbuf[0]); }
 
 		m_wsa_sendbuf.len = m_sendbuf[0];
 		DWORD ioByteSize;

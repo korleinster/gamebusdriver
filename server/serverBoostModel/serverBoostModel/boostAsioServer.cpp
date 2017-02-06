@@ -89,6 +89,29 @@ void player_session::Init()
 	*(reinterpret_cast<player_data*>(&init_this_player_buf[2])) = m_player_data;
 	g_clients[m_id]->send_packet(init_this_player_buf);
 
+	// 자동 hp 회복 하기 용도 타이머 ********************************* ( test 중 )
+	//m_is_hp_can_add = true;
+	//boost::asio::deadline_timer timer_for_wait(g_io_service, boost::posix_time::seconds(5));
+	//// async_wait
+	//timer_for_wait.async_wait([&](const boost::system::error_code& error) {
+	//	if (130 > get_player_data()->state.hp) {
+	//		cout << "Player No. [ " << m_id << " ] HP + 5\n";
+	//		get_player_data()->state.hp += 5;
+
+	//		//Packet temp_hp_buf[MAX_BUF_SIZE]{ 0 };
+	//		//temp_hp_buf[0] = sizeof(int) + sizeof(UINT) + 2;	// hp + id + packet size addition(2)
+	//		//temp_hp_buf[1] = KEYINPUT_ATTACK;
+	//		//*(reinterpret_cast<int*>(&temp_hp_buf[2])) = players->m_player_data.state.hp;
+	//		//*(reinterpret_cast<int*>(&temp_hp_buf[6])) = players->m_id;
+
+	//		//for (auto players : g_clients)
+	//		//{
+
+	//		//}
+	//	}		
+	//});
+
+
 	// 초기화 정보 보내기 2 - 얘 정보를 다른 애들한테 보내고, 다른 애들 정보를 얘한테 보내기  *****************>>>> player_data 에서 추가되는 내용을 전송 시, 수정해주어야 한다.
 	Packet other_info_to_me_buf[MAX_BUF_SIZE];
 	Packet my_info_to_other_buf[MAX_BUF_SIZE];
@@ -295,28 +318,87 @@ void player_session::m_process_packet(Packet buf[])
 		
 		case KEYINPUT_ATTACK:
 		{
-			// 충돌체크 검사하고 난 뒤에..
+			// 충돌체크 검사하고 난 뒤에.. ( 현재는 임시 충돌 체크, 실제 클라와 연동시 충돌 범위 체크해야 한다. )
+			int att_x = 15, att_y = 15;		// 테스트용 클라 공격 리치가 요정도
+			int x = m_player_data.pos.x, y = m_player_data.pos.y;
+			int player_size = 5;	// 테스트용 클라 원 반지름이 크기 5...
+			char *dir = &m_player_data.dir;
 
-			// 충돌 범위에 있는 녀석들의 hp 를 깎아 내리자.
+			if ((*dir & KEYINPUT_RIGHT) == (KEYINPUT_RIGHT))	{ x += att_x; }
+			if ((*dir & KEYINPUT_LEFT) == (KEYINPUT_LEFT))		{ x -= att_x; }
+			if ((*dir & KEYINPUT_UP) == (KEYINPUT_UP))			{ y -= att_y; }
+			if ((*dir & KEYINPUT_DOWN) == (KEYINPUT_DOWN))		{ y += att_y; }
 
-
-			Packet temp_sendbuf[MAX_BUF_SIZE]{ 0 };
-			temp_sendbuf[0] = buf[0];
-			temp_sendbuf[1] = KEYINPUT_ATTACK;
-			temp_sendbuf[2] = reinterpret_cast<Packet>(&m_id);
-
-			// 필요한 애들한테 이동 정보를 뿌려주자 - 현재는 애들 다 뿌린다.
-			for (auto players : g_clients)
-			{
+			for (auto players : g_clients) {
 				if (DISCONNECTED == players->m_connect_state) { continue; }
 				if (m_id == players->m_id) { continue; }
 
-				players->send_packet(buf);
+				int tempx = x - players->m_player_data.pos.x;
+				int tempy = y - players->m_player_data.pos.y;
+				if (((tempx * tempx) + (tempy * tempy)) <= (player_size * player_size)) {
+					players->m_player_data.state.hp -= 10;
+
+					Packet temp_hp_buf[MAX_BUF_SIZE]{ 0 };
+					temp_hp_buf[0] = sizeof(int) + sizeof(UINT) + 2;	// hp + id + packet size addition(2)
+					temp_hp_buf[1] = KEYINPUT_ATTACK;
+					*(reinterpret_cast<int*>(&temp_hp_buf[2])) = players->m_player_data.state.hp;
+					*(reinterpret_cast<int*>(&temp_hp_buf[6])) = players->m_id;
+
+					for (auto other_players : g_clients) {
+						if (DISCONNECTED == other_players->m_connect_state) { continue; }
+						//if (players->m_id == other_players->m_id) { continue; }	// 자기 hp 가 깎였을 경우, 자기 한테도 보내야 한다...
+
+						other_players->send_packet(temp_hp_buf);
+					}
+				}
 			}
+
 		}
 			break;
+
+		/*case PASSIVE_HP_ADDED:
+		{
+			cout << "Player No. [ " << m_id << " ] HP + 5\n";
+
+			boost::asio::deadline_timer timer_for_wait(g_io_service);
+			timer_for_wait.expires_from_now(boost::posix_time::seconds(1));
+			timer_for_wait.async_wait([&](const boost::system::error_code& error) {
+				g_io_service.post([]() {
+					Packet hp_added[MAX_BUF_SIZE]{ 0 };
+					hp_added[0] = 2;
+					hp_added[1] = PASSIVE_HP_ADDED;
+				});
+			});
+		}
+			break;*/
 		default:
 			break;
 		}
 	}
+}
+
+void player_session::m_passive_hp_adding() {
+
+	g_io_service.post([&]() {
+		cout << "Player No. [ " << m_id << " ] HP + 5\n";
+
+		if (130 > get_player_data()->state.hp) {
+			get_player_data()->state.hp += 5;
+
+			//Packet temp_hp_buf[MAX_BUF_SIZE]{ 0 };
+			//temp_hp_buf[0] = sizeof(int) + sizeof(UINT) + 2;	// hp + id + packet size addition(2)
+			//temp_hp_buf[1] = KEYINPUT_ATTACK;
+			//*(reinterpret_cast<int*>(&temp_hp_buf[2])) = players->m_player_data.state.hp;
+			//*(reinterpret_cast<int*>(&temp_hp_buf[6])) = players->m_id;
+
+			//for (auto players : g_clients)
+			//{
+
+			//}
+		}
+		else { m_is_hp_can_add = false; }
+
+		if (m_is_hp_can_add) { m_passive_hp_adding(); }
+	});
+
 }

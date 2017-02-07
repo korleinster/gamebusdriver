@@ -11,6 +11,7 @@
 #include "Shader.h"
 #include "Device.h"
 #include "Camera.h"
+#include "ResourcesMgr.h"
 
 
 CStaticObject::CStaticObject()
@@ -83,32 +84,31 @@ CStaticObject * CStaticObject::Create(void)
 
 void CStaticObject::Release(void)
 {
-	Safe_Delete(m_pBuffer);
-	Safe_Delete(m_pInfo);
-	Safe_Delete(m_pTexture);
+	Safe_Release(m_pBuffer);
+	Safe_Release(m_pInfo);
+	Safe_Release(m_pTexture);
 }
 
 HRESULT CStaticObject::AddComponent(void)
 {
 	CComponent* pComponent = NULL;
-	char cModelPath[MAX_PATH] = "../Resource/Mesh/town.FBX";
 
+	//TransForm
+	pComponent = m_pInfo = CInfo::Create(g_vLook);
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Transform", pComponent));
 
-	m_pBuffer = CStaticMesh::Create(cModelPath);
-	pComponent = m_pBuffer;
-	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Buffer", pComponent));
+	//StaticMesh
+	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Mesh_Town");
+	m_pBuffer = dynamic_cast<CStaticMesh*>(pComponent);
+	NULL_CHECK_RETURN(m_pBuffer, E_FAIL);
+	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Mesh", pComponent));
 
-	m_pInfo = CInfo::Create(g_vLook);
-	pComponent = m_pInfo;
-	if (pComponent == NULL)
-		return E_FAIL;
-	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Info", pComponent));
-
-	m_pTexture = CTexture::Create(L"../Resource/MeshImage/town.png");
-	pComponent = m_pTexture;
-	if (pComponent == NULL)
-		return E_FAIL;
-	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Texture", pComponent));
+	//Texture
+	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Texture_Town");
+	m_pTexture = dynamic_cast<CTexture*>(pComponent);
+	NULL_CHECK_RETURN(m_pTexture, E_FAIL);
+	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Texture", pComponent));
 
 	m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"VS");
 	m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"PS");

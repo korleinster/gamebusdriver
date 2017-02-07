@@ -69,12 +69,15 @@ void CVIBuffer::Render(void)
 
 DWORD CVIBuffer::Release(void)
 {
-	if (m_dwRefCount == 2)
+	if (m_dwRefCount == 1)
 	{
 		Safe_Release(m_VertexBuffer);
 		Safe_Release(m_IndexBuffer);
 		Safe_Release(m_ConstantBuffer);
 	}
+	else
+		--m_dwRefCount;
+
 	return 0;
 }
 
@@ -89,6 +92,7 @@ void CVIBuffer::CreateRasterizerState()
 	pGrapicDevice->m_pDevice->CreateRasterizerState(&tRasterizerDesc, &m_pRasterizerState);
 }
 
+
 void CVIBuffer::CreateRasterizerState2()
 {
 	CDevice* pGrapicDevice = CDevice::GetInstance();
@@ -99,5 +103,3 @@ void CVIBuffer::CreateRasterizerState2()
 	tRasterizerDesc.FillMode = D3D11_FILL_WIREFRAME;
 	pGrapicDevice->m_pDevice->CreateRasterizerState(&tRasterizerDesc, &m_pRasterizerState);
 }
-
-

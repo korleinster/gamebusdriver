@@ -12,6 +12,7 @@ CAniBuffer::CAniBuffer()
 	, m_pDevice(CDevice::GetInstance())
 {
 	this->m_pVertexBuffer = nullptr;
+	this->m_pVertex = nullptr;
 }
 
 CAniBuffer::~CAniBuffer()
@@ -41,6 +42,7 @@ void CAniBuffer::SetVertexSize(unsigned int _iSize)
 {
 	this->m_nVertices = _iSize;
 	this->m_pVertex = new VertexAni[_iSize];
+	m_vecStride.push_back(this->m_nVertices);
 }
 
 CAniBuffer* CAniBuffer::GetChild(unsigned int _nindex)
@@ -77,6 +79,8 @@ void CAniBuffer::CreateBuffer()
 			getchar();
 			exit(0);
 		}
+
+		m_vecBuffer.push_back(this->m_pVertexBuffer);
 	}
 }
 
@@ -97,8 +101,14 @@ void CAniBuffer::Render()
 {
 	if (this->m_nVertices != 0)
 	{
-		this->SetBuffer();
-		m_pDevice->m_pDeviceContext->Draw(this->m_nVertices, this->m_nStartIndex);
+		//this->SetBuffer();
+		//m_pDevice->m_pDeviceContext->Draw(this->m_nVertices, this->m_nStartIndex);
+
+		for (UINT i = 0; i < m_vecBuffer.size(); ++i)
+		{
+			m_pDevice->m_pDeviceContext->IASetVertexBuffers(0, 1, &this->m_vecBuffer[i], &m_nStride, &this->m_nOffset);
+			m_pDevice->m_pDeviceContext->Draw(m_vecStride[i], this->m_nStartIndex);
+		}
 	}
 
 	for (auto iter : this->m_vecChildBuffer)

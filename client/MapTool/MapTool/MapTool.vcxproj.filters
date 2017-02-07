@@ -148,6 +148,9 @@
     <Filter Include="04.Dialog\StatsTool">
       <UniqueIdentifier>{1c0f4dfe-6c1d-40cf-8b87-3746a5d2d304}</UniqueIdentifier>
     </Filter>
+    <Filter Include="06.Manager\6.MouseCol">
+      <UniqueIdentifier>{ecd70419-360d-433a-bfd3-afd23aab9c88}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -279,6 +282,9 @@
     <ClInclude Include="ObjectTool.h">
       <Filter>04.Dialog\ObjectTool</Filter>
     </ClInclude>
+    <ClInclude Include="MouseCol.h">
+      <Filter>06.Manager\6.MouseCol</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MapTool.cpp">
@@ -385,6 +391,9 @@
     </ClCompile>
     <ClCompile Include="ObjectTool.cpp">
       <Filter>04.Dialog\ObjectTool</Filter>
+    </ClCompile>
+    <ClCompile Include="MouseCol.cpp">
+      <Filter>06.Manager\6.MouseCol</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

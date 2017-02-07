@@ -202,6 +202,7 @@
     <ClInclude Include="MapToolDoc.h" />
     <ClInclude Include="MapToolView.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="MouseCol.h" />
     <ClInclude Include="MyForm.h" />
     <ClInclude Include="Obj.h" />
     <ClInclude Include="ObjectTool.h" />
@@ -243,6 +244,7 @@
     <ClCompile Include="MapToolDoc.cpp" />
     <ClCompile Include="MapToolView.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="MouseCol.cpp" />
     <ClCompile Include="MyForm.cpp" />
     <ClCompile Include="Obj.cpp" />
     <ClCompile Include="ObjectTool.cpp" />

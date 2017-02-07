@@ -27,10 +27,15 @@ public:
 public:
 	HRESULT AddBuffer(const WORD& wContainerIndex, BUFFERTYPE  eBufferType, const wstring wstrResourceKey, const WORD& wCountX = 0, const WORD& wCountZ = 0, const WORD& wInterval = 1);
 	HRESULT AddTexture(const WORD& wContainerIndex,
-		TEXTURETYPE eTextureType,
-		const wstring wstrResourceKey,
-		const wstring wstrFilePath,
+		LPCWSTR wstrResourceKey,
+		LPCWSTR wstrFilePath,
 		const WORD& wConut = 1);
+	HRESULT AddMesh(const WORD& wContainerIdx
+		, MESHTYPE eMeshType
+		, const TCHAR* pMeshKey
+		, const char* pFilePath
+		, const char* pFileName
+		, vector<string> _vecAniName = vector<string>());//Static은 Vector인자를 NULL로, Dynamic은 pFilename을 NULL로 받을것
 
 public:
 	void ResourceReset(const WORD& wContainerIndex);

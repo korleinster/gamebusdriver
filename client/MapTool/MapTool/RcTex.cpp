@@ -91,6 +91,7 @@ HRESULT CRcTex::CreateBuffer(void)
 	//bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	//CDevice::GetInstance()->m_pDevice->CreateBuffer(&bd, NULL, &m_ConstantBuffer);
 
+
 	if (FAILED(hr))
 	{
 		MessageBox(NULL, L"System Message", L"Constant Buffer Error", MB_OK);
@@ -114,5 +115,9 @@ CRcTex * CRcTex::Create(void)
 
 CResources * CRcTex::CloneResource(void)
 {
-	return nullptr;
+	CResources* pResource = this;
+
+	pResource->AddRef();
+
+	return pResource;
 }

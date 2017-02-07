@@ -7,6 +7,7 @@
 #include "MapToolView.h"
 #include "MainFrm.h"
 #include "StaticObject.h"
+#include "ResourcesMgr.h"
 
 CBack::CBack()
 {
@@ -19,6 +20,31 @@ CBack::~CBack()
 
 HRESULT CBack::Initialize(void)
 {
+	
+
+	HRESULT hr = NULL;
+
+	//lstrcpy(m_szLoadMessage, L"텍스쳐 로딩중...");
+	cout << "TextureLoading" << endl;
+	//Texture
+	hr = CResourcesMgr::GetInstance()->AddTexture(
+		RESOURCE_STAGE
+		, L"Texture_Town"
+		, L"../Resource/MeshImage/Town.png");
+	FAILED_CHECK_RETURN(hr, );
+
+
+	//lstrcpy(m_szLoadMessage, L"버퍼 로딩중...");
+	cout << "StaticBufferLoading" << endl;
+	//Buffer
+	hr = CResourcesMgr::GetInstance()->AddMesh(
+		RESOURCE_STAGE,
+		MESH_STATIC
+		, L"Mesh_Town"
+		, "../Resource/Mesh/"
+		, "Town.FBX");
+	FAILED_CHECK_RETURN(hr, );
+	
 	if (FAILED(CreateObj()))
 		return E_FAIL;
 

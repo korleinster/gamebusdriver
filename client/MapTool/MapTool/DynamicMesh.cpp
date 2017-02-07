@@ -141,23 +141,12 @@ HRESULT CDynamicMesh::Load_Model(const char* _pPath, vector<string> _vecAniName,
 		CFbxParser::ParsingVertex(pFbxRootNode, pAni);
 		//버텍스와 uv , 노말을 파싱한다.
 
+		//pAni->pAniBuffer->CreateBuffer2();
+
 		// Animation -----------------------
 		auto AnimStack = _pFBXScene->GetSrcObject<FbxAnimStack>();
 		NULL_CHECK_RETURN(AnimStack, E_FAIL);
-		///////////////////////////////
 
-		/*FbxAnimEvaluator* AniEvaluator = _pFBXScene->GetAnimationEvaluator();
-
-		int numLayers = AnimStack->GetMemberCount();
-		for (int layerIndex = 0; layerIndex < numLayers; layerIndex++)
-		{
-		FbxAnimLayer* animLayer = (FbxAnimLayer*)AnimStack->GetMember(layerIndex);
-		FbxAnimCurve* translationCurve = pFbxRootNode->LclTranslation.GetCurve(animLayer);
-
-
-		}*/
-
-		///////////////////////////////
 		pAni->llAniMaxTime = AnimStack->GetLocalTimeSpan().GetDuration().GetMilliSeconds();
 		//fbx에서 애니매이션의 최대시간을 가져온다.
 		pAni->nAniNodeIdxCnt = pAni->mapIndexByName.size();
@@ -215,13 +204,6 @@ HRESULT CDynamicMesh::Load_Model(const char* _pPath, vector<string> _vecAniName,
 	}
 
 	return S_OK;
-}
-
-
-
-CResources * CDynamicMesh::CloneResource(void)
-{
-	return nullptr;
 }
 
 int CDynamicMesh::Update()
@@ -356,4 +338,13 @@ void CDynamicMesh::BWPlayAnim(int _iIdx)
 	m_vecAni[_iIdx]->pAniBuffer->Render();
 	m_wCurrenAniIdx = _iIdx;
 	//return false;
+}
+
+CResources * CDynamicMesh::CloneResource()
+{
+	CResources* pResource = this;
+
+	pResource->AddRef();
+
+	return pResource;
 }

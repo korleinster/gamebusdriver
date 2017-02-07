@@ -62,6 +62,11 @@
 #include <ctime>
 #include <iostream>
 #include <process.h>
+#include <afxdlgs.h>
+#include <shlwapi.h>
+#include <atlimage.h>
+#include <algorithm>
+#include <fstream>
 
 using namespace std;
 

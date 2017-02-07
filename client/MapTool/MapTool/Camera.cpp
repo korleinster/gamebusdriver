@@ -29,10 +29,6 @@ HRESULT CCamera::Initialize(void)
 
 	m_vDirZ = D3DXVECTOR3(0.f, 0.f, -1.f);
 
-
-	m_dwTime = GetTickCount();
-	m_dwTime = GetTickCount();
-
 	m_bMouseFix = true;
 
 	m_pInfo = CInfo::Create(D3DXVECTOR3(0.f, 0.f, 1.f));
@@ -82,17 +78,18 @@ void CCamera::KeyState(void)
 	float fTime = CTimeMgr::GetInstance()->GetTime();
 
 
-	if (CInput::GetInstance()->GetDIKeyState(DIK_Q) & 0x80)
+	if (CInput::GetInstance()->GetDIKeyState(DIK_O) & 0x80)
 	{
-		if (m_dwTime + 150 < GetTickCount())
-		{
-			m_dwTime = GetTickCount();
-			if (m_bMouseFix == true)
-				m_bMouseFix = false;
+		if (m_bMouseFix == true)
+			m_bMouseFix = false;
 
-			else
-				m_bMouseFix = true;
-		}
+
+	}
+
+	if (CInput::GetInstance()->GetDIKeyState(DIK_P) & 0x80)
+	{
+		if (m_bMouseFix == false)
+			m_bMouseFix = true;
 	}
 
 	if (CInput::GetInstance()->GetDIKeyState(DIK_A) & 0x80)

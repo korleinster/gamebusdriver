@@ -66,7 +66,7 @@ void CLoading::StageLoading(void)
 	hr = CResourcesMgr::GetInstance()->AddTexture(
 		RESOURCE_STAGE
 		, L"Texture_Player"
-		, L"../Resource/MeshImage/Player2.png");
+		, L"../Resource/MeshImage/newplayer.png");
 
 
 	//lstrcpy(m_szLoadMessage, L"버퍼 로딩중...");
@@ -77,7 +77,7 @@ void CLoading::StageLoading(void)
 		MESH_STATIC
 		, L"Mesh_Town"
 		, "../Resource/Mesh/"
-		, "Town.FBX");
+		, "Town01.FBX");
 	FAILED_CHECK_RETURN(hr, );
 
 

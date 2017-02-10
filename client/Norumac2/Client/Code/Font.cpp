@@ -9,27 +9,20 @@
 #include <DWrite.h>
 
 
-CFont::CFont(CDevice* _pDevice)
-	: CResources(_pDevice)
-	, m_pFW1FontWarpper(NULL)
-	, m_pFW1FontFactory(NULL)
-	//, m_pWriteFactory(NULL)
-
-	, m_pDeivceContext(NULL)
-
-	, m_eType(FONT_TYPE_BASIC)
-
-	, m_wstrText(L"")
-	, m_fSize(0.f)
-	, m_nColor(0xFFFFFFFF)
-	, m_nFlag(FW1_LEFT | FW1_TOP | FW1_RESTORESTATE)
-
-	, m_vPos(0.f, 0.f)
-
-	, m_fOutlineSize(1.f)
-	, m_nOutlineColor(0xFF000000)
+CFont::CFont()
 {
-
+	m_pFW1FontWarpper = NULL;
+	m_pFW1FontFactory = NULL;
+	//, m_pWriteFactory(NULL)
+	m_pDeivceContext = NULL;
+	m_eType = FONT_TYPE_BASIC;
+	m_wstrText = L"";
+	m_fSize = 0.f;
+	m_nColor = 0xFFFFFFFF;
+	m_nFlag = FW1_LEFT | FW1_TOP | FW1_RESTORESTATE;
+	m_vPos = D3DXVECTOR2(0.f, 0.f);
+	m_fOutlineSize = 1.f;
+	m_nOutlineColor = 0xFF000000;
 }
 
 CFont::~CFont()

@@ -47,7 +47,7 @@ public:
 
 
 protected:
-	explicit CFont(CDevice*);
+	 CFont();
 public:
 	virtual ~CFont();
 };

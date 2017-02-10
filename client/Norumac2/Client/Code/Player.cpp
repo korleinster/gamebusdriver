@@ -49,7 +49,7 @@ HRESULT CPlayer::Initialize(void)
 	//m_pInfo->m_fAngle[ANGLE_X] = /*D3DX_PI / 2 * -1.f;*/D3DXToRadian(-90);
 	//m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 	//m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
-	m_pInfo->m_vScale = D3DXVECTOR3(0.01f, 0.01f, 0.01f);
+	m_pInfo->m_vScale = D3DXVECTOR3(0.05f, 0.05f, 0.05f);
 	//m_pInfo->m_vScale = D3DXVECTOR3(10.f, 10.f, 10.f);
 
 	CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, this);

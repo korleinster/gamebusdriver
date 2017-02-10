@@ -135,25 +135,25 @@ HRESULT CLogo::Add_Dynamic_Buffer(void)
 	{
 		HRESULT hr = NULL;
 
-		//cout << "DynamicBufferLoading" << endl;
-		//vector<string> vecAni;
+		cout << "DynamicBufferLoading" << endl;
+		vector<string> vecAni;
 
-		////여기에 아마 메모장통해서 벡터에다가 꼴아박아야할거같음. 일단 가라침
+		//여기에 아마 메모장통해서 벡터에다가 꼴아박아야할거같음. 일단 가라침
 
-		//vecAni.push_back("newplayer");
+		vecAni.push_back("newplayer");
 
-		//hr = CResourcesMgr::GetInstance()->AddMesh(
-		//	RESOURCE_STAGE,
-		//	MESH_DYNAMIC,
-		//	L"Player_IDLE",
-		//	"../Resource/Mesh/",
-		//	"", vecAni);
-		//FAILED_CHECK_RETURN(hr, E_FAIL);
+		hr = CResourcesMgr::GetInstance()->AddMesh(
+			RESOURCE_STAGE,
+			MESH_DYNAMIC,
+			L"Player_IDLE",
+			"../Resource/Mesh/",
+			"", vecAni);
+		FAILED_CHECK_RETURN(hr, E_FAIL);
 
 
-		//CAnimationMgr::GetInstance()->AddAnimation(L"Player", &vecAni);
+		CAnimationMgr::GetInstance()->AddAnimation(L"Player", &vecAni);
 
-		//vecAni.clear();
+		vecAni.clear();
 
 		cout << "SceneLoading" << endl;
 

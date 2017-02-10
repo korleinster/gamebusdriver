@@ -30,9 +30,9 @@ CStaticObject::~CStaticObject()
 	Release();
 }
 
-HRESULT CStaticObject::Initialize(void)
+HRESULT CStaticObject::Initialize(const TCHAR* pMeshKey, const TCHAR* pTextureKey)
 {
-	if (FAILED(AddComponent()))
+	if (FAILED(AddComponent(pMeshKey,pTextureKey)))
 		return E_FAIL;
 	m_pInfo->m_fAngle[ANGLE_X] = /*D3DX_PI / 2 * -1.f;*/D3DXToRadian(-90);
 	//m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
@@ -76,10 +76,10 @@ void CStaticObject::Render(void)
 
 }
 
-CStaticObject * CStaticObject::Create(void)
+CStaticObject * CStaticObject::Create(const TCHAR* pMeshKey, const TCHAR* pTextureKey)
 {
 	CStaticObject* pObj = new CStaticObject;
-	if (FAILED(pObj->Initialize()))
+	if (FAILED(pObj->Initialize(pMeshKey,pTextureKey)))
 		::Safe_Delete(pObj);
 
 	return pObj;
@@ -92,7 +92,7 @@ void CStaticObject::Release(void)
 	Safe_Delete(m_pTexture);
 }
 
-HRESULT CStaticObject::AddComponent(void)
+HRESULT CStaticObject::AddComponent(const TCHAR* pMeshKey, const TCHAR* pTextureKey)
 {
 	CComponent* pComponent = NULL;
 
@@ -102,13 +102,13 @@ HRESULT CStaticObject::AddComponent(void)
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Transform", pComponent));
 
 	//StaticMesh
-	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Mesh_Town");
+	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, pMeshKey);
 	m_pBuffer = dynamic_cast<CStaticMesh*>(pComponent);
 	NULL_CHECK_RETURN(m_pBuffer, E_FAIL);
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Mesh", pComponent));
 
 	//Texture
-	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Texture_Town");
+	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, pTextureKey);
 	m_pTexture = dynamic_cast<CTexture*>(pComponent);
 	NULL_CHECK_RETURN(m_pTexture, E_FAIL);
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Texture", pComponent));

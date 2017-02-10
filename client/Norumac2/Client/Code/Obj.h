@@ -35,7 +35,9 @@ public:
 	
 
 public:
-	void SetPos(D3DXVECTOR3 vPos); player_data*	GetPacketData(void);
+	void SetPos(D3DXVECTOR3 vPos); 
+	void SetScale(D3DXVECTOR3 vScale);
+	player_data*	GetPacketData(void);
 	void SetPacketData(player_data* pPacketData);
 
 protected:

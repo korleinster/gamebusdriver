@@ -15,9 +15,9 @@ public:
 	ID3D11BlendState*					m_pBlendState;
 
 private:
-	virtual HRESULT CreateTexture(LPCWSTR szFileFath);
+	virtual HRESULT CreateTexture(LPCWSTR szFileFath, WORD wCnt);
 public:
-	static CTexture* Create(LPCWSTR szFileFath);
+	static CTexture* Create(LPCWSTR szFileFath,WORD wCnt);
 public:
 	virtual CResources* CloneResource(void);
 	DWORD Release(void);

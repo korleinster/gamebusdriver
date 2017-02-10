@@ -119,7 +119,7 @@ HRESULT CResourcesMgr::AddTexture(const WORD & wContainerIndex, LPCWSTR wstrReso
 	}
 	//pDevice->AddRef();
 
-	pResource = CTexture::Create(wstrFilePath);
+	pResource = CTexture::Create(wstrFilePath, wConut);
 	NULL_CHECK_RETURN_MSG(pResource, E_FAIL, L"리소스 할당 실패");
 
 	m_pmapResource[wContainerIndex].insert(map<wstring, CResources*>::value_type(wstrResourceKey, pResource));

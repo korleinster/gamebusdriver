@@ -20,17 +20,17 @@ private:
 	VTXTEX*			m_pVerTex;
 
 public:
-	virtual HRESULT Initialize(void);
+	virtual HRESULT Initialize(const TCHAR* pMeshKey, const TCHAR* pTextureKey);
 	virtual int		Update(void);
 	virtual void	Render(void);
 	void			KeyInput(void);
 	Packet*			GetPacket(void);
 
 public:
-	static CStaticObject* Create(void);
+	static CStaticObject* Create(const TCHAR* pMeshKey, const TCHAR* pTextureKey);
 	void	Release(void);
 
 private:
-	HRESULT	AddComponent(void);
+	HRESULT	AddComponent(const TCHAR* pMeshKey, const TCHAR* pTextureKey);
 };
 

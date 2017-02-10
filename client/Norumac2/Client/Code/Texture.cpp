@@ -24,36 +24,47 @@ CTexture::~CTexture()
 	Release();
 }
 
-HRESULT CTexture::CreateTexture(LPCWSTR szFileFath)
+HRESULT CTexture::CreateTexture(LPCWSTR szFileFath,WORD wCnt)
 {
 	CDevice* pGrapicDev = CDevice::GetInstance();
 	HRESULT hr = NULL;
-	hr = D3DX11CreateShaderResourceViewFromFile(pGrapicDev->m_pDevice, szFileFath, NULL, NULL, &m_pTextureRV, NULL);
-	if (FAILED(hr))
+
+	if (wCnt == 0)
 		return E_FAIL;
 
-	D3D11_SAMPLER_DESC sampDesc;
-	ZeroMemory(&sampDesc, sizeof(sampDesc));
-	sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-	sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-	sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-	sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-	sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
-	sampDesc.MinLOD = 0;
-	sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
-	hr = pGrapicDev->m_pDevice->CreateSamplerState(&sampDesc, &m_pSamplerLinear);
-	
-	if (FAILED(hr))
-		return hr;
+	TCHAR szFullPath[MAX_PATH] = L"";
+
+	for (size_t i = 0; i < wCnt; i++)
+	{
+		wsprintf(szFullPath, szFileFath, i);
+
+		hr = D3DX11CreateShaderResourceViewFromFile(pGrapicDev->m_pDevice, szFullPath, NULL, NULL, &m_pTextureRV, NULL);
+		if (FAILED(hr))
+			return E_FAIL;
+
+		D3D11_SAMPLER_DESC sampDesc;
+		ZeroMemory(&sampDesc, sizeof(sampDesc));
+		sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+		sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+		sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+		sampDesc.MinLOD = 0;
+		sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
+		hr = pGrapicDev->m_pDevice->CreateSamplerState(&sampDesc, &m_pSamplerLinear);
+
+		if (FAILED(hr))
+			return hr;
+	}
 
 	return S_OK;
 }
 
-CTexture * CTexture::Create(LPCWSTR szFileFath)
+CTexture * CTexture::Create(LPCWSTR szFileFath,WORD wCnt)
 {
 	CTexture* pTexture = new CTexture;
 
-	if (FAILED(pTexture->CreateTexture(szFileFath)))
+	if (FAILED(pTexture->CreateTexture(szFileFath,wCnt)))
 	{
 		::Safe_Delete(pTexture);
 	}

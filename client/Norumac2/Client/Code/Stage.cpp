@@ -86,11 +86,29 @@ HRESULT CStage::CreateObj(void)
 	CRenderMgr* pRenderer = CRenderMgr::GetInstance();
 	//터레인
 	CObj* pObj = NULL;
-	pObj = CStaticObject::Create();
-	if (pObj == NULL)
-		return E_FAIL;
 
-	CObjMgr::GetInstance()->AddObject(L"StaticObject", pObj);
+	///////////////야매///////////////
+	TCHAR  szMeshKey[MAX_PATH] = L"";
+	TCHAR  szTexKey[MAX_PATH] = L"";
+	int iHigh = 0;
+
+
+	for (size_t i = 0; i < 25; ++i)
+	{
+		iHigh = i % 5;
+		wsprintf(szMeshKey, L"Mesh_Town%d", i);
+		wsprintf(szTexKey, L"Texture_Town%d", i);
+
+		pObj = CStaticObject::Create(szMeshKey, szTexKey);
+		if (pObj == NULL)
+			return E_FAIL;
+
+		pObj->SetScale(D3DXVECTOR3(0.01f, 0.01f, 0.01f));
+		pObj->SetPos(D3DXVECTOR3(5.f*iHigh, 0.f, 5.f*i));
+		
+
+		CObjMgr::GetInstance()->AddObject(L"StaticObject", pObj);
+	}
 	
 
 	for (int i = 0; i < 20; ++i)
@@ -107,8 +125,8 @@ HRESULT CStage::CreateObj(void)
 		CObjMgr::GetInstance()->AddObject(L"Flower", pObj);
 	}
 
-	pObj = CPlayer::Create();
-	CObjMgr::GetInstance()->AddObject(L"Player", pObj);
+	/*pObj = CPlayer::Create();
+	CObjMgr::GetInstance()->AddObject(L"Player", pObj);*/
 	
 
 

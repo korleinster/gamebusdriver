@@ -72,6 +72,12 @@ void CObj::SetPos(D3DXVECTOR3 vPos)
 		m_pInfo->m_vPos = vPos;
 }
 
+void CObj::SetScale(D3DXVECTOR3 vScale)
+{
+	if (m_pInfo != NULL)
+		m_pInfo->m_vScale = vScale;
+}
+
 void CObj::Compute_ViewZ(const D3DXVECTOR3 * pPos)
 {
 	D3DXMATRIX		matView;

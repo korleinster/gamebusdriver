@@ -119,7 +119,7 @@ void CTerrain::Release(void)
 
 HRESULT CTerrain::AddComponent(void)
 {
-	CComponent* pComponent = NULL;
+	/*CComponent* pComponent = NULL;
 
 	m_pInfo = CInfo::Create(g_vLook);
 	pComponent = m_pInfo;
@@ -141,7 +141,7 @@ HRESULT CTerrain::AddComponent(void)
 	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Texture", pComponent));
 
 	m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"VS");
-	m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"PS");;
+	m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"PS");;*/
 
 
 	

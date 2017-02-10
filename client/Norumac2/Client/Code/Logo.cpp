@@ -140,7 +140,7 @@ HRESULT CLogo::Add_Dynamic_Buffer(void)
 
 		//여기에 아마 메모장통해서 벡터에다가 꼴아박아야할거같음. 일단 가라침
 
-		vecAni.push_back("Player3");
+		vecAni.push_back("newplayer");
 
 		hr = CResourcesMgr::GetInstance()->AddMesh(
 			RESOURCE_STAGE,

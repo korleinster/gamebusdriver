@@ -31,13 +31,14 @@
 
 #include <d3d11.h>
 #include <d3dx11.h>
-#include <D3DX10Math.h>
+//#include "..\..\..\DX9\D3DX10Math.h"
+//#include "..\..\..\DX9\d3dx9math.h"
 #include <d3dcompiler.h>
 #include <xnamath.h>
 
 #include <fbxsdk.h>
 
-//#include "d3dx11effect.h"
+// #include "d3dx11effect.h"
 
 #define DIRECTINPUT_VERSION	0x0800
 #include <dinput.h>

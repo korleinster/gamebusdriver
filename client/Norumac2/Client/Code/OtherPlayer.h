@@ -35,5 +35,6 @@ public:
 
 private:
 	HRESULT	AddComponent(void);
+	void ChangeDir(void);
 };
 

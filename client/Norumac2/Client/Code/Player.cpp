@@ -31,6 +31,7 @@ CPlayer::CPlayer()
 	m_pVerTex = NULL;
 	m_pTerrainCol = NULL;
 	m_fSeverTime = 0.f;
+	//m_eObjDir = OBJDIR_UP;
 	test = false;
 
 	m_Packet = new Packet[MAX_BUF_SIZE];
@@ -49,7 +50,7 @@ HRESULT CPlayer::Initialize(void)
 	//m_pInfo->m_fAngle[ANGLE_X] = /*D3DX_PI / 2 * -1.f;*/D3DXToRadian(-90);
 	//m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 	//m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
-	m_pInfo->m_vScale = D3DXVECTOR3(0.01f, 0.01f, 0.01f);
+	m_pInfo->m_vScale = D3DXVECTOR3(0.05f, 0.05f, 0.05f);
 	//m_pInfo->m_vScale = D3DXVECTOR3(10.f, 10.f, 10.f);
 
 	CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, this);
@@ -66,6 +67,8 @@ int CPlayer::Update(void)
 	if (test == false)
 	{
 		m_pInfo->m_ServerInfo = *g_client.getPlayerData();
+		g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
+		g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
 		test = true;
 	}
 
@@ -74,19 +77,16 @@ int CPlayer::Update(void)
 
 	if (m_fSeverTime > 0.5f)
 	{
-		m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
-		m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
-		/*m_pInfo->m_ServerInfo.dir.x = m_pInfo->m_vDir.x;
-		m_pInfo->m_ServerInfo.dir.y = m_pInfo->m_vDir.y;
-		m_pInfo->m_ServerInfo.dir.z = m_pInfo->m_vDir.z;*/
-		g_client.sendPacket(sizeof(player_data), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo));
-
+		
 		m_fSeverTime = 0.f;
 	}
 
 	D3DXVec3TransformNormal(&m_pInfo->m_vDir, &g_vLook, &m_pInfo->m_matWorld);
 
 	//cout << m_pInfo->m_vDir.x << "/" << m_pInfo->m_vDir.y << "/" << m_pInfo->m_vDir.z << endl;
+
+	//cout << "Player pos: " << m_pInfo->m_vPos.x << "/" << m_pInfo->m_vPos.y << "/" << m_pInfo->m_vPos.z << endl;
+
 
 	KeyInput();
 	CObj::Update();
@@ -182,25 +182,58 @@ void CPlayer::KeyInput()
 	//g_client->m_recvbuf
 	if (CInput::GetInstance()->GetDIKeyState(DIK_UP) & 0x80)
 	{
+		//m_eObjDir = OBJDIR_UP;
+		m_pInfo->m_ServerInfo.dir = KEYINPUT_UP;
+		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(135.f);
 		m_pInfo->m_vPos += m_pInfo->m_vDir * 50.f * fTime;
+
+		m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
+		m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
+		g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
+		g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
 	}
 
 	if (CInput::GetInstance()->GetDIKeyState(DIK_DOWN) & 0x80)
 	{
-		m_pInfo->m_vPos -= m_pInfo->m_vDir * 50 * fTime;
+		//m_eObjDir = OBJDIR_DOWN;cout
+		m_pInfo->m_ServerInfo.dir = KEYINPUT_DOWN;
+		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(315.f);
+
+		m_pInfo->m_vPos += m_pInfo->m_vDir * 50.f * fTime;
+
+		m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
+		m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
+		g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
+		g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
 	}
 
 	if (CInput::GetInstance()->GetDIKeyState(DIK_LEFT) & 0x80)
 	{
-		m_pInfo->m_fAngle[ANGLE_Y] -= D3DXToRadian(90.f * fTime);
+		//m_eObjDir = OBJDIR_LEFT;
+		m_pInfo->m_ServerInfo.dir = KEYINPUT_LEFT;
+		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(45.f);
+		m_pInfo->m_vPos += m_pInfo->m_vDir * 50.f * fTime;
+
+		m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
+		m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
+		g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
+		g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
 	}
 
 	if (CInput::GetInstance()->GetDIKeyState(DIK_RIGHT) & 0x80)
 	{
-		m_pInfo->m_fAngle[ANGLE_Y] += D3DXToRadian(90.f * fTime);
+		//m_eObjDir = OBJDIR_RIGHT;
+		m_pInfo->m_ServerInfo.dir = KEYINPUT_RIGHT;
+		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(225.f);
+		m_pInfo->m_vPos += m_pInfo->m_vDir * 50.f * fTime;
+
+		m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
+		m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
+		g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
+		g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
 	}
 
-	if (CInput::GetInstance()->GetDIKeyState(DIK_PGUP) & 0x80)
+	/*if (CInput::GetInstance()->GetDIKeyState(DIK_PGUP) & 0x80)
 	{
 		m_pInfo->m_fAngle[ANGLE_Z] += D3DXToRadian(90.f * fTime);
 	}
@@ -218,7 +251,7 @@ void CPlayer::KeyInput()
 	if (CInput::GetInstance()->GetDIKeyState(DIK_END) & 0x80)
 	{
 		m_pInfo->m_fAngle[ANGLE_X] -= D3DXToRadian(90.f * fTime);
-	}
+	}*/
 }
 
 

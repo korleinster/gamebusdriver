@@ -103,8 +103,9 @@ HRESULT CStage::CreateObj(void)
 		if (pObj == NULL)
 			return E_FAIL;
 
-		pObj->SetScale(D3DXVECTOR3(0.01f, 0.01f, 0.01f));
-		pObj->SetPos(D3DXVECTOR3(5.f*iHigh, 0.f, 5.f*i));
+		pObj->SetScale(D3DXVECTOR3(0.05f, 0.05f, 0.05f));
+		//pObj->SetPos(D3DXVECTOR3(0.f, 0.f, 10.f*i));
+		pObj->SetPos(D3DXVECTOR3(0.f, 60.f, 0.f));
 		
 
 		CObjMgr::GetInstance()->AddObject(L"StaticObject", pObj);
@@ -125,8 +126,8 @@ HRESULT CStage::CreateObj(void)
 		CObjMgr::GetInstance()->AddObject(L"Flower", pObj);
 	}
 
-	/*pObj = CPlayer::Create();
-	CObjMgr::GetInstance()->AddObject(L"Player", pObj);*/
+	pObj = CPlayer::Create();
+	CObjMgr::GetInstance()->AddObject(L"Player", pObj);
 	
 
 

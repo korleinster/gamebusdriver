@@ -59,18 +59,14 @@ int COtherPlayer::Update(void)
 	/*if (m_pBuffer->m_bAniEnd == true)
 	m_pBuffer->m_bAniEnd = false;*/
 	
-	// 서버에서 좌표를 받아서 다른 플레이어객체들에게 좌표를 줌. ( 어때요 참 쉽죠? )
-	//m_pInfo->m_vPos.x = reinterpret_cast<player_data *>(&m_Packet[2])->pos.x;
-	//m_pInfo->m_vPos.z = reinterpret_cast<player_data *>(&m_Packet[2])->pos.y;
 
 	m_pInfo->m_vPos.x = m_pInfo->m_ServerInfo.pos.x;
 	m_pInfo->m_vPos.z = m_pInfo->m_ServerInfo.pos.y;
-	//m_pInfo->m_vDir = D3DXVECTOR3(m_pInfo->m_ServerInfo.dir.x, m_pInfo->m_ServerInfo.dir.y, m_pInfo->m_ServerInfo.dir.z);
-
+	ChangeDir();
 	D3DXVec3TransformNormal(&m_pInfo->m_vDir, &g_vLook, &m_pInfo->m_matWorld);
 
 
-	cout <<"OtherPlayer pos: " << m_pInfo->m_vPos.x << "/" << m_pInfo->m_vPos.y << "/" << m_pInfo->m_vPos.z << endl;
+	//cout <<"OtherPlayer pos: " << m_pInfo->m_vPos.x << "/" << m_pInfo->m_vPos.y << "/" << m_pInfo->m_vPos.z << endl;
 
 	CObj::Update();
 	return 0;
@@ -148,5 +144,25 @@ HRESULT COtherPlayer::AddComponent(void)
 
 
 	return S_OK;
+}
+
+void COtherPlayer::ChangeDir(void)
+{
+	if (m_pInfo->m_ServerInfo.dir == KEYINPUT_UP)
+	{
+		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(135.f);
+	}
+	else if (m_pInfo->m_ServerInfo.dir == KEYINPUT_DOWN)
+	{
+		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(315.f);
+	}
+	else if (m_pInfo->m_ServerInfo.dir == KEYINPUT_LEFT)
+	{
+		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(45.f);
+	}
+	else if (m_pInfo->m_ServerInfo.dir == KEYINPUT_RIGHT)
+	{
+		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(225.f);
+	}
 }
 

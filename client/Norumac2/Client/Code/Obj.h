@@ -17,6 +17,7 @@ protected:
 	CDevice*					m_pGrapicDevice;
 	ReleaseType					m_eReleaseType;
 	vector<string>				vecAniName;
+	//OBJECT_DIR					m_eObjDir;
 
 public:
 	virtual HRESULT Initialize(void);

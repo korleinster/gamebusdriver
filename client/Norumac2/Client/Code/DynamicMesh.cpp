@@ -263,6 +263,8 @@ void CDynamicMesh::PlayAnimation(int _iIdx)
 
 	//여기까지
 
+	cout << _iIdx <<":"<< m_fAniPlayTimer << endl;
+
 	for (unsigned int i = 0; i < m_vecAni[_iIdx]->nAniNodeIdxCnt; ++i)
 	{
 		m_vecAni[_iIdx]->pBoneMatrix->m_XMmtxBone[i] = m_vecAni[_iIdx]->ppResultMatrix[int(m_fAniPlayTimer)][i];

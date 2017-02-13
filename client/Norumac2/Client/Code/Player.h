@@ -23,6 +23,7 @@ private:
 	Packet*			m_Packet;
 	float			m_fSeverTime;
 	bool			test;
+	PLAYER_STATE	m_ePlayerState;
 
 
 public:

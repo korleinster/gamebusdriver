@@ -88,6 +88,9 @@ int CPlayer::Update(void)
 
 	//cout << m_pInfo->m_vDir.x << "/" << m_pInfo->m_vDir.y << "/" << m_pInfo->m_vDir.z << endl;
 
+	cout << "Player pos: " << m_pInfo->m_vPos.x << "/" << m_pInfo->m_vPos.y << "/" << m_pInfo->m_vPos.z << endl;
+
+
 	KeyInput();
 	CObj::Update();
 

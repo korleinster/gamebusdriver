@@ -43,7 +43,7 @@ HRESULT COtherPlayer::Initialize(void)
 	if (FAILED(AddComponent()))
 		return E_FAIL;
 
-	m_pInfo->m_vScale = D3DXVECTOR3(0.1f, 0.1f, 0.1f);
+	m_pInfo->m_vScale = D3DXVECTOR3(0.05f, 0.05f, 0.05f);
 	//m_pInfo->m_vScale = D3DXVECTOR3(10.f, 10.f, 10.f);
 	//m_pInfo->m_fAngle[ANGLE_X] = /*D3DX_PI / 2 * -1.f;*/D3DXToRadian(-90);
 
@@ -70,7 +70,7 @@ int COtherPlayer::Update(void)
 	D3DXVec3TransformNormal(&m_pInfo->m_vDir, &g_vLook, &m_pInfo->m_matWorld);
 
 
-	//cout << m_pInfo->m_vDir.x << "/" << m_pInfo->m_vDir.y << "/" << m_pInfo->m_vDir.z << endl;
+	cout <<"OtherPlayer pos: " << m_pInfo->m_vPos.x << "/" << m_pInfo->m_vPos.y << "/" << m_pInfo->m_vPos.z << endl;
 
 	CObj::Update();
 	return 0;

@@ -21,6 +21,16 @@ CInput::~CInput(void)
 
 BYTE CInput::GetDIKeyState(BYTE KeyFlag)
 {
+	HRESULT hr = NULL;
+	hr = m_pKeyBoard->GetDeviceState(sizeof(m_byKetState), (LPVOID)&m_byKetState);
+	if (FAILED(hr))
+	{
+		// If the keyboard lost focus or was not acquired then try to get control back.
+		if ((hr == DIERR_INPUTLOST) || (hr == DIERR_NOTACQUIRED))
+		{
+			m_pKeyBoard->Acquire();
+		}
+	}
 	return m_byKetState[KeyFlag];
 }
 
@@ -62,7 +72,7 @@ HRESULT CInput::InitKeyBoard(HWND hWnd)
 	hr = m_pInput->CreateDevice(GUID_SysKeyboard, &m_pKeyBoard, NULL);
 	FAILED_CHECK(hr);
 
-	m_pKeyBoard->SetCooperativeLevel(hWnd, DISCL_BACKGROUND | DISCL_NONEXCLUSIVE);
+	m_pKeyBoard->SetCooperativeLevel(hWnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
 	FAILED_CHECK(hr);
 
 	m_pKeyBoard->SetDataFormat(&c_dfDIKeyboard);
@@ -91,7 +101,9 @@ HRESULT CInput::InitMouse(HWND hWnd)
 
 void CInput::Release(void)
 {
+	m_pMouse->Unacquire();
 	Safe_Release(m_pMouse);
+	m_pKeyBoard->Unacquire();
 	Safe_Release(m_pKeyBoard);
 	Safe_Release(m_pInput);
 }

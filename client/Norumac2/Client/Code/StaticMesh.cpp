@@ -97,7 +97,7 @@ HRESULT CStaticMesh::Load_StaticMesh(const char* szFilePath,const char* szFileNa
 				++iVTXCounter;
 
 				vPos.x = (float)mControlPoints[iControlPointIndex].mData[0];
-				vPos.y = (float)mControlPoints[iControlPointIndex].mData[1];
+				vPos.y = -(float)mControlPoints[iControlPointIndex].mData[1];
 				vPos.z = (float)mControlPoints[iControlPointIndex].mData[2];
 
 				//uv ¾ò±â
@@ -110,14 +110,14 @@ HRESULT CStaticMesh::Load_StaticMesh(const char* szFilePath,const char* szFileNa
 					case FbxGeometryElement::eDirect:
 					{
 						vOutUV.x = static_cast<float>(VtxUV->GetDirectArray().GetAt(iControlPointIndex).mData[0]);
-						vOutUV.y = 1.f - static_cast<float>(VtxUV->GetDirectArray().GetAt(iControlPointIndex).mData[1]);
+						vOutUV.y = static_cast<float>(VtxUV->GetDirectArray().GetAt(iControlPointIndex).mData[1]);
 					}
 					break;
 					case FbxGeometryElement::eIndexToDirect:
 					{
 						int index = VtxUV->GetIndexArray().GetAt(iControlPointIndex);
 						vOutUV.x = static_cast<float>(VtxUV->GetDirectArray().GetAt(index).mData[0]);
-						vOutUV.y = 1 - static_cast<float>(VtxUV->GetDirectArray().GetAt(index).mData[1]);
+						vOutUV.y =  static_cast<float>(VtxUV->GetDirectArray().GetAt(index).mData[1]);
 					}
 					break;
 

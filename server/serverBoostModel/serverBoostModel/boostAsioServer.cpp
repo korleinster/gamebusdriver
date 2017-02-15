@@ -43,6 +43,7 @@ void boostAsioServer::CheckThisCPUcoreCount()
 void boostAsioServer::start_io_service()
 {	
 	m_worker_threads.reserve(m_cpuCore);
+	g_clients.reserve(1000);
 
 	for (int i = 0; i < m_cpuCore; ++i) { m_worker_threads.emplace_back(new thread{ [&]() -> void { g_io_service.run(); } }); }
 	

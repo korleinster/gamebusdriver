@@ -32,6 +32,7 @@ CStaticObject::~CStaticObject()
 HRESULT CStaticObject::Initialize(const TCHAR* pMeshKey, D3DXVECTOR3 vPos)
 {
 	_tcscpy_s(m_tcKey, pMeshKey);
+	_tcscpy_s(m_tcMeshKey, pMeshKey);
 
 	_tcscat_s(m_tcKey, L".png");
 

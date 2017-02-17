@@ -185,14 +185,14 @@ DWORD * CRcTerrain::LoadImage(void)
 {
 	D3DXIMAGE_INFO		ImgInfo;
 
-	if (FAILED(D3DXGetImageInfoFromFile(L"../Resource/Terrain/Test2.png", &ImgInfo)))
+	if (FAILED(D3DXGetImageInfoFromFile(L"../Resource/Terrain/output2.png", &ImgInfo)))
 	{
 		MessageBox(NULL, L"Can't not open the texture file.", L"Error", MB_OK);
 	}
 	//이건 크기용으로 던져주는것
 
 	if (FAILED(D3DXCreateTextureFromFileEx(CParsingDevice9::GetInstance()->m_pDevice,
-		L"../Resource/Terrain/Test2.png", ImgInfo.Width, ImgInfo.Height,
+		L"../Resource/Terrain/output2.png", ImgInfo.Width, ImgInfo.Height,
 		ImgInfo.MipLevels, 0,
 		ImgInfo.Format, D3DPOOL_MANAGED,
 		D3DX_DEFAULT, D3DX_DEFAULT, 0,

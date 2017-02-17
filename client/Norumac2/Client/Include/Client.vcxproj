@@ -95,7 +95,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>dinput8.lib;d3d11.lib;d3dcompiler.lib;d3dx11d.lib;d3dx9d.lib;dxerr.lib;dxguid.lib;winmm.lib;comctl32.lib;DirectXTex.lib;libfbxsdk-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dinput8.lib;d3d9.lib;d3d11.lib;d3dcompiler.lib;d3dx11d.lib;d3dx9d.lib;dxerr.lib;dxguid.lib;winmm.lib;comctl32.lib;DirectXTex.lib;libfbxsdk-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\..\DX9LIB86;../Library</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -171,6 +171,7 @@
     <ClInclude Include="..\Code\Obj.h" />
     <ClInclude Include="..\Code\ObjMgr.h" />
     <ClInclude Include="..\Code\OtherPlayer.h" />
+    <ClInclude Include="..\Code\ParsingDevice9.h" />
     <ClInclude Include="..\Code\Player.h" />
     <ClInclude Include="..\Code\RcCol.h" />
     <ClInclude Include="..\Code\RcTerrain.h" />
@@ -225,6 +226,7 @@
     <ClCompile Include="..\Code\Obj.cpp" />
     <ClCompile Include="..\Code\ObjMgr.cpp" />
     <ClCompile Include="..\Code\OtherPlayer.cpp" />
+    <ClCompile Include="..\Code\ParsingDevice9.cpp" />
     <ClCompile Include="..\Code\Player.cpp" />
     <ClCompile Include="..\Code\RcCol.cpp" />
     <ClCompile Include="..\Code\RcTerrain.cpp" />

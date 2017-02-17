@@ -154,6 +154,9 @@
     <Filter Include="97.Resources\04.FontMgr\Font">
       <UniqueIdentifier>{402621a1-56cb-4f86-812c-20c135a88881}</UniqueIdentifier>
     </Filter>
+    <Filter Include="95.System\99.PasingDevice">
+      <UniqueIdentifier>{5cd805a9-66fe-4a6b-865b-9c6eec25f9fe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -321,6 +324,9 @@
     <ClInclude Include="..\Code\AnimationMgr.h">
       <Filter>04.Manager\08.AniMgr</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\ParsingDevice9.h">
+      <Filter>95.System\99.PasingDevice</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\MainApp.cpp">
@@ -463,6 +469,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\AnimationMgr.cpp">
       <Filter>04.Manager\08.AniMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ParsingDevice9.cpp">
+      <Filter>95.System\99.PasingDevice</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -38,7 +38,7 @@ HRESULT CBack::Initialize(void)
 	hr = CResourcesMgr::GetInstance()->AddTexture(
 		RESOURCE_STAGE
 		, L"Texture_Terrain"
-		, L"../Resource/Terrain/Terrain0.png");
+		, L"../Resource/Terrain/norumac2.png");
 	FAILED_CHECK_RETURN(hr, E_FAIL);
 
 
@@ -201,7 +201,8 @@ void CBack::ConstObjectMode()
 			return;
 		}
 
-		pObjectTool->m_stCurrentMeshKey = (*iter)->GetKey();
+
+		pObjectTool->m_stCurrentMeshKey = (LPCTSTR)(*iter)->GetMeshKey();
 		pObjectTool->SetCurObject(*iter);
 		pObjectTool->OnInfoReset();
 		

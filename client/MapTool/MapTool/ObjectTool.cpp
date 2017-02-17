@@ -74,6 +74,8 @@ void CObjectTool::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT7, m_fEditPosX);
 	DDX_Text(pDX, IDC_EDIT8, m_fEditPosY);
 	DDX_Text(pDX, IDC_EDIT9, m_fEditPosZ);
+	DDX_Text(pDX, IDC_EDIT10, m_stCurrentMeshKey);
+
 
 }
 

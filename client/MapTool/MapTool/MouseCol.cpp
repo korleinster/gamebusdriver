@@ -53,31 +53,31 @@ void CMouseCol::Translation_ViewSpace(void)
 	D3DXVec3Normalize(&m_vRayDir, &m_vRayDir);
 }
 
-//bool CMouseCol::Translation_ViewSpace2(void)
-//{
-//	POINT	ptMouse = GetMousePos();
-//
-//	if (ptMouse.x < 0 || ptMouse.y > 600)
-//		return false;
-//
-//	D3DXMATRIX	matProj;
-//	m_pDevice->GetTransform(D3DTS_PROJECTION, &matProj);
-//	D3DXVECTOR3	vTemp;
-//
-//	// 뷰 포트 영역에서 투영 역으로 마우스 변환
-//	vTemp.x = ((float(ptMouse.x) / (WINCX >> 1)) - 1.f) / matProj._11;
-//	vTemp.y = ((float(-ptMouse.y) / (WINCY >> 1)) + 1.f) / matProj._22;
-//	vTemp.z = 1.f;
-//
-//	m_vPivotPos = D3DXVECTOR3(0.f, 0.f, 0.f);
-//
-//	m_vRayDir = vTemp - m_vPivotPos;
-//
-//	D3DXVec3Normalize(&m_vRayDir, &m_vRayDir);
-//
-//	return true;
-//
-//}
+bool CMouseCol::Translation_ViewSpace2(void)
+{
+	POINT	ptMouse = GetMousePos();
+
+	if (ptMouse.x < 0 || ptMouse.y > 600)
+		return false;
+
+	D3DXMATRIX	matProj;
+	matProj = CCamera::GetInstance()->m_matProj;
+	D3DXVECTOR3	vTemp;
+
+	// 뷰 포트 영역에서 투영 역으로 마우스 변환
+	vTemp.x = ((float(ptMouse.x) / (WINCX >> 1)) - 1.f) / matProj._11;
+	vTemp.y = ((float(-ptMouse.y) / (WINCY >> 1)) + 1.f) / matProj._22;
+	vTemp.z = 1.f;
+
+	m_vPivotPos = D3DXVECTOR3(0.f, 0.f, 0.f);
+
+	m_vRayDir = vTemp - m_vPivotPos;
+
+	D3DXVec3Normalize(&m_vRayDir, &m_vRayDir);
+
+	return true;
+
+}
 
 
 void CMouseCol::Translation_Local(const D3DXMATRIX* pmatWolrd)
@@ -170,7 +170,10 @@ void CMouseCol::SetSize(int iCntX, int iCntZ, int iItv)
 }
 bool CMouseCol::MeshPick(D3DXVECTOR3* pOut, vector<VTXTEX>* pVecVtx, int iCnt)
 {
-	Translation_ViewSpace();
+	if (Translation_ViewSpace2() == false)
+	{
+		return false;
+	}
 
 	D3DXMATRIX		matIdentity;
 	D3DXMatrixIdentity(&matIdentity);
@@ -181,7 +184,7 @@ bool CMouseCol::MeshPick(D3DXVECTOR3* pOut, vector<VTXTEX>* pVecVtx, int iCnt)
 
 	float	fU, fV, fDist;
 
-	for (int z = 0; z < m_iCntZ - 1; ++z)
+	for (int z = 0; z < iCnt - 1; ++z)
 	{
 		for (int x = 0; x < iCnt - 1; ++x)
 		{
@@ -200,6 +203,8 @@ bool CMouseCol::MeshPick(D3DXVECTOR3* pOut, vector<VTXTEX>* pVecVtx, int iCnt)
 
 				return true;
 			}
+			else
+				return false;
 
 			// 
 			if (D3DXIntersectTri(&pVecVtx->at(iIndex).vPos,
@@ -214,6 +219,8 @@ bool CMouseCol::MeshPick(D3DXVECTOR3* pOut, vector<VTXTEX>* pVecVtx, int iCnt)
 
 				return true;
 			}
+			else
+				return false;
 		}
 	}
 	return false;

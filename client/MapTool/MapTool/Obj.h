@@ -21,6 +21,7 @@ protected:
 	
 public:
 	TCHAR						m_tcKey[256];
+	TCHAR						m_tcMeshKey[256];
 
 public:
 	virtual HRESULT Initialize(void);
@@ -39,6 +40,7 @@ public:
 	const CComponent*	GetComponent(const wstring&	_wstrComponentKey);
 	VTXTEX*	GetVertex(void) { return m_pVerTex; }
 	TCHAR* GetKey(void){ return m_tcKey; }
+	TCHAR* GetMeshKey(void) { return m_tcMeshKey; }
 	
 
 public:

@@ -8,6 +8,7 @@
 #define IDR_MapToolTYPE                 130
 #define IDD_MYFORM                      310
 #define IDD_OBJECTTOOL                  312
+#define IDD_INTERFACE                   313
 #define IDC_TAB1                        1000
 #define IDC_LIST1                       1001
 #define IDC_LIST2                       1002
@@ -52,6 +53,8 @@
 #define IDC_CHECK3                      1041
 #define IDC_CHECK4                      1042
 #define IDC_CHECK5                      1043
+#define IDC_RADIO11                     1045
+#define IDC_RADIO12                     1046
 
 // Next default values for new objects
 // 
@@ -59,7 +62,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        312
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1045
-#define _APS_NEXT_SYMED_VALUE           313
+#define _APS_NEXT_CONTROL_VALUE         1047
+#define _APS_NEXT_SYMED_VALUE           314
 #endif
 #endif

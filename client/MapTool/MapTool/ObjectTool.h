@@ -23,6 +23,17 @@ public:
 	bool m_bStart;
 	CObj* m_pCurObject;
 	CInfo* m_pBeforTrans;
+	bool m_bFirstLoad;
+	vector<TCHAR*>vecFilename, vecFileKey, vecFilePath;
+	vector <TCHAR*> vecTexKey, vecTexPath;
+	CString m_strCurKey;
+
+public:
+	void	SetCurObject(CObj* pObject = NULL)
+	{
+		m_pCurObject = pObject;
+	}
+
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
@@ -31,6 +42,7 @@ protected:
 public:
 	CButton m_ObjModeRadio[5];
 	CButton m_Decimal[5];
+	CButton m_ObjTypeRadio[2];
 	CListBox m_StaticList;
 	CListBox m_DynamicList;
 	float m_fEditScaleX;
@@ -57,4 +69,8 @@ public:
 	afx_msg void OnPosZControl(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnInfoEdit();
 	afx_msg void OnInfoReset();
+	afx_msg void OnStaticListSel();
+	
+	afx_msg void OnDynamicListSel();
+	CString m_stCurrentMeshKey;
 };

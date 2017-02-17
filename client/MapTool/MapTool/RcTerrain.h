@@ -9,13 +9,16 @@ public:
 	virtual ~CRcTerrain();
 
 public:
+	LPDIRECT3DTEXTURE9 m_pTexHeightMap;
+
+public:
 	virtual HRESULT CreateBuffer(UINT iCountX, UINT iCountZ, UINT iInterval);
 	static CRcTerrain* Create(UINT iCountX, UINT iCountZ, UINT iInterval);
 	virtual CResources * CloneResource(void) override;
 	DWORD*	LoadImage(void);
+	DWORD Release(void);
 
 private:
-	DWORD Release(void);
 
 };
 

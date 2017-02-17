@@ -8,6 +8,9 @@ public:
 	virtual ~CStaticMesh();
 
 public:
+	vector<VTXTEX> vecVTXTEX;
+
+public:
 	static CStaticMesh* Create(const char* szFilePath, const char* szFileName);
 	virtual CResources* CloneResource();
 

@@ -83,7 +83,7 @@ void CObjMgr::Update(void)
 
 }
 
-list<CObj*>*  CObjMgr::Get_ObjList(wstring wstrKey)
+list<CObj*>*  CObjMgr::Get_ObjListForKey(wstring wstrKey)
 {
 	map<wstring, list<CObj*>>::iterator iter = m_mapObj.find(wstrKey);
 

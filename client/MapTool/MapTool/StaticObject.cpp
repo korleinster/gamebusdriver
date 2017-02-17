@@ -29,24 +29,29 @@ CStaticObject::~CStaticObject()
 	Release();
 }
 
-HRESULT CStaticObject::Initialize(void)
+HRESULT CStaticObject::Initialize(const TCHAR* pMeshKey, D3DXVECTOR3 vPos)
 {
-	if (FAILED(AddComponent()))
+	_tcscpy_s(m_tcKey, pMeshKey);
+
+	_tcscat_s(m_tcKey, L".png");
+
+
+
+	if (FAILED(AddComponent(pMeshKey, m_tcKey)))
 		return E_FAIL;
-	m_pInfo->m_fAngle[ANGLE_X] = /*D3DX_PI / 2 * -1.f;*/D3DXToRadian(-90);
-	//m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
-	//m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
+
+	m_pInfo->m_vPos = vPos;
+
+	m_pInfo->m_vScale = D3DXVECTOR3(0.05f, 0.05f, 0.05f);
+
+	//m_pInfo->m_fAngle[ANGLE_X] = /*D3DX_PI / 2 * -1.f;*/D3DXToRadian(-90);
 	//m_pInfo->m_vScale = D3DXVECTOR3(0.01f, 0.01f, 0.01f);
-
-
 
 	return S_OK;
 }
 
 int CStaticObject::Update(void)
 {
-
-
 	D3DXVec3TransformNormal(&m_pInfo->m_vDir, &g_vLook, &m_pInfo->m_matWorld);
 	CObj::Update();
 
@@ -73,10 +78,10 @@ void CStaticObject::Render(void)
 
 }
 
-CStaticObject * CStaticObject::Create(void)
+CStaticObject * CStaticObject::Create(const TCHAR* pMeshKey, D3DXVECTOR3 vPos)
 {
 	CStaticObject* pObj = new CStaticObject;
-	if (FAILED(pObj->Initialize()))
+	if (FAILED(pObj->Initialize(pMeshKey,vPos)))
 		::Safe_Delete(pObj);
 
 	return pObj;
@@ -89,7 +94,7 @@ void CStaticObject::Release(void)
 	Safe_Release(m_pTexture);
 }
 
-HRESULT CStaticObject::AddComponent(void)
+HRESULT CStaticObject::AddComponent(const TCHAR* pMeshKey, const TCHAR* pTextureKey)
 {
 	CComponent* pComponent = NULL;
 
@@ -99,13 +104,13 @@ HRESULT CStaticObject::AddComponent(void)
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Transform", pComponent));
 
 	//StaticMesh
-	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Mesh_Town");
+	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, pMeshKey);
 	m_pBuffer = dynamic_cast<CStaticMesh*>(pComponent);
 	NULL_CHECK_RETURN(m_pBuffer, E_FAIL);
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Mesh", pComponent));
 
 	//Texture
-	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Texture_Town");
+	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, pTextureKey);
 	m_pTexture = dynamic_cast<CTexture*>(pComponent);
 	NULL_CHECK_RETURN(m_pTexture, E_FAIL);
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Texture", pComponent));

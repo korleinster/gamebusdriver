@@ -17,6 +17,7 @@ public:
 
 // 작업입니다.
 public:
+	int m_iCurToolIndex;
 
 // 재정의입니다.
 public:
@@ -33,6 +34,8 @@ public:
 #ifdef _DEBUG
 	virtual void AssertValid() const;
 	virtual void Dump(CDumpContext& dc) const;
+
+	void SetCurToolIndex(int& iIndex);
 #endif
 
 protected:
@@ -44,6 +47,7 @@ public:
 	virtual void OnInitialUpdate();
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	virtual void PostNcDestroy();
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 };
 
 #ifndef _DEBUG  // MapToolView.cpp의 디버그 버전

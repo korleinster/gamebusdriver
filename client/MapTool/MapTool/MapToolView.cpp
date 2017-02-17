@@ -24,6 +24,7 @@
 #include "Back.h"
 #include "RenderMgr.h"
 #include "ObjMgr.h"
+#include "ParsingDevice9.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -40,6 +41,7 @@ BEGIN_MESSAGE_MAP(CMapToolView, CView)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CView::OnFilePrintPreview)
 	ON_WM_TIMER()
+	ON_WM_LBUTTONDOWN()
 END_MESSAGE_MAP()
 
 // CMapToolView 생성/소멸
@@ -107,6 +109,11 @@ void CMapToolView::Dump(CDumpContext& dc) const
 	CView::Dump(dc);
 }
 
+void CMapToolView::SetCurToolIndex(int& iIndex)
+{
+	m_iCurToolIndex = iIndex;
+}
+
 CMapToolDoc* CMapToolView::GetDocument() const // 디버그되지 않은 버전은 인라인으로 지정됩니다.
 {
 	ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CMapToolDoc)));
@@ -144,6 +151,8 @@ void CMapToolView::OnInitialUpdate()
 	g_hWnd = m_hWnd;
 
 	CDevice::GetInstance()->CreateDevice();
+
+	CParsingDevice9::GetInstance()->InitGraphicDev(CParsingDevice9::MODE_WIN, g_hWnd, WINCX, WINCY);
 
 
 	CTimeMgr::GetInstance()->InitTime();
@@ -197,6 +206,8 @@ void CMapToolView::OnInitialUpdate()
 
 
 	SetTimer(1, 10, NULL);
+
+	m_iCurToolIndex = 0;
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
 }
 
@@ -225,6 +236,7 @@ void CMapToolView::PostNcDestroy()
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
 
 	CDevice::GetInstance()->DestroyInstance();
+	CParsingDevice9::GetInstance()->DestroyInstance();
 	CTimeMgr::GetInstance()->DestroyInstance();
 	CCamera::GetInstance()->DestroyInstance();
 	CShaderMgr::GetInstance()->DestroyInstance();
@@ -234,4 +246,23 @@ void CMapToolView::PostNcDestroy()
 	CSceneMgr::GetInstance()->DestroyInstance();
 
 	CView::PostNcDestroy();
+}
+
+
+void CMapToolView::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/o또는 기본값을 호출합니다.
+
+	switch (m_iCurToolIndex)
+	{
+	case 0:
+		((CBack*)CSceneMgr::GetInstance()->GetScene())->ConstObjectMode();
+		break;
+	case 1:
+		break;
+	case 2:
+		break;
+	}
+
+	CView::OnLButtonDown(nFlags, point);
 }

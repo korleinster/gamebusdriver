@@ -151,6 +151,15 @@
     <Filter Include="06.Manager\6.MouseCol">
       <UniqueIdentifier>{ecd70419-360d-433a-bfd3-afd23aab9c88}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.Object\98.Terrain">
+      <UniqueIdentifier>{8744b9a3-67e1-4cbc-bcd0-65fc5b84199d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95.System\99.PasingDevice">
+      <UniqueIdentifier>{b31ecc41-7ec2-47cc-ab4e-4f7c82fb75e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Dialog\InterFace">
+      <UniqueIdentifier>{f7740be6-5464-4b83-8a3c-d23142db698a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -285,6 +294,15 @@
     <ClInclude Include="MouseCol.h">
       <Filter>06.Manager\6.MouseCol</Filter>
     </ClInclude>
+    <ClInclude Include="Terrain.h">
+      <Filter>03.Object\98.Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="ParsingDevice9.h">
+      <Filter>95.System\99.PasingDevice</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface.h">
+      <Filter>04.Dialog\InterFace</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MapTool.cpp">
@@ -394,6 +412,15 @@
     </ClCompile>
     <ClCompile Include="MouseCol.cpp">
       <Filter>06.Manager\6.MouseCol</Filter>
+    </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>03.Object\98.Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="ParsingDevice9.cpp">
+      <Filter>95.System\99.PasingDevice</Filter>
+    </ClCompile>
+    <ClCompile Include="Interface.cpp">
+      <Filter>04.Dialog\InterFace</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

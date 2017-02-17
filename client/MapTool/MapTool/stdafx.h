@@ -41,7 +41,8 @@
 #include <memory.h>
 #include <tchar.h>
 
-
+#include <d3d9.h>
+#include <d3dx9.h>
 #include <d3d11.h>
 #include <d3dx11.h>
 #include <D3DX10Math.h>
@@ -74,6 +75,8 @@ using namespace std;
 #include "Include.h"
 #pragma warning(disable : 4005)
 
+
+#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
 
 
 

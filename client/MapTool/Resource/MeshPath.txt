@@ -1,0 +1,2 @@
+tree1|..\Resource\Mesh\|tree1.FBX
+tree2|..\Resource\Mesh\|tree2.FBX

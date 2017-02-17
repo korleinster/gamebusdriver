@@ -56,7 +56,7 @@ HRESULT CStaticMesh::Load_StaticMesh(const char* szFilePath, const char* szFileN
 	if (!pRootNode)
 		return E_FAIL;
 
-	vector<VTXTEX> vecVTXTEX;
+	
 
 	for (int i = 0; i < pRootNode->GetChildCount(); ++i)
 	{

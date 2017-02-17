@@ -23,7 +23,7 @@ public:
 	HRESULT	ChangeScene(Scene_Tyep _eType);
 	int		Update(void);
 	void	Render(void);
-	Scene_Tyep GetScene(void);
+	CScene* GetScene(void);
 	void Release(void);
 
 

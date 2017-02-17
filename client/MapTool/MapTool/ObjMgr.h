@@ -17,7 +17,7 @@ public:
 	HRESULT SceneChange(void);
 	HRESULT AddObject(wstring wstrKey, CObj* pObj);
 	void	Update(void);
-	list<CObj*>*  Get_ObjList(wstring wstrKey);
+	list<CObj*>*  Get_ObjListForKey(wstring wstrKey);
 
 };
 

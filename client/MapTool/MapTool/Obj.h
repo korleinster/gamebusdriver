@@ -17,6 +17,10 @@ protected:
 	CDevice*					m_pGrapicDevice;
 	ReleaseType					m_eReleaseType;
 	vector<string>				vecAniName;
+	VTXTEX*						m_pVerTex;
+	
+public:
+	TCHAR						m_tcKey[256];
 
 public:
 	virtual HRESULT Initialize(void);
@@ -32,10 +36,15 @@ public:
 	const float&	GetViewZ(void) const;
 	CInfo*			GetInfo(void) { return m_pInfo; }
 	ReleaseType&	GetReleaseType(void) { return m_eReleaseType; }
+	const CComponent*	GetComponent(const wstring&	_wstrComponentKey);
+	VTXTEX*	GetVertex(void) { return m_pVerTex; }
+	TCHAR* GetKey(void){ return m_tcKey; }
 	
 
 public:
 	void SetPos(D3DXVECTOR3 vPos);
+	void SetScale(D3DXVECTOR3 vScale);
+	void SetAngle(D3DXVECTOR3 vAngle);
 
 protected:
 	void Compute_ViewZ(const D3DXVECTOR3* pPos);

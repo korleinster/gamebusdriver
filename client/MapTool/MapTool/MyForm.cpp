@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "MapTool.h"
 #include "MyForm.h"
+#include "MapToolView.h"
 
 
 // CMyForm
@@ -86,7 +87,7 @@ void CMyForm::OnToolTabChange(NMHDR *pNMHDR, LRESULT *pResult)
 			m_pWndShow = &m_Tab5;
 			break;*/
 	}
-	//m_pView->SetCurToolIndex(iIndex);
+	m_pView->SetCurToolIndex(iIndex);
 
 	*pResult = 0;
 	UpdateData(FALSE);

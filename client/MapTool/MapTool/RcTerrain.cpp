@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "RcTerrain.h"
 #include "Device.h"
+#include "ParsingDevice9.h"
 
 
 CRcTerrain::CRcTerrain()
@@ -18,35 +19,57 @@ HRESULT CRcTerrain::CreateBuffer(UINT iCountX, UINT iCountZ, UINT iInterval)
 	m_iVertexStrides = sizeof(VTXTEX);
 	m_iVertexOffsets = 0;
 
+	LoadImage();
 
-	DWORD*		pdwPixel = LoadImage();
+	D3DSURFACE_DESC pSurface;
+	D3DLOCKED_RECT pD3D_Rect;
+
+	m_pTexHeightMap->GetLevelDesc(0, &pSurface);
 
 	UINT iVertexCount = iCountX * iCountZ;
 
 	VTXTEX* Vertex = new VTXTEX[iVertexCount];
 
+	iCountZ = pSurface.Height;
+	iCountX = pSurface.Width;
+
+
+	m_pTexHeightMap->LockRect(0, &pD3D_Rect, NULL, D3DLOCK_READONLY);
 	int		iIndex = 0;
 
 	for (int z = 0; z < iCountZ; ++z)
 	{
 		for (int x = 0; x < iCountX; ++x)
 		{
+			//iIndex = z * iCountX + x;
+
+			//Vertex[iIndex].vPos		= D3DXVECTOR3(float(x) * iInterval,(pdwPixel[iIndex] & 0x000000ff) / 100.f,	float(z) * iInterval);
+			//Vertex[iIndex].vTexUV  = D3DXVECTOR2(x / (iCountX - 1.f), z / (iCountZ - 1.f));
+
 			iIndex = z * iCountX + x;
 
-			Vertex[iIndex].vPos = D3DXVECTOR3(float(x) * iInterval, (pdwPixel[iIndex] & 0x000000ff) / 100.f, float(z) * iInterval);
+			float fX = float(x) * iInterval;
+			float fY = 0.f;
+			float fZ = float(z) * iInterval;
+
+			fY = (float(*((LPDWORD)pD3D_Rect.pBits + x + z * (pD3D_Rect.Pitch / 4)) & 0x000000ff)) / 9.f;
+
+			//Vertex[iIndex].vPos = D3DXVECTOR3(fX, fY, fZ);
+			//Vertex[iIndex].vTex = D3DXVECTOR2(x / (dwCntX - 1.f), z / (dwCntY - 1.f));
+
+			Vertex[iIndex].vPos = D3DXVECTOR3(fX, fY, fZ);
 			Vertex[iIndex].vTexUV = D3DXVECTOR2(x / (iCountX - 1.f), z / (iCountZ - 1.f));
 		}
 	}
+	
 
-
-
-
+	
 	D3D11_BUFFER_DESC vbd;
 	ZeroMemory(&vbd, sizeof(vbd));
-	vbd.Usage = D3D11_USAGE_DEFAULT;
+	vbd.Usage = D3D11_USAGE_DYNAMIC;
 	vbd.ByteWidth = sizeof(VTXTEX) * iVertexCount;
 	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vbd.CPUAccessFlags = 0;
+	vbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	vbd.MiscFlags = 0;
 	vbd.StructureByteStride = 0;
 
@@ -89,7 +112,7 @@ HRESULT CRcTerrain::CreateBuffer(UINT iCountX, UINT iCountZ, UINT iInterval)
 		}
 	}
 	//32768 * 
-
+	
 	D3D11_BUFFER_DESC ibd;
 	ibd.Usage = D3D11_USAGE_DEFAULT;
 	ibd.ByteWidth = sizeof(INDEX32) * m_iIndex;
@@ -151,28 +174,34 @@ DWORD CRcTerrain::Release(void)
 
 CResources * CRcTerrain::CloneResource(void)
 {
-	return nullptr;
+	CResources* pResource = this;
+
+	pResource->AddRef();
+
+	return pResource;
 }
 
 DWORD * CRcTerrain::LoadImage(void)
 {
-	HANDLE		hFile = NULL;
-	DWORD		dwByte = 0;
+	D3DXIMAGE_INFO		ImgInfo;
 
-	hFile = CreateFile(L"../Resource/Terrain/Height.bmp", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (FAILED(D3DXGetImageInfoFromFile(L"../Resource/Terrain/Test2.png", &ImgInfo)))
+	{
+		MessageBox(NULL, L"Can't not open the texture file.", L"Error", MB_OK);
+	}
+	//이건 크기용으로 던져주는것
 
-	BITMAPFILEHEADER			fh;
-	BITMAPINFOHEADER			ih;
+	if (FAILED(D3DXCreateTextureFromFileEx(CParsingDevice9::GetInstance()->m_pDevice,
+		L"../Resource/Terrain/Test2.png", ImgInfo.Width, ImgInfo.Height,
+		ImgInfo.MipLevels, 0,
+		ImgInfo.Format, D3DPOOL_MANAGED,
+		D3DX_DEFAULT, D3DX_DEFAULT, 0,
+		&ImgInfo, NULL, &m_pTexHeightMap)))
+	{
+		MessageBox(NULL, L"Can't not open the texture file.", L"Error", MB_OK);
+	}
+	//이게 레알
 
-	ReadFile(hFile, &fh, sizeof(fh), &dwByte, NULL);
-	ReadFile(hFile, &ih, sizeof(ih), &dwByte, NULL);
 
-	DWORD*		pdwPixel = new DWORD[ih.biWidth * ih.biHeight];
-
-	ReadFile(hFile, pdwPixel, sizeof(DWORD) * ih.biWidth * ih.biHeight, &dwByte, NULL);
-
-
-	CloseHandle(hFile);
-
-	return pdwPixel;
+	return NULL;
 }

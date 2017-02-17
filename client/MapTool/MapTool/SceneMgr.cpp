@@ -69,9 +69,9 @@ void CSceneMgr::Render(void)
 	m_pScene->Render();
 }
 
-Scene_Tyep CSceneMgr::GetScene(void)
+CScene* CSceneMgr::GetScene(void)
 {
-	return m_eType;
+	return m_pScene;
 }
 
 void CSceneMgr::Release(void)

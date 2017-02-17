@@ -8,6 +8,7 @@
 CObj::CObj()
 	:m_pInfo(NULL), m_bZSort(false), m_pGrapicDevice(CDevice::GetInstance()), m_eReleaseType(Release_End)
 {
+	ZeroMemory(m_tcKey, sizeof(TCHAR) * 256);
 }
 
 
@@ -72,6 +73,22 @@ void CObj::SetPos(D3DXVECTOR3 vPos)
 		m_pInfo->m_vPos = vPos;
 }
 
+void CObj::SetScale(D3DXVECTOR3 vScale)
+{
+	if (m_pInfo != NULL)
+		m_pInfo->m_vScale = vScale;
+}
+
+void CObj::SetAngle(D3DXVECTOR3 vAngle)
+{
+	if (m_pInfo != NULL)
+	{
+		m_pInfo->m_fAngle[ANGLE_X] = vAngle.x;
+		m_pInfo->m_fAngle[ANGLE_Y] = vAngle.x;
+		m_pInfo->m_fAngle[ANGLE_Z] = vAngle.x;
+	}
+}
+
 void CObj::Compute_ViewZ(const D3DXVECTOR3 * pPos)
 {
 	D3DXMATRIX		matView;
@@ -92,4 +109,14 @@ void CObj::Compute_ViewZ(const D3DXVECTOR3 * pPos)
 const float & CObj::GetViewZ(void) const
 {
 	return m_fViewZ;
+}
+
+const CComponent* CObj::GetComponent(const wstring& _wstrComponentKey)
+{
+	map<wstring, CComponent*>::iterator iter = m_mapComponent.find(_wstrComponentKey);
+
+	if (iter == m_mapComponent.end())
+		return NULL;
+
+	return iter->second;
 }

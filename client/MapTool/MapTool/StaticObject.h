@@ -17,19 +17,19 @@ private:
 	CShader*		m_pVertexShader;
 	CShader*		m_pPixelShader;
 	CTexture*		m_pTexture;
-	VTXTEX*			m_pVerTex;
+	//VTXTEX*			m_pVerTex;
 
 public:
-	virtual HRESULT Initialize(void);
+	HRESULT Initialize(const TCHAR* pMeshKey, D3DXVECTOR3 vPos);
 	virtual int		Update(void);
 	virtual void	Render(void);
 	void			KeyInput(void);
 
 public:
-	static CStaticObject* Create(void);
+	static CStaticObject* Create(const TCHAR* pMeshKey, D3DXVECTOR3 vPos);
 	void	Release(void);
 
 private:
-	HRESULT	AddComponent(void);
+	HRESULT	AddComponent(const TCHAR* pMeshKey, const TCHAR* pTextureKey);
 };
 

@@ -29,6 +29,9 @@ int CObj::Update(void)
 
 	for (iter; iter != iter_end; ++iter)
 	{
+		if (iter->second == NULL)
+			return 100;
+
 		iter->second->Update();
 	}
 

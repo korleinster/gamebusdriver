@@ -41,7 +41,7 @@ HRESULT CCamera::Initialize(void)
 	MakeProjection();
 
 	m_fCameraDistance = 10.f;
-	m_fCameraSpeed = 10.f;
+	m_fCameraSpeed = 70.f;
 
 	return S_OK;
 }
@@ -50,6 +50,8 @@ int CCamera::Update(void)
 {
 
 	m_pInfo->Update();
+
+	cout << "카메라 속도 : " << m_fCameraSpeed << endl;
 
 	KeyState();
 	MouseMove();
@@ -145,6 +147,16 @@ void CCamera::KeyState(void)
 
 		//m_pInfo->m_vDir.y = 0.f;
 		//m_vAt -= m_pInfo->m_vDir * fTime * m_fCameraSpeed * -1.f;
+	}
+
+	if (CInput::GetInstance()->GetDIKeyState(DIK_NUMPADPLUS) & 0x80)
+	{
+		++m_fCameraSpeed;
+	}
+
+	if (CInput::GetInstance()->GetDIKeyState(DIK_NUMPADMINUS) & 0x80)
+	{
+		--m_fCameraSpeed;
 	}
 
 }

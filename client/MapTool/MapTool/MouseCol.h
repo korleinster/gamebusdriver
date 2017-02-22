@@ -3,7 +3,7 @@
 #include "Include.h"
 #include "MapToolView.h"
 
-
+class CInfo;
 class CMouseCol
 {
 private:
@@ -34,7 +34,7 @@ public:
 	//bool PickTerrainIndex(D3DXVECTOR3* pOut, const VTXTEX* pTerrainVtx);
 	//bool PickObject(D3DXVECTOR3* pOut, CToolsView::MAPCUBE* pMapCube, size_t iMode);
 	void SetSize(int iCntX, int iCntZ, int iItv);
-	bool MeshPick(D3DXVECTOR3* pOut, vector<VTXTEX>* pVecVtx, int iCnt);
+	bool MeshPick(D3DXVECTOR3* pOut, CInfo* pInfo, vector<VTXTEX>* pVecVtx, int iCnt);
 	//bool PickNaviCell(D3DXVECTOR3* pOut, CNaviCell* pCell, int* pOutIndex);
 	//bool PickOccBox(D3DXVECTOR3* pOut, VTXCOL* pVertex, INDEX16* pIndex, const D3DXMATRIX* pmatWorld);
 

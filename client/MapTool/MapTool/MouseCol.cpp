@@ -115,6 +115,7 @@ void CMouseCol::PickTerrain(D3DXVECTOR3* pOut, const VTXTEX* pTerrainVtx)
 	D3DXMatrixIdentity(&matIdentity);
 	Translation_Local(&matIdentity);
 
+
 	const VTXTEX* pVertex = pTerrainVtx;
 
 	float	fU, fV, fDist;
@@ -168,7 +169,7 @@ void CMouseCol::SetSize(int iCntX, int iCntZ, int iItv)
 	m_iCntZ = iCntZ;
 	m_iItv = iItv;
 }
-bool CMouseCol::MeshPick(D3DXVECTOR3* pOut, vector<VTXTEX>* pVecVtx, int iCnt)
+bool CMouseCol::MeshPick(D3DXVECTOR3* pOut, CInfo* pInfo, vector<VTXTEX>* pVecVtx, int iCnt)
 {
 	if (Translation_ViewSpace2() == false)
 	{
@@ -178,6 +179,37 @@ bool CMouseCol::MeshPick(D3DXVECTOR3* pOut, vector<VTXTEX>* pVecVtx, int iCnt)
 	D3DXMATRIX		matIdentity;
 	D3DXMatrixIdentity(&matIdentity);
 	Translation_Local(&matIdentity);
+
+	D3DXMATRIX	matObjScale, matObjRotX, matObjRotY, matObjRotZ, matObjTrans, matObjWorld, matSourcePos;
+
+	//스자이공
+	D3DXMatrixScaling(&matObjScale, pInfo->m_vScale.x, pInfo->m_vScale.y, pInfo->m_vScale.z);
+	D3DXMatrixRotationX(&matObjRotX, pInfo->m_fAngle[ANGLE_X]);
+	D3DXMatrixRotationY(&matObjRotY, pInfo->m_fAngle[ANGLE_Y]);
+	D3DXMatrixRotationZ(&matObjRotZ, pInfo->m_fAngle[ANGLE_Z]);
+	D3DXMatrixTranslation(&matObjTrans, pInfo->m_vPos.x, pInfo->m_vPos.y, pInfo->m_vPos.z);
+
+	matObjWorld = matObjScale * matObjRotX * matObjRotY * matObjRotZ * matObjTrans;
+	vector<D3DXVECTOR3>		vVertexPos;
+	//VTXTEX  pvertex;
+
+	vector<VTXTEX>::iterator vec_iter = pVecVtx->begin();
+	vector<VTXTEX>::iterator vec_iterend = pVecVtx->end();
+
+
+	for (; vec_iter != vec_iterend; ++vec_iter)
+	{
+		D3DXVECTOR3		vResultPos;
+
+		D3DXMatrixTranslation(&matSourcePos, (*vec_iter).vPos.x, (*vec_iter).vPos.y, (*vec_iter).vPos.z);
+		D3DXMATRIX matResult = matSourcePos * matObjWorld;
+		vResultPos.x = matResult._41;
+		vResultPos.y = matResult._42;
+		vResultPos.z = matResult._43;
+		vVertexPos.push_back(vResultPos);
+
+	}
+
 
 	//const VTXTEX* pVertex = pVecVtx;
 
@@ -190,37 +222,37 @@ bool CMouseCol::MeshPick(D3DXVECTOR3* pOut, vector<VTXTEX>* pVecVtx, int iCnt)
 		{
 			int		iIndex = z * iCnt + x;
 
+			if (iIndex + iCnt + 1 >= vVertexPos.size() || iIndex + iCnt >= vVertexPos.size() || iIndex + 1 >= vVertexPos.size())
+				return false;
+
 			// 오른쪽 위 폴리곤
-			if (D3DXIntersectTri(&pVecVtx->at(iIndex + iCnt + 1).vPos,
-				&pVecVtx->at(iIndex + iCnt).vPos,
-				&pVecVtx->at(iIndex + 1).vPos,
+			if (D3DXIntersectTri(&vVertexPos.at(iIndex + iCnt + 1),
+				&vVertexPos.at(iIndex + iCnt),
+				&vVertexPos.at(iIndex + 1),
 				&m_vPivotPos, &m_vRayDir,
 				&fU, &fV, &fDist))
 			{
-				*pOut = pVecVtx->at(iIndex + iCnt + 1).vPos +
-					(pVecVtx->at(iIndex + iCnt).vPos - pVecVtx->at(iIndex + iCnt + 1).vPos) * fU +
-					(pVecVtx->at(iIndex + 1).vPos - pVecVtx->at(iIndex + iCnt + 1).vPos) * fV;
+				*pOut = vVertexPos.at(iIndex + iCnt + 1) +
+					(vVertexPos.at(iIndex + iCnt) - vVertexPos.at(iIndex + iCnt + 1)) * fU +
+					(vVertexPos.at(iIndex + 1) - vVertexPos.at(iIndex + iCnt + 1)) * fV;
 
 				return true;
 			}
-			else
-				return false;
 
 			// 
-			if (D3DXIntersectTri(&pVecVtx->at(iIndex).vPos,
-				&pVecVtx->at(iIndex + iCnt).vPos,
-				&pVecVtx->at(iIndex + 1).vPos,
+			if (D3DXIntersectTri(&vVertexPos.at(iIndex),
+				&vVertexPos.at(iIndex + iCnt),
+				&vVertexPos.at(iIndex + 1),
 				&m_vPivotPos, &m_vRayDir,
 				&fU, &fV, &fDist))
 			{
-				*pOut = pVecVtx->at(iIndex).vPos +
-					(pVecVtx->at(iIndex + 1).vPos - pVecVtx->at(iIndex).vPos) * fV +
-					(pVecVtx->at(iIndex + iCnt).vPos - pVecVtx->at(iIndex).vPos) * fU;
+				*pOut = vVertexPos.at(iIndex) +
+					(vVertexPos.at(iIndex + 1) - vVertexPos.at(iIndex)) * fV +
+					(vVertexPos.at(iIndex + iCnt) - vVertexPos.at(iIndex)) * fU;
 
 				return true;
 			}
-			else
-				return false;
+
 		}
 	}
 	return false;

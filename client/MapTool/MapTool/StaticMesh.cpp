@@ -40,6 +40,10 @@ HRESULT CStaticMesh::Load_StaticMesh(const char* szFilePath, const char* szFileN
 
 	string	strFullPath;
 
+	FbxAxisSystem CurrAxisSystem;//현재 fbx씬내에서의 좌표축을 가져올 변수
+	FbxAxisSystem DestAxisSystem = FbxAxisSystem::eMayaYUp;//클라내에서 좌표축을 설정.
+	FbxGeometryConverter lGeomConverter(_pFBXManager);
+
 	strFullPath.clear();
 	strFullPath = szFilePath;
 	strFullPath += szFileName;//경로에 파일이름 추가
@@ -48,6 +52,12 @@ HRESULT CStaticMesh::Load_StaticMesh(const char* szFilePath, const char* szFileN
 		FAILED_CHECK_MSG(E_FAIL, L"Static Mesh Init Failed");
 	if (!(_pImporter->Import(_pFBXScene)))
 		FAILED_CHECK_MSG(E_FAIL, L"Static Mesh Import Failed");
+
+
+	CurrAxisSystem = _pFBXScene->GetGlobalSettings().GetAxisSystem();
+	//fbx의 씬에서 좌표축을 가져온다.
+	if (CurrAxisSystem != DestAxisSystem) DestAxisSystem.ConvertScene(_pFBXScene);
+	//지정한 좌표축과 fbx씬의 좌표축과 비교하여 다르면 지정한 좌표축으로 바꾼다.
 
 	FbxGeometryConverter clsConverter(_pFBXManager);
 	clsConverter.Triangulate(_pFBXScene, false);

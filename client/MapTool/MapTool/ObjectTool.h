@@ -33,6 +33,16 @@ public:
 	{
 		m_pCurObject = pObject;
 	}
+	void SetPickPos(D3DXVECTOR3 vPos)
+	{
+		UpdateData(TRUE);
+
+		m_fEditPosX = vPos.x;
+		m_fEditPosY = vPos.y;
+		m_fEditPosZ = vPos.z;
+
+		UpdateData(FALSE);
+	}
 
 
 protected:
@@ -73,4 +83,5 @@ public:
 	
 	afx_msg void OnDynamicListSel();
 	CString m_stCurrentMeshKey;
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };

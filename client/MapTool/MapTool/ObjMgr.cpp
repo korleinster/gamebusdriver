@@ -93,4 +93,30 @@ list<CObj*>*  CObjMgr::Get_ObjListForKey(wstring wstrKey)
 	return &(*iter).second;
 }
 
+void CObjMgr::DeleteByCompare(const CObj* pGameObject)
+{
+	map<wstring, list<CObj*>>::iterator		mapiter = m_mapObj.begin();
+	map<wstring, list<CObj*>>::iterator		mapiter_end = m_mapObj.end();
 
+	for (mapiter; mapiter != mapiter_end; ++mapiter)
+	{
+		list<CObj*>::iterator	iterlist = mapiter->second.begin();
+		list<CObj*>::iterator	iterlist_end = mapiter->second.end();
+
+		for (iterlist; iterlist != iterlist_end; ++iterlist)
+		{
+			if ((*iterlist) == pGameObject)
+				break;
+		}
+		if (iterlist != iterlist_end)
+		{
+			mapiter->second.erase(iterlist);
+			break;
+		}
+	}
+	if (mapiter == mapiter_end)
+		return;
+
+	if (mapiter->second.empty())
+		m_mapObj.erase(mapiter);
+}

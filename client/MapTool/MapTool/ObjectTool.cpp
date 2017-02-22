@@ -11,6 +11,10 @@
 #include "Info.h"
 #include "MainFrm.h"
 #include "MapToolView.h"
+#include "Back.h"
+#include "SceneMgr.h"
+#include "ObjMgr.h"
+#include "RenderMgr.h"
 
 
 // CObjectTool 대화 상자입니다.
@@ -330,12 +334,237 @@ void CObjectTool::OnDynamicMeshLoad()
 void CObjectTool::OnObjSave()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	CFileDialog		Dlg(FALSE, L"dat", L"*.dat",
+		OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, L"*.dat", this);
+
+	if (Dlg.DoModal() == IDCANCEL)
+		return;
+
+	TCHAR		szDirPath[MAX_PATH] = L"";
+
+	GetCurrentDirectory(sizeof(szDirPath), szDirPath);
+
+	SetCurrentDirectory(szDirPath);
+	// 응용 프로그램의 현재 작업 디렉토리를 지정된 디렉토리로 설정해주는 함수
+
+	PathRemoveFileSpec(szDirPath);
+	// 마지막 경로를 제외한 경로를 추출하는 함수
+
+	lstrcat(szDirPath, L"..\\..\\Resources\\Data");
+
+	Dlg.m_ofn.lpstrInitialDir = szDirPath;		// 상대 경로
+
+
+
+	HANDLE	hFile = CreateFile(Dlg.GetPathName(), GENERIC_WRITE,
+		0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	DWORD	dwByte;
+
+	int StaticCnt = 0;
+	int DynamicCnt = 0;
+
+	CString pBuffer;
+
+	int iObjNum = m_StaticList.GetCount();
+
+	if (iObjNum != 0)
+	{
+		WriteFile(hFile, &iObjNum, sizeof(int), &dwByte, NULL);
+
+		for (StaticCnt; StaticCnt < m_StaticList.GetCount(); ++StaticCnt)
+		{
+			TCHAR pObjectKey[50];
+			ZeroMemory(pObjectKey, sizeof(TCHAR) * 50);
+
+			m_StaticList.GetText(StaticCnt, pBuffer);
+			lstrcpy(pObjectKey, (LPCTSTR)pBuffer);
+
+			list<CObj*>* ObjList = CObjMgr::GetInstance()->Get_ObjListForKey(pObjectKey);
+			if (NULL == ObjList)
+			{
+				WriteFile(hFile, pObjectKey, sizeof(TCHAR) * 50, &dwByte, NULL);
+				int iNum = 0;
+				WriteFile(hFile, &iNum, sizeof(int), &dwByte, NULL);
+				continue;
+			}
+
+			list<CObj*>::iterator iter = ObjList->begin();
+			list<CObj*>::iterator iter_end = ObjList->end();
+
+			WriteFile(hFile, pObjectKey, sizeof(TCHAR) * 50, &dwByte, NULL);
+			int iNum = ObjList->size();
+			WriteFile(hFile, &iNum, sizeof(int), &dwByte, NULL);
+
+			for (iter; iter != iter_end; ++iter)
+			{
+				const CComponent* pComponent = (*iter)->GetComponent(L"Transform");
+
+				WriteFile(hFile, ((CInfo*)pComponent)->m_fAngle, sizeof(float) * ANGLE_END, &dwByte, NULL);
+				WriteFile(hFile, ((CInfo*)pComponent)->m_vScale, sizeof(D3DXVECTOR3), &dwByte, NULL);
+				WriteFile(hFile, ((CInfo*)pComponent)->m_vPos, sizeof(D3DXVECTOR3), &dwByte, NULL);
+				WriteFile(hFile, ((CInfo*)pComponent)->m_vDir, sizeof(D3DXVECTOR3), &dwByte, NULL);
+				WriteFile(hFile, ((CInfo*)pComponent)->m_matWorld, sizeof(D3DXMATRIX), &dwByte, NULL);
+			}
+		}
+	}
+
+
+	/*int iDynamicNum = m_DynamicList.GetCount();
+
+	if (iDynamicNum != 0)
+	{
+		WriteFile(hFile, &iDynamicNum, sizeof(int), &dwByte, NULL);
+
+		for (DynamicCnt; DynamicCnt < m_DynamicList.GetCount(); ++DynamicCnt)
+		{
+			TCHAR pObjectKey[50];
+			ZeroMemory(pObjectKey, sizeof(TCHAR) * 50);
+
+			m_DynamicList.GetText(DynamicCnt, pBuffer);
+			lstrcpy(pObjectKey, (LPCTSTR)pBuffer);
+
+			list<Engine::CGameObject*>* ObjList = const_cast<Engine::CLayer*>(pLayer)->GetObjectList((TCHAR*)(LPCTSTR)pBuffer);
+			if (NULL == ObjList)
+			{
+				WriteFile(hFile, pObjectKey, sizeof(TCHAR) * 50, &dwByte, NULL);
+				int iNum = 0;
+				WriteFile(hFile, &iNum, sizeof(int), &dwByte, NULL);
+				continue;
+			}
+
+			list<Engine::CGameObject*>::iterator iter = ObjList->begin();
+			list<Engine::CGameObject*>::iterator iter_end = ObjList->end();
+
+			WriteFile(hFile, pObjectKey, sizeof(TCHAR) * 50, &dwByte, NULL);
+			int iNum = ObjList->size();
+			WriteFile(hFile, &iNum, sizeof(int), &dwByte, NULL);
+
+			for (iter; iter != iter_end; ++iter)
+			{
+				const Engine::CComponent* pComponent = (*iter)->GetComponent(L"Transform");
+				WriteFile(hFile, ((Engine::CTransform*)pComponent)->m_fAngle, sizeof(float) * Engine::ANGLE_END, &dwByte, NULL);
+				WriteFile(hFile, ((Engine::CTransform*)pComponent)->m_vScale, sizeof(D3DXVECTOR3), &dwByte, NULL);
+				WriteFile(hFile, ((Engine::CTransform*)pComponent)->m_vPos, sizeof(D3DXVECTOR3), &dwByte, NULL);
+				WriteFile(hFile, ((Engine::CTransform*)pComponent)->m_vDir, sizeof(D3DXVECTOR3), &dwByte, NULL);
+				WriteFile(hFile, ((Engine::CTransform*)pComponent)->m_matWorld, sizeof(D3DXMATRIX), &dwByte, NULL);
+			}
+		}
+	}*/
+
+	CloseHandle(hFile);
+
+
 }
 
 
 void CObjectTool::OnObjLoad()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+
+	if (m_StaticList.GetCount() == 0)
+	{
+		AfxMessageBox(L"Load Static Mesh First!");
+		return;
+	}
+
+	/*if (m_DynamicList.GetCount() == 0)
+	{
+		AfxMessageBox(L"Load Dynamic Mesh First!");
+		return;
+	}*/
+
+	CFileDialog Dlg(TRUE, L"dat", NULL,//화일명 없음 
+		OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
+		NULL, NULL);
+
+	//옵션 선택 부분.
+	if (Dlg.DoModal() == IDOK)
+	{
+		CString strPathName = Dlg.GetPathName();//path를 돌려줌
+		wstring wstrPath = strPathName;
+	}
+
+	HANDLE	hFile = CreateFile(Dlg.GetPathName(), GENERIC_READ,
+		0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	DWORD	dwByte;
+
+	int iObjSize = 0;
+	ReadFile(hFile, &iObjSize, sizeof(int), &dwByte, NULL);
+
+	for (int i = 0; i < iObjSize; ++i)
+	{
+		//TCHAR* tcFilePath = new TCHAR[128];
+		TCHAR* pObjectKey = new TCHAR[50];
+		//ZeroMemory(pObjectKey, sizeof(TCHAR) * 50);
+
+		ReadFile(hFile, pObjectKey, sizeof(TCHAR) * 50, &dwByte, NULL);
+		//const_cast<Engine::CLayer*>(pLayer)->DeleteByKey(pObjectKey);
+
+		int iNum;
+		ReadFile(hFile, &iNum, sizeof(int), &dwByte, NULL);
+		if (0 == iNum)
+			continue;
+
+		CObj*	pGameObject = NULL;
+
+		for (int i = 0; i < iNum; ++i)
+		{
+			
+			pGameObject = CStaticObject::Create(pObjectKey,D3DXVECTOR3(0.f,0.f,0.f));
+			CObjMgr::GetInstance()->AddObject(pObjectKey,pGameObject);
+			CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, pGameObject);
+
+
+			const CComponent* pComponent = pGameObject->GetComponent(L"Transform");
+
+			ReadFile(hFile, ((CInfo*)pComponent)->m_fAngle, sizeof(float) * ANGLE_END, &dwByte, NULL);
+			ReadFile(hFile, ((CInfo*)pComponent)->m_vScale, sizeof(D3DXVECTOR3), &dwByte, NULL);
+			ReadFile(hFile, ((CInfo*)pComponent)->m_vPos, sizeof(D3DXVECTOR3), &dwByte, NULL);
+			ReadFile(hFile, ((CInfo*)pComponent)->m_vDir, sizeof(D3DXVECTOR3), &dwByte, NULL);
+			ReadFile(hFile, ((CInfo*)pComponent)->m_matWorld, sizeof(D3DXMATRIX), &dwByte, NULL);
+
+			((CBack*)CSceneMgr::GetInstance()->GetScene())->m_ToolObjList.push_back(pGameObject);
+		}
+	}
+
+	//int iDynamicSize = 0;
+	//ReadFile(hFile, &iDynamicSize, sizeof(int), &dwByte, NULL);
+
+	//for (int i = 0; i < iDynamicSize; ++i)
+	//{
+	//	TCHAR* pObjectKey = new TCHAR[50];
+
+	//	ReadFile(hFile, pObjectKey, sizeof(TCHAR) * 50, &dwByte, NULL);
+	//	//const_cast<Engine::CLayer*>(pLayer)->DeleteByKey(pObjectKey);
+
+	//	int iNum;
+	//	ReadFile(hFile, &iNum, sizeof(int), &dwByte, NULL);
+	//	if (0 == iNum)
+	//		continue;
+
+	//	Engine::CGameObject*	pGameObject = NULL;
+
+	//	for (int i = 0; i < iNum; ++i)
+	//	{
+	//		pGameObject = CDynamicObject::Create(Engine::Get_GraphicDev(), pObjectKey, D3DXVECTOR3(0.f, 0.f, 0.f));
+	//		const_cast<Engine::CLayer*>(pLayer)->AddObject(pObjectKey, pGameObject);
+
+	//		const Engine::CComponent* pComponent = pGameObject->GetComponent(L"Transform");
+	//		ReadFile(hFile, ((Engine::CTransform*)pComponent)->m_fAngle, sizeof(float) * Engine::ANGLE_END, &dwByte, NULL);
+	//		ReadFile(hFile, ((Engine::CTransform*)pComponent)->m_vScale, sizeof(D3DXVECTOR3), &dwByte, NULL);
+	//		ReadFile(hFile, ((Engine::CTransform*)pComponent)->m_vPos, sizeof(D3DXVECTOR3), &dwByte, NULL);
+	//		ReadFile(hFile, ((Engine::CTransform*)pComponent)->m_vDir, sizeof(D3DXVECTOR3), &dwByte, NULL);
+	//		ReadFile(hFile, ((Engine::CTransform*)pComponent)->m_matWorld, sizeof(D3DXMATRIX), &dwByte, NULL);
+
+	//		((CBack*)Engine::Get_Scene())->m_ObjectList.push_back(pGameObject);
+	//	}
+	//}
+
+
+	CloseHandle(hFile);
+
 }
 
 
@@ -821,4 +1050,16 @@ void CObjectTool::OnDynamicListSel()
 		if (m_ObjTypeRadio[1].GetCheck() == TRUE)
 			m_DynamicList.GetText(m_DynamicList.GetCurSel(), m_strCurKey);
 	}
+}
+
+
+BOOL CObjectTool::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
+	if (pMsg->message == WM_KEYDOWN &&
+		(pMsg->wParam == VK_RETURN || pMsg->wParam == VK_ESCAPE))
+	{
+		pMsg->wParam = NULL;
+	}
+	return CDialog::PreTranslateMessage(pMsg);
 }

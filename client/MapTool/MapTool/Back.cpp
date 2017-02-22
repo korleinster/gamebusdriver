@@ -71,6 +71,12 @@ int CBack::Update(void)
 {
 	CObjMgr::GetInstance()->Update();
 
+	/*list<CObj*>::iterator iter = m_ToolObjList.begin();
+	list<CObj*>::iterator iter_end = m_ToolObjList.end();
+
+	for (iter; iter != iter_end; ++iter)
+		(*iter)->Update();*/
+
 	return 0;
 }
 
@@ -142,6 +148,7 @@ void CBack::ConstObjectMode()
 		}
 
 		m_pMouseCol->PickTerrain(&vPos, m_pTerrainVtx);
+		cout << vPos.x << "/" << vPos.y << "/" << vPos.z << endl;
 		CObj* pObj = NULL;
 		
 		const TCHAR* strKey = (TCHAR*)(LPCTSTR)pObjectTool->m_strCurKey;
@@ -181,9 +188,8 @@ void CBack::ConstObjectMode()
 			if (TRUE == pObjectTool->m_ObjTypeRadio[0].GetCheck())
 			{
 				//스태틱
-				if (m_pMouseCol->MeshPick(&temp, &((CStaticMesh*)pMeshComponent)->vecVTXTEX, ((CStaticMesh*)pMeshComponent)->m_iVertices / 2))
+				if (m_pMouseCol->MeshPick(&temp, (*iter)->GetInfo(), &((CStaticMesh*)pMeshComponent)->vecVTXTEX, ((CStaticMesh*)pMeshComponent)->m_iVertices / 2))
 				{
-					//cout << temp.x << "/" << temp.y << "/" << temp.z << endl;
 					break;
 				}
 			}
@@ -209,6 +215,78 @@ void CBack::ConstObjectMode()
 		//const CComponent* pComponent = m_pCurObject->GetComponent(L"Transform");
 
 
+	}
+
+	else if (TRUE == pObjectTool->m_ObjModeRadio[0].GetCheck())
+	{
+		// 마우스좌표 받기 및 수정
+		D3DXVECTOR3 vIndex;
+
+		if (NULL == m_pTerrainVtx)
+		{
+			m_pTerrainVtx = new VTXTEX[VERTEXCOUNTX * VERTEXCOUNTZ];
+			m_pMouseCol->SetSize(VERTEXCOUNTX, VERTEXCOUNTZ, 1);
+
+			m_pTerrainVtx = m_pTerrain->GetVertex();
+		}
+
+		m_pMouseCol->PickTerrain(&vIndex, m_pTerrainVtx);
+
+		pObjectTool->SetPickPos(vIndex);
+	}
+
+	else if (TRUE == pObjectTool->m_ObjModeRadio[4].GetCheck())
+	{
+		// 삭제
+		D3DXVECTOR3 vIndex;
+
+		list<CObj*>::iterator iter = m_ToolObjList.begin();
+		list<CObj*>::iterator iter_end = m_ToolObjList.end();
+
+
+		const CComponent* pMeshComponent;
+		for (iter; iter != iter_end; ++iter)
+		{
+			pMeshComponent = (*iter)->GetComponent(L"Mesh");
+
+			D3DXVECTOR3 temp;
+			if (TRUE == pObjectTool->m_ObjTypeRadio[0].GetCheck())
+			{
+				//스태틱
+				if (m_pMouseCol->MeshPick(&temp, (*iter)->GetInfo(), &((CStaticMesh*)pMeshComponent)->vecVTXTEX, ((CStaticMesh*)pMeshComponent)->m_iVertices / 2))
+				{
+					break;
+				}
+			}
+		}
+
+		if (iter == iter_end)
+		{
+			pObjectTool->m_stCurrentMeshKey = L"";
+			pObjectTool->SetCurObject();
+			pObjectTool->OnInfoReset();
+			return;
+		}
+
+		pObjectTool->SetCurObject(*iter);
+		pObjectTool->OnInfoReset();
+
+
+		TCHAR tcDelKey[256];
+		
+		_tcscpy_s(tcDelKey, (*iter)->GetMeshKey());
+
+		CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
+
+		CObjMgr::GetInstance()->DeleteByCompare(*iter);
+		m_ToolObjList.erase(iter);
+
+		//::Safe_Release(*iter);
+		
+
+		pObjectTool->m_stCurrentMeshKey = L"";
+		pObjectTool->SetCurObject();
+		pObjectTool->OnInfoReset();
 	}
 
 

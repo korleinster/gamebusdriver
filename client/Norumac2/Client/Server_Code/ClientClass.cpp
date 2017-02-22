@@ -47,6 +47,10 @@ void AsynchronousClientClass::Init(const HWND& hwnd)
 		}
 	}
 
+	// DB 연동하기 위한 함수
+	Login_access();
+	printf("\nLogin SUCCESSED\n");
+
 	// WSAAsyncSelect - 넌블로킹 소켓 자동 전환
 	m_hWnd = hwnd;
 
@@ -70,6 +74,39 @@ void AsynchronousClientClass::Init(const HWND& hwnd)
 #ifdef _DEBUG
 	//system("cls");
 	printf("Connected with SERVER\n");
+#endif
+}
+
+void AsynchronousClientClass::Login_access() {
+#if 1
+	int login_cnt{ 6 };
+
+	while (--login_cnt)
+	{
+		printf("input ID & Password ( ex : guest guest )\n");
+		wchar_t id[MAX_BUF_SIZE / 4]{ 0 };
+		wchar_t pw[MAX_BUF_SIZE / 4]{ 0 };
+
+		wcin >> id >> pw;
+
+		Packet temp_buf[MAX_BUF_SIZE]{ 0 };
+		temp_buf[0] = wcslen(id) * 2;
+		wcscpy(reinterpret_cast<wchar_t*>(&temp_buf[1]), id);
+		temp_buf[temp_buf[0] + 3] = wcslen(pw) * 2;
+		wcscpy(reinterpret_cast<wchar_t*>(&temp_buf[temp_buf[0] + 4]), pw);
+
+		send(m_sock, reinterpret_cast<char*>(&temp_buf), MAX_BUF_SIZE, 0);
+		recv(m_sock, reinterpret_cast<char*>(&temp_buf), MAX_BUF_SIZE, 0);
+
+		if (1 == temp_buf[0]) { return; }
+		else {
+			system("cls");
+			printf("Login Failed\n");
+		}
+	}
+
+#else
+
 #endif
 }
 

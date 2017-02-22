@@ -17,7 +17,7 @@
 // process protocol
 enum PacketProtocolType {
 	TEST = 1,		// 받은 패킷 그대로 돌려주기용. ( 보낸 내용이 그대로 돌아오지 않는다면, 클라나 서버에 문제가 있다는 뜻 )
-	
+	DB_LOGIN,		// DB 접속 전용 코드
 
 	INIT_CLIENT,
 	INIT_OTHER_CLIENT,
@@ -52,10 +52,12 @@ using position = struct Position {
 using status = struct Status {
 	int hp{ 100 };
 };
-/// 플레이어 전체 정보
+/// 플레이어 전체 정보 64 ( dir -3 ) ( nickname - 2 ) bytes
 using player_data = struct Player_data {
 	unsigned int	id{ 0 };
 	position		pos;
 	char			dir{ KEYINPUT_DOWN };
 	status			state;
+
+	char			nickname[42]{ 0 };
 };

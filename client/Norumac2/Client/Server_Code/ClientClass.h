@@ -24,6 +24,7 @@ private:
 	void inputServerIP();
 	void inputServerIP_ReadtxtFile();
 	void inputServerIP_cin();
+	void Login_access();
 
 	int recvn();
 	void error_display(char *msg, int err_no, int line);

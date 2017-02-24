@@ -191,6 +191,21 @@ void CMapToolView::OnInitialUpdate()
 		return;
 	}
 
+	//네비메쉬 라인용
+
+	/*if (CShaderMgr::GetInstance()->AddShaderFiles(L"VS_LINE", L"LineShader.fx", "VS_LINE", "vs_5_0", SHADER_LINE_VS))
+	{
+		AfxMessageBox(L"Vertex Shader(Line) Create Failed", MB_OK);
+		return;
+	}
+
+
+	if (CShaderMgr::GetInstance()->AddShaderFiles(L"PS_LINE", L"LineShader.fx", "PS_LINE", "ps_5_0", SHADER_LINE_PS))
+	{
+		AfxMessageBox(L"PIXEL Shader(Line) Create Failed", MB_OK);
+		return;
+	}*/
+
 	if (CInput::GetInstance()->InitInputDevice(AfxGetInstanceHandle(), g_hWnd))
 	{
 		AfxMessageBox(L"DInput Create Failed", MB_OK);

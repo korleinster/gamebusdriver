@@ -13,6 +13,7 @@ public:
 	DECLARE_SINGLETON(CCamera)
 
 public:
+	ID3D11Buffer*		m_cbSelectBuffer;
 	D3DXMATRIX	m_matView;
 	D3DXMATRIX	m_matProj;
 	D3DXVECTOR3 m_vEye;

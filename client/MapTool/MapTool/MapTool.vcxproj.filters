@@ -160,6 +160,9 @@
     <Filter Include="04.Dialog\InterFace">
       <UniqueIdentifier>{f7740be6-5464-4b83-8a3c-d23142db698a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97.Resources\1.Buffer\6.LineCol">
+      <UniqueIdentifier>{a6160d7b-b827-4a12-9b3e-601b41dffd61}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -303,6 +306,12 @@
     <ClInclude Include="Interface.h">
       <Filter>04.Dialog\InterFace</Filter>
     </ClInclude>
+    <ClInclude Include="NaviTool.h">
+      <Filter>04.Dialog\NaviMeshTool</Filter>
+    </ClInclude>
+    <ClInclude Include="LineCol.h">
+      <Filter>97.Resources\1.Buffer\6.LineCol</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MapTool.cpp">
@@ -422,6 +431,12 @@
     <ClCompile Include="Interface.cpp">
       <Filter>04.Dialog\InterFace</Filter>
     </ClCompile>
+    <ClCompile Include="NaviTool.cpp">
+      <Filter>04.Dialog\NaviMeshTool</Filter>
+    </ClCompile>
+    <ClCompile Include="LineCol.cpp">
+      <Filter>97.Resources\1.Buffer\6.LineCol</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MapTool.rc">
@@ -446,6 +461,9 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader.fx">
+      <Filter>97.Resources\3.Shader\ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="LineShader.fx">
       <Filter>97.Resources\3.Shader\ShaderCode</Filter>
     </FxCompile>
   </ItemGroup>

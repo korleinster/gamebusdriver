@@ -4,6 +4,10 @@
 #include "Info.h"
 #include "Input.h"
 #include "SceneMgr.h"
+#include "Interface.h"
+#include "MainFrm.h"
+#include "MyForm.h"
+#include "Device.h"
 
 IMPLEMENT_SINGLETON(CCamera)
 
@@ -23,8 +27,8 @@ CCamera::~CCamera()
 HRESULT CCamera::Initialize(void)
 {
 	//m_vEye = D3DXVECTOR3(0.0f, 20.f, -20.0f);
-	m_vEye = D3DXVECTOR3(0.0f, 20.f, -20.0f);
-	m_vAt = D3DXVECTOR3(0.f, 0.f, 0.f);
+	m_vEye = D3DXVECTOR3(-70.0f, 210.f, -200.0f);
+	m_vAt = D3DXVECTOR3(10.f, 10.f, 10.f);
 	m_vUp = D3DXVECTOR3(0.f, 1.f, 0.f);
 
 	m_vDirZ = D3DXVECTOR3(0.f, 0.f, -1.f);
@@ -43,6 +47,25 @@ HRESULT CCamera::Initialize(void)
 	m_fCameraDistance = 10.f;
 	m_fCameraSpeed = 70.f;
 
+	D3D11_BUFFER_DESC cbd;
+	ZeroMemory(&cbd, sizeof(cbd));
+	cbd.Usage = D3D11_USAGE_DEFAULT;
+
+	cbd.ByteWidth = sizeof(SelectBuffer);
+	cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	HRESULT hr = CDevice::GetInstance()->m_pDevice->CreateBuffer(&cbd, NULL, &m_cbSelectBuffer);
+
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"왜 안돼지?", L"Selcet Constant Buffer Error", MB_OK);
+		return hr;
+	}
+
+
+	D3DXVECTOR4 vSelect(SELECT_OFF, SELECT_OFF, SELECT_OFF, SELECT_OFF);
+	CDevice::GetInstance()->m_pDeviceContext->UpdateSubresource(CCamera::GetInstance()->m_cbSelectBuffer, 0, NULL, &vSelect, 0, 0);
+
+
 	return S_OK;
 }
 
@@ -51,7 +74,9 @@ int CCamera::Update(void)
 
 	m_pInfo->Update();
 
-	cout << "카메라 속도 : " << m_fCameraSpeed << endl;
+	CInterface* pInterFace = &((CMainFrame*)AfxGetMainWnd())->m_pMyForm->m_InterFace;
+	pInterFace->CamUpdate(m_vEye, m_vAt,m_bMouseFix,m_fCameraSpeed);
+
 
 	KeyState();
 	MouseMove();
@@ -190,90 +215,125 @@ void CCamera::MouseMove(void)
 	float	fTime = CTimeMgr::GetInstance()->GetTime();
 	int		iDistance = 0;
 
-	if (iDistance = CInput::GetInstance()->GetDIMouseMove(CInput::DIM_Z))
+	if (CInput::GetInstance()->GetDIKeyState(DIK_LCONTROL))
 	{
-		iInput = 1;
-		m_fCameraDistance -= fTime * 800.f * iDistance * 0.01f;
+		if (iDistance = CInput::GetInstance()->GetDIMouseMove(CInput::DIM_X))
+		{
+			D3DXMATRIX		matAxis;
+			D3DXMatrixRotationAxis(&matAxis, &D3DXVECTOR3(0.f, 1.f, 0.f), D3DXToRadian(iDistance / 10.f));
 
+			D3DXVECTOR3		vDir;
+			vDir = m_vAt - m_vEye;
+			D3DXVec3TransformNormal(&vDir, &vDir, &matAxis);
 
-		if (m_fCameraDistance < 5.f)
-			m_fCameraDistance = 5.f;
-		// 
-		// 		if(m_fDistance > 700.f)
-		// 			m_fDistance = 700.f;
+			m_vAt = m_vEye + vDir;
 
-		D3DXVec3Normalize(&m_vDirZ, &m_vDirZ);
-		m_vDirZ *= m_fCameraDistance;
+		}
 
-		m_vEye = m_vAt + m_vDirZ;
+		if (iDistance = CInput::GetInstance()->GetDIMouseMove(CInput::DIM_Y))
+		{
+			D3DXVECTOR3		vRight;
+			D3DXMATRIX		matCamState;
 
+			D3DXMatrixInverse(&matCamState, NULL, &m_matView);
+			memcpy(&vRight, &matCamState.m[0][0], sizeof(D3DXVECTOR3));
+			D3DXVec3Normalize(&vRight, &vRight);
+
+			D3DXMATRIX		matAxis;
+			D3DXMatrixRotationAxis(&matAxis, &vRight, D3DXToRadian(iDistance / 10.f));
+
+			D3DXVECTOR3		vDir;
+			vDir = m_vAt - m_vEye;
+			D3DXVec3TransformNormal(&vDir, &vDir, &matAxis);
+
+			m_vAt = m_vEye + vDir;
+		}
 	}
-
-	if (iDistance = CInput::GetInstance()->GetDIMouseMove(CInput::DIM_X))
+	else
 	{
-		iInput = 1;
-		D3DXMATRIX		matAxis;
-		D3DXMatrixRotationAxis(&matAxis, &D3DXVECTOR3(0.f, 1.f, 0.f), D3DXToRadian(iDistance / 10.f));
+		if (iDistance = CInput::GetInstance()->GetDIMouseMove(CInput::DIM_Z))
+		{
+			iInput = 1;
+			m_fCameraDistance -= fTime * 800.f * iDistance * 0.01f;
 
-		//D3DXVECTOR3		vDir;
-		m_vDirZ = m_vEye - m_vAt;
 
-		D3DXVec3TransformNormal(&m_vDirZ, &m_vDirZ, &matAxis);
+			if (m_fCameraDistance < 5.f)
+				m_fCameraDistance = 5.f;
+			// 
+			// 		if(m_fDistance > 700.f)
+			// 			m_fDistance = 700.f;
 
-		D3DXVec3Normalize(&m_vDirZ, &m_vDirZ);
-		m_pInfo->m_vDir.x = m_vDirZ.x;
-		m_pInfo->m_vDir.z = m_vDirZ.z;;
-		m_vDirZ *= m_fCameraDistance;
+			D3DXVec3Normalize(&m_vDirZ, &m_vDirZ);
+			m_vDirZ *= m_fCameraDistance;
 
-		m_vEye = m_vAt + m_vDirZ;
+			m_vEye = m_vAt + m_vDirZ;
 
+		}
+
+		if (iDistance = CInput::GetInstance()->GetDIMouseMove(CInput::DIM_X))
+		{
+			iInput = 1;
+			D3DXMATRIX		matAxis;
+			D3DXMatrixRotationAxis(&matAxis, &D3DXVECTOR3(0.f, 1.f, 0.f), D3DXToRadian(iDistance / 10.f));
+
+			//D3DXVECTOR3		vDir;
+			m_vDirZ = m_vEye - m_vAt;
+
+			D3DXVec3TransformNormal(&m_vDirZ, &m_vDirZ, &matAxis);
+
+			D3DXVec3Normalize(&m_vDirZ, &m_vDirZ);
+			m_pInfo->m_vDir.x = m_vDirZ.x;
+			m_pInfo->m_vDir.z = m_vDirZ.z;;
+			m_vDirZ *= m_fCameraDistance;
+
+			m_vEye = m_vAt + m_vDirZ;
+
+		}
+
+		if (iDistance = CInput::GetInstance()->GetDIMouseMove(CInput::DIM_Y))
+		{
+			iInput = 1;
+			D3DXVECTOR3		vRight;
+			D3DXMATRIX		matCamState;
+
+			D3DXMatrixInverse(&matCamState, NULL, &m_matView);
+			memcpy(&vRight, &matCamState.m[0][0], sizeof(D3DXVECTOR3));
+			D3DXVec3Normalize(&vRight, &vRight);
+
+			D3DXMATRIX		matAxis;
+
+			D3DXMatrixRotationAxis(&matAxis, &vRight, D3DXToRadian(iDistance / 10.f));
+
+
+
+			m_vDirZ = m_vEye - m_vAt;
+			D3DXVec3TransformNormal(&m_vDirZ, &m_vDirZ, &matAxis);
+			D3DXVec3Normalize(&m_vDirZ, &m_vDirZ);
+
+			if (m_vDirZ.y > 0.75f)
+				m_vDirZ.y = 0.75f;
+
+			if (m_vDirZ.y < -0.35f)
+				m_vDirZ.y = -0.35f;
+
+			m_pInfo->m_vDir.x = m_vDirZ.x;
+			m_pInfo->m_vDir.z = m_vDirZ.z;
+			m_vDirZ *= m_fCameraDistance;
+			m_vEye = m_vAt + m_vDirZ;
+		}
+
+		/*if (iInput == 0)
+		{
+			D3DXVec3Normalize(&m_vDirZ, &m_vDirZ);
+			m_pInfo->m_vDir.x = m_vDirZ.x;
+			m_pInfo->m_vDir.z = m_vDirZ.z;
+			m_vDirZ *= m_fCameraDistance;
+
+			m_vEye = m_vAt + m_vDirZ;
+		}*/
+
+		D3DXVec3Normalize(&m_pInfo->m_vDir, &m_pInfo->m_vDir);
 	}
-
-	if (iDistance = CInput::GetInstance()->GetDIMouseMove(CInput::DIM_Y))
-	{
-		iInput = 1;
-		D3DXVECTOR3		vRight;
-		D3DXMATRIX		matCamState;
-
-		D3DXMatrixInverse(&matCamState, NULL, &m_matView);
-		memcpy(&vRight, &matCamState.m[0][0], sizeof(D3DXVECTOR3));
-		D3DXVec3Normalize(&vRight, &vRight);
-
-		D3DXMATRIX		matAxis;
-
-		D3DXMatrixRotationAxis(&matAxis, &vRight, D3DXToRadian(iDistance / 10.f));
-
-
-
-		m_vDirZ = m_vEye - m_vAt;
-		D3DXVec3TransformNormal(&m_vDirZ, &m_vDirZ, &matAxis);
-		D3DXVec3Normalize(&m_vDirZ, &m_vDirZ);
-
-		if (m_vDirZ.y > 0.75f)
-			m_vDirZ.y = 0.75f;
-
-		if (m_vDirZ.y < -0.35f)
-			m_vDirZ.y = -0.35f;
-
-		m_pInfo->m_vDir.x = m_vDirZ.x;
-		m_pInfo->m_vDir.z = m_vDirZ.z;
-		m_vDirZ *= m_fCameraDistance;
-		m_vEye = m_vAt + m_vDirZ;
-	}
-
-	if (iInput == 0)
-	{
-		D3DXVec3Normalize(&m_vDirZ, &m_vDirZ);
-		m_pInfo->m_vDir.x = m_vDirZ.x;
-		m_pInfo->m_vDir.z = m_vDirZ.z;
-		m_vDirZ *= m_fCameraDistance;
-
-		m_vEye = m_vAt + m_vDirZ;
-	}
-
-	D3DXVec3Normalize(&m_pInfo->m_vDir, &m_pInfo->m_vDir);
-
-	//if()
 
 
 

@@ -197,6 +197,7 @@
     <ClInclude Include="Info.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Interface.h" />
+    <ClInclude Include="LineCol.h" />
     <ClInclude Include="Macro.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="MapTool.h" />
@@ -205,6 +206,7 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MouseCol.h" />
     <ClInclude Include="MyForm.h" />
+    <ClInclude Include="NaviTool.h" />
     <ClInclude Include="Obj.h" />
     <ClInclude Include="ObjectTool.h" />
     <ClInclude Include="ObjMgr.h" />
@@ -243,6 +245,7 @@
     <ClCompile Include="Info.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Interface.cpp" />
+    <ClCompile Include="LineCol.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="MapTool.cpp" />
     <ClCompile Include="MapToolDoc.cpp" />
@@ -250,6 +253,7 @@
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MouseCol.cpp" />
     <ClCompile Include="MyForm.cpp" />
+    <ClCompile Include="NaviTool.cpp" />
     <ClCompile Include="Obj.cpp" />
     <ClCompile Include="ObjectTool.cpp" />
     <ClCompile Include="ObjMgr.cpp" />
@@ -289,6 +293,12 @@
     <Image Include="res\Toolbar.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="LineShader.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">VS_LINE</EntryPointName>
+      <DisableOptimizations Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</DisableOptimizations>
+      <EnableDebuggingInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</EnableDebuggingInformation>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+    </FxCompile>
     <FxCompile Include="Shader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">VS</EntryPointName>
       <DisableOptimizations Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</DisableOptimizations>

@@ -5,6 +5,8 @@
 #include "MapTool.h"
 #include "MyForm.h"
 #include "MapToolView.h"
+#include "Interface.h"
+#include "NaviTool.h"
 
 
 // CMyForm
@@ -70,6 +72,10 @@ void CMyForm::OnToolTabChange(NMHDR *pNMHDR, LRESULT *pResult)
 		m_Tab1.ShowWindow(SW_SHOW);
 		m_pWndShow = &m_Tab1;
 		break;
+	case 1:
+		m_Tab2.ShowWindow(SW_SHOW);
+		m_pWndShow = &m_Tab2;
+		break;
 		/*case 1:
 			m_Tab2.ShowWindow(SW_SHOW);
 			m_pWndShow = &m_Tab2;
@@ -100,18 +106,24 @@ void CMyForm::OnInitialUpdate()
 {
 	CFormView::OnInitialUpdate();
 
+	m_InterFace.Create(IDD_INTERFACE);
+
+	m_InterFace.ShowWindow(SW_SHOW);
+
 	CString str1 = _T("Object");
+	CString str2 = _T("NaviMesh");
 	
 	m_Tab.InsertItem(1, str1);
+	m_Tab.InsertItem(2, str2);
 
 	CRect Rect;
 	m_Tab.GetClientRect(&Rect);
 
 	m_Tab1.Create(IDD_OBJECTTOOL, &m_Tab);
-	m_Tab1.SetWindowPos(NULL, 5, 25, Rect.Width() - 12, Rect.Height() - 33, SWP_SHOWWINDOW | SWP_NOZORDER);
+	m_Tab1.SetWindowPos(NULL, 5, 25, Rect.Width() - 12, Rect.Height() - 33, SWP_SHOWWINDOW );
 
-	/*m_Tab2.Create(IDD_OBJECTTOOL, &m_Tab);
-	m_Tab2.SetWindowPos(NULL, 5, 25, Rect.Width(), Rect.Height() - 33, SWP_NOZORDER);*/
+	m_Tab2.Create(IDD_NAVITOOL, &m_Tab);
+	m_Tab2.SetWindowPos(NULL, 5, 25, Rect.Width(), Rect.Height() - 33, SWP_NOZORDER);
 
 	/*m_Tab3.Create(IDD_NAVIMESHTOOL, &m_Tab);
 	m_Tab3.SetWindowPos(NULL, 5, 25, Rect.Width() - 12, Rect.Height() - 33, SWP_NOZORDER);

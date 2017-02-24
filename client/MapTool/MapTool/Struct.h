@@ -9,6 +9,11 @@ struct ConstantBuffer
 	D3DXMATRIX matProjection;
 };
 
+struct SelectBuffer
+{
+	D3DXVECTOR4	vSelect;
+};
+
 ///////////////////////////////////////////////////////////////////정점 구조체
 typedef struct tagVertexTexture
 {

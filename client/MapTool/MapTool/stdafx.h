@@ -76,7 +76,7 @@ using namespace std;
 #pragma warning(disable : 4005)
 
 
-#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
+//#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
 
 
 

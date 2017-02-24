@@ -1,6 +1,8 @@
 #pragma once
 #include "afxcmn.h"
 #include "ObjectTool.h"
+#include "Interface.h"
+#include "NaviTool.h"
 
 
 // CMyForm Æû ºäÀÔ´Ï´Ù.
@@ -33,6 +35,9 @@ public:
 	CWnd*			m_pWndShow;
 	CMapToolView*	m_pView;
 	CObjectTool		m_Tab1;
+	CNaviTool		m_Tab2;
+	CInterface		m_InterFace;
+	CNaviTool		m_NaviTool;
 	afx_msg void OnToolTabChange(NMHDR *pNMHDR, LRESULT *pResult);
 	virtual void OnInitialUpdate();
 };

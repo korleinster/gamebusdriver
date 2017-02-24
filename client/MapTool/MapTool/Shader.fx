@@ -10,12 +10,16 @@ cbuffer ConstantBuffer : register(b0) //컨스턴트 버퍼
 }
 
 #define MAX		128
-
-
 cbuffer cbBoneWorldMatrix : register(b1)
 {
 	row_major matrix gMtxBone[MAX] : packoffset(c0); // row_major 행 우선 행렬 = 전치행렬X
 };
+
+
+cbuffer ConstantSelect : register(b2) //컨스턴트 버퍼
+{
+	float4 gSelect;
+}
 
 
 
@@ -31,6 +35,7 @@ struct VS_OUT
 	float4 Pos : SV_POSITION;
 	float3 Normal : NORMAL;
 	float2 Tex : TEXCOORD0;
+	float4 select : TEXCOORD1;
 };
 
 
@@ -41,6 +46,7 @@ VS_OUT VS(VS_INPUT input)
 	output.Pos = mul(output.Pos, gMatView);
 	output.Pos = mul(output.Pos, gMatProjection);
 	output.Tex = input.Tex;
+	output.select = gSelect;
 
 	return output;
 }
@@ -124,6 +130,7 @@ VS_OUT VS_ANI(VS_ANI_IN input)
 
 	output.Normal = mul(input.normal, (float3x3)gMatWorld);
 	output.Pos = mul(output.Pos, matAll);
+	output.select = gSelect;
 	output.Tex = input.tex2dcoord;
 
 
@@ -135,7 +142,15 @@ VS_OUT VS_ANI(VS_ANI_IN input)
 // 픽셀 셰이더 /////////////////////////////////////////////////////////////////////////////
 float4 PS(VS_OUT input) : SV_Target
 {
-	return txDiffuse.Sample(samLinear, input.Tex);
+
+	float4 fOut = txDiffuse.Sample(samLinear, input.Tex);
+
+	if (input.select.x > 0)
+	{
+		fOut = fOut * float4(2.f, 1.f, 1.f, 1.f);
+	}
+
+	return fOut;
 }
 
 

@@ -19,15 +19,18 @@ protected:
 	vector<string>				vecAniName;
 	VTXTEX*						m_pVerTex;
 	
+	
 public:
 	TCHAR						m_tcKey[256];
 	TCHAR						m_tcMeshKey[256];
+	float						m_fSelect;
 
 public:
 	virtual HRESULT Initialize(void);
 	virtual int		Update(void);
 	virtual void	Render(void) {};
 	virtual void Release(void);
+	void	SelectCheck(void);
 
 public:
 	static CObj* Create(ReleaseType _eType);

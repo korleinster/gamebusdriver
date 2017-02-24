@@ -71,11 +71,16 @@ int CBack::Update(void)
 {
 	CObjMgr::GetInstance()->Update();
 
-	/*list<CObj*>::iterator iter = m_ToolObjList.begin();
-	list<CObj*>::iterator iter_end = m_ToolObjList.end();
+	CInterface* pInterFace = &((CMainFrame*)AfxGetMainWnd())->m_pMyForm->m_InterFace;
 
-	for (iter; iter != iter_end; ++iter)
-		(*iter)->Update();*/
+	MEMORYSTATUS memoryStatus;
+	GlobalMemoryStatus(&memoryStatus);
+
+	SIZE_T dwAvailVirtual = memoryStatus.dwAvailVirtual >> 20;
+	SIZE_T dwTotalVirtual = memoryStatus.dwTotalVirtual >> 20;
+
+	pInterFace->HardwareUpdate(memoryStatus.dwMemoryLoad, dwTotalVirtual - dwAvailVirtual, dwTotalVirtual*2);
+
 
 	return 0;
 }
@@ -192,6 +197,8 @@ void CBack::ConstObjectMode()
 				{
 					break;
 				}
+				else
+					(*iter)->m_fSelect = 0.f;
 			}
 			else if (TRUE == pObjectTool->m_ObjTypeRadio[1].GetCheck())
 			{
@@ -211,6 +218,7 @@ void CBack::ConstObjectMode()
 		pObjectTool->m_stCurrentMeshKey = (LPCTSTR)(*iter)->GetMeshKey();
 		pObjectTool->SetCurObject(*iter);
 		pObjectTool->OnInfoReset();
+		(*iter)->m_fSelect = 1.f;
 		
 		//const CComponent* pComponent = m_pCurObject->GetComponent(L"Transform");
 

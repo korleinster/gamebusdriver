@@ -6,7 +6,11 @@
 
 
 CObj::CObj()
-	:m_pInfo(NULL), m_bZSort(false), m_pGrapicDevice(CDevice::GetInstance()), m_eReleaseType(Release_End)
+	:m_pInfo(NULL)
+	, m_bZSort(false)
+	, m_pGrapicDevice(CDevice::GetInstance())
+	, m_eReleaseType(Release_End)
+	, m_fSelect(SELECT_OFF)
 {
 	ZeroMemory(m_tcKey, sizeof(TCHAR) * 256);
 }
@@ -122,4 +126,16 @@ const CComponent* CObj::GetComponent(const wstring& _wstrComponentKey)
 		return NULL;
 
 	return iter->second;
+}
+
+void CObj::SelectCheck(void)
+{
+	SelectBuffer cb1;
+	cb1.vSelect.x = m_fSelect;
+	cb1.vSelect.y = 0.f;
+	cb1.vSelect.z = 0.f;
+	cb1.vSelect.w = 0.f;
+	CDevice::GetInstance()->m_pDeviceContext->UpdateSubresource(CCamera::GetInstance()->m_cbSelectBuffer, 0, NULL, &cb1, 0, 0);
+	CDevice::GetInstance()->m_pDeviceContext->VSSetConstantBuffers(2, 1, &CCamera::GetInstance()->m_cbSelectBuffer);
+
 }

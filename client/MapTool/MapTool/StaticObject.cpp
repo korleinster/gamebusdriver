@@ -42,6 +42,7 @@ HRESULT CStaticObject::Initialize(const TCHAR* pMeshKey, D3DXVECTOR3 vPos)
 		return E_FAIL;
 
 	m_pInfo->m_vPos = vPos;
+	m_pInfo->m_fAngle[ANGLE_X] = D3DXToRadian(270.f);
 
 	m_pInfo->m_vScale = D3DXVECTOR3(0.05f, 0.05f, 0.05f);
 
@@ -54,6 +55,7 @@ HRESULT CStaticObject::Initialize(const TCHAR* pMeshKey, D3DXVECTOR3 vPos)
 int CStaticObject::Update(void)
 {
 	D3DXVec3TransformNormal(&m_pInfo->m_vDir, &g_vLook, &m_pInfo->m_matWorld);
+	//SelectCheck();
 	CObj::Update();
 
 	return 0;

@@ -129,6 +129,44 @@ HRESULT CShader::Ready_ShaderFile(wstring wstrFilePath, LPCSTR wstrShaderName, L
 			return hr;
 	}
 
+	else if (_SType == SHADER_LINE_VS)
+	{
+		hr = CDevice::GetInstance()->m_pDevice->CreateVertexShader(pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), NULL, &m_pVertexShader);
+
+		if (FAILED(hr))
+		{
+			pShaderBlob->Release();
+			return E_FAIL;
+		}
+
+		D3D11_INPUT_ELEMENT_DESC layout[] =
+		{
+			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "COLOUR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		};
+
+
+
+		UINT numElements = ARRAYSIZE(layout);
+
+		hr = CDevice::GetInstance()->m_pDevice->CreateInputLayout(layout, numElements, pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), &m_pVertexLayout);
+		pShaderBlob->Release();
+		if (FAILED(hr))
+			return hr;
+
+		CDevice::GetInstance()->m_pDeviceContext->IASetInputLayout(m_pVertexLayout);
+
+	}
+
+	else if (_SType == SHADER_LINE_PS)
+	{
+		hr = CDevice::GetInstance()->m_pDevice->CreatePixelShader(pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), NULL, &m_pPixelShader);
+		pShaderBlob->Release();
+
+		if (FAILED(hr))
+			return hr;
+	}
+
 	return S_OK;
 }
 

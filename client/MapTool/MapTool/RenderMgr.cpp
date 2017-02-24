@@ -2,6 +2,9 @@
 #include "RenderMgr.h"
 #include "Obj.h"
 #include "Scene.h"
+#include "Interface.h"
+#include "MainFrm.h"
+#include "MyForm.h"
 
 IMPLEMENT_SINGLETON(CRenderMgr)
 
@@ -145,11 +148,15 @@ void CRenderMgr::Render_FPS(const float & fTime)
 
 	if (m_fTime >= 1.f)
 	{
-		wsprintf(m_szFps, L"FPS : %d", m_dwCount);
+		CInterface* pInterFace = &((CMainFrame*)AfxGetMainWnd())->m_pMyForm->m_InterFace;
+		pInterFace->FpsUpdate(m_dwCount);
 		m_fTime = 0.f;
 		m_dwCount = 0;
 	}
-	::SetWindowText(g_hWnd, m_szFps);
+	//::SetWindowText(g_hWnd, m_szFps);
+	
+
+
 }
 
 void CRenderMgr::Release(void)

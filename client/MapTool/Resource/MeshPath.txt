@@ -1,2 +1,3 @@
-tree1|..\Resource\Mesh\|tree1.FBX
-tree2|..\Resource\Mesh\|tree2.FBX
+archortower|..\Resource\Mesh\|archortower.FBX
+grass|..\Resource\Mesh\|grass.FBX
+newplayer|..\Resource\Mesh\|newplayer.FBX

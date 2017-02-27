@@ -376,7 +376,7 @@ void player_session::m_process_packet(Packet buf[])
 		}
 			break;
 		
-		case KEYINPUT_ATTACK:
+		case KEYINPUT_ATTACK:		// 기본 공격 ( 데미지 계산, hit box 범위 조정, 전부 여기서 다 조절해야 한다. )
 		{
 			// 충돌체크 검사하고 난 뒤에.. ( 현재는 임시 충돌 체크, 실제 클라와 연동시 충돌 범위 체크해야 한다. )
 			int att_x = 15, att_y = 15;		// 테스트용 클라 공격 리치가 요정도
@@ -438,33 +438,6 @@ void player_session::m_process_packet(Packet buf[])
 		}
 	}
 }
-
-void player_session::m_passive_hp_adding() {
-
-	g_io_service.post([&]() {
-		cout << "Player No. [ " << m_id << " ] HP + 5\n";
-
-		if (130 > get_player_data()->state.hp) {
-			get_player_data()->state.hp += 5;
-
-			//Packet temp_hp_buf[MAX_BUF_SIZE]{ 0 };
-			//temp_hp_buf[0] = sizeof(int) + sizeof(UINT) + 2;	// hp + id + packet size addition(2)
-			//temp_hp_buf[1] = KEYINPUT_ATTACK;
-			//*(reinterpret_cast<int*>(&temp_hp_buf[2])) = players->m_player_data.state.hp;
-			//*(reinterpret_cast<int*>(&temp_hp_buf[6])) = players->m_id;
-
-			//for (auto players : g_clients)
-			//{
-
-			//}
-		}
-		else { m_is_hp_can_add = false; }
-
-		if (m_is_hp_can_add) { m_passive_hp_adding(); }
-	});
-
-}
-
 
 // DB class ---------------------------------------------------------------------------------------------------------------
 

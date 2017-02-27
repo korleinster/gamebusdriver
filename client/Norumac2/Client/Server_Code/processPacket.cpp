@@ -40,16 +40,28 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 	case KEYINPUT_ATTACK: {
 		if (CSceneMgr::GetInstance()->GetScene() != SCENE_LOGO)
 		{
+			// 먼저 어떤 놈이 칼질을 했는지 아이디 확인 후, 그 녀석 애니메이션 편집 ( 내 아이디가 아니면 일단 애니메이션 작동 시켜야 됨 )
+			/// 만약 이 위치에 내 고유 id 가 들어있다면, 이미 키를 누른 시점에서 애니메이션을 재생했기 때문에, 그냥 if 문을 넘어간다.
+			if (m_player.id != *(reinterpret_cast<UINT*>(&buf[sizeof(int) + sizeof(int) + 2]))) {
+
+				// *(reinterpret_cast<UINT*>(&buf[sizeof(int) + sizeof(int) + 2])) 이 번호 클라이언트의 애니메이션을 작동시켜야 한다.
+				/// 통신을 하던 도중, 추후 시야에서 사라져, 데이터에서 제거한 상황이 있을 수 있기때문에, 벌써 사라져 없는 클라이언트에 대한 예외 처리도 해주어야 한다.
+				/// 추후 더 효과적으로 하기 위해서는, 애초에 카메라 밖에 위치한 클라이언트에 대해선 처리를 안하는게 가장 좋겠지...?
+				
+			}
+
 			// 내가 피해를 입은 것이라면, 내 hp 를 깎고 break;
+			/// -> 정확히는 hp 전체 총량 값이다. 헷갈리지 않도록 유의
+			/// 다시말하면, 이전 hp 값과, 패킷으로 날아들어온 hp 값을 차이를 비교해서 데미지가 얼마 들어갔는지 표시해주어야 한다.
+			/// 원하면, 깎이는 데미지가 얼마인지만 패킷으로 보내 줄 수도 있음.
 			if (m_player.id == *(reinterpret_cast<UINT*>(&buf[sizeof(int) + 2]))) {
 				m_player.state.hp = *(reinterpret_cast<char*>(&buf[2]));
 				break;
 			}
 
 			// 내가 아니라면 다른애 hp 깎기
-
 			player_data *data = CObjMgr::GetInstance()->Get_PlayerServerData(*reinterpret_cast<unsigned int*>(&buf[sizeof(int) + 2]));
-			data->state.hp = *(reinterpret_cast<char*>(&buf[2]));
+			data->state.hp = *(reinterpret_cast<char*>(&buf[2]));			
 
 		}
 	}

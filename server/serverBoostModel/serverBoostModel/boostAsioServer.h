@@ -69,7 +69,6 @@ private:
 	// Function
 	void m_recv_packet();
 	void m_process_packet(Packet buf[]);
-	void m_passive_hp_adding();
 
 	// 통신용 변수
 	tcp::socket		m_socket;

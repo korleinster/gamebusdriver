@@ -399,10 +399,12 @@ void player_session::m_process_packet(Packet buf[])
 					players->m_player_data.state.hp -= 10;
 
 					Packet temp_hp_buf[MAX_BUF_SIZE]{ 0 };
-					temp_hp_buf[0] = sizeof(int) + sizeof(UINT) + 2;	// hp + id + packet size addition(2)
+					temp_hp_buf[0] = sizeof(int) + sizeof(UINT) + sizeof(UINT) + 2;	// hp + id + packet size addition(2)
 					temp_hp_buf[1] = KEYINPUT_ATTACK;
 					*(reinterpret_cast<int*>(&temp_hp_buf[2])) = players->m_player_data.state.hp;
-					*(reinterpret_cast<int*>(&temp_hp_buf[6])) = players->m_id;
+					*(reinterpret_cast<int*>(&temp_hp_buf[6])) = players->m_id;		// 맞는 사람의 id
+					*(reinterpret_cast<int*>(&temp_hp_buf[10])) = m_id;				// 공격한 사람의 id
+
 
 					for (auto other_players : g_clients) {
 						if (DISCONNECTED == other_players->m_connect_state) { continue; }

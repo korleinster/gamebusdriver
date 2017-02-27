@@ -11,6 +11,7 @@
 #include "RenderMgr.h"
 #include "ObjMgr.h"
 #include "SceneMgr.h"
+#include "ParsingDevice9.h"
 
 //ÀÏ¹Ý°´Ã¼
 #include "Shader.h"
@@ -51,6 +52,8 @@ HRESULT CMainApp::Initialize(void)
 
 	CDevice::GetInstance()->CreateDevice();
 	m_pGrapicDevcie = CDevice::GetInstance();
+
+	CParsingDevice9::GetInstance()->InitGraphicDev(CParsingDevice9::MODE_WIN, g_hWnd, WINCX, WINCY);
 
 	CTimeMgr::GetInstance()->InitTime();
 
@@ -169,6 +172,7 @@ CMainApp * CMainApp::Create(void)
 void CMainApp::Release(void)
 {
 	CDevice::GetInstance()->DestroyInstance();
+	CParsingDevice9::GetInstance()->DestroyInstance();
 	CTimeMgr::GetInstance()->DestroyInstance();
 	CCamera::GetInstance()->DestroyInstance();
 	CShaderMgr::GetInstance()->DestroyInstance();

@@ -32,8 +32,9 @@ CPlayer::CPlayer()
 	m_pTerrainCol = NULL;
 	m_fSeverTime = 0.f;
 	//m_eObjDir = OBJDIR_UP;
-	test = false;
+	m_bSendServer = false;
 	m_ePlayerState = PLAYER_IDLE;
+	m_bPush = false;
 
 	m_Packet = new Packet[MAX_BUF_SIZE];
 }
@@ -52,7 +53,13 @@ HRESULT CPlayer::Initialize(void)
 	//m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 	//m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 	//m_pInfo->m_vScale = D3DXVECTOR3(0.05f, 0.05f, 0.05f);
-	//m_pInfo->m_vScale = D3DXVECTOR3(10.f, 10.f, 10.f);
+	m_pInfo->m_vScale = D3DXVECTOR3(5.f, 5.f, 5.f);
+
+	list<CObj*>::iterator iter = CObjMgr::GetInstance()->m_mapObj[L"Terrain"].begin();
+	list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->m_mapObj[L"Terrain"].end();
+
+	if (iter != iter_end)
+		m_pVerTex = *dynamic_cast<CTerrain*>(*iter)->GetVertex();
 
 	CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, this);
 	
@@ -62,15 +69,16 @@ HRESULT CPlayer::Initialize(void)
 int CPlayer::Update(void)
 {
 	m_fSeverTime += CTimeMgr::GetInstance()->GetTime();
+	m_pTerrainCol->CollisionTerrain(&m_pInfo->m_vPos, m_pVerTex);
 	/*if (dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd == true)
 		dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd = false;*/
 
-	if (test == false)
+	if (m_bSendServer == false)
 	{
 		m_pInfo->m_ServerInfo = *g_client.getPlayerData();
 		g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
 		g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
-		test = true;
+		m_bSendServer = true;
 	}
 
 
@@ -88,10 +96,19 @@ int CPlayer::Update(void)
 
 
 	KeyInput();
+	AniMove();
+
+	cout <<"내 채력:" << m_pInfo->m_ServerInfo.state.hp << endl;
+
 	CObj::Update();
 
+	cout << m_bPush << endl;
+
+	if (m_bPush == false)
+		m_ePlayerState = PLAYER_IDLE;
 
 
+	//if(dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd = false)
 	
 
 	//m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
@@ -181,144 +198,162 @@ void CPlayer::KeyInput()
 	//g_client->m_recvbuf
 	if (CInput::GetInstance()->GetDIKeyState(DIK_UP) & 0x80)
 	{
-		if (m_ePlayerState == PLAYER_IDLE)
-		{
-			cout << "들어가" << endl;
-			m_ePlayerState = PLAYER_MOVE;
-		}
-		//m_eObjDir = OBJDIR_UP;
-		m_pInfo->m_ServerInfo.dir = KEYINPUT_UP;
-		
-		//dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd = false;
-		//dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_fAniPlayTimer = 0;
+		m_bPush = true;
 		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(315.f);
-		m_pInfo->m_vPos += m_pInfo->m_vDir * 50.f * fTime;
-
+		m_pInfo->m_vPos += m_pInfo->m_vDir * 5.f * fTime;
 		m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 		m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
+
+
+		m_pInfo->m_ServerInfo.dir = KEYINPUT_UP;
 		g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
 		g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
+
+		
+		if (m_ePlayerState == PLAYER_MOVE)
+			return;
+
+		m_ePlayerState = PLAYER_MOVE;
+		
+		//m_eObjDir = OBJDIR_UP;
+
+
+		//dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd = false;
+		//dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_fAniPlayTimer = 0;
 		//m_ePlayerState = PLAYER_MOVE;
 
-		cout << "상" << endl;
+		//cout << "상" << endl;
 	}
+	/*else
+		m_bPush = false;*/
 
 	else if (CInput::GetInstance()->GetDIKeyState(DIK_DOWN) & 0x80)
 	{
-		if (m_ePlayerState == PLAYER_IDLE)
-		{
-			cout << "들어가" << endl;
-			m_ePlayerState = PLAYER_MOVE;
-		}
-		//m_eObjDir = OBJDIR_DOWN;cout
-		m_pInfo->m_ServerInfo.dir = KEYINPUT_DOWN;
-		
-		//dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd = false;
-		//dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_fAniPlayTimer = 0;
+		m_bPush = true;
 		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(135.f);
-
-		m_pInfo->m_vPos += m_pInfo->m_vDir * 50.f * fTime;
-
+		m_pInfo->m_vPos += m_pInfo->m_vDir * 5.f * fTime;
 		m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 		m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
+
+
+		m_pInfo->m_ServerInfo.dir = KEYINPUT_DOWN;
 		g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
 		g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
+
+		
+		if (m_ePlayerState == PLAYER_MOVE)
+			return;
+
+
+		m_ePlayerState = PLAYER_MOVE;
+		
+		//m_eObjDir = OBJDIR_UP;
+
+
+		//dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd = false;
+		//dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_fAniPlayTimer = 0;
 		//m_ePlayerState = PLAYER_MOVE;
 
-		cout << "하" << endl;
+		//cout << "하" << endl;
 	}
+	/*else
+		m_bPush = false;*/
 	
 
 	else if (CInput::GetInstance()->GetDIKeyState(DIK_LEFT) & 0x80)
 	{
-		if (m_ePlayerState == PLAYER_IDLE)
-		{
-			cout << "들어가" << endl;
-			m_ePlayerState = PLAYER_MOVE;
-		}
-		//m_eObjDir = OBJDIR_LEFT;
-		m_pInfo->m_ServerInfo.dir = KEYINPUT_LEFT;
-		
-		//dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd = false;
-		//dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_fAniPlayTimer = 0;
+		m_bPush = true;
 		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(225.f);
-		m_pInfo->m_vPos += m_pInfo->m_vDir * 50.f * fTime;
-
+		m_pInfo->m_vPos += m_pInfo->m_vDir * 5.f * fTime;
 		m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 		m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
+
+
+		m_pInfo->m_ServerInfo.dir = KEYINPUT_LEFT;
 		g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
 		g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
+
+		
+		if (m_ePlayerState == PLAYER_MOVE)
+			return;
+
+
+		m_ePlayerState = PLAYER_MOVE;
+		
+		//m_eObjDir = OBJDIR_UP;
+
+
+		//dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd = false;
+		//dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_fAniPlayTimer = 0;
 		//m_ePlayerState = PLAYER_MOVE;
 
-		cout << "좌" << endl;
+		//cout << "좌" << endl;
 	}
+	/*else
+		m_bPush = false;*/
 
 	else if (CInput::GetInstance()->GetDIKeyState(DIK_RIGHT) & 0x80)
 	{
-		//m_eObjDir = OBJDIR_RIGHT;
-		if (m_ePlayerState == PLAYER_IDLE)
-		{
-			cout << "들어가" << endl;
-			m_ePlayerState = PLAYER_MOVE;
-		}
-		m_pInfo->m_ServerInfo.dir = KEYINPUT_RIGHT;
-		
-		//dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd = false;
-		//dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_fAniPlayTimer = 0;
+		m_bPush = true;
 		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(45.f);
-		m_pInfo->m_vPos += m_pInfo->m_vDir * 50.f * fTime;
-
+		m_pInfo->m_vPos += m_pInfo->m_vDir * 5.f * fTime;
 		m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 		m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
+
+
+		m_pInfo->m_ServerInfo.dir = KEYINPUT_RIGHT;
 		g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
 		g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
+
+		if (m_ePlayerState == PLAYER_MOVE)
+			return;
+
+		
 		m_ePlayerState = PLAYER_MOVE;
+		
+		//m_eObjDir = OBJDIR_UP;
+
+
+		//dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd = false;
+		//dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_fAniPlayTimer = 0;
+		//m_ePlayerState = PLAYER_MOVE;
 
 		//cout << "우" << endl;
 	}
-	else
-	{
-		m_ePlayerState = PLAYER_IDLE;
-		cout << "멈춤" << endl;
-	}
+	/*else
+		m_bPush = false;*/
+	
 	
 
-	if (CInput::GetInstance()->GetDIKeyState(DIK_SPACE) & 0x80)
+	else if (CInput::GetInstance()->GetDIKeyState(DIK_SPACE) & 0x80)
 	{
-		if (m_ePlayerState == PLAYER_IDLE)
-			m_ePlayerState = PLAYER_ATT1;
+		m_bPush = true;
+
+		g_client.sendPacket(0, KEYINPUT_ATTACK, nullptr);
+
+		if (m_ePlayerState == PLAYER_ATT1)
+			return;
+
+		
+
+		m_ePlayerState = PLAYER_ATT1;
+
 		//dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd = false;
 		//dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_fAniPlayTimer = 0;
 	}
 	else
 	{
-		m_ePlayerState = PLAYER_IDLE;
+		m_bPush = false;
 	}
-	
-
-	/*if (CInput::GetInstance()->GetDIKeyState(DIK_PGUP) & 0x80)
-	{
-		m_pInfo->m_fAngle[ANGLE_Z] += D3DXToRadian(90.f * fTime);
-	}
-
-	if (CInput::GetInstance()->GetDIKeyState(DIK_PGDN) & 0x80)
-	{
-		m_pInfo->m_fAngle[ANGLE_Z] -= D3DXToRadian(90.f * fTime);
-	}
-
-	if (CInput::GetInstance()->GetDIKeyState(DIK_HOME) & 0x80)
-	{
-		m_pInfo->m_fAngle[ANGLE_X] += D3DXToRadian(90.f * fTime);
-	}
-
-	if (CInput::GetInstance()->GetDIKeyState(DIK_END) & 0x80)
-	{
-		m_pInfo->m_fAngle[ANGLE_X] -= D3DXToRadian(90.f * fTime);
-	}*/
 }
 
 
 Packet* CPlayer::GetPacket()
 {
 	return m_Packet;
+}
+
+void CPlayer::AniMove(void)
+{
+	//애니매이션에 따라 얼마나 이동할껀지 부분임.
 }

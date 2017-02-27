@@ -88,12 +88,12 @@ void AsynchronousClientClass::Login_access() {
 		wchar_t pw[MAX_BUF_SIZE / 4]{ 0 };
 
 		wcin >> id >> pw;
-
+		
 		Packet temp_buf[MAX_BUF_SIZE]{ 0 };
-		temp_buf[0] = wcslen(id) * 2;
-		wcscpy(reinterpret_cast<wchar_t*>(&temp_buf[1]), id);
-		temp_buf[temp_buf[0] + 3] = wcslen(pw) * 2;
-		wcscpy(reinterpret_cast<wchar_t*>(&temp_buf[temp_buf[0] + 4]), pw);
+		temp_buf[0] = wcslen(L"guest") * 2;
+		wcscpy(reinterpret_cast<wchar_t*>(&temp_buf[1]), L"guest");
+		temp_buf[temp_buf[0] + 3] = wcslen(L"guest") * 2;
+		wcscpy(reinterpret_cast<wchar_t*>(&temp_buf[temp_buf[0] + 4]), L"guest");
 
 		send(m_sock, reinterpret_cast<char*>(&temp_buf), MAX_BUF_SIZE, 0);
 		recv(m_sock, reinterpret_cast<char*>(&temp_buf), MAX_BUF_SIZE, 0);
@@ -102,6 +102,7 @@ void AsynchronousClientClass::Login_access() {
 		else {
 			system("cls");
 			printf("Login Failed\n");
+			exit(-1);
 		}
 	}
 
@@ -199,7 +200,8 @@ void AsynchronousClientClass::sendPacket(const BYTE data_size, const BYTE type, 
 		// 패킷 안의 실제 내용 생성
 		m_sendbuf[0] = data_size + 2;
 		m_sendbuf[1] = type;
-		memcpy(&m_sendbuf[2], data_start_pointer, m_sendbuf[0]);
+
+		if (nullptr != data_start_pointer) { memcpy(&m_sendbuf[2], data_start_pointer, m_sendbuf[0]); }
 
 		m_wsa_sendbuf.len = m_sendbuf[0];
 		DWORD ioByteSize;

@@ -52,7 +52,7 @@ HRESULT CFlower::Initialize(void)
 
 int CFlower::Update(void)
 {
-	//m_pTerrainCol->CollisionTerrain(&m_pInfo->m_vPos, m_pVerTex);
+	m_pTerrainCol->CollisionTerrain(&m_pInfo->m_vPos, m_pVerTex);
 
 
 	D3DXMATRIX		matBill;

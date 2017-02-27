@@ -16,6 +16,7 @@ private:
 	CLoading*	m_pLoading;
 	bool		m_bDynamicLoading;
 
+
 public:
 	virtual HRESULT Initialize(void);
 	virtual int Update(void);

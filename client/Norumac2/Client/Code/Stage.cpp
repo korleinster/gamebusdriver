@@ -92,24 +92,13 @@ HRESULT CStage::CreateObj(void)
 	TCHAR  szTexKey[MAX_PATH] = L"";
 	int iHigh = 0;
 
+	pObj = CTerrain::Create();
+	if (pObj == NULL)
+		return E_FAIL;
 
-	for (size_t i = 0; i < 25; ++i)
-	{
-		iHigh = i % 5;
-		wsprintf(szMeshKey, L"Mesh_Town%d", i);
-		wsprintf(szTexKey, L"Texture_Town%d", i);
+	CObjMgr::GetInstance()->AddObject(L"Terrain", pObj);
 
-		pObj = CStaticObject::Create(szMeshKey, szTexKey);
-		if (pObj == NULL)
-			return E_FAIL;
-
-		pObj->SetScale(D3DXVECTOR3(0.05f, 0.05f, 0.05f));
-		//pObj->SetPos(D3DXVECTOR3(0.f, 0.f, 10.f*i));
-		pObj->SetPos(D3DXVECTOR3(0.f, 60.f, 0.f));
-		
-
-		CObjMgr::GetInstance()->AddObject(L"StaticObject", pObj);
-	}
+	
 	
 
 	for (int i = 0; i < 20; ++i)

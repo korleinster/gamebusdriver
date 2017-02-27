@@ -22,8 +22,9 @@ private:
 	CTerrainCol*	m_pTerrainCol;
 	Packet*			m_Packet;
 	float			m_fSeverTime;
-	bool			test;
+	bool			m_bSendServer;
 	PLAYER_STATE	m_ePlayerState;
+	bool			m_bPush;
 
 
 public:
@@ -32,6 +33,7 @@ public:
 	virtual void	Render(void);
 	void			KeyInput(void);
 	Packet*			GetPacket(void);
+	void			AniMove(void);
 
 public:
 	static CPlayer* Create(void);

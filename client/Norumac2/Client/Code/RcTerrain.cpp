@@ -131,12 +131,12 @@ HRESULT CRcTerrain::CreateBuffer(UINT iCountX, UINT iCountZ, UINT iInterval)
 		return E_FAIL;
 
 
-	//D3D11_BUFFER_DESC cbd;
-	//ZeroMemory(&cbd, sizeof(cbd));
-	//cbd.Usage = D3D11_USAGE_DEFAULT;
-	//cbd.ByteWidth = sizeof(ConstantBuffer);
-	//cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	//hr = CDevice::GetInstance()->m_pDevice->CreateBuffer(&cbd, NULL, &m_ConstantBuffer);
+	D3D11_BUFFER_DESC cbd;
+	ZeroMemory(&cbd, sizeof(cbd));
+	cbd.Usage = D3D11_USAGE_DEFAULT;
+	cbd.ByteWidth = sizeof(ConstantBuffer);
+	cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	hr = CDevice::GetInstance()->m_pDevice->CreateBuffer(&cbd, NULL, &m_ConstantBuffer);
 	//D3D11_BUFFER_DESC bd;
 	//ZeroMemory(&bd, sizeof(bd));
 	//bd.Usage = D3D11_USAGE_DYNAMIC;
@@ -174,20 +174,24 @@ DWORD CRcTerrain::Release(void)
 
 CResources * CRcTerrain::CloneResource(void)
 {
-	return nullptr;
+	CResources* pResource = this;
+
+	pResource->AddRef();
+
+	return pResource;
 }
 
 DWORD * CRcTerrain::LoadImage(void)
 {
 	D3DXIMAGE_INFO		ImgInfo;
 
-	if (FAILED(D3DXGetImageInfoFromFile(L"../Resource/Terrain/Sample.png", &ImgInfo)))
+	if (FAILED(D3DXGetImageInfoFromFile(L"../Resource/Terrain/Stage1Height.png", &ImgInfo)))
 	{
 		MessageBox(NULL, L"Can't not open the texture file.", L"Error", MB_OK);
 	}
 
 	if (FAILED(D3DXCreateTextureFromFileEx(CParsingDevice9::GetInstance()->m_pDevice,
-		L"../Resource/Terrain/output.png", ImgInfo.Width, ImgInfo.Height,
+		L"../Resource/Terrain/Stage1Height.png", ImgInfo.Width, ImgInfo.Height,
 		ImgInfo.MipLevels, 0,
 		ImgInfo.Format, D3DPOOL_MANAGED,
 		D3DX_DEFAULT, D3DX_DEFAULT, 0,

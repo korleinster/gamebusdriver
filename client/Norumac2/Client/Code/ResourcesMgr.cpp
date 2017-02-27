@@ -6,6 +6,7 @@
 #include "StaticMesh.h"
 #include "DynamicMesh.h"
 #include "RcTex.h"
+#include "RcTerrain.h"
 
 
 
@@ -88,11 +89,11 @@ HRESULT CResourcesMgr::AddBuffer(const WORD & wContainerIndex, BUFFERTYPE eBuffe
 		pBuffer = CRcTex::Create();
 		break;
 
-	/*case BUFFER_TERRAIN:
-		pBuffer = CTerrainTex::Create(pDevice, wCountX, wCountZ, wInterval);
+	case BUFFER_TERRAIN:
+		pBuffer = CRcTerrain::Create(wCountX, wCountZ, wInterval);
 		break;
 
-	case BUFFER_CUBETEX:
+	/*case BUFFER_CUBETEX:
 		pBuffer = CCubeTex::Create(pDevice);
 		break;*/
 	}

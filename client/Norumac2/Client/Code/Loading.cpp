@@ -55,17 +55,12 @@ void CLoading::StageLoading(void)
 	TCHAR szTexFullPath[MAX_PATH] = L"";
 	TCHAR szTexKey[MAX_PATH] = L"";
 
-	for (size_t i = 0; i < 25; ++i) {
+	hr = CResourcesMgr::GetInstance()->AddTexture(
+		RESOURCE_STAGE
+		, L"Texture_Terrain"
+		, L"../Resource/Terrain/Stage1.png");
+	FAILED_CHECK_RETURN(hr, );
 
-		wsprintf(szTexFullPath, L"../Resource/MeshImage/Town%d.png", i);
-		wsprintf(szTexKey, L"Texture_Town%d", i);
-
-		hr = CResourcesMgr::GetInstance()->AddTexture(
-			RESOURCE_STAGE
-			, szTexKey
-			, szTexFullPath);
-		FAILED_CHECK_RETURN(hr, );
-	}
 
 	hr = CResourcesMgr::GetInstance()->AddTexture(
 		RESOURCE_STAGE
@@ -86,26 +81,14 @@ void CLoading::StageLoading(void)
 	TCHAR szFullPath[MAX_PATH] = L"";
 	TCHAR szFullKey[MAX_PATH] = L"";
 
-	for (size_t i = 0; i < 25; ++i)
-	{
-		wsprintf(szFullPath, L"Town%d.FBX", i);
-		wsprintf(szFullKey, L"Mesh_Town%d", i);
-
-		char cPath[MAX_PATH];
-
-		WideCharToMultiByte(CP_ACP, 0, szFullPath, MAX_PATH, cPath, MAX_PATH, NULL, NULL);
-
-		hr = CResourcesMgr::GetInstance()->AddMesh(
-			RESOURCE_STAGE,
-			MESH_STATIC
-			, szFullKey
-			, "../Resource/Mesh/"
-			, cPath);
-		FAILED_CHECK_RETURN(hr, );
-	}
-
 	
-
+	hr = CResourcesMgr::GetInstance()->AddBuffer(
+		RESOURCE_STAGE,
+		BUFFER_TERRAIN,
+		L"Buffer_RcTerrain",
+		VERTEXCOUNTX,
+		VERTEXCOUNTX);
+	FAILED_CHECK_RETURN(hr, );
 
 
 

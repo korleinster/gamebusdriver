@@ -43,9 +43,15 @@ HRESULT COtherPlayer::Initialize(void)
 	if (FAILED(AddComponent()))
 		return E_FAIL;
 
-	m_pInfo->m_vScale = D3DXVECTOR3(0.05f, 0.05f, 0.05f);
+	m_pInfo->m_vScale = D3DXVECTOR3(5.f, 5.f, 5.f);
 	//m_pInfo->m_vScale = D3DXVECTOR3(10.f, 10.f, 10.f);
 	//m_pInfo->m_fAngle[ANGLE_X] = /*D3DX_PI / 2 * -1.f;*/D3DXToRadian(-90);
+
+	list<CObj*>::iterator iter = CObjMgr::GetInstance()->m_mapObj[L"Terrain"].begin();
+	list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->m_mapObj[L"Terrain"].end();
+
+	if (iter != iter_end)
+		m_pVerTex = *dynamic_cast<CTerrain*>(*iter)->GetVertex();
 
 	CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, this);
 
@@ -56,6 +62,7 @@ int COtherPlayer::Update(void)
 
 {
 	m_fSeverTime += CTimeMgr::GetInstance()->GetTime();
+	m_pTerrainCol->CollisionTerrain(&m_pInfo->m_vPos, m_pVerTex);
 	/*if (m_pBuffer->m_bAniEnd == true)
 	m_pBuffer->m_bAniEnd = false;*/
 	
@@ -67,6 +74,8 @@ int COtherPlayer::Update(void)
 
 
 	//cout <<"OtherPlayer pos: " << m_pInfo->m_vPos.x << "/" << m_pInfo->m_vPos.y << "/" << m_pInfo->m_vPos.z << endl;
+
+	cout << "얼라" << m_pInfo->m_ServerInfo.id << "번의 체력:" << m_pInfo->m_ServerInfo.state.hp << endl;
 
 	CObj::Update();
 	return 0;
@@ -150,19 +159,19 @@ void COtherPlayer::ChangeDir(void)
 {
 	if (m_pInfo->m_ServerInfo.dir == KEYINPUT_UP)
 	{
-		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(135.f);
+		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(315.f);
 	}
 	else if (m_pInfo->m_ServerInfo.dir == KEYINPUT_DOWN)
 	{
-		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(315.f);
+		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(135.f);
 	}
 	else if (m_pInfo->m_ServerInfo.dir == KEYINPUT_LEFT)
 	{
-		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(45.f);
+		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(225.f);
 	}
 	else if (m_pInfo->m_ServerInfo.dir == KEYINPUT_RIGHT)
 	{
-		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(225.f);
+		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(45.f);
 	}
 }
 

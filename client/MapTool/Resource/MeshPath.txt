@@ -1,3 +1,13 @@
 archortower|..\Resource\Mesh\|archortower.FBX
 grass|..\Resource\Mesh\|grass.FBX
-newplayer|..\Resource\Mesh\|newplayer.FBX
+oak|..\Resource\Mesh\|oak.FBX
+playerhousebottom|..\Resource\Mesh\|playerhousebottom.FBX
+playerhousetop|..\Resource\Mesh\|playerhousetop.FBX
+rock1|..\Resource\Mesh\|rock1.FBX
+rock2|..\Resource\Mesh\|rock2.FBX
+rock3|..\Resource\Mesh\|rock3.FBX
+rockload|..\Resource\Mesh\|rockload.FBX
+tree1|..\Resource\Mesh\|tree1.FBX
+tree2|..\Resource\Mesh\|tree2.FBX
+treefense1|..\Resource\Mesh\|treefense1.FBX
+wall|..\Resource\Mesh\|wall.FBX

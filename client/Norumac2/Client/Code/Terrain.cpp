@@ -9,6 +9,8 @@
 #include "Camera.h"
 #include "Device.h"
 #include "Shader.h"
+#include "ResourcesMgr.h"
+#include "RenderMgr.h"
 
 CTerrain::CTerrain()
 {
@@ -48,11 +50,13 @@ HRESULT CTerrain::Initialize(void)
 	m_pVerTex = new VTXTEX[VERTEXCOUNTX * VERTEXCOUNTZ];
 
 	//m_pGrapicDevice->m_pDeviceContext->GetData
-	/*D3D11_MAPPED_SUBRESOURCE MapResource;
+	D3D11_MAPPED_SUBRESOURCE MapResource;
 
 	m_pGrapicDevice->m_pDeviceContext->Map(m_pTerrainBuffer->m_VertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &MapResource);
-	memcpy(m_pVerTex,(VTXTEX*)MapResource.pData, sizeof(VTXTEX) * (VERTEXCOUNTX * VERTEXCOUNTZ));
-	m_pGrapicDevice->m_pDeviceContext->Unmap(m_pTerrainBuffer->m_VertexBuffer, 0);*/
+	memcpy(m_pVerTex, (VTXTEX*)MapResource.pData, sizeof(VTXTEX) * (VERTEXCOUNTX * VERTEXCOUNTZ));
+	m_pGrapicDevice->m_pDeviceContext->Unmap(m_pTerrainBuffer->m_VertexBuffer, 0);
+
+	CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, this);
 
 	return S_OK;
 }
@@ -109,41 +113,36 @@ void CTerrain::Render(void)
 
 void CTerrain::Release(void)
 {
-	::Safe_Delete(m_pInfo);
-	::Safe_Delete(m_pTerrainBuffer);
-	::Safe_Delete(m_pVertexShader);
-	::Safe_Delete(m_pPixelShader);
-	::Safe_Delete(m_pTexture);
+	::Safe_Release(m_pInfo);
+	::Safe_Release(m_pTerrainBuffer);
+	::Safe_Release(m_pVertexShader);
+	::Safe_Release(m_pPixelShader);
+	::Safe_Release(m_pTexture);
 	::Safe_Delete(m_pVerTex);
 }
 
 HRESULT CTerrain::AddComponent(void)
 {
-	/*CComponent* pComponent = NULL;
+	CComponent* pComponent = NULL;
 
-	m_pInfo = CInfo::Create(g_vLook);
-	pComponent = m_pInfo;
-	if (pComponent == NULL)
-		return E_FAIL;
-	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Info", pComponent));
+	pComponent = m_pInfo = CInfo::Create(g_vLook);
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Transform", pComponent));
 
-	m_pTerrainBuffer = CRcTerrain::Create(VERTEXCOUNTX, VERTEXCOUNTZ, VERTEXINTERVAL);
-	pComponent = m_pTerrainBuffer;
-	if (pComponent == NULL)
-		return E_FAIL;
-	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Buffer", pComponent));
+	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Buffer_RcTerrain");
+	m_pTerrainBuffer = dynamic_cast<CVIBuffer*>(pComponent);
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Buffer", pComponent));
 
 
-	m_pTexture = CTexture::Create(L"../Resource/Terrain/Terrain0.png");
-	pComponent = m_pTexture;
-	if (pComponent == NULL)
-		return E_FAIL;
-	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Texture", pComponent));
+	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Texture_Terrain");
+	m_pTexture = dynamic_cast<CTexture*>(pComponent);
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
 
 	m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"VS");
-	m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"PS");;*/
+	m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"PS");;
 
 
-	
+
 	return S_OK;
 }

@@ -167,6 +167,7 @@ HRESULT CLogo::Add_Dynamic_Buffer(void)
 		//lstrcpy(m_szLoadMessage, L"로딩 완료...");
 		cout << "Loading End" << endl;
 
+
 		m_bDynamicLoading = true;
 	}
 

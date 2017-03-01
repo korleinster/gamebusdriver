@@ -8,6 +8,7 @@
 #include "Flower.h"
 #include "Player.h"
 #include "StaticObject.h"
+#include "Camera.h"
 
 CStage::CStage()
 	: m_bFirstLogin(false)
@@ -117,6 +118,8 @@ HRESULT CStage::CreateObj(void)
 
 	pObj = CPlayer::Create();
 	CObjMgr::GetInstance()->AddObject(L"Player", pObj);
+
+	//CCamera::GetInstance()->SetCameraTarget(pObj->GetInfo());
 	
 
 

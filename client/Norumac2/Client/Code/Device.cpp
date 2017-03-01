@@ -135,7 +135,7 @@ bool CDevice::CreateRenderTargetStanciView(void)
 
 void CDevice::BeginDevice(void)
 {
-	D3DXCOLOR DevcieColor(0, 0, 1, 1);
+	D3DXCOLOR DevcieColor(0, 0, 0, 0);
 	m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView, DevcieColor);
 	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }

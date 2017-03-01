@@ -10,6 +10,7 @@ public:
 
 public:
 	LPDIRECT3DTEXTURE9 m_pTexHeightMap;
+	VTXTEX* Vertex;
 
 public:
 	virtual HRESULT CreateBuffer(UINT iCountX, UINT iCountZ, UINT iInterval);

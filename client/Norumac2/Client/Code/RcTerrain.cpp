@@ -28,7 +28,7 @@ HRESULT CRcTerrain::CreateBuffer(UINT iCountX, UINT iCountZ, UINT iInterval)
 
 	UINT iVertexCount = iCountX * iCountZ;
 
-	VTXTEX* Vertex = new VTXTEX[iVertexCount];
+	Vertex = new VTXTEX[iVertexCount];
 
 	iCountZ = pSurface.Height;
 	iCountX = pSurface.Width;
@@ -79,7 +79,7 @@ HRESULT CRcTerrain::CreateBuffer(UINT iCountX, UINT iCountZ, UINT iInterval)
 	hr = CDevice::GetInstance()->m_pDevice->CreateBuffer(&vbd, &vBufferData, &m_VertexBuffer);
 
 
-	::Safe_Delete_Array(Vertex);
+	//::Safe_Delete_Array(Vertex);
 
 	if (FAILED(hr))
 		return E_FAIL;
@@ -137,6 +137,7 @@ HRESULT CRcTerrain::CreateBuffer(UINT iCountX, UINT iCountZ, UINT iInterval)
 	cbd.ByteWidth = sizeof(ConstantBuffer);
 	cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	hr = CDevice::GetInstance()->m_pDevice->CreateBuffer(&cbd, NULL, &m_ConstantBuffer);
+
 	//D3D11_BUFFER_DESC bd;
 	//ZeroMemory(&bd, sizeof(bd));
 	//bd.Usage = D3D11_USAGE_DYNAMIC;
@@ -169,6 +170,7 @@ CRcTerrain* CRcTerrain::Create(UINT iCountX, UINT iCountZ, UINT iInterval)
 
 DWORD CRcTerrain::Release(void)
 {
+	::Safe_Delete_Array(Vertex);
 	return 0;
 }
 

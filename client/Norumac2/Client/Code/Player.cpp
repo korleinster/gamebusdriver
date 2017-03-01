@@ -329,7 +329,7 @@ void CPlayer::KeyInput()
 	{
 		m_bPush = true;
 
-		g_client.sendPacket(0, KEYINPUT_ATTACK, nullptr);
+		g_client.sendPacket(0, KEYINPUT_ATTACK, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.state.hp));
 
 		if (m_ePlayerState == PLAYER_ATT1)
 			return;

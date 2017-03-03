@@ -134,6 +134,7 @@ void player_session::Init()
 	init_this_player_buf[1] = INIT_CLIENT;
 
 	if (0 == wcscmp(L"guest", m_login_id)) {
+		// guest 입장이라면, 초기화를 여기에서 진행한다.
 		m_player_data.id = m_id;
 		m_player_data.pos.x = 100;
 		m_player_data.pos.y = 100;
@@ -148,30 +149,7 @@ void player_session::Init()
 
 	*(reinterpret_cast<player_data*>(&init_this_player_buf[2])) = m_player_data;
 	g_clients[m_id]->send_packet(init_this_player_buf);
-
-	// 자동 hp 회복 하기 용도 타이머 ********************************* ( test 중 )
-	//m_is_hp_can_add = true;
-	//boost::asio::deadline_timer timer_for_wait(g_io_service, boost::posix_time::seconds(5));
-	//// async_wait
-	//timer_for_wait.async_wait([&](const boost::system::error_code& error) {
-	//	if (130 > get_player_data()->state.hp) {
-	//		cout << "Player No. [ " << m_id << " ] HP + 5\n";
-	//		get_player_data()->state.hp += 5;
-
-	//		//Packet temp_hp_buf[MAX_BUF_SIZE]{ 0 };
-	//		//temp_hp_buf[0] = sizeof(int) + sizeof(UINT) + 2;	// hp + id + packet size addition(2)
-	//		//temp_hp_buf[1] = KEYINPUT_ATTACK;
-	//		//*(reinterpret_cast<int*>(&temp_hp_buf[2])) = players->m_player_data.state.hp;
-	//		//*(reinterpret_cast<int*>(&temp_hp_buf[6])) = players->m_id;
-
-	//		//for (auto players : g_clients)
-	//		//{
-
-	//		//}
-	//	}		
-	//});
-
-
+	
 	// 초기화 정보 보내기 2 - 얘 정보를 다른 애들한테 보내고, 다른 애들 정보를 얘한테 보내기  *****************>>>> player_data 에서 추가되는 내용을 전송 시, 수정해주어야 한다.
 	Packet other_info_to_me_buf[MAX_BUF_SIZE];
 	Packet my_info_to_other_buf[MAX_BUF_SIZE];

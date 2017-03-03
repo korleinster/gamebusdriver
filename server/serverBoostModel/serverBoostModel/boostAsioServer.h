@@ -34,6 +34,7 @@ void HandleDiagnosticRecord(SQLHANDLE hHandle, SQLSMALLINT hType, RETCODE RetCod
 /// L"INSERT INTO dbo.user_data ( ID, Password, Nickname, PlayerLevel, AdminLevel ) VALUES ( '2013180056', 'ghdtmdvlf', N'홍승필', 1, 0 )"
 // 데이터 참조 ( http://blog.naver.com/khjkhj2804/220725944795 )
 /// if (SQLExecDirect(hstmt, (SQLWCHAR*)L"SELECT ID, Password, Nickname, PlayerLevel, PositionX, PositionY FROM dbo.user_data", SQL_NTS) != SQL_ERROR)
+/// L"SELECT RTRIM(ID), RTRIM(Password), RTRIM(Nickname), RTRIM(PlayerLevel), RTRIM(Admin) FROM dbo.user_data"
 
 class DB {
 public:
@@ -52,6 +53,7 @@ private:
 	SQLHSTMT    hStmt = NULL;
 };
 
+// Player Session class ---------------------------------------------------------------------------------------------------------------
 class player_session //: public std::enable_shared_from_this<player_session>
 {
 public:
@@ -86,19 +88,40 @@ private:
 	// DB 접속 id 와 pw
 	wchar_t m_login_id[MAX_BUF_SIZE / 4]{ 0 };
 	wchar_t m_login_pw[MAX_BUF_SIZE / 4]{ 0 };
-
-	// hp passive 를 위한 bool 변수
-	bool m_is_hp_can_add{ false };
-
+	
 	// 플레이어 캐릭터 관련 정보
 	player_data m_player_data;
 
 	// 현재 플레이어의 view list
 	/// 고민 1. 기본 unorderd_set 자료형을 쓸 것인가 ?
 	unordered_set<unsigned int> m_view_list;
+	unordered_set<unsigned int> m_view_list_AI;
 	/// 고민 2. 따로 멀티 쓰레드 전용 자료구조를 만들어 쓸 것인가 ? CAS... 5000을 위해서는 써야 할것이다...
 };
 
+// AI Session class ---------------------------------------------------------------------------------------------------------------
+#define MAX_AI_NUM 5000
+
+enum AI_Operator
+{
+	AI_STAY = 1,
+	AI_ATTACK,
+};
+
+class AI_session
+{
+public:
+	AI_session() {};
+	~AI_session() {};
+
+private:
+	bool is_wake{ false };
+
+	short m_operate_state{ AI_STAY };
+	player_data m_player_data;
+};
+
+// Boost Asio class ---------------------------------------------------------------------------------------------------------------
 class boostAsioServer
 {
 public:
@@ -154,6 +177,7 @@ private:
 // 플레이어가 담긴 변수
 static mutex g_clients_lock;
 static vector<player_session*> g_clients;
+static AI_session g_AIs[MAX_AI_NUM];
 
 // DB 통신용 변수
 static DB database;

@@ -73,7 +73,7 @@ int COtherPlayer::Update(void)
 	D3DXVec3TransformNormal(&m_pInfo->m_vDir, &g_vLook, &m_pInfo->m_matWorld);
 
 
-	//cout <<"OtherPlayer pos: " << m_pInfo->m_vPos.x << "/" << m_pInfo->m_vPos.y << "/" << m_pInfo->m_vPos.z << endl;
+	cout <<"OtherPlayer pos: " << m_pInfo->m_vPos.x << "/" << m_pInfo->m_vPos.y << "/" << m_pInfo->m_vPos.z << endl;
 
 	cout << "얼라" << m_pInfo->m_ServerInfo.id << "번의 체력:" << m_pInfo->m_ServerInfo.state.hp << endl;
 

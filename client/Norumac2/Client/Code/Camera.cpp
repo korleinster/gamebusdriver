@@ -53,7 +53,7 @@ HRESULT CCamera::Initialize(void)
 
 int CCamera::Update(void)
 {
-	cout << m_vEye.x << "/" << m_vEye.y << "/" << m_vEye.z << endl;
+	//cout << m_vEye.x << "/" << m_vEye.y << "/" << m_vEye.z << endl;
 	m_pInfo->Update();
 
 	if (CSceneMgr::GetInstance()->m_eType != SCENE_LOGO)

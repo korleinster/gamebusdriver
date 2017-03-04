@@ -92,7 +92,7 @@ int CPlayer::Update(void)
 
 	//cout << m_pInfo->m_vDir.x << "/" << m_pInfo->m_vDir.y << "/" << m_pInfo->m_vDir.z << endl;
 
-	//cout << "Player pos: " << m_pInfo->m_vPos.x << "/" << m_pInfo->m_vPos.y << "/" << m_pInfo->m_vPos.z << endl;
+	cout << "Player pos: " << m_pInfo->m_vPos.x << "/" << m_pInfo->m_vPos.y << "/" << m_pInfo->m_vPos.z << endl;
 
 
 	KeyInput();
@@ -329,12 +329,10 @@ void CPlayer::KeyInput()
 	{
 		m_bPush = true;
 
-		g_client.sendPacket(sizeof(int), KEYINPUT_ATTACK, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.state.hp));
-
 		if (m_ePlayerState == PLAYER_ATT1)
 			return;
 
-		
+		g_client.sendPacket(sizeof(int), KEYINPUT_ATTACK, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.state.hp));
 
 		m_ePlayerState = PLAYER_ATT1;
 

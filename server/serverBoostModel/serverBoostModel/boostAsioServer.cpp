@@ -357,9 +357,9 @@ void player_session::m_process_packet(Packet buf[])
 		case KEYINPUT_ATTACK:		// 기본 공격 ( 데미지 계산, hit box 범위 조정, 전부 여기서 다 조절해야 한다. )
 		{
 			// 충돌체크 검사하고 난 뒤에.. ( 현재는 임시 충돌 체크, 실제 클라와 연동시 충돌 범위 체크해야 한다. )
-			int att_x = 15, att_y = 15;		// 테스트용 클라 공격 리치가 요정도
+			int att_x = 3, att_y = 3;		// 테스트용 클라 공격 리치가 요정도
 			int x = m_player_data.pos.x, y = m_player_data.pos.y;
-			int player_size = 5;	// 테스트용 클라 원 반지름이 크기 5...
+			int player_size = 50;	// 테스트용 클라 원 반지름이 크기 5...
 			char *dir = &m_player_data.dir;
 
 			if ((*dir & KEYINPUT_RIGHT) == (KEYINPUT_RIGHT))	{ x += att_x; }

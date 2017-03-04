@@ -7,6 +7,7 @@
 #include "RenderMgr.h"
 #include "OtherPlayer.h"
 #include "SceneMgr.h"
+#include "Player.h"
 
 void AsynchronousClientClass::processPacket(Packet* buf)
 {
@@ -18,7 +19,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		{
 			player_data *data = CObjMgr::GetInstance()->Get_PlayerServerData(*reinterpret_cast<unsigned int*>(&buf[sizeof(position)+2]));
 
-			if (nullptr != data) { memcpy(&data->pos, &buf[2], sizeof(player_data)); }
+			if (nullptr != data) { memcpy(&data->pos, &buf[2], sizeof(position)); }
 			else
 				break;
 		}
@@ -55,13 +56,16 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			/// 다시말하면, 이전 hp 값과, 패킷으로 날아들어온 hp 값을 차이를 비교해서 데미지가 얼마 들어갔는지 표시해주어야 한다.
 			/// 원하면, 깎이는 데미지가 얼마인지만 패킷으로 보내 줄 수도 있음.
 			if (m_player.id == *(reinterpret_cast<UINT*>(&buf[sizeof(int) + 2]))) {
-				m_player.state.hp = *(reinterpret_cast<char*>(&buf[2]));
+				m_player.state.hp = *(reinterpret_cast<int*>(&buf[2]));
+				list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin();
+				(*iter)->SetPacketData(&m_player);
+
 				break;
 			}
 
 			// 내가 아니라면 다른애 hp 깎기
 			player_data *data = CObjMgr::GetInstance()->Get_PlayerServerData(*reinterpret_cast<unsigned int*>(&buf[sizeof(int) + 2]));
-			data->state.hp = *(reinterpret_cast<char*>(&buf[2]));			
+			data->state.hp = *(reinterpret_cast<int*>(&buf[2]));			
 
 		}
 	}

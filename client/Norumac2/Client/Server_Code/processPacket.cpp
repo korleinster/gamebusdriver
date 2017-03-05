@@ -19,7 +19,26 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		{
 			player_data *data = CObjMgr::GetInstance()->Get_PlayerServerData(*reinterpret_cast<unsigned int*>(&buf[sizeof(position)+2]));
 
-			if (nullptr != data) { memcpy(&data->pos, &buf[2], sizeof(position)); }
+			if (nullptr != data) 
+			{ 
+				memcpy(&data->pos, &buf[2], sizeof(position));
+
+				list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->begin();
+				list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->end();
+
+				for (iter; iter != iter_end;)
+				{
+					if ((*iter)->GetPacketData()->id == reinterpret_cast<player_data*>(data)->id)
+					{
+						if (((COtherPlayer*)(*iter))->GetAniState() == PLAYER_IDLE)
+							((COtherPlayer*)(*iter))->SetAniState(PLAYER_MOVE);
+						break;
+					}
+					else
+						++iter;
+
+				}
+			}
 			else
 				break;
 		}
@@ -44,6 +63,24 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			// 먼저 어떤 놈이 칼질을 했는지 아이디 확인 후, 그 녀석 애니메이션 편집 ( 내 아이디가 아니면 일단 애니메이션 작동 시켜야 됨 )
 			/// 만약 이 위치에 내 고유 id 가 들어있다면, 이미 키를 누른 시점에서 애니메이션을 재생했기 때문에, 그냥 if 문을 넘어간다.
 			if (m_player.id != *(reinterpret_cast<UINT*>(&buf[sizeof(int) + sizeof(int) + 2]))) {
+
+				player_data *data = CObjMgr::GetInstance()->Get_PlayerServerData(*reinterpret_cast<unsigned int*>(&buf[sizeof(int) + sizeof(int) + 2]));
+
+				list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->begin();
+				list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->end();
+
+				for (iter; iter != iter_end;)
+				{
+					if ((*iter)->GetPacketData()->id == reinterpret_cast<player_data*>(data)->id)
+					{
+						if(((COtherPlayer*)(*iter))->GetAniState()==PLAYER_IDLE)
+							((COtherPlayer*)(*iter))->SetAniState(PLAYER_ATT1);
+						break;
+					}
+					else
+						++iter;
+
+				}
 
 				// *(reinterpret_cast<UINT*>(&buf[sizeof(int) + sizeof(int) + 2])) 이 번호 클라이언트의 애니메이션을 작동시켜야 한다.
 				/// 통신을 하던 도중, 추후 시야에서 사라져, 데이터에서 제거한 상황이 있을 수 있기때문에, 벌써 사라져 없는 클라이언트에 대한 예외 처리도 해주어야 한다.

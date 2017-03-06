@@ -1,3 +1,4 @@
+grass|..\Resource\Mesh\|grass.FBX
 longrock|..\Resource\Mesh\|longrock.FBX
 mainbridge|..\Resource\Mesh\|mainbridge.FBX
 mainbridgechain|..\Resource\Mesh\|mainbridgechain.FBX
@@ -21,3 +22,4 @@ player_skill4|..\Resource\Mesh\|player_skill4.FBX
 player_skill_ultra|..\Resource\Mesh\|player_skill_ultra.FBX
 player_stun|..\Resource\Mesh\|player_stun.FBX
 tree1|..\Resource\Mesh\|tree1.FBX
+treefense|..\Resource\Mesh\|treefense.FBX

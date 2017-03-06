@@ -223,6 +223,8 @@ void CDynamicMesh::Release_Animation()
 
 void CDynamicMesh::PlayAnimation(int _iIdx)
 {
+	if (m_bAniEnd == true)
+		m_bAniEnd = false;
 
 	if (_iIdx < 0 || (unsigned)_iIdx > m_vecAni.size())
 		return;

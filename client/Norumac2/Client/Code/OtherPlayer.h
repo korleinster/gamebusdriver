@@ -21,6 +21,8 @@ private:
 	VTXTEX*			m_pVerTex;
 	CTerrainCol*	m_pTerrainCol;
 	float			m_fSeverTime;
+	PLAYER_STATE	m_ePlayerState;
+	//bool			m_bPush;
 
 
 public:
@@ -32,6 +34,8 @@ public:
 public:
 	static COtherPlayer* Create(void);
 	void	Release(void);
+	PLAYER_STATE GetAniState(void) { return m_ePlayerState; }
+	void SetAniState(PLAYER_STATE eState) { m_ePlayerState = eState; }
 
 private:
 	HRESULT	AddComponent(void);

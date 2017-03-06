@@ -30,6 +30,7 @@ COtherPlayer::COtherPlayer()
 	m_pTexture = NULL;
 	m_pVerTex = NULL;
 	m_pTerrainCol = NULL;
+	m_ePlayerState = PLAYER_IDLE;
 }
 
 
@@ -71,6 +72,11 @@ int COtherPlayer::Update(void)
 	m_pInfo->m_vPos.z = m_pInfo->m_ServerInfo.pos.y;
 	ChangeDir();
 	D3DXVec3TransformNormal(&m_pInfo->m_vDir, &g_vLook, &m_pInfo->m_matWorld);
+	if (m_ePlayerState != PLAYER_IDLE)
+	{
+		if (dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd == true)
+			m_ePlayerState = PLAYER_IDLE;
+	}
 
 
 	cout <<"OtherPlayer pos: " << m_pInfo->m_vPos.x << "/" << m_pInfo->m_vPos.y << "/" << m_pInfo->m_vPos.z << endl;
@@ -98,7 +104,7 @@ void COtherPlayer::Render(void)
 	m_pGrapicDevice->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
 
 	//m_pBuffer->Render();
-	dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(0);
+	dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(m_ePlayerState);
 
 }
 

@@ -84,7 +84,7 @@ int COtherPlayer::Update(void)
 
 	//cout <<"OtherPlayer pos: " << m_pInfo->m_vPos.x << "/" << m_pInfo->m_vPos.y << "/" << m_pInfo->m_vPos.z << endl;
 
-	//cout << "얼라" << m_pInfo->m_ServerInfo.id << "번의 체력:" << m_pInfo->m_ServerInfo.state.hp << endl;
+	cout << "다른 플레이어" << m_pInfo->m_ServerInfo.id << "번의 체력:" << m_pInfo->m_ServerInfo.state.hp << endl;
 
 	CObj::Update();
 	return 0;

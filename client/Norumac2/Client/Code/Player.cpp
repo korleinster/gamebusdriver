@@ -100,7 +100,7 @@ int CPlayer::Update(void)
 	KeyInput();
 	AniMove();
 
-	//cout <<"내 채력:" << m_pInfo->m_ServerInfo.state.hp << endl;
+	cout <<"내 채력:" << m_pInfo->m_ServerInfo.state.hp << endl;
 
 	CObj::Update();
 
@@ -348,12 +348,16 @@ void CPlayer::KeyInput()
 		if (m_dwTime + 120 < GetTickCount())
 		{
 			m_dwTime = GetTickCount();
-			list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->begin();
-			list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->end();
 
-			for (iter; iter != iter_end; ++iter)
+			if (CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer") != NULL)
 			{
-				((COtherPlayer*)(*iter))->m_bKey = false;
+				list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->begin();
+				list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->end();
+
+				for (iter; iter != iter_end; ++iter)
+				{
+					((COtherPlayer*)(*iter))->m_bKey = false;
+				}
 			}
 		}
 	}

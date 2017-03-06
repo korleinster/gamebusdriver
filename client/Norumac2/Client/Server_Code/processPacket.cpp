@@ -11,6 +11,7 @@
 
 void AsynchronousClientClass::processPacket(Packet* buf)
 {
+
 	switch (buf[1])
 	{
 	case CHANGED_POSITION: {
@@ -30,12 +31,18 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 				{
 					if ((*iter)->GetPacketData()->id == reinterpret_cast<player_data*>(data)->id)
 					{
+
 						if (((COtherPlayer*)(*iter))->GetAniState() == PLAYER_IDLE)
+						{
+							((COtherPlayer*)(*iter))->m_bKey = true;
 							((COtherPlayer*)(*iter))->SetAniState(PLAYER_MOVE);
+						}
 						break;
 					}
 					else
+					{
 						++iter;
+					}
 
 				}
 			}

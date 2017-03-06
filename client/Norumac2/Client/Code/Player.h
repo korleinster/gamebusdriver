@@ -25,6 +25,7 @@ private:
 	bool			m_bSendServer;
 	PLAYER_STATE	m_ePlayerState;
 	bool			m_bPush;
+	DWORD			m_dwTime;
 
 
 public:

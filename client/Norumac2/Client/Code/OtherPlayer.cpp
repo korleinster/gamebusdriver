@@ -31,6 +31,7 @@ COtherPlayer::COtherPlayer()
 	m_pVerTex = NULL;
 	m_pTerrainCol = NULL;
 	m_ePlayerState = PLAYER_IDLE;
+	m_bKey = false;
 }
 
 
@@ -66,7 +67,8 @@ int COtherPlayer::Update(void)
 	m_pTerrainCol->CollisionTerrain(&m_pInfo->m_vPos, m_pVerTex);
 	/*if (m_pBuffer->m_bAniEnd == true)
 	m_pBuffer->m_bAniEnd = false;*/
-	
+
+	//m_ePlayerState = PLAYER_IDLE;
 
 	m_pInfo->m_vPos.x = m_pInfo->m_ServerInfo.pos.x;
 	m_pInfo->m_vPos.z = m_pInfo->m_ServerInfo.pos.y;
@@ -74,14 +76,15 @@ int COtherPlayer::Update(void)
 	D3DXVec3TransformNormal(&m_pInfo->m_vDir, &g_vLook, &m_pInfo->m_matWorld);
 	if (m_ePlayerState != PLAYER_IDLE)
 	{
-		if (dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd == true)
+		//if (dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd == true) // 여기가 잘못됬다
+		if(m_bKey == false)
 			m_ePlayerState = PLAYER_IDLE;
 	}
 
 
-	cout <<"OtherPlayer pos: " << m_pInfo->m_vPos.x << "/" << m_pInfo->m_vPos.y << "/" << m_pInfo->m_vPos.z << endl;
+	//cout <<"OtherPlayer pos: " << m_pInfo->m_vPos.x << "/" << m_pInfo->m_vPos.y << "/" << m_pInfo->m_vPos.z << endl;
 
-	cout << "얼라" << m_pInfo->m_ServerInfo.id << "번의 체력:" << m_pInfo->m_ServerInfo.state.hp << endl;
+	//cout << "얼라" << m_pInfo->m_ServerInfo.id << "번의 체력:" << m_pInfo->m_ServerInfo.state.hp << endl;
 
 	CObj::Update();
 	return 0;

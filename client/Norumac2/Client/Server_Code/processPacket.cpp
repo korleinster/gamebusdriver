@@ -80,8 +80,11 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 				{
 					if ((*iter)->GetPacketData()->id == reinterpret_cast<player_data*>(data)->id)
 					{
-						if(((COtherPlayer*)(*iter))->GetAniState()==PLAYER_IDLE)
+						if (((COtherPlayer*)(*iter))->GetAniState() == PLAYER_IDLE)
+						{
+							((COtherPlayer*)(*iter))->m_bKey = true;
 							((COtherPlayer*)(*iter))->SetAniState(PLAYER_ATT1);
+						}
 						break;
 					}
 					else

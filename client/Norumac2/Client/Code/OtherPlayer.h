@@ -22,6 +22,9 @@ private:
 	CTerrainCol*	m_pTerrainCol;
 	float			m_fSeverTime;
 	PLAYER_STATE	m_ePlayerState;
+
+public:
+	bool			m_bKey; // Å°°¡ ´­·Ç³ª?
 	//bool			m_bPush;
 
 

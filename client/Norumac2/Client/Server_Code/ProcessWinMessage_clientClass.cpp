@@ -2,6 +2,8 @@
 #include"stdafx.h"
 #include"../../../../server/serverBoostModel/serverBoostModel/protocol.h"
 #include"../Server_Code/ClientClass.h"
+#include "ObjMgr.h"
+#include "OtherPlayer.h"
 
 void AsynchronousClientClass::ProcessWinMessage(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
@@ -39,7 +41,8 @@ void AsynchronousClientClass::ProcessWinMessage(HWND hwnd, UINT uMsg, WPARAM wPa
 				}
 			}
 			int need_to_build = m_packet_size_current - m_packet_size_previous;
-			if (need_to_build <= current_data_processing) {
+			if (need_to_build <= current_data_processing)
+			{
 				// Packet building Complete & Process Packet
 				memcpy(m_data_buf + m_packet_size_previous, buf, need_to_build);
 

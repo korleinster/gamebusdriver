@@ -20,6 +20,9 @@ using boost::asio::ip::tcp;
 #include <sqlext.h>
 #include <tchar.h>
 
+// Multithread
+#include <mutex>
+
 void HandleDiagnosticRecord(SQLHANDLE hHandle, SQLSMALLINT hType, RETCODE RetCode);
 
 #define TRYODBC(h, ht, x)   {   RETCODE rc = x;\
@@ -54,6 +57,8 @@ private:
 };
 
 // Player Session class ---------------------------------------------------------------------------------------------------------------
+#define MAX_HP 100
+
 class player_session //: public std::enable_shared_from_this<player_session>
 {
 public:
@@ -62,6 +67,7 @@ public:
 	
 	void Init();
 
+	bool* get_hp_adding() { return &is_hp_adding; }
 	unsigned int get_id() { return m_id; }
 	bool get_current_connect_state() { return m_connect_state; }
 	player_data* get_player_data() { return &m_player_data; }
@@ -78,6 +84,7 @@ private:
 	// 플레이어 상태 변수
 	bool m_connect_state{ false };
 	unsigned int m_id{ 0 };
+	bool is_hp_adding{ false };
 
 	// 버퍼 변수
 	Packet m_recv_buf[MAX_BUF_SIZE]{ 0 };
@@ -114,6 +121,8 @@ public:
 	AI_session() {};
 	~AI_session() {};
 
+	bool is_hp_full() { return(m_player_data.state.hp > (MAX_HP - 1)); }
+	void change_HP(int add_hp_size) { m_player_data.state.hp += add_hp_size; }
 private:
 	bool is_wake{ false };
 
@@ -150,15 +159,29 @@ private:
 };
 
 // Timer class ---------------------------------------------------------------------------------------------------------------
+
+enum time_queue_event
+{
+	HP_ADD = 1,
+
+};
+
+/*
+	unsigned int obj_id;
+	unsigned int wakeup_time;
+	int	event_id;
+	bool is_ai{ false };
+*/
 using event_type = struct Event_type
 {
 	unsigned int obj_id;
 	unsigned int wakeup_time;
 	int event_id;
+	bool is_ai{ false };
 };
 
 //auto wake_time_cmp = [](const event_type lhs, const event_type rhs) -> const bool { return (lhs.wakeup_time > rhs.wakeup_time); };
-class wake_time_cmp { public: bool operator() (const event_type lhs, const event_type rhs) const { return (lhs.wakeup_time > rhs.wakeup_time); }};
+class wake_time_cmp { public: bool operator() (const event_type *lhs, const event_type *rhs) const { return (lhs->wakeup_time > rhs->wakeup_time); }};
 
 class TimerQueue
 {
@@ -167,10 +190,15 @@ public:
 	~TimerQueue() {};
 
 	void TimerThread();
+	void add_event(const unsigned int& id, const int& sec, time_queue_event type, bool is_ai);
 private:
+	void processPacket(event_type *p);
+
+	// lock
+	mutex time_lock;
 
 	// timer thread queue
-	priority_queue < event_type, vector<event_type>, wake_time_cmp/*decltype(wake_time_cmp)*/ > timer_queue;
+	priority_queue < event_type*, vector<event_type*>, wake_time_cmp/*decltype(wake_time_cmp)*/ > timer_queue;
 };
 
 

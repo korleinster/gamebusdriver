@@ -139,13 +139,13 @@ void player_session::Init()
 		m_player_data.pos.x = 100;
 		m_player_data.pos.y = 100;
 		m_player_data.dir = 0;
-		m_player_data.state.hp = 100;
+		m_player_data.state.hp = MAX_HP;
 	}
 	m_player_data.id = m_id;
 	m_player_data.pos.x = 100;
 	m_player_data.pos.y = 100;
 	m_player_data.dir = 0;
-	m_player_data.state.hp = 100;
+	m_player_data.state.hp = MAX_HP;
 
 	*(reinterpret_cast<player_data*>(&init_this_player_buf[2])) = m_player_data;
 	g_clients[m_id]->send_packet(init_this_player_buf);
@@ -376,6 +376,11 @@ void player_session::m_process_packet(Packet buf[])
 				if (((tempx * tempx) + (tempy * tempy)) <= (player_size * player_size)) {
 					players->m_player_data.state.hp -= 10;
 
+					if (false == is_hp_adding) {
+						is_hp_adding = true;
+						time_queue.add_event(players->m_player_data.id, 1, HP_ADD, false);	// AI 타격 일때, 따로 hp 추가해 주는 함수가 없다 !!! **************
+					}
+
 					Packet temp_hp_buf[MAX_BUF_SIZE]{ 0 };
 					temp_hp_buf[0] = sizeof(int) + sizeof(UINT) + sizeof(UINT) + 2;	// hp + id + packet size addition(2)
 					temp_hp_buf[1] = KEYINPUT_ATTACK;
@@ -395,22 +400,6 @@ void player_session::m_process_packet(Packet buf[])
 
 		}
 			break;
-
-		/*case PASSIVE_HP_ADDED:
-		{
-			cout << "Player No. [ " << m_id << " ] HP + 5\n";
-
-			boost::asio::deadline_timer timer_for_wait(g_io_service);
-			timer_for_wait.expires_from_now(boost::posix_time::seconds(1));
-			timer_for_wait.async_wait([&](const boost::system::error_code& error) {
-				g_io_service.post([]() {
-					Packet hp_added[MAX_BUF_SIZE]{ 0 };
-					hp_added[0] = 2;
-					hp_added[1] = PASSIVE_HP_ADDED;
-				});
-			});
-		}
-			break;*/
 		default:
 			break;
 		}
@@ -558,17 +547,75 @@ void DB::SQLcmd(SQLWCHAR* str) {
 void TimerQueue::TimerThread() {
 	while (true) {
 		Sleep(1);
-		//timer_lock.lock();
+		time_lock.lock();
 		while (false == timer_queue.empty()) {
-			if (timer_queue.top().wakeup_time > GetTickCount()) break;
-			event_type ev = timer_queue.top();
+			if (timer_queue.top()->wakeup_time > GetTickCount()) { break; }
+			
+			event_type *event_ptr = timer_queue.top();
+			
 			timer_queue.pop();
-			//timer_lock.unlock();
-			//Overlap_ex *over = new Overlap_ex;
-			//over->operation = ev.event_id;
-			//PostQueuedCompletionStatus(g_hIocp, 1, ev.obj_id, &(over->original_overlap));
-			//timer_lock.lock();
+			time_lock.unlock();
+
+			processPacket(event_ptr);
+			if (event_ptr != nullptr) { delete event_ptr; }
+
+			time_lock.lock();
 		}
-		//timer_lock.unlock();
+		time_lock.unlock();
+	}
+}
+
+void TimerQueue::add_event(const unsigned int& id, const int& sec, time_queue_event type, bool is_ai) {
+
+	event_type *ptr = new event_type;
+
+	ptr->obj_id = id;
+	ptr->wakeup_time = GetTickCount() + (sec * 1000);
+	ptr->event_id = type;
+	ptr->is_ai = is_ai;
+
+	time_lock.lock();
+	timer_queue.push(ptr);
+	time_lock.unlock();
+}
+
+void TimerQueue::processPacket(event_type *p) {
+
+	switch (p->event_id)
+	{
+	case HP_ADD: {	// 1초마다 hp 5씩 채우기
+
+		int adding_hp_size = 5;
+
+		if (true == p->is_ai) {
+			if (false == g_AIs[p->obj_id].is_hp_full()) {
+				g_AIs[p->obj_id].change_HP(adding_hp_size);
+				add_event(p->obj_id, 1, HP_ADD, true);
+
+				// 아직 주변 플레이어들에게, hp 변경 내역을 통보해주지 않는다. *********************
+			}
+		}
+		else {
+			if (false == (g_clients[p->obj_id]->get_player_data()->state.hp > (MAX_HP - 1))) {
+				g_clients[p->obj_id]->get_player_data()->state.hp += adding_hp_size;
+				
+				if (MAX_HP == g_clients[p->obj_id]->get_player_data()->state.hp) { *g_clients[p->obj_id]->get_hp_adding() = false; }
+				add_event(p->obj_id, 1, HP_ADD, false);
+
+				for (auto players : g_clients) {
+					Packet buf[MAX_BUF_SIZE]{ 0 };
+					buf[0] = (sizeof(int) * 2) + 2;	// 패킷 size
+					buf[1] = SERVER_MESSAGE_HP_CHANGED;
+					*reinterpret_cast<int *>(&buf[2]) = g_clients[p->obj_id]->get_player_data()->state.hp;	// hp 입력
+					*reinterpret_cast<int *>(&buf[6]) = p->obj_id;	// id 입력
+
+					players->send_packet(buf);
+				}
+			}
+		}
+	}
+		break;
+	default:
+		break;
 	}
 }

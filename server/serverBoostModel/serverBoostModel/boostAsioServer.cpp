@@ -8,6 +8,12 @@ boostAsioServer::boostAsioServer() : m_acceptor(g_io_service, tcp::endpoint(tcp:
 	getMyServerIP();
 	CheckThisCPUcoreCount();
 
+	// DB SQL 서버에 접속
+	database.Init();
+
+	// ai 봇 초기화
+	g_client_init();
+
 	acceptThread();
 	start_io_service();
 }
@@ -41,18 +47,13 @@ void boostAsioServer::CheckThisCPUcoreCount()
 }
 
 void boostAsioServer::start_io_service()
-{	
-	m_worker_threads.reserve(m_cpuCore);
-	g_clients.reserve(1000);
-
+{
 	// DB 서버를 위해 -1
 	// Timer Thread 를 위해 -1
-	for (int i = 0; i < m_cpuCore - 1; ++i) { m_worker_threads.emplace_back(new thread{ [&]() -> void { g_io_service.run(); } }); }
+	m_worker_threads.reserve(m_cpuCore - 2);
+	for (int i = 0; i < m_cpuCore - 2; ++i) { m_worker_threads.emplace_back(new thread{ [&]() -> void { g_io_service.run(); } }); }
 	m_worker_threads.emplace_back(new thread{ [&]() -> void { time_queue.TimerThread(); } });
 	
-	// DB SQL 서버에 접속
-	database.Init();
-
 	while (m_ServerShutdown) { Sleep(1000); }
 	
 	// workerThread 발동
@@ -60,6 +61,23 @@ void boostAsioServer::start_io_service()
 		thread->join();
 		delete thread;
 	}
+}
+
+void boostAsioServer::g_client_init() {
+	
+	g_clients.reserve(MAX_AI_NUM + 1000);
+	
+	for (auto i = 0; i < MAX_AI_NUM; ++i) {
+		g_clients.emplace_back(new player_session(boost::asio::ip::tcp::socket (g_io_service), ++m_playerIndex));
+		g_clients[i]->get_player_data()->id = m_playerIndex;
+		g_clients[i]->get_player_data()->is_ai = true;
+		g_clients[i]->get_player_data()->dir = KEYINPUT_UP;
+		g_clients[i]->get_player_data()->pos.x = rand() % 500;
+		g_clients[i]->get_player_data()->pos.y = rand() % 500;
+		g_clients[i]->get_player_data()->state.hp = MAX_HP;
+	}
+
+	cout << "\nAI bots created number of " << MAX_AI_NUM << ", Compelete\n";
 }
 
 void boostAsioServer::acceptThread()
@@ -140,12 +158,14 @@ void player_session::Init()
 		m_player_data.pos.y = 100;
 		m_player_data.dir = 0;
 		m_player_data.state.hp = MAX_HP;
+		m_player_data.is_ai = false;
 	}
 	m_player_data.id = m_id;
 	m_player_data.pos.x = 100;
 	m_player_data.pos.y = 100;
 	m_player_data.dir = 0;
 	m_player_data.state.hp = MAX_HP;
+	m_player_data.is_ai = false;
 
 	*(reinterpret_cast<player_data*>(&init_this_player_buf[2])) = m_player_data;
 	g_clients[m_id]->send_packet(init_this_player_buf);
@@ -169,6 +189,7 @@ void player_session::Init()
 		*(reinterpret_cast<player_data*>(&other_info_to_me_buf[2])) = *(players->get_player_data());
 		send_packet(other_info_to_me_buf);
 
+		if (true == players->get_player_data()->is_ai) { continue; }
 		// 얘 정보를 이제 다른 애들한테 보내면 되는데..
 		players->send_packet(my_info_to_other_buf);
 	}
@@ -208,6 +229,7 @@ void player_session::m_recv_packet()
 			{
 				if (DISCONNECTED == players->m_connect_state) { continue; }
 				if (m_id == players->m_id) { continue; }
+				//if (true == players->get_player_data()->is_ai) { continue; }
 
 				players->send_packet(temp_buf);
 			}
@@ -254,27 +276,7 @@ void player_session::send_packet(Packet *packet)
 	int packet_size = packet[0];
 	Packet *sendBuf = new Packet[packet_size];
 	memcpy(sendBuf, packet, packet_size);
-
-#if 0
-	cout << "Server Sended Packet to No.[ " << m_id << " ] player for ";
-	switch (sendBuf[1])
-	{
-	case INIT_CLIENT:
-		cout << " INIT_CLIENT\n";
-		break;
-	case PLAYER_DISCONNECTED:
-		cout << " PLAYER_DISCONNECTED\n";
-		break;
-	case CHANGED_POSITION:
-		cout << " CHANGED_POSITION\n";
-		break;
-	default:
-		cout << " [ you didn't set protocol to debug ]\n";
-		break;
-	}
-#endif // _DEBUG
-
-
+	
 	//auto self(shared_from_this());
 	m_socket.async_write_some(boost::asio::buffer(sendBuf, packet_size), [=](boost::system::error_code error_code, std::size_t bytes_transferred) -> void {
 		if (!error_code) {
@@ -322,6 +324,7 @@ void player_session::m_process_packet(Packet buf[])
 			{
 				if (DISCONNECTED == players->m_connect_state) { continue; }
 				if (m_id == players->m_id) { continue; }
+				if (true == players->get_player_data()->is_ai) { continue; }
 
 				players->send_packet(temp_pos_buf);
 			}
@@ -348,6 +351,7 @@ void player_session::m_process_packet(Packet buf[])
 			{
 				if (DISCONNECTED == players->m_connect_state) { continue; }
 				if (m_id == players->m_id) { continue; }
+				if (true == players->get_player_data()->is_ai) { continue; }
 
 				players->send_packet(temp_direction_buf);
 			}
@@ -370,6 +374,7 @@ void player_session::m_process_packet(Packet buf[])
 			for (auto players : g_clients) {
 				if (DISCONNECTED == players->m_connect_state) { continue; }
 				if (m_id == players->m_id) { continue; }
+				//if (true == players->get_player_data()->is_ai) { continue; }
 
 				int tempx = x - players->m_player_data.pos.x;
 				int tempy = y - players->m_player_data.pos.y;
@@ -378,7 +383,7 @@ void player_session::m_process_packet(Packet buf[])
 
 					if (false == is_hp_adding) {
 						is_hp_adding = true;
-						time_queue.add_event(players->m_player_data.id, 1, HP_ADD, false);	// AI 타격 일때, 따로 hp 추가해 주는 함수가 없다 !!! **************
+						time_queue.add_event(players->m_player_data.id, 1, HP_ADD, false);	// AI 타격 일때, 따로 hp 추가해 주는 함수가 없다 !!! -> 일반 플레이어와 동일하게 처리함
 					}
 
 					Packet temp_hp_buf[MAX_BUF_SIZE]{ 0 };
@@ -392,6 +397,7 @@ void player_session::m_process_packet(Packet buf[])
 					for (auto other_players : g_clients) {
 						if (DISCONNECTED == other_players->m_connect_state) { continue; }
 						//if (players->m_id == other_players->m_id) { continue; }	// 자기 hp 가 깎였을 경우, 자기 한테도 보내야 한다...
+						if (true == players->get_player_data()->is_ai) { continue; }
 
 						other_players->send_packet(temp_hp_buf);
 					}
@@ -586,33 +592,37 @@ void TimerQueue::processPacket(event_type *p) {
 	case HP_ADD: {	// 1초마다 hp 5씩 채우기
 
 		int adding_hp_size = 5;
+		
+		if (false == (g_clients[p->obj_id]->get_player_data()->state.hp > (MAX_HP - 1))) {
+			g_clients[p->obj_id]->get_player_data()->state.hp += adding_hp_size;
 
-		if (true == p->is_ai) {
-			if (false == g_AIs[p->obj_id].is_hp_full()) {
-				g_AIs[p->obj_id].change_HP(adding_hp_size);
-				add_event(p->obj_id, 1, HP_ADD, true);
+			if (MAX_HP == g_clients[p->obj_id]->get_player_data()->state.hp) { *g_clients[p->obj_id]->get_hp_adding() = false; }
+			add_event(p->obj_id, 1, HP_ADD, false);
 
-				// 아직 주변 플레이어들에게, hp 변경 내역을 통보해주지 않는다. *********************
+			Packet buf[MAX_BUF_SIZE]{ 0 };
+			buf[0] = (sizeof(int) * 2) + 2;	// 패킷 size
+			buf[1] = SERVER_MESSAGE_HP_CHANGED;
+			*reinterpret_cast<int *>(&buf[2]) = g_clients[p->obj_id]->get_player_data()->state.hp;	// hp 입력
+			*reinterpret_cast<int *>(&buf[6]) = p->obj_id;	// id 입력
+
+			for (auto players : g_clients) {
+				if (DISCONNECTED == players->get_current_connect_state()) { continue; }
+				//if (players->m_id == other_players->m_id) { continue; }	// 자기 hp 가 변해도 해당 패킷을 받아야 한다.
+				if (true == players->get_player_data()->is_ai) { continue; }
+
+				players->send_packet(buf);
 			}
 		}
-		else {
-			if (false == (g_clients[p->obj_id]->get_player_data()->state.hp > (MAX_HP - 1))) {
-				g_clients[p->obj_id]->get_player_data()->state.hp += adding_hp_size;
-				
-				if (MAX_HP == g_clients[p->obj_id]->get_player_data()->state.hp) { *g_clients[p->obj_id]->get_hp_adding() = false; }
-				add_event(p->obj_id, 1, HP_ADD, false);
 
-				for (auto players : g_clients) {
-					Packet buf[MAX_BUF_SIZE]{ 0 };
-					buf[0] = (sizeof(int) * 2) + 2;	// 패킷 size
-					buf[1] = SERVER_MESSAGE_HP_CHANGED;
-					*reinterpret_cast<int *>(&buf[2]) = g_clients[p->obj_id]->get_player_data()->state.hp;	// hp 입력
-					*reinterpret_cast<int *>(&buf[6]) = p->obj_id;	// id 입력
+		//if (true == p->is_ai) {
+		//	if (false == g_AIs[p->obj_id].is_hp_full()) {
+		//		g_AIs[p->obj_id].change_HP(adding_hp_size);
+		//		add_event(p->obj_id, 1, HP_ADD, true);
 
-					players->send_packet(buf);
-				}
-			}
-		}
+		//		// 아직 주변 플레이어들에게, hp 변경 내역을 통보해주지 않는다. *********************
+		//	}
+		//}
+		//else {	}
 	}
 		break;
 	default:

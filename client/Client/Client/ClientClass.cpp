@@ -80,10 +80,10 @@ void AsynchronousClientClass::Login_access() {
 	while (--login_cnt)
 	{
 		printf("input ID & Password ( ex : guest guest )\n");
-		wchar_t id[MAX_BUF_SIZE / 4]{ 0 };
-		wchar_t pw[MAX_BUF_SIZE / 4]{ 0 };
+		wchar_t id[MAX_BUF_SIZE / 4]{ L"guest" };
+		wchar_t pw[MAX_BUF_SIZE / 4]{ L"guest" };
 
-		wcin >> id >> pw;
+		//wcin >> id >> pw;
 
 		Packet temp_buf[MAX_BUF_SIZE]{ 0 };
 		temp_buf[0] = wcslen(id) * 2;

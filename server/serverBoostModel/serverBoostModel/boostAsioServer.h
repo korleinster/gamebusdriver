@@ -82,7 +82,7 @@ private:
 	tcp::socket		m_socket;
 
 	// 플레이어 상태 변수
-	bool m_connect_state{ false };
+	bool m_connect_state{ true };
 	unsigned int m_id{ 0 };
 	bool is_hp_adding{ false };
 
@@ -107,28 +107,28 @@ private:
 };
 
 // AI Session class ---------------------------------------------------------------------------------------------------------------
-#define MAX_AI_NUM 5000
+#define MAX_AI_NUM 50
 
-enum AI_Operator
-{
-	AI_STAY = 1,
-	AI_ATTACK,
-};
-
-class AI_session
-{
-public:
-	AI_session() {};
-	~AI_session() {};
-
-	bool is_hp_full() { return(m_player_data.state.hp > (MAX_HP - 1)); }
-	void change_HP(int add_hp_size) { m_player_data.state.hp += add_hp_size; }
-private:
-	bool is_wake{ false };
-
-	short m_operate_state{ AI_STAY };
-	player_data m_player_data;
-};
+//enum AI_Operator
+//{
+//	AI_STAY = 1,
+//	AI_ATTACK,
+//};
+//
+//class AI_session
+//{
+//public:
+//	AI_session() {};
+//	~AI_session() {};
+//
+//	bool is_hp_full() { return(m_player_data.state.hp > (MAX_HP - 1)); }
+//	void change_HP(int add_hp_size) { m_player_data.state.hp += add_hp_size; }
+//private:
+//	bool is_wake{ false };
+//
+//	short m_operate_state{ AI_STAY };
+//	player_data m_player_data;
+//};
 
 // Boost Asio class ---------------------------------------------------------------------------------------------------------------
 class boostAsioServer
@@ -140,6 +140,7 @@ public:
 private:
 	// Function
 	void getMyServerIP();
+	void g_client_init();
 	void CheckThisCPUcoreCount();
 
 	void start_io_service();
@@ -205,7 +206,7 @@ private:
 // 플레이어가 담긴 변수
 static mutex g_clients_lock;
 static vector<player_session*> g_clients;
-static AI_session g_AIs[MAX_AI_NUM];
+//static AI_session g_AIs[MAX_AI_NUM];
 
 // DB 통신용 변수
 static DB database;

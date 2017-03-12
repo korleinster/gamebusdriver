@@ -216,7 +216,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 		for (auto players : *(g_client.getOtherPlayers())) {
 			x = players.second.pos.x;
 			y = players.second.pos.y;
-			Ellipse(hdc, x - value, y - value, x + value, y + value);
+			if (players.second.id < 50) { Rectangle(hdc, x - value, y - value, x + value, y + value); }	// ai
+			else { Ellipse(hdc, x - value, y - value, x + value, y + value); }	// player
 
 			/// player direction
 			dir = &players.second.dir;

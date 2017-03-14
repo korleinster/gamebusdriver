@@ -48,18 +48,12 @@ HRESULT CMainApp::Initialize(void)
 {
 	srand(UINT(time(NULL)));
 
-	//m_pInfo = CInfo::Create(D3DXVECTOR3(0,0,1));
-
 	CDevice::GetInstance()->CreateDevice();
 	m_pGrapicDevcie = CDevice::GetInstance();
 
 	CParsingDevice9::GetInstance()->InitGraphicDev(CParsingDevice9::MODE_WIN, g_hWnd, WINCX, WINCY);
 
 	CTimeMgr::GetInstance()->InitTime();
-
-	
-	//m_pRcCol = CRcTerrain::Create(VERTEXCOUNTX, VERTEXCOUNTZ, VERTEXINTERVAL);
-	//m_pRcCol = CRcTex::Create();
 
 	if (FAILED(CCamera::GetInstance()->Initialize()))
 	{

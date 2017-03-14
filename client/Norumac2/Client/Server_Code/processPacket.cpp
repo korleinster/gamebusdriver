@@ -64,6 +64,24 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 	}
 		break;
 
+	case SERVER_MESSAGE_HP_CHANGED: {
+		if (CSceneMgr::GetInstance()->GetScene() != SCENE_LOGO)
+		{
+			if (m_player.id == *(reinterpret_cast<UINT*>(&buf[sizeof(int) + 2]))) {
+				m_player.state.hp = *(reinterpret_cast<int*>(&buf[2]));
+				list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin();
+				(*iter)->SetPacketData(&m_player);
+
+				break;
+			}
+
+			// 내가 아니라면 다른애 hp 깎기
+			player_data *data = CObjMgr::GetInstance()->Get_PlayerServerData(*reinterpret_cast<unsigned int*>(&buf[sizeof(int) + 2]));
+			data->state.hp = *(reinterpret_cast<int*>(&buf[2]));
+		}
+	}
+		break;
+
 	case KEYINPUT_ATTACK: {
 		if (CSceneMgr::GetInstance()->GetScene() != SCENE_LOGO)
 		{

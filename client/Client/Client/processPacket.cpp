@@ -23,6 +23,7 @@ void AsynchronousClientClass::processPacket(Packet *buf)
 	}
 		break;
 	case SERVER_MESSAGE_HP_CHANGED: {
+
 		// 내 hp가 변경된 것인가? 그러면 변경 후 break;
 		if (m_player.id == *(reinterpret_cast<UINT*>(&buf[sizeof(int) + 2]))) {
 			m_player.state.hp = *(reinterpret_cast<int*>(&buf[2]));
@@ -36,6 +37,7 @@ void AsynchronousClientClass::processPacket(Packet *buf)
 		break;
 
 	case KEYINPUT_ATTACK: {
+
 		// 내가 피해를 입은 것이라면, 내 hp 를 깎고 break;
 		if (m_player.id == *(reinterpret_cast<UINT*>(&buf[sizeof(int) + 2]))) {
 			m_player.state.hp = *(reinterpret_cast<int*>(&buf[2]));

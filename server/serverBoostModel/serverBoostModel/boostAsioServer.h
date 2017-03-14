@@ -73,6 +73,8 @@ public:
 	player_data* get_player_data() { return &m_player_data; }
 	void send_packet(Packet *packet);
 	bool check_login();
+
+	mutex player_lock;
 private:
 	// Function
 	void m_recv_packet();
@@ -189,6 +191,9 @@ class TimerQueue
 public:
 	TimerQueue() {};
 	~TimerQueue() {};
+
+	void lock() { time_lock.lock(); }
+	void unlock() { time_lock.unlock(); }
 
 	void TimerThread();
 	void add_event(const unsigned int& id, const int& sec, time_queue_event type, bool is_ai);

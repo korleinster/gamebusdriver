@@ -380,9 +380,9 @@ void player_session::m_process_packet(Packet buf[])
 				int tempy = y - players->m_player_data.pos.y;
 				if (((tempx * tempx) + (tempy * tempy)) <= (player_size * player_size)) {
 					players->m_player_data.state.hp -= 10;
-
-					if (false == is_hp_adding) {
-						is_hp_adding = true;
+					
+					if (false == *players->get_hp_adding()) {
+						*players->get_hp_adding() = true;
 						time_queue.add_event(players->m_player_data.id, 1, HP_ADD, false);	// AI 타격 일때, 따로 hp 추가해 주는 함수가 없다 !!! -> 일반 플레이어와 동일하게 처리함
 					}
 
@@ -604,7 +604,7 @@ void TimerQueue::processPacket(event_type *p) {
 			buf[1] = SERVER_MESSAGE_HP_CHANGED;
 			*reinterpret_cast<int *>(&buf[2]) = g_clients[p->obj_id]->get_player_data()->state.hp;	// hp 입력
 			*reinterpret_cast<int *>(&buf[6]) = p->obj_id;	// id 입력
-
+			
 			for (auto players : g_clients) {
 				if (DISCONNECTED == players->get_current_connect_state()) { continue; }
 				//if (players->m_id == other_players->m_id) { continue; }	// 자기 hp 가 변해도 해당 패킷을 받아야 한다.
@@ -613,16 +613,6 @@ void TimerQueue::processPacket(event_type *p) {
 				players->send_packet(buf);
 			}
 		}
-
-		//if (true == p->is_ai) {
-		//	if (false == g_AIs[p->obj_id].is_hp_full()) {
-		//		g_AIs[p->obj_id].change_HP(adding_hp_size);
-		//		add_event(p->obj_id, 1, HP_ADD, true);
-
-		//		// 아직 주변 플레이어들에게, hp 변경 내역을 통보해주지 않는다. *********************
-		//	}
-		//}
-		//else {	}
 	}
 		break;
 	default:

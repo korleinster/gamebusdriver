@@ -57,8 +57,6 @@ private:
 };
 
 // Player Session class ---------------------------------------------------------------------------------------------------------------
-#define MAX_HP 100
-
 class player_session //: public std::enable_shared_from_this<player_session>
 {
 public:

@@ -68,6 +68,11 @@ void AsynchronousClientClass::processPacket(Packet *buf)
 	}
 		break;
 
+	case CHANGED_INVENTORY: {
+		m_player.inven = *(reinterpret_cast<inventory*>(&buf[2]));
+	}
+		break;
+
 	default:	// 잘 안쓰이는 패킷들
 
 		switch (buf[1])

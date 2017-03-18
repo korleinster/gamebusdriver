@@ -22,19 +22,29 @@ void AsynchronousClientClass::processPacket(Packet *buf)
 		ptr->second.dir = *(reinterpret_cast<char*>(&buf[2]));
 	}
 		break;
-	case SERVER_MESSAGE_HP_CHANGED: {
-
-		// 내 hp가 변경된 것인가? 그러면 변경 후 break;
-		if (m_player.id == *(reinterpret_cast<UINT*>(&buf[sizeof(int) + 2]))) {
-			m_player.state.hp = *(reinterpret_cast<int*>(&buf[2]));
-			break;
-		}
-
-		// 내가 아니라면 다른애 hp 변경
-		unordered_map<UINT, player_data>::iterator ptr = m_other_players.find(*(reinterpret_cast<UINT*>(&buf[sizeof(int) + 2])));
-		ptr->second.state.hp = *(reinterpret_cast<int*>(&buf[2]));
-	}
-		break;
+	case SERVER_MESSAGE_HP_CHANGED: 
+	//{
+	//
+	//	// 내 hp가 변경된 것인가? 그러면 변경 후 break;
+	//	if (m_player.id == *(reinterpret_cast<UINT*>(&buf[sizeof(int) + 2]))) {
+	//		m_player.state.hp = *(reinterpret_cast<int*>(&buf[2]));
+	//		break;
+	//	}
+	//
+	//	// 내가 아니라면 다른애 hp 변경
+	//	unordered_map<UINT, player_data>::iterator ptr = m_other_players.find(*(reinterpret_cast<UINT*>(&buf[sizeof(int) + 2])));
+	//	ptr->second.state.hp = *(reinterpret_cast<int*>(&buf[2]));
+	//
+	//
+	//	// 만약 hp 가 0 이하라면, 클라이언트에서 지워주어야 한다.
+	//	if (0 >= *(reinterpret_cast<int*>(&buf[2]))) {
+	//		// 지워진게 없다면!!
+	//		if (1 != m_other_players.erase(*(reinterpret_cast<UINT*>(&buf[sizeof(int) + 2])))) {
+	//			
+	//		}
+	//	}
+	//}
+	//	break;
 
 	case KEYINPUT_ATTACK: {
 
@@ -43,10 +53,18 @@ void AsynchronousClientClass::processPacket(Packet *buf)
 			m_player.state.hp = *(reinterpret_cast<int*>(&buf[2]));
 			break;
 		}
-
+		
 		// 내가 아니라면 다른애 hp 깎기
 		unordered_map<UINT, player_data>::iterator ptr = m_other_players.find(*(reinterpret_cast<UINT*>(&buf[sizeof(int) + 2])));
 		ptr->second.state.hp = *(reinterpret_cast<int*>(&buf[2]));
+		
+		// 만약 hp 가 0 이하라면, 클라이언트에서 지워주어야 한다.
+		if (0 >= *(reinterpret_cast<int*>(&buf[2]))) {
+			// 지워진게 없다면!!
+			if (1 != m_other_players.erase(*(reinterpret_cast<UINT*>(&buf[sizeof(int) + 2])))) {
+
+			}			
+		}
 	}
 		break;
 

@@ -380,12 +380,12 @@ void player_session::m_process_packet(Packet buf[])
 				int tempy = y - players->m_player_data.pos.y;
 				if (((tempx * tempx) + (tempy * tempy)) <= (player_size * player_size)) {
 					players->m_player_data.state.hp -= 10;
-					
+										
 					if (false == *players->get_hp_adding()) {
 						*players->get_hp_adding() = true;
 						time_queue.add_event(players->m_player_data.id, 1, HP_ADD, false);	// AI 타격 일때, 따로 hp 추가해 주는 함수가 없다 !!! -> 일반 플레이어와 동일하게 처리함
 					}
-
+					
 					Packet temp_hp_buf[MAX_BUF_SIZE]{ 0 };
 					temp_hp_buf[0] = sizeof(int) + sizeof(UINT) + sizeof(UINT) + 2;	// hp + id + packet size addition(2)
 					temp_hp_buf[1] = KEYINPUT_ATTACK;
@@ -393,11 +393,22 @@ void player_session::m_process_packet(Packet buf[])
 					*(reinterpret_cast<int*>(&temp_hp_buf[6])) = players->m_id;		// 맞는 사람의 id
 					*(reinterpret_cast<int*>(&temp_hp_buf[10])) = m_id;				// 공격한 사람의 id
 
+					// hp 가 0 이 되면 사망처리를 한다. -> 각각의 클라이언트에서 hp 가 0 된 녀석을 지워주자...
+					if (0 >= players->m_player_data.state.hp) {
+						//*(reinterpret_cast<int*>(&temp_hp_buf[2])) = players->m_player_data.state.hp = 0; // 굳이 0 으로 만들어줄 필요는 없는듯
+
+						// 맞은 애가 ai 면 그냥 연결 끊어서 죽이기
+						if (MAX_AI_NUM > players->get_id()) {
+							players->m_connect_state = DISCONNECTED;
+
+							// 10 초후 리젠을 하는 타이머 큐에 집어넣는건 어떨까 싶다.
+						}
+					}
 
 					for (auto other_players : g_clients) {
 						if (DISCONNECTED == other_players->m_connect_state) { continue; }
 						//if (players->m_id == other_players->m_id) { continue; }	// 자기 hp 가 깎였을 경우, 자기 한테도 보내야 한다...
-						if (true == players->get_player_data()->is_ai) { continue; }
+						if (true == other_players->get_player_data()->is_ai) { continue; }
 
 						other_players->send_packet(temp_hp_buf);
 					}
@@ -591,11 +602,16 @@ void TimerQueue::processPacket(event_type *p) {
 	{
 	case HP_ADD: {	// 1초마다 hp 5씩 채우기
 
+		// 이미 통신이 끊기거나 ( ai 가 죽은 녀석이면 pass )
+		if (DISCONNECTED == g_clients[p->obj_id]->get_current_connect_state()) { break;	}
+
 		int adding_hp_size = 5;
 		
+		// hp가 100 이상이 아니면, 아래 실행
 		if (false == (g_clients[p->obj_id]->get_player_data()->state.hp > (MAX_HP - 1))) {
 			g_clients[p->obj_id]->get_player_data()->state.hp += adding_hp_size;
 
+			// 만피가 되었다면, 계속 hp 더해주는 모드 끄기
 			if (MAX_HP == g_clients[p->obj_id]->get_player_data()->state.hp) { *g_clients[p->obj_id]->get_hp_adding() = false; }
 			add_event(p->obj_id, 1, HP_ADD, false);
 

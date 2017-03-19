@@ -120,7 +120,7 @@ HRESULT CStage::CreateObj(void)
 	pObj->SetPos(D3DXVECTOR3(10.f, 0.f, 10.f));
 	CObjMgr::GetInstance()->AddObject(L"Player", pObj);
 
-	//CCamera::GetInstance()->SetCameraTarget(pObj->GetInfo());
+	CCamera::GetInstance()->SetCameraTarget(pObj->GetInfo());
 	
 
 

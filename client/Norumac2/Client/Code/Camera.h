@@ -34,6 +34,8 @@ private:
 	DWORD m_dwTime;
 	DWORD m_dwKey;
 	D3DXVECTOR3 m_vDirZ;
+	CInfo* m_pTargetInfo;
+	float m_fAngle;
 
 public:
 	HRESULT Initialize(void);
@@ -43,11 +45,13 @@ public:
 public:
 	void MakeView(void);
 	void MakeProjection(void);
+	void SetCameraTarget(CInfo* pInfo);
 
 private:
 	void KeyState(void);
 	void FixMouse(void);
 	void MouseMove(void);
+	void TargetRenewal(void);
 
 
 };

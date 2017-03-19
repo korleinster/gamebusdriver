@@ -50,7 +50,6 @@ void boostAsioServer::start_io_service()
 {
 	// DB 서버를 위해 -1
 	// Timer Thread 를 위해 -1
-	m_worker_threads.reserve(m_cpuCore - 2);
 	for (int i = 0; i < m_cpuCore - 2; ++i) { m_worker_threads.emplace_back(new thread{ [&]() -> void { g_io_service.run(); } }); }
 	m_worker_threads.emplace_back(new thread{ [&]() -> void { time_queue.TimerThread(); } });
 	
@@ -74,7 +73,8 @@ void boostAsioServer::g_client_init() {
 		g_clients[i]->get_player_data()->dir = KEYINPUT_UP;
 		g_clients[i]->get_player_data()->pos.x = rand() % 500;
 		g_clients[i]->get_player_data()->pos.y = rand() % 500;
-		g_clients[i]->get_player_data()->state.hp = MAX_HP;
+		g_clients[i]->get_player_data()->state.maxhp = 100;
+		g_clients[i]->get_player_data()->state.hp = g_clients[i]->get_player_data()->state.maxhp;
 	}
 
 	cout << "\nAI bots created number of " << MAX_AI_NUM << ", Compelete\n";
@@ -157,14 +157,16 @@ void player_session::Init()
 		m_player_data.pos.x = 100;
 		m_player_data.pos.y = 100;
 		m_player_data.dir = 0;
-		m_player_data.state.hp = MAX_HP;
+		m_player_data.state.maxhp = 100;
+		m_player_data.state.hp = m_player_data.state.maxhp;
 		m_player_data.is_ai = false;
 	}
 	m_player_data.id = m_id;
 	m_player_data.pos.x = 100;
 	m_player_data.pos.y = 100;
 	m_player_data.dir = 0;
-	m_player_data.state.hp = MAX_HP;
+	m_player_data.state.maxhp = 100;
+	m_player_data.state.hp = m_player_data.state.maxhp;
 	m_player_data.is_ai = false;
 
 	*(reinterpret_cast<player_data*>(&init_this_player_buf[2])) = m_player_data;
@@ -380,12 +382,12 @@ void player_session::m_process_packet(Packet buf[])
 				int tempy = y - players->m_player_data.pos.y;
 				if (((tempx * tempx) + (tempy * tempy)) <= (player_size * player_size)) {
 					players->m_player_data.state.hp -= 10;
-					
+
 					if (false == *players->get_hp_adding()) {
 						*players->get_hp_adding() = true;
 						time_queue.add_event(players->m_player_data.id, 1, HP_ADD, false);	// AI 타격 일때, 따로 hp 추가해 주는 함수가 없다 !!! -> 일반 플레이어와 동일하게 처리함
 					}
-
+					
 					Packet temp_hp_buf[MAX_BUF_SIZE]{ 0 };
 					temp_hp_buf[0] = sizeof(int) + sizeof(UINT) + sizeof(UINT) + 2;	// hp + id + packet size addition(2)
 					temp_hp_buf[1] = KEYINPUT_ATTACK;
@@ -393,11 +395,35 @@ void player_session::m_process_packet(Packet buf[])
 					*(reinterpret_cast<int*>(&temp_hp_buf[6])) = players->m_id;		// 맞는 사람의 id
 					*(reinterpret_cast<int*>(&temp_hp_buf[10])) = m_id;				// 공격한 사람의 id
 
+					// hp 가 0 이 되면 사망처리를 한다. -> 각각의 클라이언트에서 hp 가 0 된 녀석을 지워주자...
+					if (0 >= players->m_player_data.state.hp) {
+						//*(reinterpret_cast<int*>(&temp_hp_buf[2])) = players->m_player_data.state.hp = 0; // 굳이 0 으로 만들어줄 필요는 없는듯
+
+						// 맞은 애가 ai 면 그냥 연결 끊어서 죽이기
+						if (MAX_AI_NUM > players->get_id()) {
+							players->m_connect_state = DISCONNECTED;
+
+							// 10 초후 리젠을 하는 타이머 큐에 집어넣는건 어떨까 싶다.
+
+							// ai 죽일경우, 아이템 그냥 입력해서 주기 ( 대충 만든거라서, 다시 수정해야 한다 ) => 패킷 보내는건, 그냥 전체 인벤토리 걍 보내버림.. 이것도 수정 필요
+							if (NONE == m_player_data.inven.head) { m_player_data.inven.head = BASIC_HEAD; }
+							else if (NONE == m_player_data.inven.body) { m_player_data.inven.body = BASIC_BODY; }
+							else if (NONE == m_player_data.inven.arm) { m_player_data.inven.arm = BASIC_ARM; }
+							else if (NONE == m_player_data.inven.weapon) { m_player_data.inven.weapon = BASIC_WEAPON; }
+
+							Packet temp_buf_inventory[MAX_BUF_SIZE]{ 0 };
+							temp_buf_inventory[0] = sizeof(inventory) + 2;
+							temp_buf_inventory[1] = CHANGED_INVENTORY;
+							*(reinterpret_cast<inventory*>(&temp_buf_inventory[2])) = m_player_data.inven;
+
+							send_packet(temp_buf_inventory);
+						}
+					}
 
 					for (auto other_players : g_clients) {
 						if (DISCONNECTED == other_players->m_connect_state) { continue; }
 						//if (players->m_id == other_players->m_id) { continue; }	// 자기 hp 가 깎였을 경우, 자기 한테도 보내야 한다...
-						if (true == players->get_player_data()->is_ai) { continue; }
+						if (true == other_players->get_player_data()->is_ai) { continue; }
 
 						other_players->send_packet(temp_hp_buf);
 					}
@@ -591,12 +617,17 @@ void TimerQueue::processPacket(event_type *p) {
 	{
 	case HP_ADD: {	// 1초마다 hp 5씩 채우기
 
+		// 이미 통신이 끊기거나 ( ai 가 죽은 녀석이면 pass )
+		if (DISCONNECTED == g_clients[p->obj_id]->get_current_connect_state()) { break;	}
+
 		int adding_hp_size = 5;
 		
-		if (false == (g_clients[p->obj_id]->get_player_data()->state.hp > (MAX_HP - 1))) {
+		// hp가 maxhp 이상이 아니면, 아래 실행
+		if (false == (g_clients[p->obj_id]->get_player_data()->state.hp > (g_clients[p->obj_id]->get_player_data()->state.maxhp - 1))) {
 			g_clients[p->obj_id]->get_player_data()->state.hp += adding_hp_size;
 
-			if (MAX_HP == g_clients[p->obj_id]->get_player_data()->state.hp) { *g_clients[p->obj_id]->get_hp_adding() = false; }
+			// 만피가 되었다면, 계속 hp 더해주는 모드 끄기
+			if (g_clients[p->obj_id]->get_player_data()->state.maxhp == g_clients[p->obj_id]->get_player_data()->state.hp) { *g_clients[p->obj_id]->get_hp_adding() = false; }
 			add_event(p->obj_id, 1, HP_ADD, false);
 
 			Packet buf[MAX_BUF_SIZE]{ 0 };

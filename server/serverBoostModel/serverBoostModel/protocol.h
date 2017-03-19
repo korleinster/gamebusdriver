@@ -27,11 +27,15 @@ enum PacketProtocolType {
 	CHANGED_POSITION,
 	CHANGED_DIRECTION,
 
+	// 캐릭터 장비
+	CHANGED_INVENTORY,
+
 	// 키 입력관련 상호작용
 	KEYINPUT_ATTACK,
 
 	// 패시브 효과로 인한 서버의 통보
 	SERVER_MESSAGE_HP_CHANGED,
+
 };
 
 using Packet = unsigned char;
@@ -49,13 +53,39 @@ using position = struct Position {
 #define KEYINPUT_RIGHT	0b00001000
 
 using status = struct Status {
+	int maxhp{ 100 };
 	int hp{ 100 };
 };
+
+enum inventory_id {
+	NONE = 0,
+
+	// head
+	BASIC_HEAD,
+
+	// body
+	BASIC_BODY,
+
+	// arm
+	BASIC_ARM,
+
+	// weapon
+	BASIC_WEAPON,
+};
+
+using inventory = struct Inventory {
+	short head{ NONE };
+	short body{ NONE };
+	short arm{ NONE };
+	short weapon{ NONE };
+};
+
 /// 플레이어 전체 정보 64 ( dir -3 ) ( nickname - 2 ) bytes
 using player_data = struct Player_data {
 	unsigned int	id{ 0 };	// 4
 	position		pos;		// 8
-	status			state;		// 4
+	status			state;		// 8
+	Inventory		inven;		// 8
 
 	char			dir{ KEYINPUT_DOWN };	// 1
 	bool			is_ai{ false };			// 1

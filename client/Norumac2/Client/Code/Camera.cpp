@@ -24,7 +24,7 @@ CCamera::~CCamera()
 HRESULT CCamera::Initialize(void)
 {
 	//m_vEye = D3DXVECTOR3(0.0f, 20.f, -20.0f);
-	m_vEye = D3DXVECTOR3(86.0f, 102.f, -14.0f);
+	m_vEye = D3DXVECTOR3(86.0f, 100.f, -14.0f);
 	m_vAt = D3DXVECTOR3(0.f, 0.f, 0.f);
 	m_vUp = D3DXVECTOR3(0.f, 1.f, 0.f);
 
@@ -47,20 +47,24 @@ HRESULT CCamera::Initialize(void)
 
 	m_fCameraDistance = 10.f;
 	m_fCameraSpeed = 70.f;
+
+	m_fAngle = 0.f;
 	
 	return S_OK;
 }
 
 int CCamera::Update(void)
 {
-	//cout << m_vEye.x << "/" << m_vEye.y << "/" << m_vEye.z << endl;
+	cout << m_vEye.x << "/" << m_vEye.y << "/" << m_vEye.z << endl;
+
 	m_pInfo->Update();
 
 	if (CSceneMgr::GetInstance()->m_eType != SCENE_LOGO)
 	{
 		KeyState();
-		MouseMove();
-		FixMouse();
+		//MouseMove();
+		//FixMouse();
+		TargetRenewal();
 	}
 	MakeView();
 	MakeProjection();
@@ -75,6 +79,11 @@ void CCamera::MakeView(void)
 void CCamera::MakeProjection(void)
 {
 	D3DXMatrixPerspectiveFovLH(&m_matProj, m_fFovY, m_fAspect, m_fNear, m_fFar);
+}
+
+void CCamera::SetCameraTarget(CInfo* pInfo)
+{
+	m_pTargetInfo = pInfo;
 }
 
 void CCamera::Release(void)
@@ -305,4 +314,29 @@ void CCamera::MouseMove(void)
 
 
 
+}
+
+void CCamera::TargetRenewal(void)
+{
+	//m_vEye = m_pTargetInfo->m_vDir * (-1);
+	//D3DXVec3Normalize(&m_vEye, &m_vEye);
+
+	//m_vEye *= m_fCameraDistance;
+
+	D3DXVECTOR3		vRight;
+	memcpy(&vRight, &m_pTargetInfo->m_matWorld.m[0][0], sizeof(float) * 3);
+
+	D3DXMATRIX		matRotAxis;
+
+	//m_fAngle = m_pTargetInfo->m_fAngle[ANGLE_Y];
+
+	D3DXMatrixRotationAxis(&matRotAxis, &vRight, m_fAngle);
+	D3DXVec3TransformNormal(&m_vEye, &m_vEye, &matRotAxis);
+
+	m_vEye.x = m_pTargetInfo->m_vPos.x + 50.f;
+	m_vEye.z = m_pTargetInfo->m_vPos.z - 50.f;
+
+	m_vAt = m_pTargetInfo->m_vPos;
+
+	MakeView();
 }

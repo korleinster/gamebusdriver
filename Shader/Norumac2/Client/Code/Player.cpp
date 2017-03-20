@@ -168,7 +168,7 @@ HRESULT CPlayer::AddComponent(void)
 	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Texture", pComponent));
 
 	m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"RenderSceneVS");
-	m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"RenderScenePS");;
+	m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"RenderScenePS");
 
 	return S_OK;
 }

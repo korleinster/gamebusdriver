@@ -103,6 +103,84 @@ HRESULT CMainApp::Initialize(void)
 	}
 	////////////////////////////////////////////////////////////////////////
 
+	// 디퍼드용
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"GBufferVisVS", L"../ShaderCode/GBufferVis.fx", "GBufferVisVS", "vs_5_0", SHADER_VS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"GBuffer Vertex Shader Create Failed", MB_OK);
+		return hr;
+	}
+
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"GBufferVisPS", L"../ShaderCode/GBufferVis.fx", "GBufferVisPS", "ps_5_0", SHADER_PS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"GBuffer Pixel Shader Create Failed", MB_OK);
+		return hr;
+	}
+	////////////////////////////////////////////////////////////////////////
+
+	// 디퍼드 오브젝트용
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"RenderSceneVS", L"../ShaderCode/DeferredShading.fx", "RenderSceneVS", "vs_5_0", SHADER_VS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"Render Scene Vertex Shader Create Failed", MB_OK);
+		return hr;
+	}
+
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"RenderScenePS", L"../ShaderCode/DeferredShading.fx", "RenderScenePS", "ps_5_0", SHADER_PS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"Render Scene Pixel Shader Create Failed", MB_OK);
+		return hr;
+	}
+	////////////////////////////////////////////////////////////////////////
+
+	// 조명 쉐이더
+	// Directional
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"DirLightVS", L"../ShaderCode/DirLight.fx", "DirLightVS", "vs_5_0", SHADER_VS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"DirLight Vertex Shader Create Failed", MB_OK);
+		return hr;
+	}
+
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"DirLightPS", L"../ShaderCode/DirLight.fx", "DirLightPS", "ps_5_0", SHADER_PS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"DirLight Pixel Shader Create Failed", MB_OK);
+		return hr;
+	}
+
+	// Point
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"PointLightVS", L"../ShaderCode/PointLight.fx", "PointLightVS", "vs_5_0", SHADER_VS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"PointLight Vertex Shader Create Failed", MB_OK);
+		return hr;
+	}
+
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"PointLightHS", L"../ShaderCode/PointLight.fx", "PointLightHS", "hs_5_0", SHADER_HS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"PointLight Pixel Shader Create Failed", MB_OK);
+		return hr;
+	}
+
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"PointLightDS", L"../ShaderCode/PointLight.fx", "PointLightDS", "ds_5_0", SHADER_DS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"PointLight Vertex Shader Create Failed", MB_OK);
+		return hr;
+	}
+
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"PointLightPS", L"../ShaderCode/PointLight.fx", "PointLightPS", "ps_5_0", SHADER_PS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"PointLight Pixel Shader Create Failed", MB_OK);
+		return hr;
+	}
+	////////////////////////////////////////////////////////////////////////
+
 	hr = CInput::GetInstance()->InitInputDevice(g_hInst, g_hWnd);
 	if (FAILED(hr))
 	{

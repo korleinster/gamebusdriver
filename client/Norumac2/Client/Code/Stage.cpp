@@ -102,7 +102,7 @@ HRESULT CStage::CreateObj(void)
 	
 	
 
-	for (int i = 0; i < 20; ++i)
+	/*for (int i = 0; i < 20; ++i)
 	{
 		pObj = CFlower::Create();
 		if (pObj == NULL)
@@ -114,7 +114,7 @@ HRESULT CStage::CreateObj(void)
 		pObj->SetPos(D3DXVECTOR3(fX, 0.f, fZ));
 
 		CObjMgr::GetInstance()->AddObject(L"Flower", pObj);
-	}
+	}*/
 
 	pObj = CPlayer::Create();
 	pObj->SetPos(D3DXVECTOR3(10.f, 0.f, 10.f));

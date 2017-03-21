@@ -34,7 +34,7 @@ HRESULT CLogo::Initialize(void)
 
 	hr = CResourcesMgr::GetInstance()->AddTexture(RESOURCE_LOGO,
 		L"Texture_Logo",
-		L"../Resource/Logo.jpg");
+		L"../Resource/Logo.png");
 
 	if (FAILED(hr))
 		return E_FAIL;

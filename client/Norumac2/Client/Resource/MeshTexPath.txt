@@ -3,7 +3,6 @@ longrock.png|..\Resource\MeshImage\longrock.png
 mainbridge.png|..\Resource\MeshImage\mainbridge.png
 mainbridgechain.png|..\Resource\MeshImage\mainbridgechain.png
 mainbridgetower.png|..\Resource\MeshImage\mainbridgetower.png
-newplayer.png|..\Resource\MeshImage\newplayer.png
 playerhousebottom.png|..\Resource\MeshImage\playerhousebottom.png
 playerhousetop.png|..\Resource\MeshImage\playerhousetop.png
 tree1.png|..\Resource\MeshImage\tree1.png

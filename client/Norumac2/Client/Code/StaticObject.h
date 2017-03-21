@@ -23,8 +23,6 @@ public:
 	virtual HRESULT Initialize(const TCHAR* pMeshKey, const TCHAR* pTextureKey);
 	virtual int		Update(void);
 	virtual void	Render(void);
-	void			KeyInput(void);
-	Packet*			GetPacket(void);
 
 public:
 	static CStaticObject* Create(const TCHAR* pMeshKey, const TCHAR* pTextureKey);

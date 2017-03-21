@@ -79,9 +79,6 @@
     <Filter Include="02.Object">
       <UniqueIdentifier>{a182f6c5-6c01-42c9-b179-747c0f9f6afe}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Object\01.Player">
-      <UniqueIdentifier>{7b53df79-60cb-49b2-9cad-e67cfd9b7fa2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="96.Utility\02.Component">
       <UniqueIdentifier>{731562bd-e332-48e1-abe0-f90e30c51df5}</UniqueIdentifier>
     </Filter>
@@ -156,6 +153,9 @@
     </Filter>
     <Filter Include="95.System\99.PasingDevice">
       <UniqueIdentifier>{5cd805a9-66fe-4a6b-865b-9c6eec25f9fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\01.Player">
+      <UniqueIdentifier>{7b53df79-60cb-49b2-9cad-e67cfd9b7fa2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

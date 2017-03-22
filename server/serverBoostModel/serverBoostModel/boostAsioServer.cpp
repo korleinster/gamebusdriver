@@ -100,7 +100,7 @@ bool player_session::check_login() {
 
 	m_connect_state = true;
 
-	int login_cnt{ 6 };
+	int login_cnt{ 2 };
 	while (--login_cnt)
 	{
 		// id size + id + pw size + pw ( id 문자열 + pw 문자열 + 2 )
@@ -365,7 +365,7 @@ void player_session::m_process_packet(Packet buf[])
 			// 충돌체크 검사하고 난 뒤에.. ( 현재는 임시 충돌 체크, 실제 클라와 연동시 충돌 범위 체크해야 한다. )
 			int att_x = 3, att_y = 3;		// 테스트용 클라 공격 리치가 요정도
 			int x = m_player_data.pos.x, y = m_player_data.pos.y;
-			int player_size = 50;	// 테스트용 클라 원 반지름이 크기 5...
+			int player_size = 25;	// 테스트용 클라 원 반지름이 크기 5...
 			char *dir = &m_player_data.dir;
 
 			if ((*dir & KEYINPUT_RIGHT) == (KEYINPUT_RIGHT))	{ x += att_x; }

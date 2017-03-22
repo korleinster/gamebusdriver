@@ -4,6 +4,8 @@
 #include<WinSock2.h>
 #include<Windows.h>
 
+#include"resource.h"
+BOOL CALLBACK AboutDlgProc(HWND, UINT, WPARAM, LPARAM);
 
 #include<iostream>
 #include<unordered_map>

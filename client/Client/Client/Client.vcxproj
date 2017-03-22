@@ -151,11 +151,15 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\server\serverBoostModel\serverBoostModel\protocol.h" />
     <ClInclude Include="ClientClass.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="guestID.txt" />
     <Text Include="ServerIP.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ip_and_login.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

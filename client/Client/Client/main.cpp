@@ -56,7 +56,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	UpdateWindow(hWnd);
 
 	// 서버와의 통신 진행 - 디버그 모드가 아니라면 ServerIP.txt 파일에 적힌 ip 주소로 바로 연결이 된다.
-	g_client.Init(hWnd);
+	g_client.Init(hWnd, hInstance);
 
 	// 메시지 루프
 	MSG msg;
@@ -88,6 +88,50 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	return msg.wParam;
 }
+
+BOOL CALLBACK AboutDlgProc(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM lParam) {
+
+	switch (iMessage)
+	{
+	case WM_INITDIALOG: {
+
+		SetDlgItemText(hDlg, IDC_IPADDR, L"127.0.0.1");
+		SetDlgItemText(hDlg, IDC_ID, L"guest");
+		SetDlgItemText(hDlg, IDC_PW, L"guest");
+
+		return TRUE;
+	}
+	case WM_COMMAND: {
+
+		switch (LOWORD(wParam))
+		{
+		case IDOK:
+			wchar_t ip[32];
+
+			GetDlgItemText(hDlg, IDC_IPADDR, ip, 32);
+			WideCharToMultiByte(CP_ACP, 0, ip, -1, g_client.get_server_ip_array(), 32, 0, 0);
+
+			GetDlgItemText(hDlg, IDC_ID, g_client.get_login_id_array(), MAX_BUF_SIZE / 4);
+			GetDlgItemText(hDlg, IDC_PW, g_client.get_login_pw_array(), MAX_BUF_SIZE / 4);
+
+			EndDialog(hDlg, IDOK);
+			return TRUE;
+		case IDCANCEL:
+			EndDialog(hDlg, IDCANCEL);
+			exit(-1);
+			return TRUE;
+		default:
+			break;
+		}
+
+		break;
+	}
+	default:
+		break;
+	}
+	return FALSE;
+}
+
 
 // 윈도우 프로시저
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {

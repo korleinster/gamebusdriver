@@ -8,6 +8,7 @@
 #include "Stage.h"
 #include "SceneMgr.h"
 #include "AnimationMgr.h"
+#include <fstream>
 
 CLoading::CLoading(LOADINGID eLoadID)
 	: m_eLoadID(eLoadID)
@@ -52,8 +53,7 @@ void CLoading::StageLoading(void)
 	cout << "TextureLoading" << endl;
 	//Texture
 
-	TCHAR szTexFullPath[MAX_PATH] = L"";
-	TCHAR szTexKey[MAX_PATH] = L"";
+	//LoadTexture();
 
 	hr = CResourcesMgr::GetInstance()->AddTexture(
 		RESOURCE_STAGE
@@ -64,19 +64,25 @@ void CLoading::StageLoading(void)
 
 	hr = CResourcesMgr::GetInstance()->AddTexture(
 		RESOURCE_STAGE
-		, L"Texture_Flower"
-		, L"../Resource/Flower.png");
-	FAILED_CHECK_RETURN(hr, );
-
-	hr = CResourcesMgr::GetInstance()->AddTexture(
-		RESOURCE_STAGE
 		, L"Texture_Player"
 		, L"../Resource/MeshImage/newplayer.png");
+	FAILED_CHECK_RETURN(hr, );
+
+
+	//hr = CResourcesMgr::GetInstance()->AddTexture(
+	//	RESOURCE_STAGE
+	//	, L"Texture_Flower"
+	//	, L"../Resource/Flower.png");
+	//FAILED_CHECK_RETURN(hr, );
+
+	
 
 
 	//lstrcpy(m_szLoadMessage, L"버퍼 로딩중...");
 	cout << "StaticBufferLoading" << endl;
 	//Buffer
+
+	//LoadStaticMesh();
 
 	TCHAR szFullPath[MAX_PATH] = L"";
 	TCHAR szFullKey[MAX_PATH] = L"";
@@ -90,13 +96,6 @@ void CLoading::StageLoading(void)
 		VERTEXCOUNTX);
 	FAILED_CHECK_RETURN(hr, );
 
-
-
-
-
-
-
-
 	//다이나믹은 ㅅㅂ 스레드 ㅈ같아서 스레드로딩안함. 
 
 
@@ -108,6 +107,97 @@ void CLoading::StageLoading(void)
 		g_client.Init(g_hWnd);
 		m_serverConnected = true;
 	}
+}
+
+HRESULT CLoading::LoadTexture(void)
+{
+	HRESULT hr = NULL;
+
+	TCHAR szTexFullPath[MAX_PATH] = L"";
+	TCHAR szTexKey[MAX_PATH] = L"";
+
+	
+
+
+
+	wifstream LoadFile;
+	//////차후 스테이지 구분 걸어야함. 1스테이지면 말고
+	LoadFile.open(L"..//Resources/MeshTexPath.txt", ios::in);
+	/////////////////////////
+
+	while (!LoadFile.eof())
+	{
+		TCHAR* szTexName = new TCHAR[MAX_PATH];
+		TCHAR* szTexPath = new TCHAR[MAX_PATH];
+
+		LoadFile.getline(szTexName, MAX_PATH, '|');
+		LoadFile.getline(szTexPath, MAX_PATH);
+
+		if (szTexName == L"\n")
+			break;
+
+		hr = CResourcesMgr::GetInstance()->AddTexture(
+			RESOURCE_STAGE
+			, szTexName, szTexPath, 1);
+		FAILED_CHECK_RETURN(hr, E_FAIL);
+
+		Safe_Delete_Array(szTexName);
+		Safe_Delete_Array(szTexPath);
+	}
+
+	LoadFile.close();
+
+	return S_OK;
+
+}
+
+HRESULT CLoading::LoadStaticMesh(void)
+{
+	wifstream LoadFile;
+	HRESULT hr = NULL;
+
+	/////////////////스테이지 구분해줄것
+	LoadFile.open(L"..//Resources/MeshPath.txt", ios::in);
+	/////////////////
+
+	while (!LoadFile.eof())
+	{
+		TCHAR* szMeshKey = new TCHAR[MAX_PATH];
+		TCHAR* szMeshPath = new TCHAR[MAX_PATH];
+		TCHAR* szMeshName = new TCHAR[MAX_PATH];
+
+		char cPath[MAX_PATH];
+		char cName[MAX_PATH];
+
+		LoadFile.getline(szMeshKey, MAX_PATH, '|');
+		LoadFile.getline(szMeshPath, MAX_PATH, '|');
+		LoadFile.getline(szMeshName, MAX_PATH);
+
+		WideCharToMultiByte(CP_ACP, 0, szMeshPath, MAX_PATH, cPath, MAX_PATH, NULL, NULL);
+		WideCharToMultiByte(CP_ACP, 0, szMeshName, MAX_PATH, cName, MAX_PATH, NULL, NULL);
+
+		if (szMeshKey == L"\n")
+			break;
+
+		hr = CResourcesMgr::GetInstance()->AddMesh(
+			RESOURCE_STAGE
+			, MESH_STATIC
+			, szMeshKey
+			, cPath
+			, cName);
+
+		FAILED_CHECK_RETURN(hr, E_FAIL);
+
+		Safe_Delete_Array(szMeshKey);
+		Safe_Delete_Array(szMeshPath);
+		Safe_Delete_Array(szMeshName);
+
+	}
+
+	LoadFile.close();
+
+	return S_OK;
+
 }
 
 CLoading* CLoading::Create(LOADINGID eLoadID)

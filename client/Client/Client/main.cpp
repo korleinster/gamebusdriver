@@ -118,7 +118,7 @@ BOOL CALLBACK AboutDlgProc(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM lPara
 			return TRUE;
 		case IDCANCEL:
 			EndDialog(hDlg, IDCANCEL);
-			exit(-1);
+			PostQuitMessage(0);
 			return TRUE;
 		default:
 			break;

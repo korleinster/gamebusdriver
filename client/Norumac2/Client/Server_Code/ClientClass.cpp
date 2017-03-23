@@ -17,7 +17,9 @@ AsynchronousClientClass::~AsynchronousClientClass()
 
 void AsynchronousClientClass::Init(const HWND& hwnd)
 {
-	inputServerIP();
+	// Server IP 입력과 DB Login 을 하는 팝업 Dialog
+	DialogBox(g_hInst, MAKEINTRESOURCE(101), hwnd, AboutDlgProc);
+	//inputServerIP();
 
 	// init Winsock
 	if (WSAStartup(MAKEWORD(2, 2), &m_wsadata) != 0) {
@@ -78,8 +80,8 @@ void AsynchronousClientClass::Init(const HWND& hwnd)
 }
 
 void AsynchronousClientClass::Login_access() {
-#if 1
-	int login_cnt{ 6 };
+#if 0
+	int login_cnt{ 2 };
 
 	while (--login_cnt)
 	{
@@ -107,7 +109,20 @@ void AsynchronousClientClass::Login_access() {
 	}
 
 #else
+	Packet temp_buf[MAX_BUF_SIZE]{ 0 };
+	temp_buf[0] = wcslen(login_id) * 2;
+	wcscpy(reinterpret_cast<wchar_t*>(&temp_buf[1]), login_id);
+	temp_buf[temp_buf[0] + 3] = wcslen(login_pw) * 2;
+	wcscpy(reinterpret_cast<wchar_t*>(&temp_buf[temp_buf[0] + 4]), login_pw);
 
+	send(m_sock, reinterpret_cast<char*>(&temp_buf), MAX_BUF_SIZE, 0);
+	recv(m_sock, reinterpret_cast<char*>(&temp_buf), MAX_BUF_SIZE, 0);
+
+	if (1 == temp_buf[0]) { return; }
+	else {
+		system("cls");
+		printf("Login Failed\n");
+	}
 #endif
 }
 

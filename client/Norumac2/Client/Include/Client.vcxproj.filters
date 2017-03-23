@@ -171,9 +171,6 @@
     <ClInclude Include="Client.h">
       <Filter>99.Default</Filter>
     </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>99.Default</Filter>
-    </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>99.Default</Filter>
     </ClInclude>
@@ -327,6 +324,7 @@
     <ClInclude Include="..\Code\ParsingDevice9.h">
       <Filter>95.System\99.PasingDevice</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\MainApp.cpp">
@@ -475,21 +473,11 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="small.ico">
-      <Filter>99.Default</Filter>
-    </Image>
-    <Image Include="Client.ico">
-      <Filter>99.Default</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Client.rc">
-      <Filter>99.Default</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
     <FxCompile Include="..\ShaderCode\Shader.fx">
       <Filter>97.Resources\03.Shader\ShaderCode</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ip_and_login.rc" />
   </ItemGroup>
 </Project>

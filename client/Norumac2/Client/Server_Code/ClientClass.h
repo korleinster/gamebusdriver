@@ -11,6 +11,10 @@ public:
 
 	void Init(const HWND&);
 
+	CHAR* get_server_ip_array() { return m_serverIP; }
+	wchar_t* get_login_id_array() { return login_id; }
+	wchar_t* get_login_pw_array() { return login_pw; }
+
 	void ProcessWinMessage(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	void sendPacket(const BYTE data_size, const BYTE type, BYTE* data_start_pointer);
 	void sendPacket_TEST();
@@ -44,6 +48,8 @@ private:
 	int m_retval{ 0 };
 
 	CHAR m_serverIP[32]{ 0 };
+	wchar_t login_id[MAX_BUF_SIZE / 4]{ L"guest" };
+	wchar_t login_pw[MAX_BUF_SIZE / 4]{ L"guest" };
 
 	WSABUF m_wsa_recvbuf;
 	WSABUF m_wsa_sendbuf;

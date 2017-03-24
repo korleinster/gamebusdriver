@@ -95,6 +95,11 @@ void CMapToolView::OnEndPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
 	// TODO: 인쇄 후 정리 작업을 추가합니다.
 }
 
+void CMapToolView::SetCurToolIndex(int& iIndex)
+{
+	m_iCurToolIndex = iIndex;
+}
+
 
 // CMapToolView 진단
 
@@ -107,11 +112,6 @@ void CMapToolView::AssertValid() const
 void CMapToolView::Dump(CDumpContext& dc) const
 {
 	CView::Dump(dc);
-}
-
-void CMapToolView::SetCurToolIndex(int& iIndex)
-{
-	m_iCurToolIndex = iIndex;
 }
 
 CMapToolDoc* CMapToolView::GetDocument() const // 디버그되지 않은 버전은 인라인으로 지정됩니다.

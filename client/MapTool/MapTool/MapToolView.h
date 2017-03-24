@@ -31,11 +31,11 @@ protected:
 // 구현입니다.
 public:
 	virtual ~CMapToolView();
+	void SetCurToolIndex(int& iIndex);
 #ifdef _DEBUG
 	virtual void AssertValid() const;
 	virtual void Dump(CDumpContext& dc) const;
 
-	void SetCurToolIndex(int& iIndex);
 #endif
 
 protected:

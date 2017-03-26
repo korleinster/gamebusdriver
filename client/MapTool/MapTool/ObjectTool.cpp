@@ -509,7 +509,7 @@ void CObjectTool::OnObjLoad()
 
 		CObj*	pGameObject = NULL;
 
-		for (int i = 0; i < iNum; ++i)
+		for (int j = 0; j < iNum; ++j)
 		{
 			
 			pGameObject = CStaticObject::Create(pObjectKey,D3DXVECTOR3(0.f,0.f,0.f));

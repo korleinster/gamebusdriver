@@ -16,6 +16,8 @@ public:
 public:
 	HRESULT InitLoading(void);
 	void StageLoading(void);
+	void TextureLoad(void);
+	void StaticMeshLoad(void);
 
 public:
 	static CLoading* Create(LOADINGID eLoadID);

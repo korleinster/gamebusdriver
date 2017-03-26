@@ -169,19 +169,19 @@ void COtherPlayer::ChangeDir(void)
 {
 	if (m_pInfo->m_ServerInfo.dir == KEYINPUT_UP)
 	{
-		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(315.f);
+		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(135.f);
 	}
 	else if (m_pInfo->m_ServerInfo.dir == KEYINPUT_DOWN)
 	{
-		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(135.f);
+		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(315.f);
 	}
 	else if (m_pInfo->m_ServerInfo.dir == KEYINPUT_LEFT)
 	{
-		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(225.f);
+		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(45.f);
 	}
 	else if (m_pInfo->m_ServerInfo.dir == KEYINPUT_RIGHT)
 	{
-		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(45.f);
+		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(225.f);
 	}
 }
 

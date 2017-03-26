@@ -18,6 +18,8 @@ protected:
 	ReleaseType					m_eReleaseType;
 	vector<string>				vecAniName;
 	//OBJECT_DIR					m_eObjDir;
+	TCHAR						m_tcKey[256];
+	TCHAR						m_tcMeshKey[256];
 
 public:
 	virtual HRESULT Initialize(void);
@@ -33,6 +35,7 @@ public:
 	const float&	GetViewZ(void) const;
 	CInfo*			GetInfo(void) { return m_pInfo; }
 	ReleaseType&	GetReleaseType(void) { return m_eReleaseType; }
+	const CComponent*	GetComponent(const wstring&	_wstrComponentKey);
 	
 
 public:

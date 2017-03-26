@@ -30,9 +30,15 @@ CStaticObject::~CStaticObject()
 	Release();
 }
 
-HRESULT CStaticObject::Initialize(const TCHAR* pMeshKey, const TCHAR* pTextureKey)
+HRESULT CStaticObject::Initialize(const TCHAR* pMeshKey)
 {
-	if (FAILED(AddComponent(pMeshKey,pTextureKey)))
+	_tcscpy_s(m_tcKey, pMeshKey);
+	_tcscpy_s(m_tcMeshKey, pMeshKey);
+
+	_tcscat_s(m_tcKey, L".png");
+
+
+	if (FAILED(AddComponent(pMeshKey, m_tcKey)))
 		return E_FAIL;
 	m_pInfo->m_fAngle[ANGLE_X] = /*D3DX_PI / 2 * -1.f;*/D3DXToRadian(-90);
 	//m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
@@ -76,10 +82,10 @@ void CStaticObject::Render(void)
 
 }
 
-CStaticObject * CStaticObject::Create(const TCHAR* pMeshKey, const TCHAR* pTextureKey)
+CStaticObject * CStaticObject::Create(const TCHAR* pMeshKey)
 {
 	CStaticObject* pObj = new CStaticObject;
-	if (FAILED(pObj->Initialize(pMeshKey,pTextureKey)))
+	if (FAILED(pObj->Initialize(pMeshKey)))
 		::Safe_Delete(pObj);
 
 	return pObj;

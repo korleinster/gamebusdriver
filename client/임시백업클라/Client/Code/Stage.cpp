@@ -9,6 +9,7 @@
 #include "Player.h"
 #include "StaticObject.h"
 #include "Camera.h"
+#include "Info.h"
 
 CStage::CStage()
 	: m_bFirstLogin(false)
@@ -117,13 +118,54 @@ HRESULT CStage::CreateObj(void)
 	}*/
 
 	pObj = CPlayer::Create();
-	pObj->SetPos(D3DXVECTOR3(10.f, 0.f, 10.f));
+	pObj->SetPos(D3DXVECTOR3(155.f, 0.f, 400.f));
 	CObjMgr::GetInstance()->AddObject(L"Player", pObj);
 
 	CCamera::GetInstance()->SetCameraTarget(pObj->GetInfo());
+
+
+	DataLoad();
 	
 
 
 	return S_OK;
+}
+
+void CStage::DataLoad(void)
+{
+	HANDLE	hFile = CreateFile(L"..\\Resource\\Data\\Norumac2.dat", GENERIC_READ,
+		0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	DWORD dwByte;
+
+	int iObjSize = 0;
+	ReadFile(hFile, &iObjSize, sizeof(int), &dwByte, NULL);
+
+	for (int i = 0; i < iObjSize; ++i)
+	{
+		TCHAR* pObjectKey = new TCHAR[50];
+		ReadFile(hFile, pObjectKey, sizeof(TCHAR) * 50, &dwByte, NULL);
+
+		int iNum;
+		ReadFile(hFile, &iNum, sizeof(int), &dwByte, NULL);
+		if(0==iNum)
+			continue;
+		CObj* pGameObject = NULL;
+
+		for (int j = 0; j < iNum; ++j)
+		{
+			pGameObject = CStaticObject::Create(pObjectKey);
+			CObjMgr::GetInstance()->AddObject(pObjectKey, pGameObject);
+			CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, pGameObject);
+
+			const CComponent* pComponent = pGameObject->GetComponent(L"Transform");
+			ReadFile(hFile, ((CInfo*)pComponent)->m_fAngle, sizeof(float) * ANGLE_END, &dwByte, NULL);
+			ReadFile(hFile, ((CInfo*)pComponent)->m_vScale, sizeof(D3DXVECTOR3), &dwByte, NULL);
+			ReadFile(hFile, ((CInfo*)pComponent)->m_vPos, sizeof(D3DXVECTOR3), &dwByte, NULL);
+			ReadFile(hFile, ((CInfo*)pComponent)->m_vDir, sizeof(D3DXVECTOR3), &dwByte, NULL);
+			ReadFile(hFile, ((CInfo*)pComponent)->m_matWorld, sizeof(D3DXMATRIX), &dwByte, NULL);
+		}
+	}
+
 }
 

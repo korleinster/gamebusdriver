@@ -100,6 +100,16 @@ const float & CObj::GetViewZ(void) const
 	return m_fViewZ;
 }
 
+const CComponent* CObj::GetComponent(const wstring& _wstrComponentKey)
+{
+	map<wstring, CComponent*>::iterator iter = m_mapComponent.find(_wstrComponentKey);
+
+	if (iter == m_mapComponent.end())
+		return NULL;
+
+	return iter->second;
+}
+
 
 player_data* CObj::GetPacketData()
 {

@@ -15,9 +15,11 @@ public:
 
 public:
 	static CStage* Create(void);
+	
 
 public:
 	HRESULT	CreateObj(void);
+	void DataLoad(void);
 
 public:
 	bool m_bFirstLogin;

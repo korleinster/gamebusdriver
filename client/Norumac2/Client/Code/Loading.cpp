@@ -53,7 +53,8 @@ void CLoading::StageLoading(void)
 	cout << "TextureLoading" << endl;
 	//Texture
 
-	//LoadTexture();
+	TCHAR szTexFullPath[MAX_PATH] = L"";
+	TCHAR szTexKey[MAX_PATH] = L"";
 
 	hr = CResourcesMgr::GetInstance()->AddTexture(
 		RESOURCE_STAGE
@@ -61,28 +62,24 @@ void CLoading::StageLoading(void)
 		, L"../Resource/Terrain/Stage1.png");
 	FAILED_CHECK_RETURN(hr, );
 
+	TextureLoad();
+
+
+	/*hr = CResourcesMgr::GetInstance()->AddTexture(
+		RESOURCE_STAGE
+		, L"Texture_Flower"
+		, L"../Resource/Flower.png");*/
+	FAILED_CHECK_RETURN(hr, );
 
 	hr = CResourcesMgr::GetInstance()->AddTexture(
 		RESOURCE_STAGE
 		, L"Texture_Player"
 		, L"../Resource/MeshImage/newplayer.png");
-	FAILED_CHECK_RETURN(hr, );
-
-
-	//hr = CResourcesMgr::GetInstance()->AddTexture(
-	//	RESOURCE_STAGE
-	//	, L"Texture_Flower"
-	//	, L"../Resource/Flower.png");
-	//FAILED_CHECK_RETURN(hr, );
-
-	
 
 
 	//lstrcpy(m_szLoadMessage, L"버퍼 로딩중...");
 	cout << "StaticBufferLoading" << endl;
 	//Buffer
-
-	//LoadStaticMesh();
 
 	TCHAR szFullPath[MAX_PATH] = L"";
 	TCHAR szFullKey[MAX_PATH] = L"";
@@ -95,6 +92,9 @@ void CLoading::StageLoading(void)
 		VERTEXCOUNTX,
 		VERTEXCOUNTX);
 	FAILED_CHECK_RETURN(hr, );
+
+	StaticMeshLoad();
+
 
 	//다이나믹은 ㅅㅂ 스레드 ㅈ같아서 스레드로딩안함. 
 
@@ -109,20 +109,17 @@ void CLoading::StageLoading(void)
 	}
 }
 
-HRESULT CLoading::LoadTexture(void)
+void CLoading::TextureLoad(void)
 {
+
 	HRESULT hr = NULL;
 
 	TCHAR szTexFullPath[MAX_PATH] = L"";
 	TCHAR szTexKey[MAX_PATH] = L"";
 
-	
-
-
-
 	wifstream LoadFile;
 	//////차후 스테이지 구분 걸어야함. 1스테이지면 말고
-	LoadFile.open(L"..//Resources/MeshTexPath.txt", ios::in);
+	LoadFile.open(L"..//Resource/Data/MeshTexPath.txt", ios::in);
 	/////////////////////////
 
 	while (!LoadFile.eof())
@@ -139,7 +136,7 @@ HRESULT CLoading::LoadTexture(void)
 		hr = CResourcesMgr::GetInstance()->AddTexture(
 			RESOURCE_STAGE
 			, szTexName, szTexPath, 1);
-		FAILED_CHECK_RETURN(hr, E_FAIL);
+		FAILED_CHECK_RETURN(hr, );
 
 		Safe_Delete_Array(szTexName);
 		Safe_Delete_Array(szTexPath);
@@ -147,17 +144,15 @@ HRESULT CLoading::LoadTexture(void)
 
 	LoadFile.close();
 
-	return S_OK;
-
 }
 
-HRESULT CLoading::LoadStaticMesh(void)
+void CLoading::StaticMeshLoad(void)
 {
 	wifstream LoadFile;
 	HRESULT hr = NULL;
 
 	/////////////////스테이지 구분해줄것
-	LoadFile.open(L"..//Resources/MeshPath.txt", ios::in);
+	LoadFile.open(L"..//Resource/Data/MeshPath.txt", ios::in);
 	/////////////////
 
 	while (!LoadFile.eof())
@@ -186,7 +181,7 @@ HRESULT CLoading::LoadStaticMesh(void)
 			, cPath
 			, cName);
 
-		FAILED_CHECK_RETURN(hr, E_FAIL);
+		FAILED_CHECK_RETURN(hr, );
 
 		Safe_Delete_Array(szMeshKey);
 		Safe_Delete_Array(szMeshPath);
@@ -195,9 +190,6 @@ HRESULT CLoading::LoadStaticMesh(void)
 	}
 
 	LoadFile.close();
-
-	return S_OK;
-
 }
 
 CLoading* CLoading::Create(LOADINGID eLoadID)

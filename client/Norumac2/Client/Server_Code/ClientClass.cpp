@@ -32,7 +32,7 @@ void AsynchronousClientClass::Init(const HWND& hwnd)
 		int err_no = WSAGetLastError();
 		error_quit(L"WSASocket()", err_no);
 	}
-		
+
 	// connect
 	SOCKADDR_IN serveraddr;
 	ZeroMemory(&serveraddr, sizeof(serveraddr));
@@ -90,7 +90,7 @@ void AsynchronousClientClass::Login_access() {
 		wchar_t pw[MAX_BUF_SIZE / 4]{ 0 };
 
 		wcin >> id >> pw;
-		
+
 		Packet temp_buf[MAX_BUF_SIZE]{ 0 };
 		temp_buf[0] = wcslen(L"guest") * 2;
 		wcscpy(reinterpret_cast<wchar_t*>(&temp_buf[1]), L"guest");
@@ -142,18 +142,18 @@ void AsynchronousClientClass::inputServerIP_cin()
 
 void AsynchronousClientClass::inputServerIP()
 {
-//#ifdef _DEBUG
-//	cout << "choose Server to connect.\n\n0. Read Server IP in .txt File\n1. Input Server IP, directly\n\nchoice method : ";
-//	short cmd{ 0 };
-//	cin >> cmd;
-//
-//	if (cmd & 1) { inputServerIP_cin(); }
-//	else { inputServerIP_ReadtxtFile(); }
-//
-//	cout << "\n\n\t--==** Connecting Server, Please Wait **==--\n\n\n";
-//#else
+	//#ifdef _DEBUG
+	//	cout << "choose Server to connect.\n\n0. Read Server IP in .txt File\n1. Input Server IP, directly\n\nchoice method : ";
+	//	short cmd{ 0 };
+	//	cin >> cmd;
+	//
+	//	if (cmd & 1) { inputServerIP_cin(); }
+	//	else { inputServerIP_ReadtxtFile(); }
+	//
+	//	cout << "\n\n\t--==** Connecting Server, Please Wait **==--\n\n\n";
+	//#else
 	inputServerIP_ReadtxtFile();
-//#endif
+	//#endif
 }
 
 SOCKET* AsynchronousClientClass::getServerSocket()

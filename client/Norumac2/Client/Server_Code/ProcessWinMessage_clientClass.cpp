@@ -18,7 +18,7 @@ void AsynchronousClientClass::ProcessWinMessage(HWND hwnd, UINT uMsg, WPARAM wPa
 	{
 	case FD_READ: {	// 데이터 수신
 
-		// m_retval = recvn();
+					// m_retval = recvn();
 		DWORD ioByteSize{ 0 };
 		DWORD ioFlag{ 0 };
 
@@ -63,7 +63,7 @@ void AsynchronousClientClass::ProcessWinMessage(HWND hwnd, UINT uMsg, WPARAM wPa
 			}
 		}
 	}
-		break;
+				  break;
 	case FD_WRITE:	// 데이터 송신
 		break;
 	case FD_CLOSE:	// 서버에서 통신을 끊음

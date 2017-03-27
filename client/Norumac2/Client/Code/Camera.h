@@ -41,8 +41,6 @@ public:
 	HRESULT Initialize(void);
 	int		Update(void);
 	void	Release(void);
-	const D3DXMATRIX* GetViewMatrix() { return &m_matView; }
-	const D3DXMATRIX* GetProjMatrix() { return &m_matProj; }
 
 public:
 	void MakeView(void);

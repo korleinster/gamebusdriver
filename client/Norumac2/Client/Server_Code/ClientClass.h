@@ -20,7 +20,7 @@ public:
 	void sendPacket_TEST();
 
 	unordered_map<UINT, player_data>* getOtherPlayers() { return &m_other_players; }
-	player_data* getPlayerData(){ return &m_player; }
+	player_data* getPlayerData() { return &m_player; }
 
 
 private:

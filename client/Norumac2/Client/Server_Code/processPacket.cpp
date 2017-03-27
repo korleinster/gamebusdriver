@@ -18,10 +18,10 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 		if (CSceneMgr::GetInstance()->GetScene() != SCENE_LOGO)
 		{
-			player_data *data = CObjMgr::GetInstance()->Get_PlayerServerData(*reinterpret_cast<unsigned int*>(&buf[sizeof(position)+2]));
+			player_data *data = CObjMgr::GetInstance()->Get_PlayerServerData(*reinterpret_cast<unsigned int*>(&buf[sizeof(position) + 2]));
 
-			if (nullptr != data) 
-			{ 
+			if (nullptr != data)
+			{
 				memcpy(&data->pos, &buf[2], sizeof(position));
 
 				list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->begin();
@@ -50,19 +50,19 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 				break;
 		}
 	}
-		break;
+						   break;
 	case CHANGED_DIRECTION: {
 
 		if (CSceneMgr::GetInstance()->GetScene() != SCENE_LOGO)
 		{
-			player_data *data = CObjMgr::GetInstance()->Get_PlayerServerData(*reinterpret_cast<unsigned int*>(&buf[sizeof(char)+2]));
+			player_data *data = CObjMgr::GetInstance()->Get_PlayerServerData(*reinterpret_cast<unsigned int*>(&buf[sizeof(char) + 2]));
 
 			if (nullptr != data) { memcpy(&data->dir, &buf[2], sizeof(char)); }
 			else
 				break;
 		}
 	}
-		break;
+							break;
 
 	case SERVER_MESSAGE_HP_CHANGED: {
 		if (CSceneMgr::GetInstance()->GetScene() != SCENE_LOGO)
@@ -80,7 +80,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			data->state.hp = *(reinterpret_cast<int*>(&buf[2]));
 		}
 	}
-		break;
+									break;
 
 	case KEYINPUT_ATTACK: {
 		if (CSceneMgr::GetInstance()->GetScene() != SCENE_LOGO)
@@ -113,7 +113,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 				// *(reinterpret_cast<UINT*>(&buf[sizeof(int) + sizeof(int) + 2])) 이 번호 클라이언트의 애니메이션을 작동시켜야 한다.
 				/// 통신을 하던 도중, 추후 시야에서 사라져, 데이터에서 제거한 상황이 있을 수 있기때문에, 벌써 사라져 없는 클라이언트에 대한 예외 처리도 해주어야 한다.
 				/// 추후 더 효과적으로 하기 위해서는, 애초에 카메라 밖에 위치한 클라이언트에 대해선 처리를 안하는게 가장 좋겠지...?
-				
+
 			}
 
 			// 내가 피해를 입은 것이라면, 내 hp 를 깎고 break;
@@ -131,8 +131,8 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			// 내가 아니라면 다른애 hp 깎기
 			player_data *data = CObjMgr::GetInstance()->Get_PlayerServerData(*reinterpret_cast<unsigned int*>(&buf[sizeof(int) + 2]));
 			data->state.hp = *(reinterpret_cast<int*>(&buf[2]));
-			
-			if (0 >= *(reinterpret_cast<int*>(&buf[2]))) 
+
+			if (0 >= *(reinterpret_cast<int*>(&buf[2])))
 			{
 				list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->begin();
 				list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->end();
@@ -153,7 +153,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 		}
 	}
-		 break;
+						  break;
 
 
 	default:	// 잘 안쓰이는 패킷들
@@ -171,7 +171,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			// 여기는 주체가 되는, 내가 직접 조작을 하는 플레이어의 데이터가 들어오니까
 			// 아이템이라던가 위치정보라던가 일단 다 여기로 들어온다잉
 		}
-			break;
+						  break;
 		case INIT_OTHER_CLIENT: {
 			/*unordered_map<UINT, player_data>::iterator ptr = m_other_players.find(reinterpret_cast<player_data*>(&buf[2])->id);
 			if (m_other_players.end() == ptr) { m_other_players.insert(make_pair(reinterpret_cast<player_data*>(&buf[2])->id, *reinterpret_cast<player_data*>(&buf[2]))); }
@@ -199,7 +199,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 				}
 			}
 		}
-			break;
+								break;
 		case PLAYER_DISCONNECTED: {
 			// 여기도, id 로 찾아서, 그 아이디 찾으면 그 객체는 삭제 해야겠찌? ㅇㅋㄷㅋ?
 			player_data *data = CObjMgr::GetInstance()->Get_PlayerServerData(reinterpret_cast<player_data*>(&buf[2])->id);
@@ -221,13 +221,13 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			}
 
 		}
-			break;
+								  break;
 		default:
 			break;
 		}
 
 
-				// default break;
+		// default break;
 		break;
 	}
 }

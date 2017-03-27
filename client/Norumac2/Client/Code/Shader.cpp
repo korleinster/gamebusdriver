@@ -8,8 +8,6 @@ CShader::CShader()
 	m_pVertexShader = NULL;
 	m_pPixelShader = NULL;
 	m_pVertexLayout = NULL;
-	m_pHullShader = NULL;
-	m_pDomainShader = NULL;
 	m_dwRefCount = 1;
 }
 
@@ -18,8 +16,6 @@ CShader::CShader(const CShader & rhs)
 	m_pVertexShader = rhs.m_pVertexShader;
 	m_pVertexLayout = rhs.m_pVertexLayout;
 	m_pPixelShader = rhs.m_pPixelShader;
-	m_pHullShader = rhs.m_pHullShader;
-	m_pDomainShader = rhs.m_pDomainShader;
 	m_dwRefCount = rhs.m_dwRefCount;
 	++m_dwRefCount;
 }
@@ -45,19 +41,7 @@ HRESULT CShader::Ready_ShaderFile(wstring wstrFilePath, LPCSTR wstrShaderName, L
 	ID3DBlob* pErrorBlob = NULL;
 	ID3DBlob* pShaderBlob = NULL;
 
-	// hlsl 컴파일
-	hr = D3DX11CompileFromFile(
-		wstrFilePath.c_str(), // 셰이더 파일 경로
-		NULL,
-		NULL,
-		wstrShaderName, // 셰이더 실행이 시작되는 진입 점 함수의 이름
-		wstrShaderVersion, // 셰이더 버전
-		dwShaderFlags,
-		0,
-		NULL,
-		&pShaderBlob,
-		&pErrorBlob,
-		NULL);
+	hr = D3DX11CompileFromFile(wstrFilePath.c_str(), NULL, NULL, wstrShaderName, wstrShaderVersion, dwShaderFlags, 0, NULL, &pShaderBlob, &pErrorBlob, NULL);
 
 	if (FAILED(hr))
 	{
@@ -66,8 +50,8 @@ HRESULT CShader::Ready_ShaderFile(wstring wstrFilePath, LPCSTR wstrShaderName, L
 		if (pErrorBlob) pErrorBlob->Release();
 		return hr;
 	}
-
 	if (pErrorBlob) pErrorBlob->Release();
+
 
 
 	if (_SType == SHADER_VS)
@@ -144,24 +128,6 @@ HRESULT CShader::Ready_ShaderFile(wstring wstrFilePath, LPCSTR wstrShaderName, L
 		if (FAILED(hr))
 			return hr;
 	}
-	else if (_SType == SHADER_HS)
-	{
-		hr = CDevice::GetInstance()->m_pDevice->CreateHullShader(pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), NULL, &m_pHullShader);
-	
-		pShaderBlob->Release();
-
-		if (FAILED(hr))
-			return hr;
-	}
-	else if (_SType == SHADER_DS)
-	{
-		hr = CDevice::GetInstance()->m_pDevice->CreateDomainShader(pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), NULL, &m_pDomainShader);
-	
-		pShaderBlob->Release();
-
-		if (FAILED(hr))
-			return hr;
-	}
 
 	return S_OK;
 }
@@ -173,8 +139,6 @@ DWORD CShader::Release(void)
 		::Safe_Release(m_pVertexShader);
 		::Safe_Release(m_pPixelShader);
 		::Safe_Release(m_pVertexLayout);
-		::Safe_Release(m_pHullShader);
-		::Safe_Release(m_pDomainShader);
 	}
 
 	else

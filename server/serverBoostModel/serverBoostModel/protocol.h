@@ -25,7 +25,7 @@ enum PacketProtocolType {
 	INIT_CLIENT,
 	INIT_OTHER_CLIENT,
 	PLAYER_DISCONNECTED,
-	
+
 	// 캐릭터 좌표 및 방향 관련
 	CHANGED_POSITION,
 	CHANGED_DIRECTION,

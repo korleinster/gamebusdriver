@@ -157,11 +157,17 @@
     <Filter Include="95.System\99.PasingDevice">
       <UniqueIdentifier>{5cd805a9-66fe-4a6b-865b-9c6eec25f9fe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.Manager\09.LightMgr">
+      <UniqueIdentifier>{54f8a8cc-6824-40e1-8aaf-c85b9e6a9b35}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
     <Text Include="ServerIP.txt">
       <Filter>99.Default\Only for Server</Filter>
+    </Text>
+    <Text Include="..\ShaderCode\HLSL내장함수.txt">
+      <Filter>97.Resources\03.Shader\ShaderCode</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>
@@ -476,6 +482,21 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\ShaderCode\Shader.fx">
+      <Filter>97.Resources\03.Shader\ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderCode\common.fx">
+      <Filter>97.Resources\03.Shader\ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderCode\DeferredShading.fx">
+      <Filter>97.Resources\03.Shader\ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderCode\DirLight.fx">
+      <Filter>97.Resources\03.Shader\ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderCode\GBufferVis.fx">
+      <Filter>97.Resources\03.Shader\ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderCode\PointLight.fx">
       <Filter>97.Resources\03.Shader\ShaderCode</Filter>
     </FxCompile>
   </ItemGroup>

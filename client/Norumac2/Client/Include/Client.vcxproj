@@ -98,6 +98,12 @@
       <AdditionalDependencies>dinput8.lib;d3d9.lib;d3d11.lib;d3dcompiler.lib;d3dx11d.lib;d3dx9d.lib;dxerr.lib;dxguid.lib;winmm.lib;comctl32.lib;DirectXTex.lib;libfbxsdk-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\..\DX9LIB86;../Library</AdditionalLibraryDirectories>
     </Link>
+    <FxCompile>
+      <ShaderType>Effect</ShaderType>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -126,6 +132,12 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <FxCompile>
+      <ShaderType>Effect</ShaderType>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -144,6 +156,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <Text Include="..\ShaderCode\HLSL내장함수.txt" />
     <Text Include="ReadMe.txt" />
     <Text Include="ServerIP.txt" />
   </ItemGroup>
@@ -259,6 +272,11 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\ShaderCode\common.fx" />
+    <FxCompile Include="..\ShaderCode\DeferredShading.fx" />
+    <FxCompile Include="..\ShaderCode\DirLight.fx" />
+    <FxCompile Include="..\ShaderCode\GBufferVis.fx" />
+    <FxCompile Include="..\ShaderCode\PointLight.fx" />
     <FxCompile Include="..\ShaderCode\Shader.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">VS</EntryPointName>
       <DisableOptimizations Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</DisableOptimizations>

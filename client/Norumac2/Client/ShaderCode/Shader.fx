@@ -17,7 +17,12 @@ cbuffer cbBoneWorldMatrix : register(b1)
 	row_major matrix gMtxBone[MAX] : packoffset(c0); // row_major 행 우선 행렬 = 전치행렬X
 };
 
-
+static const float2 arrBasePos[4] = {
+	float2(-1.0, 1.0),
+	float2(1.0, 1.0),
+	float2(1.0, -1.0),
+	float2(-1.0, -1.0),
+};
 
 struct VS_INPUT
 {
@@ -47,11 +52,15 @@ VS_OUT VS(VS_INPUT input)
 
 
 ///로고
-VS_OUT VS_Logo(VS_INPUT input)
+VS_OUT VS_Logo(/*VS_INPUT input*/uint VertexID : SV_VertexID)
 {
 	VS_OUT output = (VS_OUT)0;
-	output.Pos = input.Pos;
-	output.Tex = input.Tex;
+
+	output.Pos = float4(arrBasePos[VertexID].xy, 0.0, 1.0);
+	output.Tex = float2(output.Pos.x * 0.5 + 0.5, output.Pos.y * -0.5 + 0.5);
+	
+	//output.Pos = input.Pos;
+	//output.Tex = input.Tex;
 	return output;
 }
 

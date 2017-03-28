@@ -160,6 +160,12 @@
     <Filter Include="04.Manager\09.LightMgr">
       <UniqueIdentifier>{54f8a8cc-6824-40e1-8aaf-c85b9e6a9b35}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.Manager\10.TargetMgr">
+      <UniqueIdentifier>{2cfad904-f89c-49d9-b467-5ab6bb338748}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Manager\10.TargetMgr\MultiRenderTarget">
+      <UniqueIdentifier>{5659eede-9e0f-4e79-8f25-a25209f62705}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -333,6 +339,15 @@
     <ClInclude Include="..\Code\ParsingDevice9.h">
       <Filter>95.System\99.PasingDevice</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\LightMgr.h">
+      <Filter>04.Manager\09.LightMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\TargetMgr.h">
+      <Filter>04.Manager\10.TargetMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\MultiRenderTarget.h">
+      <Filter>04.Manager\10.TargetMgr\MultiRenderTarget</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\MainApp.cpp">
@@ -478,6 +493,15 @@
     </ClCompile>
     <ClCompile Include="..\Code\ParsingDevice9.cpp">
       <Filter>95.System\99.PasingDevice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\LightMgr.cpp">
+      <Filter>04.Manager\09.LightMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\TargetMgr.cpp">
+      <Filter>04.Manager\10.TargetMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\MultiRenderTarget.cpp">
+      <Filter>04.Manager\10.TargetMgr\MultiRenderTarget</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

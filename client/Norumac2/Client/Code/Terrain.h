@@ -21,6 +21,10 @@ private:
 	VTXTEX*		m_pVerTex;
 	VTXTEX*		m_pConvertVerTex;
 
+	// Scene meshes shader constant buffers
+	ID3D11Buffer*		m_pSceneVertexShaderCB;
+	ID3D11Buffer*		m_pScenePixelShaderCB;
+
 public:
 	static CTerrain* Create(void);
 

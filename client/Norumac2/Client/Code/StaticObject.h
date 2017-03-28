@@ -19,6 +19,11 @@ private:
 	CTexture*		m_pTexture;
 	VTXTEX*			m_pVerTex;
 
+	// Scene meshes shader constant buffers
+	ID3D11Buffer*		m_pSceneVertexShaderCB;
+	ID3D11Buffer*		m_pScenePixelShaderCB;
+
+
 
 public:
 	virtual HRESULT Initialize(const TCHAR* pMeshKey);

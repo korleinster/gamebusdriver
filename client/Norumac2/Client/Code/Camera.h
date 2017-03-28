@@ -43,6 +43,9 @@ public:
 	void	Release(void);
 
 public:
+	const D3DXMATRIX* GetViewMatrix() { return &m_matView; }
+	const D3DXMATRIX* GetProjMatrix() { return &m_matProj; }
+
 	void MakeView(void);
 	void MakeProjection(void);
 	void SetCameraTarget(CInfo* pInfo);

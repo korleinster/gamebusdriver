@@ -3,8 +3,19 @@
 
 class CScene;
 class CObj;
+class CDevice;
+class CTargetMgr;
+class CLightMgr;
 class CRenderMgr
 {
+public:
+	enum RGB_COLOR// 추가
+	{
+		RGB_RED,
+		RGB_GREEN,
+		RGB_BLUE,
+		RGB_END
+	};
 private:
 	CRenderMgr();
 	virtual ~CRenderMgr();
@@ -14,12 +25,9 @@ public:
 	
 public:
 	void SetCurrentScene(CScene* pScene);
-
 public:
 	HRESULT InitScene(void);
 	void Render(const float& fTime);
-
-
 public:
 	void AddRenderGroup(RENDERGROUP eRednerID, CObj* pObj);
 	void DelRenderGroup(RENDERGROUP eRednerID, CObj* pObj);
@@ -37,11 +45,18 @@ public:
 
 private:
 	CScene*		m_pScene;
+	CDevice*		m_pDevice;// 추가
+	CTargetMgr*		m_pTargetMgr;// 추가
+	CLightMgr*		m_pLightMgr;// 추가
 
 private:
 	float		m_fTime;
 	TCHAR		m_szFps[128];
 	DWORD		m_dwCount;
 	list<CObj*>		m_RenderGroup[TYPE_END];
+private:
+	void Input(float fTime); // 추가
+	D3DXVECTOR3		m_vDirLight;// 추가
+	float			m_fDirColor[RGB_END];// 추가
 };
 

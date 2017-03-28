@@ -176,11 +176,13 @@
     <ClInclude Include="..\Code\FontMgr.h" />
     <ClInclude Include="..\Code\Info.h" />
     <ClInclude Include="..\Code\Input.h" />
+    <ClInclude Include="..\Code\LightMgr.h" />
     <ClInclude Include="..\Code\Loading.h" />
     <ClInclude Include="..\Code\Logo.h" />
     <ClInclude Include="..\Code\LogoBack.h" />
     <ClInclude Include="..\Code\MainApp.h" />
     <ClInclude Include="..\Code\Mesh.h" />
+    <ClInclude Include="..\Code\MultiRenderTarget.h" />
     <ClInclude Include="..\Code\Obj.h" />
     <ClInclude Include="..\Code\ObjMgr.h" />
     <ClInclude Include="..\Code\OtherPlayer.h" />
@@ -200,6 +202,7 @@
     <ClInclude Include="..\Code\Stage.h" />
     <ClInclude Include="..\Code\StaticMesh.h" />
     <ClInclude Include="..\Code\StaticObject.h" />
+    <ClInclude Include="..\Code\TargetMgr.h" />
     <ClInclude Include="..\Code\Terrain.h" />
     <ClInclude Include="..\Code\TerrainCol.h" />
     <ClInclude Include="..\Code\Texture.h" />
@@ -231,11 +234,13 @@
     <ClCompile Include="..\Code\FontMgr.cpp" />
     <ClCompile Include="..\Code\Info.cpp" />
     <ClCompile Include="..\Code\Input.cpp" />
+    <ClCompile Include="..\Code\LightMgr.cpp" />
     <ClCompile Include="..\Code\Loading.cpp" />
     <ClCompile Include="..\Code\Logo.cpp" />
     <ClCompile Include="..\Code\LogoBack.cpp" />
     <ClCompile Include="..\Code\MainApp.cpp" />
     <ClCompile Include="..\Code\Mesh.cpp" />
+    <ClCompile Include="..\Code\MultiRenderTarget.cpp" />
     <ClCompile Include="..\Code\Obj.cpp" />
     <ClCompile Include="..\Code\ObjMgr.cpp" />
     <ClCompile Include="..\Code\OtherPlayer.cpp" />
@@ -255,6 +260,7 @@
     <ClCompile Include="..\Code\Stage.cpp" />
     <ClCompile Include="..\Code\StaticMesh.cpp" />
     <ClCompile Include="..\Code\StaticObject.cpp" />
+    <ClCompile Include="..\Code\TargetMgr.cpp" />
     <ClCompile Include="..\Code\Terrain.cpp" />
     <ClCompile Include="..\Code\TerrainCol.cpp" />
     <ClCompile Include="..\Code\Texture.cpp" />

@@ -131,20 +131,31 @@ HRESULT CShader::Ready_ShaderFile(wstring wstrFilePath, LPCSTR wstrShaderName, L
 	else if (_SType == SHADER_PS)
 	{
 		hr = CDevice::GetInstance()->m_pDevice->CreatePixelShader(pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), NULL, &m_pPixelShader);
-		
+	
+		pShaderBlob->Release();
+
+		if (FAILED(hr))
+			return hr;
 	}
 	else if (_SType == SHADER_HS)
 	{
 		hr = CDevice::GetInstance()->m_pDevice->CreateHullShader(pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), NULL, &m_pHullShader);
+	
+		pShaderBlob->Release();
+
+		if (FAILED(hr))
+			return hr;
 	}
 	else if (_SType == SHADER_DS)
 	{
 		hr = CDevice::GetInstance()->m_pDevice->CreateDomainShader(pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), NULL, &m_pDomainShader);
-	}
-	pShaderBlob->Release();
+	
+		pShaderBlob->Release();
 
-	if (FAILED(hr))
-		return hr;
+		if (FAILED(hr))
+			return hr;
+	}
+	
 
 	return S_OK;
 }

@@ -89,8 +89,16 @@ void CRenderMgr::Render(const float & fTime)
 	// 조명 클리어
 	m_pLightMgr->ClearLights();
 	// 점조명 갱신
-	m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f, -20.f, 100.f), 30.f, D3DXVECTOR3(1.0f, 0.0f, 0.0f));
-	m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f, -20.f, 120.f), 30.f, D3DXVECTOR3(0.0f, 1.0f, 0.0f));
+	for(int i = 0; i < 100; ++ i)
+	{
+		if (i % 3 == 0)
+			m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f, 10.f, 0.f + i * 5), 20.f, D3DXVECTOR3(i, 0.0f, 0.0f));
+		else if (i % 3 == 1)
+			m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f + i * 5, 10.f, 0.f), 20.f, D3DXVECTOR3(0.0f, i, 0.0f));
+		else if (i % 3 == 2)
+			m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f + i * 5, 10.f, 0.f + i * 5), 20.f, D3DXVECTOR3(0.0f, 0.0f, i));
+	}
+		
 
 	ID3D11DepthStencilState* pPrevDepthState;
 	UINT nPrevStencil;

@@ -38,16 +38,16 @@ void CTargetMgr::Release()
 void CTargetMgr::RenderGBuffer(ID3D11DeviceContext* pd3dImmediateContext)
 {
 	
-	ID3D11ShaderResourceView* arrViews[5] = 
+	ID3D11ShaderResourceView* arrViews[4] = 
 	{
 		m_pMRT_GBuffer->GetDepthView(),
 		m_pMRT_GBuffer->GetColorView(), 
 		m_pMRT_GBuffer->GetNormalView(),
 		m_pMRT_GBuffer->GetSpecPowerView(),
-		m_pMRT_GBuffer->GetSobelView(),
+		//m_pMRT_GBuffer->GetSobelView(),
 	};
 
-	pd3dImmediateContext->PSSetShaderResources(0, 5, arrViews);
+	pd3dImmediateContext->PSSetShaderResources(0, 4, arrViews);
 
 	//pd3dImmediateContext->PSSetSamplers(0, 1, &g_pSampPoint);
 
@@ -62,7 +62,7 @@ void CTargetMgr::RenderGBuffer(ID3D11DeviceContext* pd3dImmediateContext)
 
 	// gpu에게 현재 버텍스버퍼, 버텍스레이아웃, 프리미티브 토폴로지를 사용해서 렌더링하라는 함수
 	pd3dImmediateContext->Draw(
-		20, // gpu로 보낸 버텍스의 갯수
+		16, // gpu로 보낸 버텍스의 갯수
 		0); // 처음시작할 버텍스의 인덱스
 
 	// Cleanup
@@ -70,5 +70,5 @@ void CTargetMgr::RenderGBuffer(ID3D11DeviceContext* pd3dImmediateContext)
 	pd3dImmediateContext->PSSetShader(NULL, NULL, 0);
 
 	ZeroMemory(arrViews, sizeof(arrViews));
-	pd3dImmediateContext->PSSetShaderResources(0, 5, arrViews);
+	pd3dImmediateContext->PSSetShaderResources(0, 4, arrViews);
 }

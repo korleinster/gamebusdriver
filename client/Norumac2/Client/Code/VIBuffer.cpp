@@ -50,9 +50,18 @@ void CVIBuffer::Render(void)
 {
 	CDevice* pGrapicDevice = CDevice::GetInstance();
 	
-	pGrapicDevice->m_pDeviceContext->IASetVertexBuffers(m_iSlot, 1, &m_VertexBuffer, &m_iVertexStrides, &m_iVertexOffsets);
+	pGrapicDevice->m_pDeviceContext->IASetVertexBuffers(
+		m_iSlot,
+		1,
+		&m_VertexBuffer,
+		&m_iVertexStrides,
+		&m_iVertexOffsets);
+
 	if(m_IndexBuffer)
-		pGrapicDevice->m_pDeviceContext->IASetIndexBuffer(m_IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+		pGrapicDevice->m_pDeviceContext->IASetIndexBuffer(
+			m_IndexBuffer,
+			DXGI_FORMAT_R32_UINT,
+			0);
 	pGrapicDevice->m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//pGrapicDevice->m_pDeviceContext->Draw(4, 0);
 	//pGrapicDevice->m_pDeviceContext->RSSetState(m_pd3dRasterizerState);
@@ -65,6 +74,9 @@ void CVIBuffer::Render(void)
 
 	else
 		pGrapicDevice->m_pDeviceContext->Draw(m_iVertices, m_iStartVertex);
+
+	if (m_pRasterizerState)
+		pGrapicDevice->m_pDeviceContext->RSSetState(NULL);
 }
 
 DWORD CVIBuffer::Release(void)

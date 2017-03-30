@@ -3,7 +3,7 @@ Texture2D<float> DepthTexture         : register( t0 );
 Texture2D<float4> ColorSpecIntTexture : register( t1 );
 Texture2D<float3> NormalTexture       : register( t2 );
 Texture2D<float4> SpecPowTexture      : register( t3 );
-Texture2D<float4> SobelTexture      : register(t4);
+
 SamplerState PointSampler             : register( s0 ); // 샘플러(슬롯 번호 0번과 연결)
 
 // constants
@@ -63,7 +63,6 @@ struct SURFACE_DATA
 	float3 Normal;
 	float SpecPow;
 	float SpecIntensity;
-	float Sobel;
 };
 
 SURFACE_DATA UnpackGBuffer(float2 UV)
@@ -81,8 +80,6 @@ SURFACE_DATA UnpackGBuffer(float2 UV)
 	Out.Normal = normalize(Out.Normal * 2.0 - 1.0);
 
 	Out.SpecPow = SpecPowTexture.Sample( PointSampler, UV.xy ).x;
-
-	Out.Sobel = SobelTexture.Sample(PointSampler, UV.xy).y;
 
 	return Out;
 }
@@ -111,8 +108,6 @@ SURFACE_DATA UnpackGBuffer_Loc(int2 location)
 
 	// 원래 범위 값에 대해 스펙큘러 파워 스케일 조정
 	Out.SpecPow = SpecPowTexture.Load(location3).x;
-
-	Out.Sobel = Out.LinearDepth;
 
 	return Out;
 }

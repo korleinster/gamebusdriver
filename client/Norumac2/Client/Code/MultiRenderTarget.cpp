@@ -16,7 +16,7 @@ CMultiRenderTarget::CMultiRenderTarget()
 m_DepthStencilRT(NULL), m_ColorSpecIntensityRT(NULL), m_NormalRT(NULL), m_SpecPowerRT(NULL),
 m_DepthStencilDSV(NULL), m_DepthStencilReadOnlyDSV(NULL), m_ColorSpecIntensityRTV(NULL), m_NormalRTV(NULL), m_SpecPowerRTV(NULL),
 m_DepthStencilSRV(NULL), m_ColorSpecIntensitySRV(NULL), m_NormalSRV(NULL), m_SpecPowerSRV(NULL),
-m_SobelRT(NULL), m_SobelRTV(NULL), m_SobelSRV(NULL),
+//m_SobelRT(NULL), m_SobelRTV(NULL), m_SobelSRV(NULL),
 m_DepthStencilState(NULL)
 {
 
@@ -36,21 +36,21 @@ HRESULT CMultiRenderTarget::Initialize(UINT width, UINT height)
 	static const DXGI_FORMAT basicColorTextureFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 	static const DXGI_FORMAT normalTextureFormat = DXGI_FORMAT_R11G11B10_FLOAT;
 	static const DXGI_FORMAT specPowTextureFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
-	static const DXGI_FORMAT sobelTextureFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	//static const DXGI_FORMAT sobelTextureFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
 
 	// Render view formats
 	static const DXGI_FORMAT depthStencilRenderViewFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	static const DXGI_FORMAT basicColorRenderViewFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 	static const DXGI_FORMAT normalRenderViewFormat = DXGI_FORMAT_R11G11B10_FLOAT;
 	static const DXGI_FORMAT specPowRenderViewFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
-	static const DXGI_FORMAT sobelRenderViewFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	//static const DXGI_FORMAT sobelRenderViewFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
 
 	// Resource view formats
 	static const DXGI_FORMAT depthStencilResourceViewFormat = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
 	static const DXGI_FORMAT basicColorResourceViewFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 	static const DXGI_FORMAT normalResourceViewFormat = DXGI_FORMAT_R11G11B10_FLOAT;
 	static const DXGI_FORMAT specPowResourceViewFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
-	static const DXGI_FORMAT sobelResourceViewFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	//static const DXGI_FORMAT sobelResourceViewFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
 
 	// Allocate the depth stencil target
 	D3D11_TEXTURE2D_DESC dtd =
@@ -90,8 +90,8 @@ HRESULT CMultiRenderTarget::Initialize(UINT width, UINT height)
 	//m_SpecPowerRT->SetPrivateData(WKPDID_D3DDebugObjectName, lstrlenA("GBuffer - Specular Power"), "GBuffer - Specular Power");
 
 	// Allocate the Sobel target
-	dtd.Format = sobelTextureFormat;
-	FAILED_CHECK(CDevice::GetInstance()->m_pDevice->CreateTexture2D(&dtd, NULL, &m_SobelRT));
+	//dtd.Format = sobelTextureFormat;
+	//FAILED_CHECK(CDevice::GetInstance()->m_pDevice->CreateTexture2D(&dtd, NULL, &m_SobelRT));
 	//m_SobelRT->SetPrivateData(WKPDID_D3DDebugObjectName, lstrlenA("GBuffer - Sobel"), "GBuffer - Sobel");
 
 	// Create the render target views
@@ -124,8 +124,8 @@ HRESULT CMultiRenderTarget::Initialize(UINT width, UINT height)
 	FAILED_CHECK(CDevice::GetInstance()->m_pDevice->CreateRenderTargetView(m_SpecPowerRT, &rtsvd, &m_SpecPowerRTV));
 	//m_SpecPowerRTV->SetPrivateData(WKPDID_D3DDebugObjectName, lstrlenA("GBuffer - Spec Power RTV"), "GBuffer - Spec Power RTV");
 
-	rtsvd.Format = sobelRenderViewFormat;
-	FAILED_CHECK(CDevice::GetInstance()->m_pDevice->CreateRenderTargetView(m_SobelRT, &rtsvd, &m_SobelRTV));
+	//rtsvd.Format = sobelRenderViewFormat;
+	//FAILED_CHECK(CDevice::GetInstance()->m_pDevice->CreateRenderTargetView(m_SobelRT, &rtsvd, &m_SobelRTV));
 	//m_SobelRTV->SetPrivateData(WKPDID_D3DDebugObjectName, lstrlenA("GBuffer - Sobel RTV"), "GBuffer - Sobel RTV");
 
 	// Create the resource views
@@ -152,8 +152,8 @@ HRESULT CMultiRenderTarget::Initialize(UINT width, UINT height)
 	FAILED_CHECK(CDevice::GetInstance()->m_pDevice->CreateShaderResourceView(m_SpecPowerRT, &dsrvd, &m_SpecPowerSRV));
 	//m_SpecPowerSRV->SetPrivateData(WKPDID_D3DDebugObjectName, lstrlenA("GBuffer - Spec Power SRV"), "GBuffer - Spec Power SRV");
 
-	dsrvd.Format = sobelResourceViewFormat;
-	FAILED_CHECK(CDevice::GetInstance()->m_pDevice->CreateShaderResourceView(m_SobelRT, &dsrvd, &m_SobelSRV));
+	//dsrvd.Format = sobelResourceViewFormat;
+	//FAILED_CHECK(CDevice::GetInstance()->m_pDevice->CreateShaderResourceView(m_SobelRT, &dsrvd, &m_SobelSRV));
 	//m_SobelSRV->SetPrivateData(WKPDID_D3DDebugObjectName, lstrlenA("GBuffer - Sobel SRV"), "GBuffer - Sobel SRV");
 
 	D3D11_DEPTH_STENCIL_DESC descDepth;
@@ -192,7 +192,7 @@ void CMultiRenderTarget::Release()
 	Safe_Release(m_ColorSpecIntensityRT);
 	Safe_Release(m_NormalRT);
 	Safe_Release(m_SpecPowerRT);
-	Safe_Release(m_SobelRT);
+	//Safe_Release(m_SobelRT);
 
 	// Clear all views
 	Safe_Release(m_DepthStencilDSV);
@@ -200,12 +200,12 @@ void CMultiRenderTarget::Release()
 	Safe_Release(m_ColorSpecIntensityRTV);
 	Safe_Release(m_NormalRTV);
 	Safe_Release(m_SpecPowerRTV);
-	Safe_Release(m_SobelRTV);
+	//Safe_Release(m_SobelRTV);
 	Safe_Release(m_DepthStencilSRV);
 	Safe_Release(m_ColorSpecIntensitySRV);
 	Safe_Release(m_NormalSRV);
 	Safe_Release(m_SpecPowerSRV);
-	Safe_Release(m_SobelSRV);
+	//Safe_Release(m_SobelSRV);
 
 	// Clear the depth stencil state
 	Safe_Release(m_DepthStencilState);
@@ -226,10 +226,10 @@ void CMultiRenderTarget::Begin_MRT(ID3D11DeviceContext* pd3dImmediateContext)
 	pd3dImmediateContext->ClearRenderTargetView(m_ColorSpecIntensityRTV, ClearColor);
 	pd3dImmediateContext->ClearRenderTargetView(m_NormalRTV, ClearColor);
 	pd3dImmediateContext->ClearRenderTargetView(m_SpecPowerRTV, ClearColor);
-	pd3dImmediateContext->ClearRenderTargetView(m_SobelRTV, ClearColor);
+	//pd3dImmediateContext->ClearRenderTargetView(m_SobelRTV, ClearColor);
 
 	// Bind all the render targets togther
-	ID3D11RenderTargetView* rt[4] = { m_ColorSpecIntensityRTV, m_NormalRTV, m_SpecPowerRTV, m_SobelRTV };
+	ID3D11RenderTargetView* rt[4] = { m_ColorSpecIntensityRTV, m_NormalRTV, m_SpecPowerRTV/*, m_SobelRTV*/ };
 
 	pd3dImmediateContext->OMSetRenderTargets(
 		4, // ·»´õÅ¸°ÙÀÇ ¼ö

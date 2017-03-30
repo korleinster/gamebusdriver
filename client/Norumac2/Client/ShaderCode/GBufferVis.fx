@@ -1,20 +1,27 @@
 #include "common.fx"
 
 // 버텍스 위치들을 컨트롤
-static float2 arrOffsets[5] = {
-	float2(-0.89, 0.89),
-	float2(-0.68, 0.89),
-	float2(-0.47, 0.89),
-	float2(-0.26, 0.89),
-	float2(-0.05, 0.89),
+static float2 arrOffsets[4] = {
+	float2(-1, 3),
+	float2(-0.0, 0.0),//float2(-0.68, 0.89),
+	float2(-1, 3),
+	float2(-1, 3),
 };
+
+//// 평상시
+//static float2 arrOffsets[4] = {
+//	float2(-0.89, 0.89),
+//	float2(-0.68, 0.89),
+//	float2(-0.47, 0.89),
+//	float2(-0.26, 0.89),
+//};
 
 // 버텍스 위치
 static const float2 arrBasePos[4] = {
-	float2(1.0, 1.0),
-	float2(1.0, -1.0),
-	float2(-1.0, 1.0),
-	float2(-1.0, -1.0),
+	float2(10.0, 10.0),
+	float2(10.0, -10.0),
+	float2(-10.0, 10.0),
+	float2(-10.0, -10.0),
 };
 
 // uv
@@ -25,12 +32,11 @@ static const float2 arrUV[4] = {
 	float2(0.0, 1.0),
 };
 
-static const float4 arrMask[5] = {
+static const float4 arrMask[4] = {
 	float4(1.0, 0.0, 0.0, 0.0),
 	float4(0.0, 1.0, 0.0, 0.0),
 	float4(0.0, 0.0, 1.0, 0.0),
 	float4(0.0, 0.0, 0.0, 1.0),
-	float4(1.0, 1.0, 1.0, 1.0),
 };
 
 struct VS_OUTPUT
@@ -68,7 +74,6 @@ float4 GBufferVisPS(VS_OUTPUT In) : SV_TARGET // SV_Target이라는 의미소는 이 함�
 	finalColor += float4(gbd.Color.xyz, 0.0) * In.sampMask.yyyy;
 	finalColor += float4(gbd.Normal.xyz * 0.5 + 0.5, 0.0) * In.sampMask.zzzz;
 	finalColor += float4(gbd.SpecIntensity, gbd.SpecPow, 0.0, 0.0) * In.sampMask.wwww;
-	finalColor += float4(gbd.Sobel, gbd.Sobel, 0, 0) * In.sampMask.zzzz;
 
 	return finalColor;
 }

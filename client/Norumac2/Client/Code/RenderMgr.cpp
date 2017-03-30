@@ -112,7 +112,7 @@ void CRenderMgr::Render(const float & fTime)
 
 	Render_Priority();
 	Render_NoneAlpha();
-
+	
 	m_pTargetMgr->GetGBuffer()->End_MRT(m_pDevice->m_pDeviceContext);
 
 	// Set the render target and do the lighting
@@ -125,8 +125,9 @@ void CRenderMgr::Render(const float & fTime)
 		m_pLightMgr->DoDebugLightVolume(m_pDevice->m_pDeviceContext);
 
 	m_pDevice->m_pDeviceContext->OMSetRenderTargets(1, &m_pDevice->m_pRenderTargetView, NULL);
-
-	m_pTargetMgr->RenderGBuffer(m_pDevice->m_pDeviceContext);
+	
+	if (CInput::GetInstance()->GetDIKeyState(DIK_TAB) & 0x80)
+		m_pTargetMgr->RenderGBuffer(m_pDevice->m_pDeviceContext);
 
 	m_pDevice->m_pDeviceContext->OMSetRenderTargets(1, &m_pDevice->m_pRenderTargetView, m_pTargetMgr->GetGBuffer()->GetDepthDSV());
 

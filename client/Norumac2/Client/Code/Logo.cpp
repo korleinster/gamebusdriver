@@ -91,7 +91,7 @@ void CLogo::Release(void)
 
 	for (iter; iter != iter_end;)
 	{
-		CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
+		CRenderMgr::GetInstance()->DelRenderGroup(TYPE_UI, *iter);
 		::Safe_Release(*iter);
 		CObjMgr::GetInstance()->Get_ObjList(L"LogoBack")->erase(iter++);
 

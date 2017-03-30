@@ -35,7 +35,7 @@ HRESULT CLogoBack::Initialize(void)
 	if (FAILED(hr))
 		return E_FAIL;
 
-	CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, this);
+	CRenderMgr::GetInstance()->AddRenderGroup(TYPE_UI, this);
 
 	return S_OK;
 }

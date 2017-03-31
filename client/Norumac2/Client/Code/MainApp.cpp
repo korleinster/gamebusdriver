@@ -125,6 +125,13 @@ HRESULT CMainApp::Initialize(void)
 		return hr;
 	}
 
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"RenderSceneVS_ANI", L"../ShaderCode/DeferredShading.fx", "RenderSceneVS_ANI", "vs_5_0", SHADER_ANI);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"Render Scene Vertex Shader Create Failed", MB_OK);
+		return hr;
+	}
+
 	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"RenderScenePS", L"../ShaderCode/DeferredShading.fx", "RenderScenePS", "ps_5_0", SHADER_PS);
 	if (FAILED(hr))
 	{

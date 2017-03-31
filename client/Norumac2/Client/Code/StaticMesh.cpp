@@ -405,17 +405,17 @@ HRESULT CStaticMesh::Load_StaticMesh(const char* szFilePath,const char* szFileNa
 					{
 					case FbxGeometryElement::eDirect:
 					{
-						vOutNormal.x = static_cast<float>(VtxNormal->GetDirectArray().GetAt(iControlPointIndex).mData[0]);
+						vOutNormal.x = static_cast<float>(VtxNormal->GetDirectArray().GetAt(iControlPointIndex).mData[2]);
 						vOutNormal.y = static_cast<float>(VtxNormal->GetDirectArray().GetAt(iControlPointIndex).mData[1]);
-						vOutNormal.z = static_cast<float>(VtxNormal->GetDirectArray().GetAt(iControlPointIndex).mData[2]);
+						vOutNormal.z = static_cast<float>(VtxNormal->GetDirectArray().GetAt(iControlPointIndex).mData[0]);
 					}
 					break;
 					case FbxGeometryElement::eIndexToDirect:
 					{
 						int index = VtxNormal->GetIndexArray().GetAt(iControlPointIndex);
-						vOutNormal.x = static_cast<float>(VtxNormal->GetDirectArray().GetAt(index).mData[0]);
+						vOutNormal.x = static_cast<float>(VtxNormal->GetDirectArray().GetAt(index).mData[2]);
 						vOutNormal.y = static_cast<float>(VtxNormal->GetDirectArray().GetAt(index).mData[1]);
-						vOutNormal.z = static_cast<float>(VtxNormal->GetDirectArray().GetAt(index).mData[2]);
+						vOutNormal.z = static_cast<float>(VtxNormal->GetDirectArray().GetAt(index).mData[0]);
 					}
 					break;
 
@@ -433,16 +433,16 @@ HRESULT CStaticMesh::Load_StaticMesh(const char* szFilePath,const char* szFileNa
 					case FbxGeometryElement::eDirect:
 					{
 						int index = VtxNormal->GetIndexArray().GetAt(iVTXCounter);
-						vOutNormal.x = static_cast<float>(VtxNormal->GetDirectArray().GetAt(index).mData[0]);
+						vOutNormal.x = static_cast<float>(VtxNormal->GetDirectArray().GetAt(index).mData[2]);
 						vOutNormal.y = static_cast<float>(VtxNormal->GetDirectArray().GetAt(index).mData[1]);
-						vOutNormal.z = static_cast<float>(VtxNormal->GetDirectArray().GetAt(index).mData[2]);
+						vOutNormal.z = static_cast<float>(VtxNormal->GetDirectArray().GetAt(index).mData[0]);
 					}
 					case FbxGeometryElement::eIndexToDirect:
 					{
 						int index = VtxNormal->GetIndexArray().GetAt(iVTXCounter);
-						vOutNormal.x = static_cast<float>(VtxNormal->GetDirectArray().GetAt(index).mData[0]);
+						vOutNormal.x = static_cast<float>(VtxNormal->GetDirectArray().GetAt(index).mData[2]);
 						vOutNormal.y = static_cast<float>(VtxNormal->GetDirectArray().GetAt(index).mData[1]);
-						vOutNormal.z = static_cast<float>(VtxNormal->GetDirectArray().GetAt(index).mData[2]);
+						vOutNormal.z = static_cast<float>(VtxNormal->GetDirectArray().GetAt(index).mData[0]);
 					}
 					break;
 					default:

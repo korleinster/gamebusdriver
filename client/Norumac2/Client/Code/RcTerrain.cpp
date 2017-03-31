@@ -59,10 +59,58 @@ HRESULT CRcTerrain::CreateBuffer(UINT iCountX, UINT iCountZ, UINT iInterval)
 
 			Vertex[iIndex].vPos = D3DXVECTOR3(fX, fY, fZ);
 			Vertex[iIndex].vTexUV = D3DXVECTOR2(x / (iCountX - 1.f), z / (iCountZ - 1.f));
+			Vertex[iIndex].vNormal = D3DXVECTOR3(0.f, 0.f, 0.f);
 		}
 	}
 	
+	//int AAAA = (iCountX - 1) * (iCountZ - 1) * 2 + 1;
+	m_iIndex = (iCountX - 1) * (iCountZ - 1) * 2;
 
+	INDEX32* Index = new INDEX32[m_iIndex];
+
+	int	iTriCnt = 0;
+
+	for (int z = 0; z < iCountZ - 1; ++z)
+	{
+		for (int x = 0; x < iCountX - 1; ++x)
+		{
+			iIndex = z * iCountX + x;
+
+			Index[iTriCnt]._1 = iIndex + iCountX;
+			Index[iTriCnt]._2 = iIndex + iCountX + 1;
+			Index[iTriCnt]._3 = iIndex + 1;
+
+			D3DXVECTOR3		vDest, vSour, vNormal;
+			vDest = Vertex[Index[iTriCnt]._2].vPos - Vertex[Index[iTriCnt]._1].vPos;
+			vSour = Vertex[Index[iTriCnt]._3].vPos - Vertex[Index[iTriCnt]._2].vPos;
+			D3DXVec3Cross(&vNormal, &vDest, &vSour);
+
+			Vertex[Index[iTriCnt]._1].vNormal += vNormal;
+			Vertex[Index[iTriCnt]._2].vNormal += vNormal;
+			Vertex[Index[iTriCnt]._3].vNormal += vNormal;
+
+			++iTriCnt;
+
+			Index[iTriCnt]._1 = iIndex + iCountX;
+			Index[iTriCnt]._2 = iIndex + 1;
+			Index[iTriCnt]._3 = iIndex;
+
+			vDest = Vertex[Index[iTriCnt]._2].vPos - Vertex[Index[iTriCnt]._1].vPos;
+			vSour = Vertex[Index[iTriCnt]._3].vPos - Vertex[Index[iTriCnt]._2].vPos;
+			D3DXVec3Cross(&vNormal, &vDest, &vSour);
+
+			Vertex[Index[iTriCnt]._1].vNormal += vNormal;
+			Vertex[Index[iTriCnt]._2].vNormal += vNormal;
+			Vertex[Index[iTriCnt]._3].vNormal += vNormal;
+
+			++iTriCnt;
+		}
+	}
+
+	for (unsigned long i = 0; i < iVertexCount; ++i)
+	{
+		D3DXVec3Normalize(&Vertex[i].vNormal, &Vertex[i].vNormal);		
+	}
 	
 	D3D11_BUFFER_DESC vbd;
 	ZeroMemory(&vbd, sizeof(vbd));
@@ -85,32 +133,7 @@ HRESULT CRcTerrain::CreateBuffer(UINT iCountX, UINT iCountZ, UINT iInterval)
 		return E_FAIL;
 
 
-	//int AAAA = (iCountX - 1) * (iCountZ - 1) * 2 + 1;
-	m_iIndex = (iCountX - 1) * (iCountZ - 1) * 2;
-
-	INDEX32* Index = new INDEX32[m_iIndex];
-
-	int	iTriCnt = 0;
-
-	for (int z = 0; z < iCountZ - 1; ++z)
-	{
-		for (int x = 0; x < iCountX - 1; ++x)
-		{
-			iIndex = z * iCountX + x;
-
-			Index[iTriCnt]._1 = iIndex + iCountX;
-			Index[iTriCnt]._2 = iIndex + iCountX + 1;
-			Index[iTriCnt]._3 = iIndex + 1;
-
-			++iTriCnt;
-
-			Index[iTriCnt]._1 = iIndex + iCountX;
-			Index[iTriCnt]._2 = iIndex + 1;
-			Index[iTriCnt]._3 = iIndex;
-
-			++iTriCnt;
-		}
-	}
+	
 	//32768 * 
 	
 	D3D11_BUFFER_DESC ibd;

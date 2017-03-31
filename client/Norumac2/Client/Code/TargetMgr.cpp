@@ -44,8 +44,9 @@ void CTargetMgr::RenderGBuffer(ID3D11DeviceContext* pd3dImmediateContext)
 		m_pMRT_GBuffer->GetColorView(), 
 		m_pMRT_GBuffer->GetNormalView(),
 		m_pMRT_GBuffer->GetSpecPowerView(),
-		//m_pMRT_GBuffer->GetSobelView(),
 	};
+	// 이거모임 ㅋㅋ
+	pd3dImmediateContext->RSSetState(NULL);
 
 	pd3dImmediateContext->PSSetShaderResources(0, 4, arrViews);
 
@@ -71,4 +72,6 @@ void CTargetMgr::RenderGBuffer(ID3D11DeviceContext* pd3dImmediateContext)
 
 	ZeroMemory(arrViews, sizeof(arrViews));
 	pd3dImmediateContext->PSSetShaderResources(0, 4, arrViews);
+	
+	
 }

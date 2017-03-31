@@ -27,6 +27,9 @@ private:
 	bool			m_bPush;
 	DWORD			m_dwTime;
 
+	// Scene meshes shader constant buffers
+	ID3D11Buffer*		m_pSceneVertexShaderCB;
+	ID3D11Buffer*		m_pScenePixelShaderCB;
 
 public:
 	virtual HRESULT Initialize(void);

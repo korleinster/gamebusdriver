@@ -23,6 +23,10 @@ private:
 	float			m_fSeverTime;
 	PLAYER_STATE	m_ePlayerState;
 
+	// Scene meshes shader constant buffers
+	ID3D11Buffer*		m_pSceneVertexShaderCB;
+	ID3D11Buffer*		m_pScenePixelShaderCB;
+
 public:
 	bool			m_bKey; // Å°°¡ ´­·Ç³ª?
 	//bool			m_bPush;

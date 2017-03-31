@@ -22,6 +22,21 @@
 #include "ResourcesMgr.h"
 #include "OtherPlayer.h"
 
+#pragma pack(push,1)
+struct CB_VS_PER_OBJECT
+{
+	D3DXMATRIX m_mWorldViewProjection;
+	D3DXMATRIX m_mWorld;
+};
+
+struct CB_PS_PER_OBJECT
+{
+	float m_fSpecExp;
+	float m_fSpecIntensity;
+	D3DXVECTOR3 m_vEyePosition;
+	float pad[3];
+};
+#pragma pack(pop)
 
 CPlayer::CPlayer()
 {
@@ -36,6 +51,8 @@ CPlayer::CPlayer()
 	m_bSendServer = false;
 	m_ePlayerState = PLAYER_IDLE;
 	m_bPush = false;
+	m_pSceneVertexShaderCB = NULL;
+	m_pScenePixelShaderCB = NULL;
 
 	m_Packet = new Packet[MAX_BUF_SIZE];
 }
@@ -64,6 +81,17 @@ HRESULT CPlayer::Initialize(void)
 
 	CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, this);
 	m_dwTime = GetTickCount();
+
+	D3D11_BUFFER_DESC cbDesc;
+	ZeroMemory(&cbDesc, sizeof(cbDesc));
+	cbDesc.Usage = D3D11_USAGE_DYNAMIC;
+	cbDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	cbDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	cbDesc.ByteWidth = sizeof(CB_VS_PER_OBJECT);
+	FAILED_CHECK(m_pGrapicDevice->m_pDevice->CreateBuffer(&cbDesc, NULL, &m_pSceneVertexShaderCB));
+
+	cbDesc.ByteWidth = sizeof(CB_PS_PER_OBJECT);
+	FAILED_CHECK(m_pGrapicDevice->m_pDevice->CreateBuffer(&cbDesc, NULL, &m_pScenePixelShaderCB));
 	
 	return S_OK;
 }
@@ -137,6 +165,43 @@ void CPlayer::Render(void)
 	////m_pBuffer->Render();
 	//dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(m_ePlayerState);
 
+	//////////////////////////////////////////////////////////////////////////////////
+
+	// Get the projection & view matrix from the camera class
+	D3DXMATRIX mView = *(CCamera::GetInstance()->GetViewMatrix());
+	D3DXMATRIX mProj = *(CCamera::GetInstance()->GetProjMatrix());
+	D3DXMATRIX mWorldViewProjection = m_pInfo->m_matWorld * mView * mProj;
+
+	// Set the constant buffers
+	D3D11_MAPPED_SUBRESOURCE MappedResource;
+	FAILED_CHECK_RETURN(m_pGrapicDevice->m_pDeviceContext->Map(m_pSceneVertexShaderCB, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource), );
+	CB_VS_PER_OBJECT* pVSPerObject = (CB_VS_PER_OBJECT*)MappedResource.pData;
+	D3DXMatrixTranspose(&pVSPerObject->m_mWorldViewProjection, &mWorldViewProjection);
+	D3DXMatrixTranspose(&pVSPerObject->m_mWorld, &m_pInfo->m_matWorld);
+	m_pGrapicDevice->m_pDeviceContext->Unmap(m_pSceneVertexShaderCB, 0);
+	m_pGrapicDevice->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pSceneVertexShaderCB);
+
+	FAILED_CHECK_RETURN(m_pGrapicDevice->m_pDeviceContext->Map(m_pScenePixelShaderCB, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource), );
+	CB_PS_PER_OBJECT* pPSPerObject = (CB_PS_PER_OBJECT*)MappedResource.pData;
+	pPSPerObject->m_vEyePosition = CCamera::GetInstance()->m_vEye;
+	pPSPerObject->m_fSpecExp = 250.0f;
+	pPSPerObject->m_fSpecIntensity = 0.25f;
+	m_pGrapicDevice->m_pDeviceContext->Unmap(m_pScenePixelShaderCB, 0);
+	m_pGrapicDevice->m_pDeviceContext->PSSetConstantBuffers(0, 1, &m_pScenePixelShaderCB);
+
+	// Set the vertex layout
+	m_pGrapicDevice->m_pDeviceContext->IASetInputLayout(m_pVertexShader->m_pVertexLayout);
+
+	// Set the shaders
+	m_pGrapicDevice->m_pDeviceContext->VSSetShader(m_pVertexShader->m_pVertexShader, NULL, 0);
+	m_pGrapicDevice->m_pDeviceContext->PSSetShader(m_pPixelShader->m_pPixelShader, NULL, 0);
+
+	m_pGrapicDevice->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
+	m_pGrapicDevice->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
+
+	m_pBuffer->Render();
+
+	dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(m_ePlayerState);
 }
 
 CPlayer * CPlayer::Create(void)
@@ -185,8 +250,8 @@ HRESULT CPlayer::AddComponent(void)
 	NULL_CHECK_RETURN(m_pTexture, E_FAIL);
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Texture", pComponent));
 
-	m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"VS_ANI");
-	m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"PS");;
+	m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"RenderSceneVS_ANI");
+	m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"RenderScenePS");
 
 
 	return S_OK;

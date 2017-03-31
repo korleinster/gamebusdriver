@@ -18,6 +18,8 @@ CRenderMgr::CRenderMgr()
 	, m_pDevice(CDevice::GetInstance())
 	, m_pTargetMgr(CTargetMgr::GetInstance())
 	, m_pLightMgr(CLightMgr::GetInstance())
+	, m_bDefferdCheck(false)
+	, m_fTimeCheck(0.f)
 {
 	ZeroMemory(m_szFps, sizeof(TCHAR) * 128);
 
@@ -67,7 +69,7 @@ void CRenderMgr::DelRenderGroup(RENDERGROUP eRednerID, CObj* pObj)
 			m_RenderGroup[eRednerID].erase(iter++);
 		else
 			++iter;
-	
+
 	}
 }
 
@@ -89,7 +91,7 @@ void CRenderMgr::Render(const float & fTime)
 	// 조명 클리어
 	m_pLightMgr->ClearLights();
 	// 점조명 갱신
-	for(int i = 0; i < 100; ++ i)
+	for (int i = 0; i < 100; ++i)
 	{
 		if (i % 3 == 0)
 			m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f, 10.f, 0.f + i * 5), 20.f, D3DXVECTOR3(i, 0.0f, 0.0f));
@@ -98,7 +100,6 @@ void CRenderMgr::Render(const float & fTime)
 		else if (i % 3 == 2)
 			m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f + i * 5, 10.f, 0.f + i * 5), 20.f, D3DXVECTOR3(0.0f, 0.0f, i));
 	}
-		
 
 	ID3D11DepthStencilState* pPrevDepthState;
 	UINT nPrevStencil;
@@ -112,7 +113,7 @@ void CRenderMgr::Render(const float & fTime)
 
 	Render_Priority();
 	Render_NoneAlpha();
-	
+
 	m_pTargetMgr->GetGBuffer()->End_MRT(m_pDevice->m_pDeviceContext);
 
 	// Set the render target and do the lighting
@@ -121,13 +122,11 @@ void CRenderMgr::Render(const float & fTime)
 	m_pTargetMgr->GetGBuffer()->PrepareForUnpack(m_pDevice->m_pDeviceContext);
 	m_pLightMgr->DoLighting(m_pDevice->m_pDeviceContext, m_pTargetMgr->GetGBuffer());
 
-	if (CInput::GetInstance()->GetDIKeyState(DIK_TAB) & 0x80)
+	if (m_bDefferdCheck)
+	{
 		m_pLightMgr->DoDebugLightVolume(m_pDevice->m_pDeviceContext);
-
-	m_pDevice->m_pDeviceContext->OMSetRenderTargets(1, &m_pDevice->m_pRenderTargetView, NULL);
-	
-	if (CInput::GetInstance()->GetDIKeyState(DIK_TAB) & 0x80)
 		m_pTargetMgr->RenderGBuffer(m_pDevice->m_pDeviceContext);
+	}
 
 	m_pDevice->m_pDeviceContext->OMSetRenderTargets(1, &m_pDevice->m_pRenderTargetView, m_pTargetMgr->GetGBuffer()->GetDepthDSV());
 
@@ -248,6 +247,21 @@ void CRenderMgr::ListClear(void)
 
 void CRenderMgr::Input(float fTime)
 {
+	m_fTimeCheck += fTime;
+
+	if (m_fTimeCheck >= 0.5f)
+	{		
+		if (CInput::GetInstance()->GetDIKeyState(DIK_TAB) & 0x80)
+		{
+			if (m_bDefferdCheck)
+				m_bDefferdCheck = false;
+			else
+				m_bDefferdCheck = true;
+			m_fTimeCheck = 0.f;
+		}		
+	}
+	
+
 	// For.Red
 	if (CInput::GetInstance()->GetDIKeyState(DIK_R) & 0x80)
 	{

@@ -1,28 +1,37 @@
 #include "common.fx"
 
-// 버텍스 위치들을 컨트롤
-static float2 arrOffsets[4] = {
-	float2(-1, 3),
-	float2(-0.0, 0.0),//float2(-0.68, 0.89),
-	float2(-1, 3),
-	float2(-1, 3),
-};
-
-//// 평상시
+//// 버텍스 위치들을 컨트롤
 //static float2 arrOffsets[4] = {
-//	float2(-0.89, 0.89),
-//	float2(-0.68, 0.89),
-//	float2(-0.47, 0.89),
-//	float2(-0.26, 0.89),
+//	float2(-1, 3),
+//	float2(-0.0, 0.0),//float2(-0.68, 0.89),
+//	float2(-1, 3),
+//	float2(-1, 3),
+//};
+//// 버텍스 위치
+//static const float2 arrBasePos[4] = {
+//	float2(10.0, 10.0),
+//	float2(10.0, -10.0),
+//	float2(-10.0, 10.0),
+//	float2(-10.0, -10.0),
 //};
 
-// 버텍스 위치
-static const float2 arrBasePos[4] = {
-	float2(10.0, 10.0),
-	float2(10.0, -10.0),
-	float2(-10.0, 10.0),
-	float2(-10.0, -10.0),
+// 버텍스 위치들을 컨트롤(평상시)
+static float2 arrOffsets[4] = {
+	float2(-0.89, 0.89),
+	float2(-0.68, 0.89),
+	float2(-0.47, 0.89),
+	float2(-0.26, 0.89),
 };
+
+// 버텍스 위치(평상시)
+static const float2 arrBasePos[4] = {
+	float2(1.0, 1.0),
+	float2(1.0, -1.0),
+	float2(-1.0, 1.0),
+	float2(-1.0, -1.0),
+};
+
+
 
 // uv
 static const float2 arrUV[4] = {

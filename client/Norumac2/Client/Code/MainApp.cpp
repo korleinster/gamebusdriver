@@ -35,7 +35,7 @@ CMainApp::CMainApp()
 	freopen("CONOUT$", "wt", stdout);
 	SetConsoleTitleA("Debug");
 
-	//_CrtSetBreakAlloc(800715);
+	//_CrtSetBreakAlloc(798470);
 }
 
 

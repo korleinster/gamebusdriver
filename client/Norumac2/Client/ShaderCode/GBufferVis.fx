@@ -2,10 +2,10 @@
 
 //// 버텍스 위치들을 컨트롤
 //static float2 arrOffsets[4] = {
-//	float2(-1, 3),
-//	float2(-0.0, 0.0),//float2(-0.68, 0.89),
-//	float2(-1, 3),
-//	float2(-1, 3),
+//	float2(-3, 3),
+//	float2(-3, 3),//float2(-0.0, 0.0),
+//	float2(-0.0, 0.0),//float2(-3, 3),
+//	float2(-3, 3),
 //};
 //// 버텍스 위치
 //static const float2 arrBasePos[4] = {

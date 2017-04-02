@@ -2,6 +2,7 @@
 #include "RcTerrain.h"
 #include "Device.h"
 #include "ParsingDevice9.h"
+#include "Vibuffer.h"
 
 
 CRcTerrain::CRcTerrain()
@@ -15,6 +16,8 @@ CRcTerrain::~CRcTerrain()
 
 HRESULT CRcTerrain::CreateBuffer(UINT iCountX, UINT iCountZ, UINT iInterval)
 {
+	CVIBuffer::CreateRasterizerState();
+
 	HRESULT hr = E_FAIL;
 	m_iVertexStrides = sizeof(VTXTEX);
 	m_iVertexOffsets = 0;

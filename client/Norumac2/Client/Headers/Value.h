@@ -1,8 +1,8 @@
 #pragma once
 #include "stdafx.h"
 
-const UINT WINCX = 800;
-const UINT WINCY = 600;
+const UINT WINCX = 1024;
+const UINT WINCY = 768;
 
 const UINT	BONE_NUM = 8;
 const UINT	BONE_MATRIX_NUM = 128;

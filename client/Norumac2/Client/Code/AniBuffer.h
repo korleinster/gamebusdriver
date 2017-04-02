@@ -39,5 +39,6 @@ public:
 
 	void		Render();
 	void		SetFbxBoneIndex(map<std::string, unsigned int>* _pIndexByName, FbxNode* _pNode);
+	void		Release();
 };
 

@@ -17,14 +17,7 @@ CAniBuffer::CAniBuffer()
 
 CAniBuffer::~CAniBuffer()
 {
-	for (auto iter : this->m_vecChildBuffer)
-		delete iter;
-
-	if (this->m_pVertexBuffer != nullptr)
-	{
-		this->m_pVertexBuffer->Release();
-		this->m_pVertexBuffer = nullptr;
-	}
+	//Release();
 }
 
 VertexAni* CAniBuffer::GetVertex(unsigned int _nIndex)
@@ -122,4 +115,16 @@ void CAniBuffer::SetFbxBoneIndex(map<std::string, unsigned int>* _pIndexByName,
 
 	for (int i = 0; i < _pNode->GetChildCount(); ++i)
 		this->SetFbxBoneIndex(_pIndexByName, _pNode->GetChild(i));
+}
+
+void CAniBuffer::Release()
+{
+	for (auto iter : this->m_vecChildBuffer)
+		delete iter;
+
+	if (this->m_pVertexBuffer != nullptr)
+	{
+		this->m_pVertexBuffer->Release();
+		this->m_pVertexBuffer = nullptr;
+	}
 }

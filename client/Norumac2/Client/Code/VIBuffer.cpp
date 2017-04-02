@@ -81,7 +81,7 @@ void CVIBuffer::Render(void)
 
 DWORD CVIBuffer::Release(void)
 {
-	if (m_dwRefCount == 1)
+	if (m_dwRefCount == 0)
 	{
 		Safe_Release(m_VertexBuffer);
 		Safe_Release(m_IndexBuffer);

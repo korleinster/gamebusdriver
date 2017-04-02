@@ -79,7 +79,7 @@ CResources * CTexture::CloneResource(void)
 
 DWORD CTexture::Release(void)
 {
-	if (m_dwRefCount == 1)
+	if (m_dwRefCount == 0)
 	{
 		::Safe_Release(m_pTextureRV);
 		::Safe_Release(m_pSamplerLinear);

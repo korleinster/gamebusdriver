@@ -61,6 +61,8 @@ CPlayer::CPlayer()
 CPlayer::~CPlayer()
 {
 	//Release();
+
+	int a = 10;
 }
 
 HRESULT CPlayer::Initialize(void)

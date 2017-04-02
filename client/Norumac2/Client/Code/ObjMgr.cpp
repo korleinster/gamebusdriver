@@ -12,6 +12,7 @@ CObjMgr::CObjMgr()
 
 CObjMgr::~CObjMgr()
 {
+	Release();
 }
 
 HRESULT CObjMgr::SceneChange(void)
@@ -112,4 +113,21 @@ list<CObj*>*  CObjMgr::Get_ObjList(wstring wstrKey)
 	return &(*iter).second;
 }
 
+void CObjMgr::Release(void)
+{
+	map<wstring, list<CObj*>>::iterator iter = m_mapObj.begin();
+	map<wstring, list<CObj*>>::iterator iter_end = m_mapObj.end();
+
+	for (iter; iter != iter_end; ++iter)
+	{
+		list<CObj*>::iterator Listiter = iter->second.begin();
+		list<CObj*>::iterator Listiter_end = iter->second.end();
+
+		for (Listiter; Listiter != Listiter_end; )
+		{
+			::Safe_Delete(*Listiter);
+			iter->second.erase(Listiter++);
+		}
+	}
+}
 

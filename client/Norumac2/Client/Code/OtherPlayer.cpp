@@ -53,7 +53,7 @@ COtherPlayer::COtherPlayer()
 
 COtherPlayer::~COtherPlayer()
 {
-	Release();
+
 }
 
 HRESULT COtherPlayer::Initialize(void)
@@ -61,7 +61,7 @@ HRESULT COtherPlayer::Initialize(void)
 	if (FAILED(AddComponent()))
 		return E_FAIL;
 
-	m_pInfo->m_vScale = D3DXVECTOR3(5.f, 5.f, 5.f);
+	m_pInfo->m_vScale = D3DXVECTOR3(1.f, 1.f, 1.f);
 	//m_pInfo->m_vScale = D3DXVECTOR3(10.f, 10.f, 10.f);
 	//m_pInfo->m_fAngle[ANGLE_X] = /*D3DX_PI / 2 * -1.f;*/D3DXToRadian(-90);
 

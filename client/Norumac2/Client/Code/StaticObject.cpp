@@ -44,7 +44,7 @@ CStaticObject::CStaticObject()
 
 CStaticObject::~CStaticObject()
 {
-	Release();
+	//Release();
 }
 
 HRESULT CStaticObject::Initialize(const TCHAR* pMeshKey)
@@ -153,9 +153,9 @@ CStaticObject * CStaticObject::Create(const TCHAR* pMeshKey)
 
 void CStaticObject::Release(void)
 {
-	Safe_Delete(m_pBuffer);
-	Safe_Delete(m_pInfo);
-	Safe_Delete(m_pTexture);
+	Safe_Release(m_pBuffer);
+	Safe_Release(m_pInfo);
+	Safe_Release(m_pTexture);
 	Safe_Release(m_pSceneVertexShaderCB);
 	Safe_Release(m_pScenePixelShaderCB);
 }

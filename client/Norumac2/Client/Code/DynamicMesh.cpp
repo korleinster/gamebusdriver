@@ -213,6 +213,37 @@ int CDynamicMesh::Update()
 
 DWORD CDynamicMesh::Release()
 {
+	if (m_dwRefCount == 1)
+	{
+		for (unsigned int i = 0; i < m_vecAni.size(); ++i)
+		{
+			for (int j = 0; j < BONE_MATRIX_NUM; ++j)
+			{
+				_aligned_free((void*)&(m_vecAni[i]->pBaseBoneMatrix[j]));
+
+				for (int k = 0; k < m_vecAni[i]->llAniMaxTime / 10; ++k)
+				{
+					_aligned_free((void*)&(m_vecAni[i]->ppAniMatrix[j][k]));
+					_aligned_free((void*)&(m_vecAni[i]->ppResultMatrix[j][k]));
+				}
+			}
+
+			::Safe_Delete(m_vecAni[i]->pAniBuffer);
+
+			m_vecAni[i]->pBoneMatrixBuffer->Release();
+			::Safe_Delete(m_vecAni[i]->pBoneMatrix);
+
+			delete m_vecAni[i];
+			m_vecAni[i] = NULL;
+		}
+
+		m_vecAni.clear();
+	}
+	else
+		--m_dwRefCount;
+
+	
+
 	return 0;
 }
 

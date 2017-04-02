@@ -43,7 +43,7 @@ CVIBuffer::CVIBuffer(const CVIBuffer & rhs)
 
 CVIBuffer::~CVIBuffer()
 {
-
+	Release();
 }
 
 void CVIBuffer::Render(void)

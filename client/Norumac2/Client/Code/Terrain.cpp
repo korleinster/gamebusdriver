@@ -40,7 +40,7 @@ CTerrain::CTerrain()
 
 CTerrain::~CTerrain()
 {
-	Release();
+	//Release();
 }
 
 CTerrain * CTerrain::Create(void)
@@ -185,7 +185,7 @@ void CTerrain::Release(void)
 	::Safe_Release(m_pVertexShader);
 	::Safe_Release(m_pPixelShader);
 	::Safe_Release(m_pTexture);
-	::Safe_Delete(m_pVerTex);
+	//::Safe_Delete(m_pVerTex);
 }
 
 HRESULT CTerrain::AddComponent(void)

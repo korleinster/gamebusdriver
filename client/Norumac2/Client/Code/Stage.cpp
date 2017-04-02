@@ -10,6 +10,7 @@
 #include "StaticObject.h"
 #include "Camera.h"
 #include "Info.h"
+#include "ResourcesMgr.h"
 
 CStage::CStage()
 	: m_bFirstLogin(false)
@@ -19,6 +20,7 @@ CStage::CStage()
 
 CStage::~CStage()
 {
+
 }
 
 HRESULT CStage::Initialize(void)
@@ -69,6 +71,8 @@ void CStage::Render(void)
 
 void CStage::Release(void)
 {
+	CObjMgr::GetInstance()->m_mapObj.clear();
+	CResourcesMgr::GetInstance()->ResourceReset(RESOURCE_STATIC);
 }
 
 CStage * CStage::Create(void)

@@ -61,7 +61,7 @@ void CObj::Release(void)
 
 	for (iter; iter != iter_end; ++iter)
 	{
-		::Safe_Delete(iter->second);
+		::Safe_Release(iter->second);
 	}
 	m_mapComponent.clear();
 }

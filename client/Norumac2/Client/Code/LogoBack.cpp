@@ -60,6 +60,8 @@ void CLogoBack::Render(void)
 void CLogoBack::Release(void)
 {
 	::Safe_Release(m_pPolygon);
+	::Safe_Delete(m_pInfo);
+	::Safe_Delete(m_pTexture);
 }
 
 CLogoBack * CLogoBack::Create(void)

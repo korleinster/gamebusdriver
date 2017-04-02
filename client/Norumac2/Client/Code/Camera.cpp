@@ -24,7 +24,7 @@ CCamera::~CCamera()
 HRESULT CCamera::Initialize(void)
 {
 	//m_vEye = D3DXVECTOR3(0.0f, 20.f, -20.0f);
-	m_vEye = D3DXVECTOR3(86.0f, 80.f, -14.0f);
+	m_vEye = D3DXVECTOR3(86.0f, 20.f, -14.0f);
 	m_vAt = D3DXVECTOR3(0.f, 0.f, 0.f);
 	m_vUp = D3DXVECTOR3(0.f, 1.f, 0.f);
 
@@ -333,8 +333,8 @@ void CCamera::TargetRenewal(void)
 	D3DXMatrixRotationAxis(&matRotAxis, &vRight, m_fAngle);
 	D3DXVec3TransformNormal(&m_vEye, &m_vEye, &matRotAxis);
 
-	m_vEye.x = m_pTargetInfo->m_vPos.x - 50.f;
-	m_vEye.z = m_pTargetInfo->m_vPos.z + 50.f;
+	m_vEye.x = m_pTargetInfo->m_vPos.x - 10.f;
+	m_vEye.z = m_pTargetInfo->m_vPos.z + 10.f;
 
 	m_vAt = m_pTargetInfo->m_vPos;
 

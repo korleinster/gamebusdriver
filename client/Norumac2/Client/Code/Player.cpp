@@ -60,7 +60,7 @@ CPlayer::CPlayer()
 
 CPlayer::~CPlayer()
 {
-	Release();
+	//Release();
 }
 
 HRESULT CPlayer::Initialize(void)
@@ -71,7 +71,7 @@ HRESULT CPlayer::Initialize(void)
 	//m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 	//m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 	//m_pInfo->m_vScale = D3DXVECTOR3(0.05f, 0.05f, 0.05f);
-	m_pInfo->m_vScale = D3DXVECTOR3(5.f, 5.f, 5.f);
+	m_pInfo->m_vScale = D3DXVECTOR3(1.f, 1.f, 1.f);
 
 	list<CObj*>::iterator iter = CObjMgr::GetInstance()->m_mapObj[L"Terrain"].begin();
 	list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->m_mapObj[L"Terrain"].end();
@@ -215,9 +215,9 @@ CPlayer * CPlayer::Create(void)
 
 void CPlayer::Release(void)
 {
-	Safe_Delete(m_pBuffer);
-	Safe_Delete(m_pInfo);
-	Safe_Delete(m_pTexture);
+	Safe_Release(m_pBuffer);
+	Safe_Release(m_pInfo);
+	Safe_Release(m_pTexture);
 	Safe_Delete_Array(m_Packet);
 }
 

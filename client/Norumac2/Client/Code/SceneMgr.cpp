@@ -14,6 +14,7 @@ CSceneMgr::CSceneMgr()
 
 CSceneMgr::~CSceneMgr()
 {
+	Release();
 }
 
 HRESULT CSceneMgr::AddScene(Scene_Tyep _eType, CScene * _pScene)
@@ -47,7 +48,11 @@ HRESULT CSceneMgr::ChangeScene(Scene_Tyep _eType)
 		return E_FAIL;
 	}
 	if (m_pScene != NULL)
+	{
+		map<Scene_Tyep, CScene*>::iterator deliter = m_mapScene.find(m_eType);
 		::Safe_Release(m_pScene);
+		m_mapScene.erase(deliter);
+	}
 
 	m_eType = _eType;
 	m_pScene = iter->second;
@@ -84,7 +89,8 @@ void CSceneMgr::Release(void)
 
 	for (iter; iter != iter_end; ++iter)
 	{
-		::Safe_Delete(iter->second);
+		::Safe_Release(iter->second);
+		//::Safe_Delete(iter->second);
 	}
 	m_mapScene.clear();
 }

@@ -19,6 +19,7 @@ public:
 	void	Update(void);
 	player_data* 	Get_PlayerServerData(UINT uID);
 	list<CObj*>*  Get_ObjList(wstring wstrKey);
+	void Release(void);
 
 };
 

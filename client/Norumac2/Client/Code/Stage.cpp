@@ -73,6 +73,7 @@ void CStage::Release(void)
 {
 	CObjMgr::GetInstance()->m_mapObj.clear();
 	CResourcesMgr::GetInstance()->ResourceReset(RESOURCE_STATIC);
+	CResourcesMgr::GetInstance()->ResourceReset(RESOURCE_STAGE);
 }
 
 CStage * CStage::Create(void)

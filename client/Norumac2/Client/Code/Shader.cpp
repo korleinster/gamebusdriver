@@ -162,7 +162,7 @@ HRESULT CShader::Ready_ShaderFile(wstring wstrFilePath, LPCSTR wstrShaderName, L
 
 DWORD CShader::Release(void)
 {
-	if (m_dwRefCount == 0)
+	if (m_dwRefCount == 1)
 	{
 		::Safe_Release(m_pVertexShader);
 		::Safe_Release(m_pPixelShader);

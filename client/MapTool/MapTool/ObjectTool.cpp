@@ -334,29 +334,39 @@ void CObjectTool::OnDynamicMeshLoad()
 void CObjectTool::OnObjSave()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	CFileDialog		Dlg(FALSE, L"dat", L"*.dat",
+	/*CFileDialog		Dlg(FALSE, L"dat", L"*.dat",
 		OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, L"*.dat", this);
 
 	if (Dlg.DoModal() == IDCANCEL)
+		return;*/
+
+	if (m_StaticList.GetCount() == 0)
+	{
+		AfxMessageBox(L"Load Static Mesh First!");
+		return;
+	}
+
+	int savecheck = AfxMessageBox(L"저장하겠습니까? 확인을 누르면 돌이킬수 없슴.", MB_OKCANCEL);
+	if (savecheck == 2)
 		return;
 
-	TCHAR		szDirPath[MAX_PATH] = L"";
+	TCHAR		szDirPath[MAX_PATH] = L"..\\..\\Resources\\Data\\Norumac2.dat";
 
 	GetCurrentDirectory(sizeof(szDirPath), szDirPath);
 
-	SetCurrentDirectory(szDirPath);
-	// 응용 프로그램의 현재 작업 디렉토리를 지정된 디렉토리로 설정해주는 함수
+	//SetCurrentDirectory(szDirPath);
+	//// 응용 프로그램의 현재 작업 디렉토리를 지정된 디렉토리로 설정해주는 함수
 
-	PathRemoveFileSpec(szDirPath);
-	// 마지막 경로를 제외한 경로를 추출하는 함수
+	//PathRemoveFileSpec(szDirPath);
+	//// 마지막 경로를 제외한 경로를 추출하는 함수
 
-	lstrcat(szDirPath, L"..\\..\\Resources\\Data");
+	//lstrcat(szDirPath, L"..\\..\\Resources\\Data");
 
-	Dlg.m_ofn.lpstrInitialDir = szDirPath;		// 상대 경로
+	//Dlg.m_ofn.lpstrInitialDir = szDirPath;		// 상대 경로
 
 
-
-	HANDLE	hFile = CreateFile(Dlg.GetPathName(), GENERIC_WRITE,
+	
+	HANDLE	hFile = CreateFile(L"..\\save.dat", GENERIC_WRITE,
 		0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
 	DWORD	dwByte;

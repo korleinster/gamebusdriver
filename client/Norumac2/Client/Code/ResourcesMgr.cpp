@@ -155,7 +155,7 @@ void CResourcesMgr::Release(void)
 		{
 			//dwRefCnt = iter->second->Release();
 			if (dwRefCnt == 0)
-				Safe_Delete(iter->second);
+				Safe_Release(iter->second);
 		}
 		m_pmapResource[i].clear();
 	}

@@ -29,7 +29,7 @@ void AsynchronousClientClass::Init(const HWND& hwnd, const HINSTANCE& hInst)
 		int err_no = WSAGetLastError();
 		error_quit(L"socket()", err_no);
 	}
-		
+	
 	// connect
 	SOCKADDR_IN serveraddr;
 	ZeroMemory(&serveraddr, sizeof(serveraddr));

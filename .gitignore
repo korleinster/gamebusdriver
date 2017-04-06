@@ -49,3 +49,4 @@ Release/
 *.pdb
 *.suo
 *.log
+packages/

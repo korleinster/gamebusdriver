@@ -18,7 +18,8 @@ CRenderMgr::CRenderMgr()
 	, m_pDevice(CDevice::GetInstance())
 	, m_pTargetMgr(CTargetMgr::GetInstance())
 	, m_pLightMgr(CLightMgr::GetInstance())
-	, m_bDefferdCheck(false)
+	, m_bRenderGBuffer(false)
+	, m_bDefferdOn(true)
 	, m_fTimeCheck(0.f)
 {
 	ZeroMemory(m_szFps, sizeof(TCHAR) * 128);
@@ -83,23 +84,26 @@ void CRenderMgr::Render(const float & fTime)
 	// 키세팅
 	Input(fTime);
 
-	// 디렉셔널 갱신
-	m_pLightMgr->SetDirectional(
-		D3DXVECTOR3(m_vDirLight.x, m_vDirLight.y, m_vDirLight.z),
-		D3DXVECTOR3(m_fDirColor[RGB_RED], m_fDirColor[RGB_GREEN], m_fDirColor[RGB_BLUE]));
-
-	// 조명 클리어
-	m_pLightMgr->ClearLights();
-	// 점조명 갱신
-	for (int i = 0; i < 100; ++i)
+	if (m_bDefferdOn)
 	{
-		if (i % 3 == 0)
-			m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f, 20.f, 0.f + i * 5), 20.f, D3DXVECTOR3(0.0f, 0.0f, i));
-		else if (i % 3 == 1)
-			m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f, 0.f + i * 5, 0.f), 20.f, D3DXVECTOR3(0.0f, i, 0.0f));
-		else if (i % 3 == 2)
-			m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f + i * 5, 20.f, 0.f), 20.f, D3DXVECTOR3(i, 0.0f, 0.0f));
-	}
+		// 디렉셔널 갱신
+		m_pLightMgr->SetDirectional(
+			D3DXVECTOR3(m_vDirLight.x, m_vDirLight.y, m_vDirLight.z),
+			D3DXVECTOR3(m_fDirColor[RGB_RED], m_fDirColor[RGB_GREEN], m_fDirColor[RGB_BLUE]));
+
+		// 조명 클리어
+		m_pLightMgr->ClearLights();
+		// 점조명 갱신
+		for (int i = 0; i < 100; ++i)
+		{
+			if (i % 3 == 0)
+				m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f, 20.f, 0.f + i * 5), 20.f, D3DXVECTOR3(0.0f, 0.0f, i));
+			else if (i % 3 == 1)
+				m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f, 0.f + i * 5, 0.f), 20.f, D3DXVECTOR3(0.0f, i, 0.0f));
+			else if (i % 3 == 2)
+				m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f + i * 5, 20.f, 0.f), 20.f, D3DXVECTOR3(i, 0.0f, 0.0f));
+		}
+	}	
 
 	ID3D11DepthStencilState* pPrevDepthState;
 	UINT nPrevStencil;
@@ -110,9 +114,12 @@ void CRenderMgr::Render(const float & fTime)
 
 	// GBuffer
 	m_pTargetMgr->GetGBuffer()->Begin_MRT(m_pDevice->m_pDeviceContext);
-
-	Render_Priority();
-	Render_NoneAlpha();
+	
+	if (m_bDefferdOn)
+	{
+		Render_Priority();
+		Render_NoneAlpha();		
+	}		
 
 	m_pTargetMgr->GetGBuffer()->End_MRT(m_pDevice->m_pDeviceContext);
 
@@ -122,7 +129,7 @@ void CRenderMgr::Render(const float & fTime)
 	m_pTargetMgr->GetGBuffer()->PrepareForUnpack(m_pDevice->m_pDeviceContext);
 	m_pLightMgr->DoLighting(m_pDevice->m_pDeviceContext, m_pTargetMgr->GetGBuffer());
 
-	if (m_bDefferdCheck)
+	if (m_bRenderGBuffer)
 	{
 		m_pLightMgr->DoDebugLightVolume(m_pDevice->m_pDeviceContext);
 		m_pTargetMgr->RenderGBuffer(m_pDevice->m_pDeviceContext);
@@ -132,6 +139,12 @@ void CRenderMgr::Render(const float & fTime)
 
 	m_pDevice->m_pDeviceContext->OMSetDepthStencilState(pPrevDepthState, nPrevStencil);
 	Safe_Release(pPrevDepthState);
+
+	if(!m_bDefferdOn)
+	{ 
+		Render_Priority();
+		Render_NoneAlpha();
+	}	
 
 	Render_Alpha();
 	Render_UI();
@@ -250,17 +263,29 @@ void CRenderMgr::Input(float fTime)
 	m_fTimeCheck += fTime;
 
 	if (m_fTimeCheck >= 0.5f)
-	{		
+	{
 		if (CInput::GetInstance()->GetDIKeyState(DIK_TAB) & 0x80)
 		{
-			if (m_bDefferdCheck)
-				m_bDefferdCheck = false;
+			if (m_bRenderGBuffer)
+				m_bRenderGBuffer = false;
 			else
-				m_bDefferdCheck = true;
+				m_bRenderGBuffer = true;
 			m_fTimeCheck = 0.f;
-		}		
+		}
 	}
-	
+
+	if (m_fTimeCheck >= 0.5f)
+	{
+		if (CInput::GetInstance()->GetDIKeyState(DIK_0) & 0x80)
+		{
+			if (m_bDefferdOn)
+				m_bDefferdOn = false;
+			else
+				m_bDefferdOn = true;
+			m_fTimeCheck = 0.f;
+		}
+	}
+
 
 	// For.Red
 	if (CInput::GetInstance()->GetDIKeyState(DIK_R) & 0x80)

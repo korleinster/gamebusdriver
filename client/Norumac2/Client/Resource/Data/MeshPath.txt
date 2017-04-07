@@ -6,7 +6,9 @@ mainbridgetower|..\Resource\Mesh\|mainbridgetower.FBX
 playerhousebottom|..\Resource\Mesh\|playerhousebottom.FBX
 playerhousetop|..\Resource\Mesh\|playerhousetop.FBX
 streetlamp|..\Resource\Mesh\|streetlamp.FBX
+tower|..\Resource\Mesh\|tower.FBX
 towntile|..\Resource\Mesh\|towntile.FBX
 tree1|..\Resource\Mesh\|tree1.FBX
 treebridge|..\Resource\Mesh\|treebridge.FBX
 treefense|..\Resource\Mesh\|treefense.FBX
+wall|..\Resource\Mesh\|wall.FBX

@@ -45,7 +45,7 @@ int CStage::Update(void)
 	CObjMgr::GetInstance()->Update();
 
 
-	if (GetAsyncKeyState('0'))
+	/*if (GetAsyncKeyState('0'))
 	{
 		list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"Flower")->begin();
 		list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"Flower")->end();
@@ -58,7 +58,7 @@ int CStage::Update(void)
 			cout << CObjMgr::GetInstance()->Get_ObjList(L"Flower")->size() << endl;
 		}		
 		
-	}
+	}*/
 
 	return 0;
 }

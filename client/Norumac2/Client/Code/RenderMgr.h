@@ -48,7 +48,8 @@ private:
 	CDevice*		m_pDevice;// 추가
 	CTargetMgr*		m_pTargetMgr;// 추가
 	CLightMgr*		m_pLightMgr;// 추가
-	bool		m_bDefferdCheck;
+	bool		m_bRenderGBuffer;
+	bool		m_bDefferdOn;
 	float m_fTimeCheck;
 private:
 	float		m_fTime;

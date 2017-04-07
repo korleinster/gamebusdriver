@@ -17,21 +17,19 @@
 
 // 버텍스 위치들을 컨트롤(평상시)
 static float2 arrOffsets[4] = {
-	float2(-0.89, 0.89),
-	float2(-0.68, 0.89),
-	float2(-0.47, 0.89),
-	float2(-0.26, 0.89),
+	float2(-0.84, 0.84),
+	float2(-0.53, 0.84),
+	float2(-0.22, 0.84),
+	float2(0.09, 0.84),
 };
 
 // 버텍스 위치(평상시)
 static const float2 arrBasePos[4] = {
-	float2(1.0, 1.0),
-	float2(1.0, -1.0),
-	float2(-1.0, 1.0),
-	float2(-1.0, -1.0),
+	float2(1.5, 1.5),
+	float2(1.5, -1.5),
+	float2(-1.5, 1.5),
+	float2(-1.5, -1.5),
 };
-
-
 
 // uv
 static const float2 arrUV[4] = {

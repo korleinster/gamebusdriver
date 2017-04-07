@@ -5,7 +5,7 @@
 #include<Windows.h>
 
 #include"resource.h"
-BOOL CALLBACK AboutDlgProc(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK AboutDlgProc(HWND, UINT, WPARAM, LPARAM);
 
 #include<iostream>
 #include<unordered_map>

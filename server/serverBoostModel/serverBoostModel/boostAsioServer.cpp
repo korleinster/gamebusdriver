@@ -500,7 +500,7 @@ bool DB::DB_Login(wchar_t* id, wchar_t* pw) {
 	int PlayerLevel{ 0 };
 	bool Admin{ false };
 
-	SQLINTEGER pIndicators[5];		// DB 상 안에 있는 목차 갯 수
+	SQLLEN pIndicators[5];		// DB 상 안에 있는 목차 갯 수
 
 	if (SQLExecDirect(hStmt, (SQLWCHAR*)L"SELECT RTRIM(ID), RTRIM(Password), RTRIM(Nickname), RTRIM(PlayerLevel), RTRIM(Admin) FROM dbo.user_data", SQL_NTS) != SQL_ERROR) {
 		// 숫자 1 은, 첫번째 파라미터 ID

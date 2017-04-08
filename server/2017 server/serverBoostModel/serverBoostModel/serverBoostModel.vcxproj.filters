@@ -16,6 +16,18 @@
     <Filter Include="소스 파일\00.boostAsioServer">
       <UniqueIdentifier>{6a03d804-c83c-4bad-bd30-1c85f64e8048}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\99. Default">
+      <UniqueIdentifier>{991f1ea8-056a-4e55-9344-4852b87ab2cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\01.player_session">
+      <UniqueIdentifier>{a79e27bf-7011-4e8b-b64c-efc03bcbc316}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\02.DB class">
+      <UniqueIdentifier>{492cd90c-5d00-45e3-99bf-21f605077e8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\03.Timer class">
+      <UniqueIdentifier>{e0b18f2e-cd24-408f-9fb2-cfdba576a237}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -27,16 +39,34 @@
     <ClInclude Include="boostAsioServer.h">
       <Filter>소스 파일\00.boostAsioServer</Filter>
     </ClInclude>
+    <ClInclude Include="player_sesstion.h">
+      <Filter>소스 파일\01.player_session</Filter>
+    </ClInclude>
+    <ClInclude Include="DB.h">
+      <Filter>소스 파일\02.DB class</Filter>
+    </ClInclude>
+    <ClInclude Include="TimerQueue.h">
+      <Filter>소스 파일\03.Timer class</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="boostAsioServer.cpp">
       <Filter>소스 파일\00.boostAsioServer</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>소스 파일\99. Default</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>소스 파일\99. Default</Filter>
+    </ClCompile>
+    <ClCompile Include="player_sesstion.cpp">
+      <Filter>소스 파일\01.player_session</Filter>
+    </ClCompile>
+    <ClCompile Include="DB.cpp">
+      <Filter>소스 파일\02.DB class</Filter>
+    </ClCompile>
+    <ClCompile Include="TimerQueue.cpp">
+      <Filter>소스 파일\03.Timer class</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

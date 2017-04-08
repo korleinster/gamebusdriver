@@ -147,18 +147,24 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="boostAsioServer.h" />
+    <ClInclude Include="DB.h" />
+    <ClInclude Include="player_sesstion.h" />
     <ClInclude Include="protocol.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="TimerQueue.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="boostAsioServer.cpp" />
+    <ClCompile Include="DB.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="player_sesstion.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TimerQueue.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

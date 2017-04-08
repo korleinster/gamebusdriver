@@ -6,14 +6,20 @@ boostAsioServer::boostAsioServer() : m_acceptor(g_io_service, tcp::endpoint(tcp:
 	getMyServerIP();
 	CheckThisCPUcoreCount();
 
+	// DB SQL 서버에 접속
+	database.Init();
+
+	// ai 봇 초기화
+	g_client_init();
+
 	acceptThread();
 	start_io_service();
 }
 
 boostAsioServer::~boostAsioServer()
 {
-	// make_shared 를 썼기 때문에, 삭제할 필요가 없다아 ?
-	//for (auto ptr : g_clients) { delete ptr; }
+	// make_shared 를 쓸땐, 삭제할 필요가 없지만, 멀티쓰레드 충돌을 막기 위해 현재 일반 vector 를 사용함.. ( 추후 나만의 자료구조를 만들어야 한다 )
+	for (auto ptr : g_clients) { delete ptr; }
 }
 
 void boostAsioServer::getMyServerIP()
@@ -39,13 +45,14 @@ void boostAsioServer::CheckThisCPUcoreCount()
 }
 
 void boostAsioServer::start_io_service()
-{	
-	m_worker_threads.reserve(m_cpuCore);
+{
+	// DB 서버를 위해 -1
+	// Timer Thread 를 위해 -1
+	for (int i = 0; i < m_cpuCore - 2; ++i) { m_worker_threads.emplace_back(new thread{ [&]() -> void { g_io_service.run(); } }); }
+	m_worker_threads.emplace_back(new thread{ [&]() -> void { time_queue.TimerThread(); } });
 
-	for (int i = 0; i < m_cpuCore; ++i) { m_worker_threads.emplace_back(new thread{ [&]() -> void { g_io_service.run(); } }); }
-	
 	while (m_ServerShutdown) { Sleep(1000); }
-	
+
 	// workerThread 발동
 	for (auto thread : m_worker_threads) {
 		thread->join();
@@ -53,119 +60,33 @@ void boostAsioServer::start_io_service()
 	}
 }
 
+void boostAsioServer::g_client_init() {
+
+	g_clients.reserve(MAX_AI_NUM + 1000);
+
+	for (auto i = 0; i < MAX_AI_NUM; ++i) {
+		g_clients.emplace_back(new player_session(boost::asio::ip::tcp::socket(g_io_service), ++m_playerIndex));
+		g_clients[i]->get_player_data()->id = m_playerIndex;
+		g_clients[i]->get_player_data()->is_ai = true;
+		g_clients[i]->get_player_data()->dir = KEYINPUT_UP;
+		g_clients[i]->get_player_data()->pos.x = rand() % 500;
+		g_clients[i]->get_player_data()->pos.y = rand() % 500;
+		g_clients[i]->get_player_data()->state.maxhp = 100;
+		g_clients[i]->get_player_data()->state.hp = g_clients[i]->get_player_data()->state.maxhp;
+	}
+
+	cout << "\nAI bots created number of " << MAX_AI_NUM << ", Compelete\n";
+}
+
 void boostAsioServer::acceptThread()
 {
-	m_acceptor.async_accept(m_socket, [this](boost::system::error_code error_code) {
+	m_acceptor.async_accept(m_socket, [&](boost::system::error_code error_code) {
 		if (true == (!error_code)) {
 			cout << "Client No. [ " << ++m_playerIndex << " ] Connected \t:: IP = " << m_socket.remote_endpoint().address().to_string() << ", Port = " << m_socket.remote_endpoint().port() << "\n";
-			g_clients.emplace_back(make_shared<player_session>(std::move(m_socket), m_playerIndex));
-			g_clients[m_playerIndex]->Init();
+			g_clients.emplace_back(new player_session(std::move(m_socket), m_playerIndex));
+			if (false != g_clients[m_playerIndex]->check_login()) { g_clients[m_playerIndex]->Init(); }
+
 		}
-		if (false == m_ServerShutdown) { acceptThread(); }		
-	});
-}
-
-
-// player_session class
-
-void player_session::Init()
-{
-	m_connect_state = true;
-
-	m_recv_packet();
-}
-
-void player_session::m_recv_packet()
-{
-	auto self(shared_from_this());
-	m_socket.async_read_some(boost::asio::buffer(m_recv_buf, MAX_BUF_SIZE), [this, self](boost::system::error_code error_code, std::size_t length) -> void {
-		if (error_code) {
-			if (error_code.value() == boost::asio::error::operation_aborted) { return; }
-			// client was disconnected
-			if (false == g_clients[m_id]->get_current_connect_state()) { return; }
-
-			cout << "Client No. [ " << m_id << " ] Disonnected \t:: IP = " << m_socket.remote_endpoint().address().to_string() << ", Port = " << m_socket.remote_endpoint().port() << "\n";
-			m_socket.shutdown(m_socket.shutdown_both);
-			m_socket.close();
-
-			/*
-				모든 플레이어에게, 현재 플레이어의 퇴장을 알리며
-				view list 같은 곳에서도 빼주자~ !!
-			*/
-
-			return;
-		}
-
-		int current_data_processing = static_cast<int>(length);
-		Packet *buf = m_recv_buf;
-		while (0 < current_data_processing) {
-			if (0 == m_packet_size_current) {
-				m_packet_size_current = buf[0];
-				if (buf[0] > MAX_BUF_SIZE) {
-					cout << "player_session::m_recv_packet() Error, Client No. [ " << m_id << " ] recv buf[0] is out of MAX_BUF_SIZE\n";
-					exit(-1);
-				}
-			}
-			int need_to_build = m_packet_size_current - m_packet_size_previous;
-			if (need_to_build <= current_data_processing) {
-				// Packet building Complete & Process Packet
-				memcpy(m_data_buf + m_packet_size_previous, buf, need_to_build);
-
-				m_process_packet(m_id, m_data_buf);
-
-				m_packet_size_current = 0;
-				m_packet_size_previous = 0;
-				current_data_processing -= need_to_build;
-				buf += need_to_build;
-			}
-			else {
-				// Packet build continue
-				memcpy(m_data_buf + m_packet_size_previous, buf, current_data_processing);
-				m_packet_size_previous += current_data_processing;
-				current_data_processing = 0;
-				buf += current_data_processing;
-			}
-		}
-		m_recv_packet();
-	});
-}
-
-void player_session::m_process_packet(const unsigned int& id, Packet buf[])
-{
-	// packet[0] = packet size		> 0번째 자리에는 무조건, 패킷의 크기가 들어가야만 한다.
-	// packet[1] = type				> 1번째 자리에는 현재 패킷이 무슨 패킷인지 속성을 정해주는 값이다.
-	// packet[...] = data			> 2번째 부터는 속성에 맞는 순대로 처리를 해준다.
-
-	// buf[1] 번째의 속성으로 분류를 한 뒤에, 내부에서 2번째 부터 데이터를 처리하기 시작한다.
-
-	{
-		switch (buf[1])
-		{
-		case TEST:
-			// 받은 패킷을 그대로 돌려준다.
-			cout << "Client No. [ " << m_id << " ] TEST Packet Recived !!\n";
-			printf("buf[0] = %d, buf[1] = %d, buf[2] = %d\n\n", buf[0], buf[1], buf[2]);
-			send_packet(id, buf);
-			break;
-		case KEYINPUT:
-			break;
-		default:
-			break;
-		}
-	}
-}
-
-void player_session::send_packet(const unsigned int& id, Packet *packet)
-{
-	int packet_size = packet[0];
-	Packet *sendBuf = new Packet[packet_size];
-	memcpy(sendBuf, packet, packet_size);
-
-	auto self(shared_from_this());
-	m_socket.async_write_some(boost::asio::buffer(sendBuf, packet_size), [this, self, sendBuf, packet_size](boost::system::error_code error_code, std::size_t bytes_transferred) -> void {
-		if (!error_code) {
-			if (packet_size != bytes_transferred) { cout << "Client No. [ " << m_id << " ] async_write_some packet bytes was NOT SAME !!\n"; }
-			delete[] sendBuf;
-		}
+		if (false == m_ServerShutdown) { acceptThread(); }
 	});
 }

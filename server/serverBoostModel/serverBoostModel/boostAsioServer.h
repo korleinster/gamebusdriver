@@ -20,9 +20,6 @@ using boost::asio::ip::tcp;
 #include <sqlext.h>
 #include <tchar.h>
 
-// Multithread
-#include <mutex>
-
 void HandleDiagnosticRecord(SQLHANDLE hHandle, SQLSMALLINT hType, RETCODE RetCode);
 
 #define TRYODBC(h, ht, x)   {   RETCODE rc = x;\

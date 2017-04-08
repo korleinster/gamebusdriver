@@ -58,7 +58,7 @@ using position = struct Position {
 using status = struct Status {
 	int maxhp{ 5 };
 	int hp{ 5 };
-	unsigned short mp{ 10 };
+	/*unsigned short mp{ 10 };
 	unsigned short level{ 2 };
 	unsigned short exp{ 0 };
 	short def{ 1 };
@@ -66,7 +66,7 @@ using status = struct Status {
 	short agi{ 2 };
 	short intel{ 1 };
 	short health{ 3 };
-	short gauge{ 0 };
+	short gauge{ 0 };*/
 };
 
 /// 플레이어 전체 정보 64 ( dir -3 ) ( nickname - 2 ) bytes

@@ -170,6 +170,21 @@ void CMapToolView::OnInitialUpdate()
 		return;
 	}
 
+	//네비메쉬 라인용
+
+	if (CShaderMgr::GetInstance()->AddShaderFiles(L"VS_LINE", L"LineShader.fx", "VS_LINE", "vs_5_0", SHADER_LINE_VS))
+	{
+		AfxMessageBox(L"Vertex Shader(Line) Create Failed", MB_OK);
+		return;
+	}
+
+
+	if (CShaderMgr::GetInstance()->AddShaderFiles(L"PS_LINE", L"LineShader.fx", "PS_LINE", "ps_5_0", SHADER_LINE_PS))
+	{
+		AfxMessageBox(L"PIXEL Shader(Line) Create Failed", MB_OK);
+		return;
+	}
+
 	//일반
 
 	if (CShaderMgr::GetInstance()->AddShaderFiles(L"VS", L"Shader.fx", "VS", "vs_5_0", SHADER_VS))
@@ -184,27 +199,13 @@ void CMapToolView::OnInitialUpdate()
 		AfxMessageBox(L"PIXEL Shader(Default) Create Failed", MB_OK);
 		return;
 	}
+
 	//다이나믹 매쉬용
 	if (CShaderMgr::GetInstance()->AddShaderFiles(L"VS_ANI", L"Shader.fx", "VS_ANI", "vs_5_0", SHADER_ANI))
 	{
 		AfxMessageBox(L"Vertex Shader(Ani) Create Failed", MB_OK);
 		return;
-	}
-
-	//네비메쉬 라인용
-
-	/*if (CShaderMgr::GetInstance()->AddShaderFiles(L"VS_LINE", L"LineShader.fx", "VS_LINE", "vs_5_0", SHADER_LINE_VS))
-	{
-		AfxMessageBox(L"Vertex Shader(Line) Create Failed", MB_OK);
-		return;
-	}
-
-
-	if (CShaderMgr::GetInstance()->AddShaderFiles(L"PS_LINE", L"LineShader.fx", "PS_LINE", "ps_5_0", SHADER_LINE_PS))
-	{
-		AfxMessageBox(L"PIXEL Shader(Line) Create Failed", MB_OK);
-		return;
-	}*/
+	}	
 
 	if (CInput::GetInstance()->InitInputDevice(AfxGetInstanceHandle(), g_hWnd))
 	{

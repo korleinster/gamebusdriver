@@ -42,7 +42,7 @@ void boostAsioServer::CheckThisCPUcoreCount()
 {
 	SYSTEM_INFO si;
 	GetSystemInfo(&si);
-	m_cpuCore = static_cast<int>(si.dwNumberOfProcessors) * 2;
+	m_cpuCore = static_cast<int>(si.dwNumberOfProcessors);
 	printf("CPU Core Count = %d, threads = %d\n", m_cpuCore / 2, m_cpuCore);
 }
 
@@ -363,9 +363,9 @@ void player_session::m_process_packet(Packet buf[])
 		case KEYINPUT_ATTACK:		// 기본 공격 ( 데미지 계산, hit box 범위 조정, 전부 여기서 다 조절해야 한다. )
 		{
 			// 충돌체크 검사하고 난 뒤에.. ( 현재는 임시 충돌 체크, 실제 클라와 연동시 충돌 범위 체크해야 한다. )
-			int att_x = 3, att_y = 3;		// 테스트용 클라 공격 리치가 요정도
+			int att_x = 0.1, att_y = 0.1;		// 테스트용 클라 공격 리치가 요정도
 			int x = m_player_data.pos.x, y = m_player_data.pos.y;
-			int player_size = 25;	// 테스트용 클라 원 반지름이 크기 5...
+			int player_size = 1;	// 테스트용 클라 원 반지름이 크기 5...
 			char *dir = &m_player_data.dir;
 
 			if ((*dir & KEYINPUT_RIGHT) == (KEYINPUT_RIGHT))	{ x += att_x; }
@@ -406,7 +406,7 @@ void player_session::m_process_packet(Packet buf[])
 							// 10 초후 리젠을 하는 타이머 큐에 집어넣는건 어떨까 싶다.
 
 							// ai 죽일경우, 아이템 그냥 입력해서 주기 ( 대충 만든거라서, 다시 수정해야 한다 ) => 패킷 보내는건, 그냥 전체 인벤토리 걍 보내버림.. 이것도 수정 필요
-							if (NONE == m_player_data.inven.head) { m_player_data.inven.head = BASIC_HEAD; }
+							/*if (NONE == m_player_data.inven.head) { m_player_data.inven.head = BASIC_HEAD; }
 							else if (NONE == m_player_data.inven.body) { m_player_data.inven.body = BASIC_BODY; }
 							else if (NONE == m_player_data.inven.arm) { m_player_data.inven.arm = BASIC_ARM; }
 							else if (NONE == m_player_data.inven.weapon) { m_player_data.inven.weapon = BASIC_WEAPON; }
@@ -416,7 +416,7 @@ void player_session::m_process_packet(Packet buf[])
 							temp_buf_inventory[1] = CHANGED_INVENTORY;
 							*(reinterpret_cast<inventory*>(&temp_buf_inventory[2])) = m_player_data.inven;
 
-							send_packet(temp_buf_inventory);
+							send_packet(temp_buf_inventory);*/
 						}
 					}
 

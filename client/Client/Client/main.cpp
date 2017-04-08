@@ -4,9 +4,9 @@ LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 // 그리기 위한 변수 - WM_PAINT
 int view_range{ 150 };
-int value{ 10 };
-int dir_value{ 3 };
-int att_value{ 5 };
+int value{ 1 };	// 원 충돌 범위 크기
+double dir_value{ 0.1 }; // 이동 거리 및 방향
+double att_value{ 0.1 }; // 공격 리치
 int hp_value_x{ 25 };
 // ------------------------------
 
@@ -172,7 +172,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 			break;
 		case 'i': {	// inventory check key
 #ifdef _DEBUG
-			cout << "\n\nhead : ";
+			/*cout << "\n\nhead : ";
 			if (NONE == g_client.getPlayerData()->inven.head) {	cout << "NONE\n"; }
 			else { cout << "BASIC_HEAD\n"; }
 
@@ -186,7 +186,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
 			cout << "weapon : ";
 			if (NONE == g_client.getPlayerData()->inven.weapon) { cout << "NONE\n"; }
-			else { cout << "BASIC_WEAPON\n"; }
+			else { cout << "BASIC_WEAPON\n"; }*/
 #endif // _DEBUG
 		}
 			break;

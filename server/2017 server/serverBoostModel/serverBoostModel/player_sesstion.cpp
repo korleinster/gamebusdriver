@@ -50,10 +50,24 @@ void player_session::Init()
 	m_connect_state = true;
 
 	// 기본 셋팅 초기화 정보 보내기 *****************>>>> player_data 초기화에 대한 기본 필요 정보 수정시, 여기서 해야함.
-	Packet init_this_player_buf[MAX_BUF_SIZE];
 
-	init_this_player_buf[0] = sizeof(player_data) + 2;
-	init_this_player_buf[1] = INIT_CLIENT;
+	m_player_data.id = m_id;
+	m_player_data.pos.x = 100;
+	m_player_data.pos.y = 100;
+	m_player_data.dir = 0;
+	m_player_data.state.maxhp = 100;
+	m_player_data.state.mp = 10;
+	m_player_data.state.level = 1;
+	m_player_data.state.exp = 0;
+	m_player_data.state.critical = 20;	// const
+	m_player_data.state.def = 1;
+	m_player_data.state.str = 5;
+	m_player_data.state.agi = 2;
+	m_player_data.state.intel = 1;
+	m_player_data.state.health = 3;
+	m_player_data.state.gauge = 0;
+	m_player_data.state.hp = m_player_data.state.maxhp;
+	m_player_data.is_ai = false;
 
 	if (0 == wcscmp(L"guest", m_login_id)) {
 		// guest 입장이라면, 초기화를 여기에서 진행한다.
@@ -61,30 +75,34 @@ void player_session::Init()
 		m_player_data.pos.x = 100;
 		m_player_data.pos.y = 100;
 		m_player_data.dir = 0;
-		m_player_data.state.maxhp = 100;
+		m_player_data.state.maxhp = 5;
+		m_player_data.state.mp = 10;
+		m_player_data.state.level = 2;
+		m_player_data.state.exp = 0;
+		m_player_data.state.critical = 20;	// const
+		m_player_data.state.def = 1;
+		m_player_data.state.str = 5;
+		m_player_data.state.agi = 2;
+		m_player_data.state.intel = 1;
+		m_player_data.state.health = 3;
+		m_player_data.state.gauge = 0;
 		m_player_data.state.hp = m_player_data.state.maxhp;
 		m_player_data.is_ai = false;
 	}
-	m_player_data.id = m_id;
-	m_player_data.pos.x = 100;
-	m_player_data.pos.y = 100;
-	m_player_data.dir = 0;
-	m_player_data.state.maxhp = 100;
-	m_player_data.state.hp = m_player_data.state.maxhp;
-	m_player_data.is_ai = false;
 
-	*(reinterpret_cast<player_data*>(&init_this_player_buf[2])) = m_player_data;
-	g_clients[m_id]->send_packet(init_this_player_buf);
+	sc_client_init_info init_player;
+	init_player.size = sizeof(sc_client_init_info);
+	init_player.type = INIT_CLIENT;
+	init_player.player_info = m_player_data;
+	g_clients[m_id]->send_packet(reinterpret_cast<Packet*>(&init_player));
 
 	// 초기화 정보 보내기 2 - 얘 정보를 다른 애들한테 보내고, 다른 애들 정보를 얘한테 보내기  *****************>>>> player_data 에서 추가되는 내용을 전송 시, 수정해주어야 한다.
-	Packet other_info_to_me_buf[MAX_BUF_SIZE];
-	Packet my_info_to_other_buf[MAX_BUF_SIZE];
+	sc_other_init_info my_info_to_other;
+	sc_other_init_info other_info_to_me;
 
-	other_info_to_me_buf[0] = my_info_to_other_buf[0] = sizeof(player_data) + 2;
-	other_info_to_me_buf[1] = my_info_to_other_buf[1] = INIT_OTHER_CLIENT;
-
-	// 현재 접속한 애한테 다른 플레이어 정보 보내기
-	*(reinterpret_cast<player_data*>(&my_info_to_other_buf[2])) = m_player_data;
+	my_info_to_other.id = m_player_data.id;
+	my_info_to_other.hp = m_player_data.state.hp;
+	my_info_to_other.pos = m_player_data.pos;
 
 	for (auto players : g_clients)
 	{
@@ -92,12 +110,14 @@ void player_session::Init()
 		if (m_id == players->get_id()) { continue; }
 
 		// 다른 애들 정보를 복사해서 넣고, 얘한테 먼저 보내고...
-		*(reinterpret_cast<player_data*>(&other_info_to_me_buf[2])) = *(players->get_player_data());
-		send_packet(other_info_to_me_buf);
+		other_info_to_me.id = (players->get_player_data())->id;
+		other_info_to_me.hp = (players->get_player_data())->state.hp;
+		other_info_to_me.pos = (players->get_player_data())->pos;
+		send_packet(reinterpret_cast<Packet*>(&other_info_to_me));
 
 		if (true == players->get_player_data()->is_ai) { continue; }
 		// 얘 정보를 이제 다른 애들한테 보내면 되는데..
-		players->send_packet(my_info_to_other_buf);
+		players->send_packet(reinterpret_cast<Packet*>(&my_info_to_other));
 	}
 
 	/*
@@ -128,8 +148,8 @@ void player_session::m_recv_packet()
 			view list 같은 곳에서도 빼주자 ~ !!
 			*/
 
-			Packet temp_buf[MAX_BUF_SIZE] = { sizeof(player_data) + 2, PLAYER_DISCONNECTED };
-			memcpy(&temp_buf[2], &m_player_data, temp_buf[0]);
+			sc_disconnect p;
+			p.id = m_id;
 
 			for (auto players : g_clients)
 			{

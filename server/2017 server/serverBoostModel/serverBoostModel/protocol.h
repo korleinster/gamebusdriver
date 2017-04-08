@@ -56,16 +56,17 @@ using position = struct Position {
 #define KEYINPUT_RIGHT	0b00001000
 
 using status = struct Status {
-	int maxhp{ 5 };
-	int hp{ 5 };
-	unsigned short mp{ 10 };
-	unsigned short level{ 2 };
+	int maxhp{ 100 };
+	int hp{ 100 };
+	BYTE mp{ 10 };
+	BYTE level{ 1 };
 	unsigned short exp{ 0 };
-	short def{ 1 };
-	short str{ 5 };
-	short agi{ 2 };
-	short intel{ 1 };
-	short health{ 3 };
+	BYTE critical{ 20 };
+	unsigned short def{ 5 };
+	unsigned short str{ 5 };
+	unsigned short agi{ 5 };
+	unsigned short intel{ 5 };
+	unsigned short health{ 5 };
 	short gauge{ 0 };
 };
 
@@ -80,3 +81,30 @@ using player_data = struct Player_data {
 
 	char			nickname[42]{ 0 };	// 42
 };
+
+#pragma pack (push, 1)
+
+using sc_client_init_info = struct server_to_client_info
+{
+	BYTE size = sizeof(player_data) + sizeof(BYTE) + sizeof(BYTE);
+	BYTE type = INIT_CLIENT;
+	player_data player_info;
+};
+
+using sc_other_init_info = struct server_to_client_other_clients_info
+{
+	BYTE size = sizeof(unsigned int) + sizeof(int) + sizeof(position) + sizeof(BYTE) + sizeof(BYTE);
+	BYTE type = INIT_OTHER_CLIENT;
+	unsigned int id;
+	int hp;
+	position pos;
+};
+
+using sc_disconnect = struct server_to_client_player_disconnect
+{
+	BYTE size = sizeof(unsigned int) + sizeof(BYTE) + sizeof(BYTE);
+	BYTE type = PLAYER_DISCONNECTED;
+	unsigned int id;
+};
+
+#pragma pack (pop)

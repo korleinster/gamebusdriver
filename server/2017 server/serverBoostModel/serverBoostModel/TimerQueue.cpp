@@ -1,6 +1,5 @@
 #include "stdafx.h"
 
-
 void TimerQueue::TimerThread() {
 	while (true) {
 		Sleep(1);
@@ -55,18 +54,22 @@ void TimerQueue::processPacket(event_type *p) {
 			if (g_clients[p->obj_id]->get_player_data()->state.maxhp == g_clients[p->obj_id]->get_player_data()->state.hp) { *g_clients[p->obj_id]->get_hp_adding() = false; }
 			add_event(p->obj_id, 1, HP_ADD, false);
 
-			Packet buf[MAX_BUF_SIZE]{ 0 };
-			buf[0] = (sizeof(int) * 2) + 2;	// 패킷 size
-			buf[1] = SERVER_MESSAGE_HP_CHANGED;
-			*reinterpret_cast<int *>(&buf[2]) = g_clients[p->obj_id]->get_player_data()->state.hp;	// hp 입력
-			*reinterpret_cast<int *>(&buf[6]) = p->obj_id;	// id 입력
+			//Packet buf[MAX_BUF_SIZE]{ 0 };
+			//buf[0] = (sizeof(int) * 2) + 2;	// 패킷 size
+			//buf[1] = SERVER_MESSAGE_HP_CHANGED;
+			//*reinterpret_cast<int *>(&buf[2]) = g_clients[p->obj_id]->get_player_data()->state.hp;	// hp 입력
+			//*reinterpret_cast<int *>(&buf[6]) = p->obj_id;	// id 입력
+
+			sc_hp packet;
+			packet.hp == g_clients[p->obj_id]->get_player_data()->state.hp;
+			packet.id = p->obj_id;
 
 			for (auto players : g_clients) {
 				if (DISCONNECTED == players->get_current_connect_state()) { continue; }
 				//if (players->m_id == other_players->m_id) { continue; }	// 자기 hp 가 변해도 해당 패킷을 받아야 한다.
 				if (true == players->get_player_data()->is_ai) { continue; }
 
-				players->send_packet(buf);
+				players->send_packet(reinterpret_cast<Packet*>(&packet));
 			}
 		}
 	}

@@ -16,7 +16,7 @@ using namespace chrono;
 
 // 서버와 연동되는 protocol.h - 수정시 서버에도 바로 적용된다.
 //#include"../../../server/Server/Server/protocol.h"
-#include"../../../server/serverBoostModel/serverBoostModel/protocol.h"
+#include"../../../server/2017 server/serverBoostModel/serverBoostModel/protocol.h"
 #define WM_SOCKET (WM_USER + 1)
 
 // client 통신 class

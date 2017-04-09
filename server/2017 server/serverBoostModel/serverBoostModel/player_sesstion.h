@@ -43,10 +43,10 @@ private:
 
 	// 플레이어 캐릭터 관련 정보
 	player_data m_player_data;
+	sub_status m_sub_status;
 
 	// 현재 플레이어의 view list
 	/// 고민 1. 기본 unorderd_set 자료형을 쓸 것인가 ?
 	unordered_set<unsigned int> m_view_list;
-	unordered_set<unsigned int> m_view_list_AI;
 	/// 고민 2. 따로 멀티 쓰레드 전용 자료구조를 만들어 쓸 것인가 ? CAS... 5000을 위해서는 써야 할것이다...
 };

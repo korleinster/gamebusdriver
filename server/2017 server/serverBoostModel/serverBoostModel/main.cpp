@@ -5,6 +5,7 @@
 
 int main()
 {
+	cout << "g_clients ADDR : " << (int*)&g_clients << endl;
 	try
 	{
 		_wsetlocale(LC_ALL, L"korean");

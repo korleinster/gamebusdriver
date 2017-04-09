@@ -44,10 +44,10 @@
     <ClInclude Include="ClientClass.h">
       <Filter>Source Files\Client_Main_Class</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\server\serverBoostModel\serverBoostModel\protocol.h">
+    <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
+    <ClInclude Include="..\..\..\server\2017 server\serverBoostModel\serverBoostModel\protocol.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

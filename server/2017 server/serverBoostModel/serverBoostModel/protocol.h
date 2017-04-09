@@ -58,16 +58,20 @@ using position = struct Position {
 using status = struct Status {
 	int maxhp{ 100 };
 	int hp{ 100 };
-	BYTE mp{ 10 };
-	BYTE level{ 1 };
+	unsigned char mp = 10;
+	unsigned char level = 1;
 	unsigned short exp{ 0 };
-	BYTE critical{ 20 };
+	short gauge{ 0 };
+};
+
+using sub_status = struct Sub_status
+{
+	unsigned char critical = { 20 };
 	unsigned short def{ 5 };
 	unsigned short str{ 5 };
 	unsigned short agi{ 5 };
 	unsigned short intel{ 5 };
 	unsigned short health{ 5 };
-	short gauge{ 0 };
 };
 
 /// 플레이어 전체 정보 64 ( dir -3 ) ( nickname - 2 ) bytes
@@ -86,25 +90,56 @@ using player_data = struct Player_data {
 
 using sc_client_init_info = struct server_to_client_info
 {
-	BYTE size = sizeof(player_data) + sizeof(BYTE) + sizeof(BYTE);
-	BYTE type = INIT_CLIENT;
+	unsigned char size = sizeof(player_data) + sizeof(unsigned char) + sizeof(unsigned char);
+	unsigned char type = INIT_CLIENT;
 	player_data player_info;
 };
 
 using sc_other_init_info = struct server_to_client_other_clients_info
 {
-	BYTE size = sizeof(unsigned int) + sizeof(int) + sizeof(position) + sizeof(BYTE) + sizeof(BYTE);
-	BYTE type = INIT_OTHER_CLIENT;
-	unsigned int id;
-	int hp;
-	position pos;
+	unsigned char size = sizeof(player_data) + sizeof(unsigned char) + sizeof(unsigned char);
+	unsigned char type = INIT_OTHER_CLIENT;
+	player_data playerData;
 };
 
 using sc_disconnect = struct server_to_client_player_disconnect
 {
-	BYTE size = sizeof(unsigned int) + sizeof(BYTE) + sizeof(BYTE);
-	BYTE type = PLAYER_DISCONNECTED;
+	unsigned char size = sizeof(unsigned int) + sizeof(unsigned char) + sizeof(unsigned char);
+	unsigned char type = PLAYER_DISCONNECTED;
 	unsigned int id;
+};
+
+using sc_move = struct server_to_client_player_move
+{
+	unsigned char size = sizeof(position) + sizeof(unsigned int) + sizeof(unsigned char) + sizeof(unsigned char);
+	unsigned char type = CHANGED_POSITION;
+	unsigned int id;
+	position pos;
+};
+
+using sc_dir = struct server_to_client_player_direction
+{
+	unsigned char size = sizeof(char) + sizeof(unsigned int) + sizeof(unsigned char) + sizeof(unsigned char);
+	unsigned char type = CHANGED_DIRECTION;
+	unsigned int id;
+	char dir;
+};
+
+using sc_atk = struct server_to_client_attack_states
+{
+	unsigned char size = sizeof(int) + sizeof(unsigned int) + sizeof(unsigned int) + sizeof(unsigned char) + sizeof(unsigned char);
+	unsigned char type = KEYINPUT_ATTACK;
+	unsigned int attacking_id;
+	unsigned int under_attack_id;
+	int hp;
+};
+
+using sc_hp = struct server_to_client_changed_hp
+{
+	unsigned char size = sizeof(int) + sizeof(unsigned int) + sizeof(unsigned char) + sizeof(unsigned char);
+	unsigned char type = SERVER_MESSAGE_HP_CHANGED;
+	unsigned int id;
+	int hp;
 };
 
 #pragma pack (pop)

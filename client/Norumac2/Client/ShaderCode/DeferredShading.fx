@@ -152,7 +152,19 @@ VS_OUTPUT RenderSceneVS_ANI(VS_ANI_IN input)
 	output.UV = input.tex2dcoord;
 
 	// Transform the normal to world space
-	output.Normal = mul(input.normal, (float3x3)World);
+
+	float3 Normal = input.normal;
+
+	if (fWeight0 > 0) output.Normal += fWeight0 * mul(Normal, (float3x3)m0);
+	if (fWeight1 > 0) output.Normal += fWeight1 * mul(Normal, (float3x3)m1);
+	if (fWeight2 > 0) output.Normal += fWeight2 * mul(Normal, (float3x3)m2);
+	if (fWeight3 > 0) output.Normal += fWeight3 * mul(Normal, (float3x3)m3);
+	if (fWeight4 > 0) output.Normal += fWeight4 * mul(Normal, (float3x3)m4);
+	if (fWeight5 > 0) output.Normal += fWeight5 * mul(Normal, (float3x3)m5);
+	if (fWeight6 > 0) output.Normal += fWeight6 * mul(Normal, (float3x3)m6);
+	if (fWeight7 > 0) output.Normal += fWeight7 * mul(Normal, (float3x3)m7);
+
+	output.Normal = mul(output.Normal, (float3x3)World);
 
 	return output;
 }

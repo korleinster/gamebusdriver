@@ -29,7 +29,7 @@ CRenderMgr::CRenderMgr()
 
 	m_fDirColor[RGB_RED] = 0.8f;
 	m_fDirColor[RGB_GREEN] = 0.8f;
-	m_fDirColor[RGB_BLUE] = 0.0f;
+	m_fDirColor[RGB_BLUE] = 0.5f;
 
 	m_vDirLight = D3DXVECTOR3(1.0f, -1.0f, 1.0f);
 
@@ -37,7 +37,7 @@ CRenderMgr::CRenderMgr()
 
 	m_pLightMgr->SetAmbient(D3DXVECTOR3(0.4f, 0.5f, 0.4f), D3DXVECTOR3(0.4f, 0.5f, 0.4f));
 	m_pLightMgr->SetDirectional(
-		D3DXVECTOR3(m_vDirLight.x, -m_vDirLight.y, m_vDirLight.z),
+		D3DXVECTOR3(m_vDirLight.x, m_vDirLight.y, m_vDirLight.z),
 		D3DXVECTOR3(m_fDirColor[RGB_RED], m_fDirColor[RGB_GREEN], m_fDirColor[RGB_BLUE]));
 }
 

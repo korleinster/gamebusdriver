@@ -145,3 +145,5 @@ HRESULT CTerrain::AddComponent(void)
 
 	return S_OK;
 }
+
+

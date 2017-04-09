@@ -213,6 +213,7 @@
     <ClInclude Include="Info.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Interface.h" />
+    <ClInclude Include="Line2D.h" />
     <ClInclude Include="LineCol.h" />
     <ClInclude Include="Macro.h" />
     <ClInclude Include="MainFrm.h" />
@@ -222,6 +223,8 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MouseCol.h" />
     <ClInclude Include="MyForm.h" />
+    <ClInclude Include="NaviCell.h" />
+    <ClInclude Include="NaviMgr.h" />
     <ClInclude Include="NaviTool.h" />
     <ClInclude Include="Obj.h" />
     <ClInclude Include="ObjectTool.h" />
@@ -261,6 +264,7 @@
     <ClCompile Include="Info.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Interface.cpp" />
+    <ClCompile Include="Line2D.cpp" />
     <ClCompile Include="LineCol.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="MapTool.cpp" />
@@ -269,6 +273,8 @@
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MouseCol.cpp" />
     <ClCompile Include="MyForm.cpp" />
+    <ClCompile Include="NaviCell.cpp" />
+    <ClCompile Include="NaviMgr.cpp" />
     <ClCompile Include="NaviTool.cpp" />
     <ClCompile Include="Obj.cpp" />
     <ClCompile Include="ObjectTool.cpp" />

@@ -12,11 +12,15 @@
 #include "ObjectTool.h"
 #include "MyForm.h"
 #include "VIBuffer.h"
+#include "NaviMgr.h"
 #include "StaticMesh.h"
+#include "NaviTool.h"
 
 CBack::CBack()
 	:m_pTerrainVtx(NULL)
 	,m_pTerrain(NULL)
+	,m_bPickFirst(false)
+	,m_bPickSecond(false)
 {
 }
 
@@ -62,8 +66,6 @@ HRESULT CBack::Initialize(void)
 	if (FAILED(CreateObj()))
 		return E_FAIL;
 
-
-
 	return S_OK;
 }
 
@@ -89,6 +91,7 @@ void CBack::Render(void)
 {
 	float fTime = CTimeMgr::GetInstance()->GetTime();
 	CRenderMgr::GetInstance()->Render(fTime);
+	CNaviMgr::GetInstance()->Render();
 }
 
 void CBack::Release(void)
@@ -299,3 +302,141 @@ void CBack::ConstObjectMode()
 
 
 }
+
+void CBack::NaviMeshMode()
+{
+	CNaviTool*	pNavimeshTool = &((CMainFrame*)AfxGetMainWnd())->m_pMyForm->m_Tab2;
+
+	D3DXVECTOR3 vIndex;
+
+	if (NULL == m_pTerrainVtx)
+	{
+		m_pTerrainVtx = new VTXTEX[VERTEXCOUNTX * VERTEXCOUNTZ];
+		m_pMouseCol->SetSize(VERTEXCOUNTX, VERTEXCOUNTZ, 1);
+
+		m_pTerrainVtx = m_pTerrain->GetVertex();
+	}
+	if (TRUE == pNavimeshTool->m_PickingMode[0].GetCheck())
+	{
+		m_pMouseCol->PickTerrain(&vIndex, m_pTerrainVtx);
+	}
+	else if (TRUE == pNavimeshTool->m_PickingMode[1].GetCheck())
+	{
+		//매쉬피킹부분
+	}
+
+	pNavimeshTool->SetPickPos(vIndex);
+
+	if (vIndex.x < 0.f || vIndex.z < 0.f)
+		return;
+
+	if (TRUE == pNavimeshTool->m_NaviMode[1].GetCheck())
+	{
+		//3점피킹
+		if (TRUE == pNavimeshTool->m_CreateMode[0].GetCheck())
+		{
+			if (!m_bPickFirst)
+			{
+				CNaviMgr::GetInstance()->GetNearPoint(vIndex, pNavimeshTool->m_fNearRange);
+				m_vPoint[0] = vIndex;
+				m_bPickFirst = true;
+			}
+			else if (m_bPickFirst && !m_bPickSecond)
+			{
+				CNaviMgr::GetInstance()->GetNearPoint(vIndex, pNavimeshTool->m_fNearRange);
+				m_vPoint[1] = vIndex;
+				m_bPickSecond = true;
+			}
+			else if (m_bPickFirst && m_bPickSecond)
+			{
+				CNaviMgr::GetInstance()->GetNearPoint(vIndex, pNavimeshTool->m_fNearRange);
+				m_vPoint[2] = vIndex;
+				m_bPickFirst = false;
+				m_bPickSecond = false;
+			}
+			BuildNavimesh();
+		}
+		// 1점 피킹
+		if (TRUE == pNavimeshTool->m_CreateMode[1].GetCheck())
+		{
+			if (CNaviMgr::GetInstance()->GetSize() == 0)
+				return;
+
+			m_vPoint[0] = vIndex;
+
+			if (CNaviMgr::GetInstance()->SetOnePoint(m_vPoint[1], m_vPoint[2], m_vPoint[0]))
+				BuildNavimesh();
+			else
+				return;
+		}
+	}
+}
+
+void CBack::BuildNavimesh()
+{
+	CNaviTool* pNavimeshTool = &((CMainFrame*)AfxGetMainWnd())->m_pMyForm->m_Tab2;
+
+	if (!m_bPickFirst && !m_bPickSecond)
+	{
+		ComparePoint(m_vPoint[0], m_vPoint[1], m_vPoint[2]);
+		CNaviMgr::GetInstance()->Unlink_Cell();
+		if (pNavimeshTool->m_CellType[0].GetCheck() == TRUE)
+			CNaviMgr::GetInstance()->Add_Cell(&m_vPoint[0], &m_vPoint[1], &m_vPoint[2], TYPE_TERRAIN);
+
+		else /*if (pNavimeshTool->m_CellType[1].GetCheck() == TRUE)*/
+			CNaviMgr::GetInstance()->Add_Cell(&m_vPoint[0], &m_vPoint[1], &m_vPoint[2], TYPE_MESH);
+
+		pNavimeshTool->m_PointAx = m_vPoint[0].x;
+		pNavimeshTool->m_PointAy = m_vPoint[0].y;
+		pNavimeshTool->m_PointAz = m_vPoint[0].z;
+
+		pNavimeshTool->m_PointBx = m_vPoint[1].x;
+		pNavimeshTool->m_PointBy = m_vPoint[1].y;
+		pNavimeshTool->m_PointBz = m_vPoint[1].z;
+
+		pNavimeshTool->m_PointCx = m_vPoint[2].x;
+		pNavimeshTool->m_PointCy = m_vPoint[2].y;
+		pNavimeshTool->m_PointCz = m_vPoint[2].z;
+
+		CNaviMgr::GetInstance()->Link_Cell();
+
+		ZeroMemory(m_vPoint, sizeof(D3DXVECTOR3) * 3);
+	}
+
+}
+
+void CBack::ComparePoint(D3DXVECTOR3& vPoint1, D3DXVECTOR3& vPoint2, D3DXVECTOR3& vPoint3)
+{
+	D3DXVECTOR3		vPoint[3];
+
+	vPoint[0] = ((vPoint1.x < vPoint2.x) ? vPoint1 : vPoint2);
+	vPoint[0] = ((vPoint[0].x < vPoint3.x) ? vPoint[0] : vPoint3);
+
+	D3DXVECTOR3		vCompareXPoint[2];
+	if (vPoint[0] == vPoint1)
+	{
+		vCompareXPoint[0] = vPoint2;
+		vCompareXPoint[1] = vPoint3;
+	}
+	else if (vPoint[0] == vPoint2)
+	{
+		vCompareXPoint[0] = vPoint1;
+		vCompareXPoint[1] = vPoint3;
+	}
+	else
+	{
+		vCompareXPoint[0] = vPoint1;
+		vCompareXPoint[1] = vPoint2;
+	}
+
+	vPoint[1] = ((vCompareXPoint[0].z > vCompareXPoint[1].z) ? vCompareXPoint[0] : vCompareXPoint[1]);
+	vPoint[2] = ((vCompareXPoint[0].z < vCompareXPoint[1].z) ? vCompareXPoint[0] : vCompareXPoint[1]);
+
+
+
+
+	vPoint1 = vPoint[0];
+	vPoint2 = vPoint[1];
+	vPoint3 = vPoint[2];
+}
+

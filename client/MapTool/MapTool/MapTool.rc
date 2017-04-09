@@ -70,9 +70,7 @@ END
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDR_MAINFRAME           ICON                    "res\\MapTool.ico"
-
 IDR_MapToolTYPE         ICON                    "res\\MapToolDoc.ico"
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -80,7 +78,6 @@ IDR_MapToolTYPE         ICON                    "res\\MapToolDoc.ico"
 //
 
 IDR_MAINFRAME           BITMAP                  "res\\Toolbar.bmp"
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -306,21 +303,21 @@ BEGIN
     CONTROL         "지형",IDC_CHECK1,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,61,18,22,10
     CONTROL         "오브젝트",IDC_CHECK2,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,61,32,33,10
     GROUPBOX        "모드",IDC_STATIC,100,7,102,23
-    CONTROL         "기본",IDC_RADIO1,"Button",BS_AUTORADIOBUTTON,104,15,22,10
+    CONTROL         "기본",IDC_RADIO1,"Button",BS_AUTORADIOBUTTON | WS_GROUP,104,15,22,10
     CONTROL         "생성",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON,129,15,22,10
     CONTROL         "수정",IDC_RADIO3,"Button",BS_AUTORADIOBUTTON,152,15,23,10
     CONTROL         "삭제",IDC_RADIO4,"Button",BS_AUTORADIOBUTTON,176,15,24,10
-    CONTROL         "지형",IDC_RADIO5,"Button",BS_AUTORADIOBUTTON,14,61,22,10
+    CONTROL         "지형",IDC_RADIO5,"Button",BS_AUTORADIOBUTTON | WS_GROUP,14,61,22,10
     CONTROL         "오브젝트",IDC_RADIO6,"Button",BS_AUTORADIOBUTTON,37,61,34,10
     GROUPBOX        "피킹 타입",IDC_STATIC,12,52,62,25
     GROUPBOX        "생성 모드",IDC_STATIC,100,29,130,23
-    CONTROL         "3점 피킹",IDC_RADIO7,"Button",BS_AUTORADIOBUTTON,104,37,35,10
+    CONTROL         "3점 피킹",IDC_RADIO7,"Button",BS_AUTORADIOBUTTON | WS_GROUP,104,37,35,10
     CONTROL         "1점 피킹(1개이상의 셀 필요)",IDC_RADIO8,"Button",BS_AUTORADIOBUTTON,140,37,92,10
     GROUPBOX        "셀 타입",IDC_STATIC,79,52,62,25
-    CONTROL         "지형",IDC_RADIO9,"Button",BS_AUTORADIOBUTTON,82,61,21,10
+    CONTROL         "지형",IDC_RADIO9,"Button",BS_AUTORADIOBUTTON | WS_GROUP,82,61,21,10
     CONTROL         "오브젝트",IDC_RADIO10,"Button",BS_AUTORADIOBUTTON,105,61,33,10
     GROUPBOX        "삭제 모드",IDC_STATIC,145,52,79,25
-    CONTROL         "버텍스 단위",IDC_RADIO11,"Button",BS_AUTORADIOBUTTON,149,61,42,10
+    CONTROL         "버텍스 단위",IDC_RADIO11,"Button",BS_AUTORADIOBUTTON | WS_GROUP,149,61,42,10
     CONTROL         "셀 단위",IDC_RADIO12,"Button",BS_AUTORADIOBUTTON,193,61,31,10
     GROUPBOX        "피킹 상태",IDC_STATIC,13,81,212,40
     EDITTEXT        IDC_EDIT2,26,101,40,14,ES_AUTOHSCROLL
@@ -360,11 +357,12 @@ BEGIN
     PUSHBUTTON      "저장",IDC_BUTTON2,126,246,50,14
     PUSHBUTTON      "로드",IDC_BUTTON3,182,246,50,14
     GROUPBOX        "소숫점 설정(수정 전용)",IDC_STATIC,40,219,160,23
-    CONTROL         "1.0",IDC_RADIO13,"Button",BS_AUTORADIOBUTTON,46,229,20,10
+    CONTROL         "1.0",IDC_RADIO13,"Button",BS_AUTORADIOBUTTON | WS_GROUP,46,229,20,10
     CONTROL         "0.1",IDC_RADIO14,"Button",BS_AUTORADIOBUTTON,72,229,19,10
     CONTROL         "0.01",IDC_RADIO15,"Button",BS_AUTORADIOBUTTON,100,229,25,10
     CONTROL         "0.001",IDC_RADIO16,"Button",BS_AUTORADIOBUTTON,130,229,30,10
     CONTROL         "0.0001",IDC_RADIO17,"Button",BS_AUTORADIOBUTTON,162,229,33,10
+    CONTROL         "네비 출력",IDC_CHECK3,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,13,36,37,10
 END
 
 

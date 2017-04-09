@@ -19,6 +19,9 @@ public:
 	CTerrain*	 m_pTerrain;
 	map<wstring, CComponent*> m_mapComponent;
 	list<CObj*> m_ToolObjList;
+	bool		m_bPickFirst;
+	bool		m_bPickSecond;
+	D3DXVECTOR3	m_vPoint[3];
 public:
 	CBack();
 	virtual ~CBack();
@@ -33,6 +36,10 @@ public:
 	static CBack* Create(void);
 	void SetMainView(CMapToolView* pMainView);
 	void ConstObjectMode();
+	void NaviMeshMode();
+	void BuildNavimesh();
+	void ComparePoint(D3DXVECTOR3& vPoint1, D3DXVECTOR3& vPoint2, D3DXVECTOR3& vPoint3);
+	
 
 public:
 	HRESULT	CreateObj(void);

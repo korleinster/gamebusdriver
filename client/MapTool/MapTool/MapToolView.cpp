@@ -25,6 +25,7 @@
 #include "RenderMgr.h"
 #include "ObjMgr.h"
 #include "ParsingDevice9.h"
+#include "NaviMgr.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -170,6 +171,12 @@ void CMapToolView::OnInitialUpdate()
 		return;
 	}
 
+	if (FAILED(CNaviMgr::GetInstance()->Reserve_CellContainerSize(1)))
+	{
+		AfxMessageBox(L"NaviCell Container Init Failed");
+		return;
+	}
+
 	//네비메쉬 라인용
 
 	if (CShaderMgr::GetInstance()->AddShaderFiles(L"VS_LINE", L"LineShader.fx", "VS_LINE", "vs_5_0", SHADER_LINE_VS))
@@ -255,6 +262,7 @@ void CMapToolView::PostNcDestroy()
 	CParsingDevice9::GetInstance()->DestroyInstance();
 	CTimeMgr::GetInstance()->DestroyInstance();
 	CCamera::GetInstance()->DestroyInstance();
+	CNaviMgr::GetInstance()->DestroyInstance();
 	CShaderMgr::GetInstance()->DestroyInstance();
 	CInput::GetInstance()->DestroyInstance();
 	CRenderMgr::GetInstance()->DestroyInstance();
@@ -275,6 +283,7 @@ void CMapToolView::OnLButtonDown(UINT nFlags, CPoint point)
 		((CBack*)CSceneMgr::GetInstance()->GetScene())->ConstObjectMode();
 		break;
 	case 1:
+		((CBack*)CSceneMgr::GetInstance()->GetScene())->NaviMeshMode();
 		break;
 	case 2:
 		break;

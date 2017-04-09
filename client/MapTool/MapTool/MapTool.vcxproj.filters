@@ -163,6 +163,15 @@
     <Filter Include="97.Resources\1.Buffer\6.LineCol">
       <UniqueIdentifier>{a6160d7b-b827-4a12-9b3e-601b41dffd61}</UniqueIdentifier>
     </Filter>
+    <Filter Include="96.Utility\2. NaviMgr">
+      <UniqueIdentifier>{b7fdd534-0fbb-44a1-8b30-d9176a0beab3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.Utility\2. NaviMgr\NaviCell">
+      <UniqueIdentifier>{b4dbddae-bab3-4cdb-a04a-46782fba934a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.Utility\2. NaviMgr\NaviCell\Line2D">
+      <UniqueIdentifier>{efb96a33-b547-45ab-b8fc-544f7fb7e156}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -312,6 +321,15 @@
     <ClInclude Include="LineCol.h">
       <Filter>97.Resources\1.Buffer\6.LineCol</Filter>
     </ClInclude>
+    <ClInclude Include="NaviCell.h">
+      <Filter>96.Utility\2. NaviMgr\NaviCell</Filter>
+    </ClInclude>
+    <ClInclude Include="NaviMgr.h">
+      <Filter>96.Utility\2. NaviMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="Line2D.h">
+      <Filter>96.Utility\2. NaviMgr\NaviCell\Line2D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MapTool.cpp">
@@ -436,6 +454,15 @@
     </ClCompile>
     <ClCompile Include="LineCol.cpp">
       <Filter>97.Resources\1.Buffer\6.LineCol</Filter>
+    </ClCompile>
+    <ClCompile Include="NaviCell.cpp">
+      <Filter>96.Utility\2. NaviMgr\NaviCell</Filter>
+    </ClCompile>
+    <ClCompile Include="NaviMgr.cpp">
+      <Filter>96.Utility\2. NaviMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="Line2D.cpp">
+      <Filter>96.Utility\2. NaviMgr\NaviCell\Line2D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

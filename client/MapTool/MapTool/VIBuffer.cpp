@@ -53,14 +53,17 @@ void CVIBuffer::Render(void)
 	pGrapicDevice->m_pDeviceContext->IASetVertexBuffers(m_iSlot, 1, &m_VertexBuffer, &m_iVertexStrides, &m_iVertexOffsets);
 	if (m_IndexBuffer)
 		pGrapicDevice->m_pDeviceContext->IASetIndexBuffer(m_IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-	pGrapicDevice->m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//if (m_eDrawType == DRAW_LINE)
+		//pGrapicDevice->m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
+	//else
+		pGrapicDevice->m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//pGrapicDevice->m_pDeviceContext->Draw(4, 0);
 	//pGrapicDevice->m_pDeviceContext->RSSetState(m_pd3dRasterizerState);
 
 	if (m_pRasterizerState)
 		pGrapicDevice->m_pDeviceContext->RSSetState(m_pRasterizerState);
 
-	if (m_eDrawType == DRAW_INDEX)
+	if (m_eDrawType == DRAW_INDEX/*|| m_eDrawType == DRAW_LINE*/)
 		pGrapicDevice->m_pDeviceContext->DrawIndexed(m_iIndex, m_iStartIndex, m_iBaseVertex);
 
 	else

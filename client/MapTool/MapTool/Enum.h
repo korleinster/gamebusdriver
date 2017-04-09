@@ -16,8 +16,10 @@ enum ReleaseType { Release_Static, Release_Dynamic, Release_End };
 
 enum Scene_Tyep { SCENE_BACK, SCENE_END };
 
-enum DrawType { DRAW_INDEX, DRAW_VERTEX };
+enum DrawType { DRAW_INDEX, DRAW_VERTEX, DRAW_LINE };
 
 enum MESHTYPE { MESH_STATIC, MESH_DYNAMIC };
 
 enum SELECT { SELECT_OFF, SELECT_ON };
+
+enum CELLTYPE { TYPE_TERRAIN, TYPE_CELL, TYPE_MESH };

@@ -30,8 +30,6 @@ public:
 	void	Render(void);
 	void	Release(void);
 
-public:
-	
 
 private:
 	

@@ -100,6 +100,7 @@ HRESULT CPlayer::Initialize(void)
 
 int CPlayer::Update(void)
 {
+	//m_pInfo->m_fAngle[1] += 0.1f;
 	m_fSeverTime += CTimeMgr::GetInstance()->GetTime();
 	m_pTerrainCol->CollisionTerrain(&m_pInfo->m_vPos, m_pVerTex);
 	/*if (dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd == true)
@@ -201,7 +202,7 @@ void CPlayer::Render(void)
 	m_pGrapicDevice->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
 	m_pGrapicDevice->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
 
-	m_pBuffer->Render();
+	//m_pBuffer->Render();
 
 	dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(m_ePlayerState);
 }

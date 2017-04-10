@@ -12,7 +12,7 @@ CRenderTarget::~CRenderTarget()
 
 }
 
-HRESULT CRenderTarget::Ready_RenderTarget(const  UINT& sizeX, const  UINT& sizeY, DXGI_FORMAT format, D3DXCOLOR color)
+HRESULT CRenderTarget::Ready_RenderTarget(const  UINT& sizeX, const  UINT& sizeY, DXGI_FORMAT format)
 {
 	// Allocate the depth stencil target
 	D3D11_TEXTURE2D_DESC dtd = {
@@ -31,8 +31,6 @@ HRESULT CRenderTarget::Ready_RenderTarget(const  UINT& sizeX, const  UINT& sizeY
 
 	CDevice::GetInstance()->m_pDevice->CreateTexture2D(&dtd, nullptr, &m_pTargetRT);
 
-	//m_pTargetRT->SetPrivateData
-
 	// Create the render target views
 
 	D3D11_RENDER_TARGET_VIEW_DESC rtsvd =
@@ -42,7 +40,6 @@ HRESULT CRenderTarget::Ready_RenderTarget(const  UINT& sizeX, const  UINT& sizeY
 	};
 
 	CDevice::GetInstance()->m_pDevice->CreateRenderTargetView(m_pTargetRT, &rtsvd, &m_pTagetRTV);
-	// m_pTagetRTV->SetPrivateData
 
 	// Create the resource views
 	D3D11_SHADER_RESOURCE_VIEW_DESC dsrvd =
@@ -55,26 +52,14 @@ HRESULT CRenderTarget::Ready_RenderTarget(const  UINT& sizeX, const  UINT& sizeY
 
 	CDevice::GetInstance()->m_pDevice->CreateShaderResourceView(m_pTargetRT, &dsrvd, &m_pTagetSRV);
 
-	// Create constant buffers
-	D3D11_BUFFER_DESC cbDesc;
-	ZeroMemory(&cbDesc, sizeof(cbDesc));
-	cbDesc.Usage = D3D11_USAGE_DYNAMIC;
-	cbDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	cbDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	//cbDesc.ByteWidth = sizeof(CB_GBUFFER_UNPACK);
-	CDevice::GetInstance()->m_pDevice->CreateBuffer(&cbDesc, NULL, &m_pGBufferUnpackCB);
-
-
-	m_ClearColor = color;
-
 	return S_OK;
 }
 
-CRenderTarget* CRenderTarget::Create(const  UINT& sizeX, const  UINT& sizeY, DXGI_FORMAT format, D3DXCOLOR color)
+CRenderTarget* CRenderTarget::Create(const  UINT& sizeX, const  UINT& sizeY, DXGI_FORMAT format)
 {
 	CRenderTarget*	pInstance = new CRenderTarget();
 
-	if (FAILED(pInstance->Ready_RenderTarget(sizeX, sizeY, format, color)))
+	if (FAILED(pInstance->Ready_RenderTarget(sizeX, sizeY, format)))
 	{
 		MessageBox(NULL,  L"System Message", L"RenderTarget Created Failed", MB_OK);
 		Safe_Delete(pInstance);

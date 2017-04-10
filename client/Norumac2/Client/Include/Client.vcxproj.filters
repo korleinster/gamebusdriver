@@ -121,9 +121,6 @@
     <Filter Include="97.Resources\01.Buffer\5.Mesh\DynamicMesh\AnimationBuffer">
       <UniqueIdentifier>{c62de12e-6dde-4abc-af96-3d81921fb76c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="96.Utility\03.RenderTarget">
-      <UniqueIdentifier>{08bbd010-3b9b-4b9f-84e5-af3820e90e4d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="99.Default\Only for Server">
       <UniqueIdentifier>{17ab7a26-ec7a-4aa4-aded-0d3a699b0c37}</UniqueIdentifier>
     </Filter>
@@ -165,6 +162,9 @@
     </Filter>
     <Filter Include="04.Manager\10.TargetMgr\MultiRenderTarget">
       <UniqueIdentifier>{5659eede-9e0f-4e79-8f25-a25209f62705}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Manager\10.TargetMgr\MultiRenderTarget\RenderTaget">
+      <UniqueIdentifier>{d3a9a414-72d3-4810-92c1-68607e9a64dd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -306,9 +306,6 @@
     <ClInclude Include="..\Code\AniBuffer.h">
       <Filter>97.Resources\01.Buffer\5.Mesh\DynamicMesh\AnimationBuffer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\RenderTarget.h">
-      <Filter>96.Utility\03.RenderTarget</Filter>
-    </ClInclude>
     <ClInclude Include="..\Server_Code\ClientClass.h">
       <Filter>99.Default\Only for Server</Filter>
     </ClInclude>
@@ -347,6 +344,9 @@
     </ClInclude>
     <ClInclude Include="..\Code\MultiRenderTarget.h">
       <Filter>04.Manager\10.TargetMgr\MultiRenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\RenderTarget.h">
+      <Filter>04.Manager\10.TargetMgr\MultiRenderTarget\RenderTaget</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -458,9 +458,6 @@
     <ClCompile Include="..\Code\AniBuffer.cpp">
       <Filter>97.Resources\01.Buffer\5.Mesh\DynamicMesh\AnimationBuffer</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\RenderTaget.cpp">
-      <Filter>96.Utility\03.RenderTarget</Filter>
-    </ClCompile>
     <ClCompile Include="..\Server_Code\ClientClass.cpp">
       <Filter>99.Default\Only for Server</Filter>
     </ClCompile>
@@ -502,6 +499,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\MultiRenderTarget.cpp">
       <Filter>04.Manager\10.TargetMgr\MultiRenderTarget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\RenderTarget.cpp">
+      <Filter>04.Manager\10.TargetMgr\MultiRenderTarget\RenderTaget</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

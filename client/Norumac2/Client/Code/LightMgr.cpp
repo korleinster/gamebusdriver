@@ -269,7 +269,6 @@ void CLightMgr::DoLighting(ID3D11DeviceContext * pd3dImmediateContext, CMultiRen
 			CapsuleLight(pd3dImmediateContext, (*itrCurLight).vPosition, (*itrCurLight).vDirection, (*itrCurLight).fRange, (*itrCurLight).fLength, (*itrCurLight).vColor);
 		}
 	}
-
 	// Cleanup
 	pd3dImmediateContext->VSSetShader(NULL, NULL, 0);
 	pd3dImmediateContext->HSSetShader(NULL, NULL, 0);

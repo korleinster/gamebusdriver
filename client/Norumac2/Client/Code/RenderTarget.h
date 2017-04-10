@@ -8,10 +8,9 @@ private:
 public:
 	virtual ~CRenderTarget();
 public:
-	HRESULT Ready_RenderTarget(const  UINT&, const  UINT&, DXGI_FORMAT,D3DXCOLOR);
+	HRESULT Ready_RenderTarget(const  UINT&, const  UINT&, DXGI_FORMAT);
 private:
 
-	ID3D11Buffer*				m_pGBufferUnpackCB;
 
 	ID3D11Texture2D*			m_pTargetRT;
 	
@@ -19,7 +18,6 @@ private:
 	
 	ID3D11ShaderResourceView*	m_pTagetSRV;
 
-	D3DXCOLOR					m_ClearColor;
 public:
-	static CRenderTarget* Create(const  UINT&, const  UINT&, DXGI_FORMAT, D3DXCOLOR);
+	static CRenderTarget* Create(const  UINT&, const  UINT&, DXGI_FORMAT);
 };

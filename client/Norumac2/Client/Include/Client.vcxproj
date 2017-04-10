@@ -256,7 +256,7 @@
     <ClCompile Include="..\Code\RcTerrain.cpp" />
     <ClCompile Include="..\Code\RcTex.cpp" />
     <ClCompile Include="..\Code\RenderMgr.cpp" />
-    <ClCompile Include="..\Code\RenderTaget.cpp" />
+    <ClCompile Include="..\Code\RenderTarget.cpp" />
     <ClCompile Include="..\Code\Resources.cpp" />
     <ClCompile Include="..\Code\ResourcesMgr.cpp" />
     <ClCompile Include="..\Code\Scene.cpp" />

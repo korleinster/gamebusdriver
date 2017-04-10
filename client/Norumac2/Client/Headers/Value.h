@@ -21,3 +21,4 @@ const D3DXVECTOR3 g_vLook(0.f, 0.f, 1.f);
 
 #define PS_SLOT_TEXTURE				0x00
 #define PS_SLOT_SAMPLER_STATE		0x00
+

@@ -94,7 +94,6 @@ void CCamera::KeyState(void)
 {
 	float fTime = CTimeMgr::GetInstance()->GetTime();
 
-
 	if (CInput::GetInstance()->GetDIKeyState(DIK_O) & 0x80)
 	{
 		if (m_bMouseFix == true)
@@ -235,7 +234,7 @@ void CCamera::MouseMove(void)
 
 	//	if (m_fCameraDistance < 5.f)
 	//		m_fCameraDistance = 5.f;
-	//	// 
+	//	// 444444
 	//	// 		if(m_fDistance > 700.f)
 	//	// 			m_fDistance = 700.f;
 

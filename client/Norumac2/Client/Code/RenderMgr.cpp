@@ -103,7 +103,7 @@ void CRenderMgr::Render(const float & fTime)
 			else if (i % 3 == 2)
 				m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f + i * 5, 20.f, 0.f), 20.f, D3DXVECTOR3(i, 0.0f, 0.0f));
 		}
-	}	
+	}		
 
 	ID3D11DepthStencilState* pPrevDepthState;
 	UINT nPrevStencil;
@@ -112,13 +112,14 @@ void CRenderMgr::Render(const float & fTime)
 	// Set render resources
 	//m_pDevice->m_pDeviceContext->PSSetSamplers(0, 1, &g_pSampLinear);
 
-	// GBuffer
 	m_pTargetMgr->GetGBuffer()->Begin_MRT(m_pDevice->m_pDeviceContext);
-	
+
+	// GBuffer	
 	if (m_bDefferdOn)
-	{
+	{		
 		Render_Priority();
 		Render_NoneAlpha();		
+		
 	}		
 
 	m_pTargetMgr->GetGBuffer()->End_MRT(m_pDevice->m_pDeviceContext);
@@ -145,6 +146,7 @@ void CRenderMgr::Render(const float & fTime)
 		Render_Priority();
 		Render_NoneAlpha();
 	}	
+	
 
 	Render_Alpha();
 	Render_UI();

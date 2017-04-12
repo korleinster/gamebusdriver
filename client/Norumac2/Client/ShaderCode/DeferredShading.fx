@@ -37,7 +37,7 @@ VS_OUTPUT RenderSceneVS( VS_INPUT input )
 {
     VS_OUTPUT Output;
     float3 vNormalWorldSpace;
-    
+	
     // Transform the position from object space to homogeneous projection space
     Output.Position = mul( input.Position, WorldViewProjection );
 

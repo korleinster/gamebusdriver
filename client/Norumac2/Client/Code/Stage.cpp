@@ -172,5 +172,6 @@ void CStage::DataLoad(void)
 		}
 	}
 
+	CloseHandle(hFile);
 }
 

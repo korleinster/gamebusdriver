@@ -24,9 +24,9 @@ CInterface::CInterface(CWnd* pParent /*=NULL*/)
 	, m_iFps(0)
 	, m_iRamState(0)
 	, m_iRamMaximum(0)
-	, m_Navi1(_T("False"))
-	, m_Navi2(_T("False"))
-	, m_Navi3(_T("False"))
+	, m_Navi1(_T("¾ÈÂïÈû"))
+	, m_Navi2(_T("¾ÈÂïÈû"))
+	, m_Navi3(_T("¾ÈÂïÈû"))
 	, m_iCamSpeed(0)
 {
 
@@ -116,5 +116,25 @@ void CInterface::FpsUpdate(int iFps)
 	m_iFps = iFps;
 	SetDlgItemInt(IDC_EDIT10, m_iFps);
 
+	UpdateData(FALSE);
+}
+
+void CInterface::NaviUpdate(bool bFirst, bool bSecond)
+{
+	UpdateData(TRUE);
+	if (bFirst == false)
+		m_Navi1 = L"¾ÈÂïÈû";
+	else
+		m_Navi1 = L"ÂïÈû";
+
+	if (bSecond == false)
+		m_Navi2 = L"¾ÈÂïÈû";
+	else
+		m_Navi2 = L"ÂïÈû";
+
+
+	SetDlgItemText(IDC_EDIT11, (CString)m_Navi1);
+	SetDlgItemText(IDC_EDIT12, (CString)m_Navi2);
+	SetDlgItemText(IDC_EDIT13, (CString)m_Navi3);
 	UpdateData(FALSE);
 }

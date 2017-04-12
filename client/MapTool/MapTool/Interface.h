@@ -41,4 +41,5 @@ public:
 	void CamUpdate(D3DXVECTOR3 vCamPos, D3DXVECTOR3 vCamAt, bool bCamState, int iCamSpeed);
 	void HardwareUpdate(int iCpu, int iRam, int iRamMax);
 	void FpsUpdate(int iFps);
+	void NaviUpdate(bool bFirst, bool bSecond);
 };

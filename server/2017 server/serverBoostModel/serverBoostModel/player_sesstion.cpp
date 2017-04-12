@@ -229,20 +229,9 @@ void player_session::m_process_packet(Packet buf[])
 			break;
 
 		case CHANGED_POSITION: {
-
-			// [ 0] = size
-			// [ 1] = CHANGED_POSITION type
-			// [ 2] = size of position
-			// [10] = user id
-
+			
 			m_player_data.pos = *(reinterpret_cast<position*>(&buf[2]));
-
-			/*Packet temp_pos_buf[MAX_BUF_SIZE]{ 0 };
-			temp_pos_buf[0] = sizeof(position) + sizeof(unsigned int) + 2;
-			temp_pos_buf[1] = CHANGED_POSITION;
-			*(reinterpret_cast<position*>(&temp_pos_buf[2])) = m_player_data.pos;
-			*(reinterpret_cast<unsigned int*>(&temp_pos_buf[sizeof(position) + 2])) = m_id;*/
-
+			
 			sc_move p;
 			p.id = m_id;
 			p.pos = m_player_data.pos;
@@ -260,20 +249,9 @@ void player_session::m_process_packet(Packet buf[])
 			break;
 
 		case CHANGED_DIRECTION: {
-
-			// [0] = size
-			// [1] = CHANGED_DIRECTION type
-			// [2] = size of direction
-			// [3] = user id
-
+			
 			m_player_data.dir = *(reinterpret_cast<char*>(&buf[2]));
-
-			/*Packet temp_direction_buf[MAX_BUF_SIZE]{ 0 };
-			temp_direction_buf[0] = sizeof(char) + sizeof(unsigned int) + 2;
-			temp_direction_buf[1] = CHANGED_DIRECTION;
-			*(reinterpret_cast<char*>(&temp_direction_buf[2])) = m_player_data.dir;
-			*(reinterpret_cast<unsigned int*>(&temp_direction_buf[sizeof(char) + 2])) = m_id;*/
-
+			
 			sc_dir p;
 			p.id = m_id;
 			p.dir = m_player_data.dir;

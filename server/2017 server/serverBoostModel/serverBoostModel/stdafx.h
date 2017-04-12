@@ -23,7 +23,7 @@ using namespace std;
 #include <memory>
 #include <boost\asio.hpp>
 
-static boost::asio::io_service g_io_service;
+extern boost::asio::io_service g_io_service;
 
 #include "DB.h"
 #include "TimerQueue.h"

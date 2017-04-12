@@ -3,6 +3,8 @@
 
 #include "stdafx.h"
 
+boost::asio::io_service g_io_service;
+
 // 플레이어가 담긴 변수
 mutex g_clients_lock;
 vector<player_session*> g_clients;

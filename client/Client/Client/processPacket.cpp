@@ -21,7 +21,7 @@ void AsynchronousClientClass::processPacket(Packet *buf)
 		break;
 
 	case CHANGED_DIRECTION: {
-		sc_dir *p = reinterpret_cast<sc_dir*>(&buf);
+		sc_dir *p = reinterpret_cast<sc_dir*>(buf);
 
 		m_other_players[p->id].dir = p->dir;
 
@@ -89,6 +89,7 @@ void AsynchronousClientClass::processPacket(Packet *buf)
 		case INIT_OTHER_CLIENT: {
 			sc_other_init_info *p = reinterpret_cast<sc_other_init_info *>(buf);
 			m_other_players[p->playerData.id] = p->playerData;
+			break;
 		}
 		case PLAYER_DISCONNECTED: {
 			sc_disconnect *p = reinterpret_cast<sc_disconnect*>(buf);

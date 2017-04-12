@@ -323,7 +323,27 @@ void CBack::NaviMeshMode()
 	}
 	else if (TRUE == pNavimeshTool->m_PickingMode[1].GetCheck())
 	{
-		//매쉬피킹부분
+		D3DXVECTOR3 vIndex;
+
+		list<CObj*>::iterator iter = m_ToolObjList.begin();
+		list<CObj*>::iterator iter_end = m_ToolObjList.end();
+
+		const CComponent* pInfoComponent;
+		const CComponent* pMeshComponent;
+
+		for (iter; iter != iter_end; ++iter)
+		{
+			pInfoComponent = (*iter)->GetComponent(L"Transform");
+			pMeshComponent = (*iter)->GetComponent(L"Mesh");
+			if (m_pMouseCol->MeshPick(&vIndex, (*iter)->GetInfo(), &((CStaticMesh*)pMeshComponent)->vecVTXTEX, ((CStaticMesh*)pMeshComponent)->m_iVertices / 2))
+			{
+				break;
+			}
+		}
+		if (iter == iter_end)
+		{
+			m_pMouseCol->PickTerrain(&vIndex, m_pTerrainVtx);
+		}
 	}
 
 	pNavimeshTool->SetPickPos(vIndex);

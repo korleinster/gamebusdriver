@@ -82,6 +82,7 @@ int CBack::Update(void)
 	SIZE_T dwTotalVirtual = memoryStatus.dwTotalVirtual >> 20;
 
 	pInterFace->HardwareUpdate(memoryStatus.dwMemoryLoad, dwTotalVirtual - dwAvailVirtual, dwTotalVirtual*2);
+	pInterFace->NaviUpdate(m_bPickFirst, m_bPickSecond);
 
 
 	return 0;
@@ -338,19 +339,19 @@ void CBack::NaviMeshMode()
 			if (!m_bPickFirst)
 			{
 				CNaviMgr::GetInstance()->GetNearPoint(vIndex, pNavimeshTool->m_fNearRange);
-				m_vPoint[0] = vIndex;
+				m_vPoint[0] = D3DXVECTOR3(vIndex.x,vIndex.y+ 0.1f,vIndex.z);
 				m_bPickFirst = true;
 			}
 			else if (m_bPickFirst && !m_bPickSecond)
 			{
 				CNaviMgr::GetInstance()->GetNearPoint(vIndex, pNavimeshTool->m_fNearRange);
-				m_vPoint[1] = vIndex;
+				m_vPoint[1] = D3DXVECTOR3(vIndex.x, vIndex.y + 0.1f, vIndex.z);
 				m_bPickSecond = true;
 			}
 			else if (m_bPickFirst && m_bPickSecond)
 			{
 				CNaviMgr::GetInstance()->GetNearPoint(vIndex, pNavimeshTool->m_fNearRange);
-				m_vPoint[2] = vIndex;
+				m_vPoint[2] = D3DXVECTOR3(vIndex.x, vIndex.y + 0.1f, vIndex.z);
 				m_bPickFirst = false;
 				m_bPickSecond = false;
 			}

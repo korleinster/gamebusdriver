@@ -3,7 +3,6 @@
 
 boostAsioServer::boostAsioServer() : m_acceptor(g_io_service, tcp::endpoint(tcp::v4(), SERVERPORT)), m_socket(g_io_service)
 {
-	cout << "g_clients ADDR : " << (int*)&g_clients << endl;
 	getMyServerIP();
 	CheckThisCPUcoreCount();
 
@@ -63,7 +62,6 @@ void boostAsioServer::start_io_service()
 
 void boostAsioServer::g_client_init() {
 
-	cout << "g_clients ADDR : " << (int*)&g_clients << endl;
 	g_clients.reserve(MAX_AI_NUM + 1000);
 
 	for (auto i = 0; i < MAX_AI_NUM; ++i) {

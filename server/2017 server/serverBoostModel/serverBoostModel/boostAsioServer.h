@@ -30,3 +30,7 @@ private:
 	int				m_cpuCore{ 0 };
 	vector<thread*>	m_worker_threads;
 };
+
+extern mutex g_clients_lock;
+extern vector<player_session*> g_clients;
+//static AI_session g_AIs[MAX_AI_NUM];

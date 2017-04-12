@@ -2,6 +2,7 @@
 
 using boost::asio::ip::tcp;
 
+
 class player_session //: public std::enable_shared_from_this<player_session>
 {
 public:

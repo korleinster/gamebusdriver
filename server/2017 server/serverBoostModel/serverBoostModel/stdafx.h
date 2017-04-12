@@ -26,17 +26,17 @@ using namespace std;
 static boost::asio::io_service g_io_service;
 
 #include "DB.h"
-#include "player_sesstion.h"
 #include "TimerQueue.h"
+#include "player_sesstion.h"
 #include "boostAsioServer.h"
 
 // TODO: 프로그램에 필요한 추가 헤더는 여기에서 참조합니다.
 
 // 플레이어가 담긴 변수
-static mutex g_clients_lock;
-static vector<player_session*> g_clients;
+extern mutex g_clients_lock;
+extern vector<player_session*> g_clients;
 //static AI_session g_AIs[MAX_AI_NUM];
 
 // DB 통신용 변수
-static DB database;
-static TimerQueue time_queue;
+extern DB database;
+extern TimerQueue time_queue;

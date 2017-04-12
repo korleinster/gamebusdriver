@@ -4,9 +4,9 @@ LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 // 그리기 위한 변수 - WM_PAINT
 int view_range{ 150 };
-int value{ 1 };	// 원 충돌 범위 크기
-double dir_value{ 0.1 }; // 이동 거리 및 방향
-double att_value{ 0.1 }; // 공격 리치
+int value{ 1 * 5 };	// 원 충돌 범위 크기
+double dir_value{ 0.1 * 20 }; // 이동 거리 및 방향
+double att_value{ 0.1 * 20 }; // 공격 리치
 int hp_value_x{ 25 };
 // ------------------------------
 

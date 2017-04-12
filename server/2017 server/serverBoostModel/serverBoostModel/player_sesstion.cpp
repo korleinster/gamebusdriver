@@ -76,9 +76,9 @@ void player_session::Init()
 		m_player_data.pos.x = 100;
 		m_player_data.pos.y = 100;
 		m_player_data.dir = 0;
-		m_player_data.state.maxhp = 5;
+		m_player_data.state.maxhp = 100;
 		m_player_data.state.mp = 10;
-		m_player_data.state.level = 2;
+		m_player_data.state.level = 1;
 		m_player_data.state.exp = 0;
 		m_player_data.state.gauge = 0;
 		m_player_data.state.hp = m_player_data.state.maxhp;
@@ -91,9 +91,7 @@ void player_session::Init()
 		m_sub_status.intel = 1;
 		m_sub_status.health = 3;
 	}
-
-	cout << "g_clients ADDR : " << (int*)&g_clients << endl;
-
+	
 	sc_client_init_info init_player;
 	init_player.size = sizeof(sc_client_init_info);
 	init_player.type = INIT_CLIENT;

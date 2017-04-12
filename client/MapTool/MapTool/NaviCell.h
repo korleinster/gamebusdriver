@@ -7,6 +7,7 @@ class CLineCol;
 class CLine2D;
 class CShader;
 class CVIBuffer;
+class CInfo;
 class CNaviCell
 {
 public:
@@ -50,6 +51,9 @@ private:
 	CShader*				m_pVertexShader;
 	CShader*				m_pPixelShader;
 	CVIBuffer*				m_pBuffer;
+public:
+	D3DXVECTOR3				m_CellPos;
+	D3DXMATRIX				m_CellMat;
 
 private:
 	D3DXVECTOR3			m_vPoint[POINT_END];

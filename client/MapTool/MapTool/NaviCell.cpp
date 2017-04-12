@@ -7,6 +7,7 @@
 #include "Device.h"
 #include "ShaderMgr.h"
 #include "Shader.h"
+#include "Info.h"
 
 CNaviCell::CNaviCell(const D3DXVECTOR3* pPointA, const D3DXVECTOR3* pPointB, const D3DXVECTOR3* pPointC)
 	: m_dwIndex(0)
@@ -76,6 +77,26 @@ HRESULT CNaviCell::Init_Cell(const DWORD& dwIdx, const DWORD& dwType)
 	m_pLine2D[LINE_BC] = CLine2D::Create(&m_vPoint[POINT_B], &m_vPoint[POINT_C]);
 	m_pLine2D[LINE_CA] = CLine2D::Create(&m_vPoint[POINT_C], &m_vPoint[POINT_A]);
 
+	D3DXVECTOR3 vAverage;
+
+	vAverage = m_vPoint[POINT_A] + m_vPoint[POINT_B] + m_vPoint[POINT_C];
+	vAverage /= 3.f;
+
+	m_CellPos = vAverage; 
+
+	D3DXMatrixIdentity(&m_CellMat);
+	D3DXMATRIX	matScale, matRotX, matRotY, matRotZ, matTrans;
+
+	//스자이공
+	D3DXMatrixScaling(&matScale, 1.f,1.f,1.f);
+	D3DXMatrixRotationX(&matRotX, 0.f);
+	D3DXMatrixRotationY(&matRotY, 0.f);
+	D3DXMatrixRotationZ(&matRotZ, 0.f);
+	D3DXMatrixTranslation(&matTrans, m_CellPos.x, m_CellPos.y, m_CellPos.z);
+
+	m_CellMat = matScale * matRotX * matRotY * matRotZ * matTrans;
+
+
 	return S_OK;
 }
 
@@ -83,73 +104,18 @@ void CNaviCell::Render(void)
 {
 
 	ConstantBuffer cb;
-	//D3DXMatrixTranspose(&cb.matWorld, &m_pInfo->m_matWorld);
-	//D3DXMatrixTranspose(&cb.matView, &CCamera::GetInstance()->m_matView);
-	//D3DXMatrixTranspose(&cb.matProjection, &CCamera::GetInstance()->m_matProj);
-	//CDevice::GetInstance()->m_pDeviceContext->UpdateSubresource(m_pBuffer->m_ConstantBuffer, 0, NULL, &cb, 0, 0);
+	D3DXMatrixTranspose(&cb.matWorld, &m_CellMat);
+	D3DXMatrixTranspose(&cb.matView, &CCamera::GetInstance()->m_matView);
+	D3DXMatrixTranspose(&cb.matProjection, &CCamera::GetInstance()->m_matProj);
+	CDevice::GetInstance()->m_pDeviceContext->UpdateSubresource(m_pBuffer->m_ConstantBuffer, 0, NULL, &cb, 0, 0);
 
 	CDevice::GetInstance()->m_pDeviceContext->VSSetShader(m_pVertexShader->m_pVertexShader, NULL, 0);
-	//CDevice::GetInstance()->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pBuffer->m_ConstantBuffer);
+	CDevice::GetInstance()->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pBuffer->m_ConstantBuffer);
 	//////////////////
 	CDevice::GetInstance()->m_pDeviceContext->PSSetShader(m_pPixelShader->m_pPixelShader, NULL, 0);
 
 
 	m_pBuffer->Render();
-
-
-	/*D3DXMATRIX		matView, matProj;
-
-	m_pDevice->GetTransform(D3DTS_VIEW, &matView);
-	m_pDevice->GetTransform(D3DTS_PROJECTION, &matProj);
-
-	D3DXVECTOR3			vPoint[4];
-	vPoint[0] = m_vPoint[0];
-	vPoint[1] = m_vPoint[1];
-	vPoint[2] = m_vPoint[2];
-	vPoint[3] = m_vPoint[0];
-
-	for (int i = 0; i < 4; ++i)
-	{
-		D3DXVec3TransformCoord(&vPoint[i], &vPoint[i], &matView);
-		if (vPoint[i].z < 0.f)
-			vPoint[i].z = 0.f;
-		D3DXVec3TransformCoord(&vPoint[i], &vPoint[i], &matProj);
-	}
-
-	D3DXMATRIX		matIdentity;
-	D3DXMatrixIdentity(&matIdentity);
-
-	m_pLine->SetWidth(2.f);
-
-	m_pLine->Begin();
-	if (m_dwType == TYPE_TERRAIN)
-	{
-		if (m_pNeighbor[NEIGHBOR_AB] != NULL && m_pNeighbor[NEIGHBOR_BC] != NULL && m_pNeighbor[NEIGHBOR_CA] != NULL)
-			m_pLine->DrawTransform(vPoint, POINT_END + 1, &matIdentity, D3DXCOLOR(1.f, 0.f, 0.f, 1.f));
-		else if (m_pNeighbor[NEIGHBOR_AB] == NULL && m_pNeighbor[NEIGHBOR_BC] == NULL && m_pNeighbor[NEIGHBOR_CA] == NULL)
-			m_pLine->DrawTransform(vPoint, POINT_END + 1, &matIdentity, D3DXCOLOR(1.f, 0.5f, 0.f, 1.f));
-		else
-			m_pLine->DrawTransform(vPoint, POINT_END + 1, &matIdentity, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
-	}
-	else if (m_dwType == TYPE_CELL)
-	{
-		if (m_pNeighbor[NEIGHBOR_AB] != NULL && m_pNeighbor[NEIGHBOR_BC] != NULL && m_pNeighbor[NEIGHBOR_CA] != NULL)
-			m_pLine->DrawTransform(vPoint, POINT_END + 1, &matIdentity, D3DXCOLOR(0.f, 1.f, 1.f, 1.f));
-		else if (m_pNeighbor[NEIGHBOR_AB] == NULL && m_pNeighbor[NEIGHBOR_BC] == NULL && m_pNeighbor[NEIGHBOR_CA] == NULL)
-			m_pLine->DrawTransform(vPoint, POINT_END + 1, &matIdentity, D3DXCOLOR(0.f, 1.f, 0.f, 1.f));
-		else
-			m_pLine->DrawTransform(vPoint, POINT_END + 1, &matIdentity, D3DXCOLOR(0.f, 0.5f, 1.f, 1.f));
-	}
-	else if (m_dwType == TYPE_MESH)
-	{
-		if (m_pNeighbor[NEIGHBOR_AB] != NULL && m_pNeighbor[NEIGHBOR_BC] != NULL && m_pNeighbor[NEIGHBOR_CA] != NULL)
-			m_pLine->DrawTransform(vPoint, POINT_END + 1, &matIdentity, D3DXCOLOR(1.f, 0.f, 1.f, 1.f));
-		else if (m_pNeighbor[NEIGHBOR_AB] == NULL && m_pNeighbor[NEIGHBOR_BC] == NULL && m_pNeighbor[NEIGHBOR_CA] == NULL)
-			m_pLine->DrawTransform(vPoint, POINT_END + 1, &matIdentity, D3DXCOLOR(1.f, 0.5f, 1.f, 1.f));
-		else
-			m_pLine->DrawTransform(vPoint, POINT_END + 1, &matIdentity, D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.f));
-	}
-	m_pLine->End();*/
 }
 
 CNaviCell* CNaviCell::Create(const D3DXVECTOR3* pPointA

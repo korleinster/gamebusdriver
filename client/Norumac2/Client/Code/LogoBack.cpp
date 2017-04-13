@@ -24,6 +24,7 @@ CLogoBack::CLogoBack()
 
 CLogoBack::~CLogoBack()
 {
+	CObj::Release();
 }
 
 HRESULT CLogoBack::Initialize(void)
@@ -57,13 +58,6 @@ void CLogoBack::Render(void)
 	m_pPolygon->Render();
 }
 
-void CLogoBack::Release(void)
-{
-	::Safe_Release(m_pPolygon);
-	::Safe_Delete(m_pInfo);
-	::Safe_Delete(m_pTexture);
-}
-
 CLogoBack * CLogoBack::Create(void)
 {
 	CLogoBack* pLogoBack = new CLogoBack;
@@ -95,10 +89,13 @@ HRESULT CLogoBack::AddBuffer(void)
 	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_LOGO, L"Texture_Logo");
 	m_pTexture = dynamic_cast<CTexture*>(pComponent);
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Texture", pComponent));
 
 	//m_pPolygon = CRcTex::Create();
-	m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"VS_Logo");
-	m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"PS");
+	pComponent = m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"VS_Logo");
+	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"VS_Shader", pComponent));
+	pComponent = m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"PS");
+	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"PS_Shader", pComponent));
 	//m_pTexture = CTexture::Create(L"../Resource/Logo.jpg");
 
 	return S_OK;

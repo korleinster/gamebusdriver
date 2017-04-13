@@ -44,7 +44,15 @@ CStaticObject::CStaticObject()
 
 CStaticObject::~CStaticObject()
 {
-	//Release();
+	map<wstring, CComponent*>::iterator iter = m_mapComponent.begin();
+	map<wstring, CComponent*>::iterator iter_end = m_mapComponent.end();
+	for (iter; iter != iter_end; ++iter)
+	{
+		::Safe_Delete(iter->second);
+	}
+	m_mapComponent.clear();
+
+	//CObj::Release();
 }
 
 HRESULT CStaticObject::Initialize(const TCHAR* pMeshKey)
@@ -152,15 +160,6 @@ CStaticObject * CStaticObject::Create(const TCHAR* pMeshKey)
 	return pObj;
 }
 
-void CStaticObject::Release(void)
-{
-	Safe_Release(m_pBuffer);
-	Safe_Release(m_pInfo);
-	Safe_Release(m_pTexture);
-	Safe_Release(m_pSceneVertexShaderCB);
-	Safe_Release(m_pScenePixelShaderCB);
-}
-
 HRESULT CStaticObject::AddComponent(const TCHAR* pMeshKey, const TCHAR* pTextureKey)
 {
 	CComponent* pComponent = NULL;
@@ -174,7 +173,6 @@ HRESULT CStaticObject::AddComponent(const TCHAR* pMeshKey, const TCHAR* pTexture
 	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, pMeshKey);
 	m_pBuffer = dynamic_cast<CStaticMesh*>(pComponent);
 	NULL_CHECK_RETURN(m_pBuffer, E_FAIL);
-	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Mesh", pComponent));
 
 	//Texture
 	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, pTextureKey);
@@ -182,8 +180,10 @@ HRESULT CStaticObject::AddComponent(const TCHAR* pMeshKey, const TCHAR* pTexture
 	NULL_CHECK_RETURN(m_pTexture, E_FAIL);
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Texture", pComponent));
 
-	m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"RenderSceneVS");
-	m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"RenderScenePS");
+	pComponent = m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"RenderSceneVS");
+	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"VS_Shader", pComponent));
+	pComponent = m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"RenderScenePS");
+	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"PS_Shader", pComponent));
 
 
 	return S_OK;

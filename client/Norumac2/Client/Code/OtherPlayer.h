@@ -40,7 +40,6 @@ public:
 
 public:
 	static COtherPlayer* Create(void);
-	void	Release(void);
 	PLAYER_STATE GetAniState(void) { return m_ePlayerState; }
 	void SetAniState(PLAYER_STATE eState) { m_ePlayerState = eState; }
 

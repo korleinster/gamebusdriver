@@ -17,7 +17,7 @@ CAniBuffer::CAniBuffer()
 
 CAniBuffer::~CAniBuffer()
 {
-	//Release();
+	Release();
 }
 
 VertexAni* CAniBuffer::GetVertex(unsigned int _nIndex)
@@ -73,6 +73,8 @@ void CAniBuffer::CreateBuffer()
 			exit(0);
 		}
 
+
+		::Safe_Delete_Array(m_pVertex);
 		m_vecBuffer.push_back(this->m_pVertexBuffer);
 	}
 }

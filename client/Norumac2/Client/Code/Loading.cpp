@@ -196,7 +196,7 @@ CLoading* CLoading::Create(LOADINGID eLoadID)
 {
 	CLoading*	pLoading = new CLoading(eLoadID);
 	if (FAILED(pLoading->InitLoading()))
-		::Safe_Release(pLoading);
+		::Safe_Delete(pLoading);
 
 	return pLoading;
 }

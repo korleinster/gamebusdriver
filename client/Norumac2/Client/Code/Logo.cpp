@@ -25,6 +25,7 @@ CLogo::CLogo()
 
 CLogo::~CLogo()
 {
+	Release();
 }
 
 HRESULT CLogo::Initialize(void)
@@ -84,18 +85,18 @@ void CLogo::Render(void)
 
 void CLogo::Release(void)
 {
-	::Safe_Release(m_pLoading);
+	::Safe_Delete(m_pLoading);
 
 	list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"LogoBack")->begin();
 	list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"LogoBack")->end();
 
-	for (iter; iter != iter_end;)
+	for (iter; iter != iter_end; ++iter)
 	{
 		CRenderMgr::GetInstance()->DelRenderGroup(TYPE_UI, *iter);
-		::Safe_Release(*iter);
-		CObjMgr::GetInstance()->Get_ObjList(L"LogoBack")->erase(iter++);
-
+		::Safe_Delete(*iter);
 	}
+
+	CObjMgr::GetInstance()->Get_ObjList(L"LogoBack")->clear();
 
 }
 

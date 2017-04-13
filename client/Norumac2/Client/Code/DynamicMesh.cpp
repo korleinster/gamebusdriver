@@ -213,28 +213,14 @@ int CDynamicMesh::Update()
 
 DWORD CDynamicMesh::Release()
 {
-	if (m_dwRefCount == 2)
+	if (m_dwRefCount == 0)
 	{
 		for (unsigned int i = 0; i < m_vecAni.size(); ++i)
 		{
-			/*for (int j = 0; j < BONE_MATRIX_NUM; ++j)
-			{
-				_aligned_free((void*)&(m_vecAni[i]->pBaseBoneMatrix[j]));
-
-				for (int k = 0; k < m_vecAni[i]->llAniMaxTime / 10; ++k)
-				{
-					_aligned_free((void*)&(m_vecAni[i]->ppAniMatrix[j][k]));
-					_aligned_free((void*)&(m_vecAni[i]->ppResultMatrix[j][k]));
-				}
-			}*/
-
-			::Safe_Release(m_vecAni[i]->pAniBuffer);
-
-			//m_vecAni[i]->pBoneMatrixBuffer->Release();
-			//::Safe_Delete(m_vecAni[i]->pBoneMatrix);
-
-			delete m_vecAni[i];
-			m_vecAni[i] = NULL;
+			::Safe_Delete_Array(m_vecAni[i]->ppAniMatrix);
+			::Safe_Delete_Array(m_vecAni[i]->ppResultMatrix);
+			::Safe_Delete(m_vecAni[i]->pAniBuffer);
+			::Safe_Delete(m_vecAni[i]);
 		}
 
 		m_vecAni.clear();
@@ -378,8 +364,6 @@ void CDynamicMesh::BWPlayAnim(int _iIdx)
 CResources * CDynamicMesh::CloneResource()
 {
 	CResources* pResource = this;
-
-	pResource->AddRef();
 
 	return pResource;
 }

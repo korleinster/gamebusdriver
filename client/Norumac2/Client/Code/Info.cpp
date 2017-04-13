@@ -41,6 +41,5 @@ DWORD CInfo::Release(void)
 
 CInfo * CInfo::Create(const D3DXVECTOR3 & vLook)
 {
-
 	return new CInfo(vLook);
 }

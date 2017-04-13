@@ -4,7 +4,7 @@
 #include "Value.h"
 #include "Macro.h"
 #include "Struct.h"
-#include "..\..\..\..\server\serverBoostModel\serverBoostModel\protocol.h"
+#include "protocol.h"
 
 
 //전역변수

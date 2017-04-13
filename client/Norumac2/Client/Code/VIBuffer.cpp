@@ -25,6 +25,8 @@ CVIBuffer::CVIBuffer()
 
 CVIBuffer::CVIBuffer(const CVIBuffer & rhs)
 {
+	m_dwRefCount = rhs.m_dwRefCount;
+	++m_dwRefCount;
 	m_VertexBuffer = rhs.m_VertexBuffer;
 	m_IndexBuffer = rhs.m_IndexBuffer;
 	m_ConstantBuffer = rhs.m_ConstantBuffer;
@@ -87,9 +89,6 @@ DWORD CVIBuffer::Release(void)
 		Safe_Release(m_IndexBuffer);
 		Safe_Release(m_ConstantBuffer);
 	}
-	else
-		--m_dwRefCount;
-
 	return 0;
 }
 

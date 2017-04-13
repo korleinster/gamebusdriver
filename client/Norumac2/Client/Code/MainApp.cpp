@@ -12,6 +12,7 @@
 #include "ObjMgr.h"
 #include "SceneMgr.h"
 #include "ParsingDevice9.h"
+#include "AnimationMgr.h"
 
 //일반객체
 #include "Shader.h"
@@ -43,7 +44,6 @@ CMainApp::~CMainApp()
 {
 	FreeConsole();
 	Release();
-
 }
 
 HRESULT CMainApp::Initialize(void)
@@ -63,12 +63,6 @@ HRESULT CMainApp::Initialize(void)
 	}
 	
 	HRESULT hr = S_OK;
-
-	if (FAILED(CResourcesMgr::GetInstance()->ReserveContainerSize(RESOURCE_END)))
-	{
-		MessageBox(NULL, L"System Message", L"Resource Container Reserve Failed", MB_OK);
-		return E_FAIL;
-	}
 
 
 	//일반
@@ -258,4 +252,6 @@ void CMainApp::Release(void)
 	CRenderMgr::GetInstance()->DestroyInstance();
 	CObjMgr::GetInstance()->DestroyInstance();
 	CSceneMgr::GetInstance()->DestroyInstance();
+	CResourcesMgr::GetInstance()->DestroyInstance();
+	CAnimationMgr::GetInstance()->DestroyInstance();
 }

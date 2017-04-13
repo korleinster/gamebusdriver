@@ -44,6 +44,9 @@ void CFbxParser::ParsingVertex(FbxNode* _pNode, Animation* _pAnimation)
 
 				mVertexByIndex[IndexArray[i]].push_back(i);
 			}
+
+			::Safe_Delete_Array(IndexArray);
+			::Safe_Delete_Array(lVertexArray);
 		}
 		//std::cout << "DONE!" << std::endl;
 

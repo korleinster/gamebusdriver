@@ -161,12 +161,15 @@ void CRenderMgr::Render_Priority(void)
 	list<CObj*>::iterator	iter = m_RenderGroup[TYPE_PRIORITY].begin();
 	list<CObj*>::iterator	iter_end = m_RenderGroup[TYPE_PRIORITY].end();
 
-	for (; iter != iter_end; ++iter)
+	for (; iter != iter_end;)
 	{
 		if ((*iter) == NULL)
-			m_RenderGroup[TYPE_PRIORITY].erase(iter++);
+			iter = m_RenderGroup[TYPE_PRIORITY].erase(iter);
 		else
+		{
 			(*iter)->Render();
+			++iter;
+		}
 	}
 
 	//m_pDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
@@ -178,12 +181,15 @@ void CRenderMgr::Render_NoneAlpha(void)
 	list<CObj*>::iterator	iter = m_RenderGroup[TYPE_NONEALPHA].begin();
 	list<CObj*>::iterator	iter_end = m_RenderGroup[TYPE_NONEALPHA].end();
 
-	for (; iter != iter_end; ++iter)
+	for (; iter != iter_end;)
 	{
 		if ((*iter) == NULL)
-			m_RenderGroup[TYPE_NONEALPHA].erase(iter++);
+			iter = m_RenderGroup[TYPE_NONEALPHA].erase(iter);
 		else
+		{
 			(*iter)->Render();
+			++iter;
+		}
 	}
 }
 
@@ -207,12 +213,15 @@ void CRenderMgr::Render_Alpha(void)
 	list<CObj*>::iterator	iter = m_RenderGroup[TYPE_ALPHA].begin();
 	list<CObj*>::iterator	iter_end = m_RenderGroup[TYPE_ALPHA].end();
 
-	for (; iter != iter_end; ++iter)
+	for (; iter != iter_end; iter)
 	{
 		if ((*iter) == NULL)
-			m_RenderGroup[TYPE_ALPHA].erase(iter++);
+			iter = m_RenderGroup[TYPE_ALPHA].erase(iter);
 		else
+		{
 			(*iter)->Render();
+			++iter;
+		}
 	}
 }
 
@@ -223,12 +232,15 @@ void CRenderMgr::Render_UI(void)
 	list<CObj*>::iterator	iter = m_RenderGroup[TYPE_UI].begin();
 	list<CObj*>::iterator	iter_end = m_RenderGroup[TYPE_UI].end();
 
-	for (; iter != iter_end; ++iter)
+	for (; iter != iter_end; iter)
 	{
 		if ((*iter) == NULL)
-			m_RenderGroup[TYPE_UI].erase(iter++);
+			m_RenderGroup[TYPE_UI].erase(iter);
 		else
+		{
 			(*iter)->Render();
+			++iter;
+		}
 	}
 	//m_pDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 	//m_pDevice->SetRenderState(D3DRS_ZENABLE, TRUE);

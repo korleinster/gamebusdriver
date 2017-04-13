@@ -88,6 +88,7 @@ void CCamera::SetCameraTarget(CInfo* pInfo)
 
 void CCamera::Release(void)
 {
+	::Safe_Delete(m_pInfo);
 }
 
 void CCamera::KeyState(void)

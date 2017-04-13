@@ -4,7 +4,7 @@
 
 CResources::CResources()
 {
-	m_dwRefCount = 1;
+	m_dwRefCount = 0;
 }
 
 CResources::CResources(CResources& rhs)

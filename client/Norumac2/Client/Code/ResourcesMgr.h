@@ -13,7 +13,7 @@ public:
 	DECLARE_SINGLETON(CResourcesMgr)
 
 private:
-	map<wstring, CResources*>*		m_pmapResource;
+	map<wstring, CResources*>		m_pmapResource[RESOURCE_END];
 	WORD							m_wReservedSize;
 
 public:
@@ -39,6 +39,8 @@ public:
 
 public:
 	void ResourceReset(const WORD& wContainerIndex);
+
+private:
 	void Release(void);
 
 	

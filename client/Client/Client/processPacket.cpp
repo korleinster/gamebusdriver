@@ -17,8 +17,8 @@ void AsynchronousClientClass::processPacket(Packet *buf)
 			m_other_players.insert(make_pair(temp.id, temp));
 		}
 		else { ptr->second.pos = *reinterpret_cast<position*>(&buf[2]); }*/
-	}
 		break;
+	}
 
 	case CHANGED_DIRECTION: {
 		sc_dir *p = reinterpret_cast<sc_dir*>(buf);
@@ -28,8 +28,8 @@ void AsynchronousClientClass::processPacket(Packet *buf)
 		//unordered_map<UINT, player_data>::iterator ptr = m_other_players.find(*(reinterpret_cast<UINT*>(&buf[sizeof(char) + 2])));
 		////if(m_other_players.end() != ptr){ ptr->second.dir = *(reinterpret_cast<char*>(&buf[2])); }	// ptr 이 nullptr 이면 이상한 상황이다...
 		//ptr->second.dir = *(reinterpret_cast<char*>(&buf[2]));
-	}
 		break;
+	}
 	case SERVER_MESSAGE_HP_CHANGED: {
 		sc_hp *p = reinterpret_cast<sc_hp*>(buf);
 		
@@ -41,9 +41,8 @@ void AsynchronousClientClass::processPacket(Packet *buf)
 
 		// 내가 아닌 다른 녀석이라면
 		m_other_players[p->id].state.hp = p->hp;
-
-	}
 		break;
+	}
 
 	case KEYINPUT_ATTACK: {
 
@@ -79,8 +78,8 @@ void AsynchronousClientClass::processPacket(Packet *buf)
 		//
 		//	}			
 		//}
-	}
 		break;
+	}
 
 	default:	// 잘 안쓰이는 패킷들
 
@@ -94,15 +93,13 @@ void AsynchronousClientClass::processPacket(Packet *buf)
 		case PLAYER_DISCONNECTED: {
 			sc_disconnect *p = reinterpret_cast<sc_disconnect*>(buf);
 			m_other_players.erase(p->id);
-		}
 			break;
+		}
 		case INIT_CLIENT: {
 			sc_client_init_info *p = reinterpret_cast<sc_client_init_info *>(buf);
 			m_player = p->player_info;
+			break;
 		}
-			break;
-
-			break;
 		case TEST:
 #ifdef _DEBUG
 			cout << "Server is Running. TEST Packet Recived Successfully.\n";

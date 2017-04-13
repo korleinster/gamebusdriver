@@ -34,7 +34,6 @@ public:
 
 public:
 	static CStaticObject* Create(const TCHAR* pMeshKey);
-	void	Release(void);
 
 private:
 	HRESULT	AddComponent(const TCHAR* pMeshKey, const TCHAR* pTextureKey);

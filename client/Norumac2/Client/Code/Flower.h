@@ -24,7 +24,6 @@ public:
 	virtual HRESULT Initialize(void);
 	virtual int		Update(void);
 	virtual void	Render(void);
-	void	Release(void);
 
 public:
 	static CFlower* Create(void);

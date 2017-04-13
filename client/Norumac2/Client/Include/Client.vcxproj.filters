@@ -58,9 +58,6 @@
     <Filter Include="96.Utility\01.Collision\TerrainCol">
       <UniqueIdentifier>{fbc126dd-7094-473c-9ca2-65103b3dce89}</UniqueIdentifier>
     </Filter>
-    <Filter Include="95.System\01.Device">
-      <UniqueIdentifier>{dd34141e-2394-445e-8a57-8cda25588b51}</UniqueIdentifier>
-    </Filter>
     <Filter Include="95.System\02.Time">
       <UniqueIdentifier>{5e3eb66c-b157-4fba-bb87-001e6cbf98e0}</UniqueIdentifier>
     </Filter>
@@ -166,6 +163,9 @@
     <Filter Include="04.Manager\10.TargetMgr\MultiRenderTarget\RenderTaget">
       <UniqueIdentifier>{d3a9a414-72d3-4810-92c1-68607e9a64dd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="95.System\02.Time\01.Device">
+      <UniqueIdentifier>{dd34141e-2394-445e-8a57-8cda25588b51}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -241,7 +241,7 @@
       <Filter>96.Utility\01.Collision\TerrainCol</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\Device.h">
-      <Filter>95.System\01.Device</Filter>
+      <Filter>95.System\02.Time\01.Device</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\TimeMgr.h">
       <Filter>95.System\02.Time</Filter>
@@ -393,7 +393,7 @@
       <Filter>96.Utility\01.Collision\TerrainCol</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\Device.cpp">
-      <Filter>95.System\01.Device</Filter>
+      <Filter>95.System\02.Time\01.Device</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\TimeMgr.cpp">
       <Filter>95.System\02.Time</Filter>

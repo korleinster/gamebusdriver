@@ -16,7 +16,6 @@
 #include "DynamicMesh.h"
 #include "Input.h"
 #include "TimeMgr.h"
-#include"../../../../server/serverBoostModel/serverBoostModel/protocol.h"
 #include "RenderMgr.h"
 #include "AnimationMgr.h"
 #include "ResourcesMgr.h"
@@ -60,9 +59,8 @@ CPlayer::CPlayer()
 
 CPlayer::~CPlayer()
 {
-	//Release();
-
-	int a = 10;
+	CObj::Release();
+	::Safe_Delete_Array(m_Packet);
 }
 
 HRESULT CPlayer::Initialize(void)
@@ -216,13 +214,6 @@ CPlayer * CPlayer::Create(void)
 	return pObj;
 }
 
-void CPlayer::Release(void)
-{
-	Safe_Release(m_pBuffer);
-	Safe_Release(m_pInfo);
-	Safe_Release(m_pTexture);
-	Safe_Delete_Array(m_Packet);
-}
 
 HRESULT CPlayer::AddComponent(void)
 {
@@ -245,7 +236,7 @@ HRESULT CPlayer::AddComponent(void)
 	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Player_IDLE");
 	m_pBuffer = dynamic_cast<CDynamicMesh*>(pComponent);
 	NULL_CHECK_RETURN(m_pBuffer, E_FAIL);
-	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Mesh", pComponent));
+	//m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Mesh", pComponent));
 
 	//Texture
 	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Texture_Player");
@@ -253,8 +244,10 @@ HRESULT CPlayer::AddComponent(void)
 	NULL_CHECK_RETURN(m_pTexture, E_FAIL);
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Texture", pComponent));
 
-	m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"RenderSceneVS_ANI");
-	m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"RenderScenePS");
+	pComponent = m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"RenderSceneVS_ANI");
+	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"VS_Shader", pComponent));
+	pComponent = m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"RenderScenePS");
+	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"PS_Shader", pComponent));
 
 
 	return S_OK;

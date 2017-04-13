@@ -41,7 +41,6 @@ public:
 
 public:
 	static CPlayer* Create(void);
-	void	Release(void);
 
 private:
 	HRESULT	AddComponent(void);

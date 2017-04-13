@@ -32,7 +32,6 @@ public:
 	HRESULT Initialize(void);
 	int		Update(void);
 	void	Render(void);
-	void	Release(void);
 
 public:
 	VTXTEX**	GetVertex(void) { return &m_pVerTex; }

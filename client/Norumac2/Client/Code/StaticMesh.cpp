@@ -495,6 +495,8 @@ HRESULT CStaticMesh::Load_StaticMesh(const char* szFilePath,const char* szFileNa
 	tData.pSysMem = pVTXTex;
 	hr = CDevice::GetInstance()->m_pDevice->CreateBuffer(&tBufferDesc, &tData, &m_VertexBuffer);
 
+
+	::Safe_Delete(pVTXTex);
 	if (FAILED(hr))
 		return E_FAIL;
 

@@ -29,7 +29,7 @@ CFlower::CFlower()
 
 CFlower::~CFlower()
 {
-	Release();
+	CObj::Release();
 }
 
 HRESULT CFlower::Initialize(void)
@@ -99,14 +99,6 @@ CFlower * CFlower::Create(void)
 	return pFlower;
 }
 
-void CFlower::Release(void)
-{
-	::Safe_Release(m_pInfo);
-	::Safe_Release(m_pBuffer);
-	::Safe_Release(m_pVertexShader);
-	::Safe_Release(m_pPixelShader);
-	::Safe_Release(m_pTexture);
-}
 
 HRESULT CFlower::AddComponent(void)
 {
@@ -119,7 +111,7 @@ HRESULT CFlower::AddComponent(void)
 	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STATIC, L"Buffer_RcTex");
 	m_pBuffer = dynamic_cast<CVIBuffer*>(pComponent);
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Buffer", pComponent));
+	//m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Buffer", pComponent));
 
 
 	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Texture_Flower");
@@ -132,8 +124,7 @@ HRESULT CFlower::AddComponent(void)
 		return E_FAIL;
 	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"TerrainCol ", pComponent));
 
-	m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"VS");
-	m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"PS");;
+
 
 
 	return S_OK;

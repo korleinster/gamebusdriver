@@ -60,7 +60,7 @@ BOOL CALLBACK AboutDlgProc(HWND, UINT, WPARAM, LPARAM);
 using namespace std;
 
 // 서버와 관련된 프로토콜
-#include"../../../../server/serverBoostModel/serverBoostModel/protocol.h"
+#include"protocol.h"
 
 // client 통신 관련 class
 #include<fstream>

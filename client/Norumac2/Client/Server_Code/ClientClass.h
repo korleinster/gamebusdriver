@@ -1,6 +1,6 @@
 #pragma once
 #include<WinSock2.h>
-#include"../../../../server/serverBoostModel/serverBoostModel/protocol.h"
+#include"protocol.h"
 #include<unordered_map>
 
 class AsynchronousClientClass

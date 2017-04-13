@@ -32,6 +32,8 @@ HRESULT CTargetMgr::Initialize()
 
 void CTargetMgr::Release()
 {
+	::Safe_Delete(m_pGBufferVisVertexShader);
+	::Safe_Delete(m_pGBufferVisPixelShader);
 	delete m_pMRT_GBuffer;
 }
 

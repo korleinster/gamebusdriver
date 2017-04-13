@@ -1,6 +1,5 @@
 #pragma once
 #include"stdafx.h"
-#include"../../../../server/serverBoostModel/serverBoostModel/protocol.h"
 #include"../Server_Code/ClientClass.h"
 #include<fstream>
 

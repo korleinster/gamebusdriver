@@ -30,7 +30,7 @@ HRESULT CObjMgr::SceneChange(void)
 			if ((*Listiter)->GetReleaseType() == Release_Dynamic)
 			{	
 				::Safe_Delete(*Listiter);
-				iter->second.erase(Listiter);
+				Listiter = iter->second.erase(Listiter);
 			}
 			else
 				++Listiter;
@@ -76,7 +76,7 @@ void CObjMgr::Update(void)
 			if ((*Listiter)->Update() == 100)
 			{
 				::Safe_Delete(*Listiter);
-				iter->second.erase(Listiter);
+				Listiter = iter->second.erase(Listiter);
 			}
 			else
 				++Listiter;
@@ -123,11 +123,12 @@ void CObjMgr::Release(void)
 		list<CObj*>::iterator Listiter = iter->second.begin();
 		list<CObj*>::iterator Listiter_end = iter->second.end();
 
-		for (Listiter; Listiter != Listiter_end; )
+		for (Listiter; Listiter != Listiter_end; ++Listiter)
 		{
 			::Safe_Delete(*Listiter);
-			iter->second.erase(Listiter++);
 		}
+		iter->second.clear();
 	}
+	m_mapObj.clear();
 }
 

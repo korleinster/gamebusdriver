@@ -12,6 +12,7 @@ CRcTerrain::CRcTerrain()
 
 CRcTerrain::~CRcTerrain()
 {
+	::Safe_Delete_Array(Vertex);
 }
 
 HRESULT CRcTerrain::CreateBuffer(UINT iCountX, UINT iCountZ, UINT iInterval)
@@ -179,6 +180,7 @@ HRESULT CRcTerrain::CreateBuffer(UINT iCountX, UINT iCountZ, UINT iInterval)
 
 	//}
 
+	//::Safe_Delete(Vertex)
 	m_iIndex *= 3;
 	return S_OK;
 }
@@ -203,9 +205,6 @@ DWORD CRcTerrain::Release(void)
 CResources * CRcTerrain::CloneResource(void)
 {
 	CResources* pResource = this;
-
-	pResource->AddRef();
-
 	return pResource;
 }
 

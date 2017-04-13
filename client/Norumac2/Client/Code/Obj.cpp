@@ -13,7 +13,7 @@ CObj::CObj()
 
 CObj::~CObj()
 {
-	Release();
+	//Release();
 }
 
 HRESULT CObj::Initialize(void)
@@ -58,11 +58,11 @@ void CObj::Release(void)
 {
 	map<wstring, CComponent*>::iterator iter = m_mapComponent.begin();
 	map<wstring, CComponent*>::iterator iter_end = m_mapComponent.end();
-
 	for (iter; iter != iter_end; ++iter)
 	{
-		::Safe_Release(iter->second);
+		::Safe_Delete(iter->second);
 	}
+
 	m_mapComponent.clear();
 }
 

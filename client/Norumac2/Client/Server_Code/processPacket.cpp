@@ -1,6 +1,5 @@
 #pragma once
 #include"stdafx.h"
-#include"../../../../server/serverBoostModel/serverBoostModel/protocol.h"
 #include"../Server_Code/ClientClass.h"
 #include "ObjMgr.h"
 #include "Obj.h"
@@ -134,6 +133,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 			if (0 >= *(reinterpret_cast<int*>(&buf[2])))
 			{
+				list<CObj*>* ListObj = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer");
 				list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->begin();
 				list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->end();
 
@@ -142,8 +142,8 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 					if ((*iter)->GetPacketData()->id == reinterpret_cast<player_data*>(data)->id)
 					{
 						CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
-						::Safe_Release(*iter);
-						CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->erase(iter++);
+						::Safe_Delete(*iter);
+						iter = ListObj->erase(iter);
 					}
 					else
 						++iter;
@@ -212,8 +212,8 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 				if ((*iter)->GetPacketData()->id == reinterpret_cast<player_data*>(data)->id)
 				{
 					CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
-					::Safe_Release(*iter);
-					CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->erase(iter++);
+					::Safe_Delete(*iter);
+					iter = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->erase(iter);
 				}
 				else
 					++iter;

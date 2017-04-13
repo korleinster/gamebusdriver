@@ -40,6 +40,7 @@ CTerrain::CTerrain()
 
 CTerrain::~CTerrain()
 {
+	CObj::Release();
 	//Release();
 }
 
@@ -63,7 +64,7 @@ HRESULT CTerrain::Initialize(void)
 		return E_FAIL;
 	}
 
-	m_pVerTex = new VTXTEX[VERTEXCOUNTX * VERTEXCOUNTZ];
+	//m_pVerTex = new VTXTEX[VERTEXCOUNTX * VERTEXCOUNTZ];
 
 	//m_pGrapicDevice->m_pDeviceContext->GetData
 	//D3D11_MAPPED_SUBRESOURCE MapResource;
@@ -178,16 +179,6 @@ void CTerrain::Render(void)
 	m_pTerrainBuffer->Render();
 }
 
-void CTerrain::Release(void)
-{
-	::Safe_Release(m_pInfo);
-	::Safe_Release(m_pTerrainBuffer);
-	::Safe_Release(m_pVertexShader);
-	::Safe_Release(m_pPixelShader);
-	::Safe_Release(m_pTexture);
-	//::Safe_Delete(m_pVerTex);
-}
-
 HRESULT CTerrain::AddComponent(void)
 {
 	CComponent* pComponent = NULL;
@@ -199,15 +190,18 @@ HRESULT CTerrain::AddComponent(void)
 	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Buffer_RcTerrain");
 	m_pTerrainBuffer = dynamic_cast<CVIBuffer*>(pComponent);
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Buffer", pComponent));
+	//m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Buffer", pComponent));
 
 
 	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Texture_Terrain");
 	m_pTexture = dynamic_cast<CTexture*>(pComponent);
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Texture", pComponent));
 
-	m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"RenderSceneVS");
-	m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"RenderScenePS");
+	pComponent = m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"RenderSceneVS");
+	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"VS_Shader", pComponent));
+	pComponent = m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"RenderScenePS");
+	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"PS_Shader", pComponent));
 
 	return S_OK;
 }

@@ -80,16 +80,16 @@ struct CB_CAPSULE_LIGHT_PIXEL
 #pragma pack(pop)
 
 CLightMgr::CLightMgr()
-:m_bShowLightVolume(false),
-m_pDirLightVertexShader(NULL), m_pDirLightPixelShader(NULL), m_pDirLightCB(NULL),
-m_pPointLightVertexShader(NULL), m_pPointLightHullShader(NULL), m_pPointLightDomainShader(NULL), m_pPointLightPixelShader(NULL),
-m_pPointLightDomainCB(NULL), m_pPointLightPixelCB(NULL),
-m_pSpotLightVertexShader(NULL), m_pSpotLightHullShader(NULL), m_pSpotLightDomainShader(NULL), m_pSpotLightPixelShader(NULL),
-m_pSpotLightDomainCB(NULL), m_pSpotLightPixelCB(NULL),
-m_pCapsuleLightVertexShader(NULL), m_pCapsuleLightHullShader(NULL), m_pCapsuleLightDomainShader(NULL), m_pCapsuleLightPixelShader(NULL),
-m_pCapsuleLightDomainCB(NULL), m_pCapsuleLightPixelCB(NULL),
-m_pNoDepthWriteLessStencilMaskState(NULL), m_pNoDepthWriteGreatherStencilMaskState(NULL),
-m_pAdditiveBlendState(NULL), m_pNoDepthClipFrontRS(NULL), m_pWireframeRS(NULL)
+	:m_bShowLightVolume(false),
+	m_pDirLightVertexShader(NULL), m_pDirLightPixelShader(NULL), m_pDirLightCB(NULL),
+	m_pPointLightVertexShader(NULL), m_pPointLightHullShader(NULL), m_pPointLightDomainShader(NULL), m_pPointLightPixelShader(NULL),
+	m_pPointLightDomainCB(NULL), m_pPointLightPixelCB(NULL),
+	m_pSpotLightVertexShader(NULL), m_pSpotLightHullShader(NULL), m_pSpotLightDomainShader(NULL), m_pSpotLightPixelShader(NULL),
+	m_pSpotLightDomainCB(NULL), m_pSpotLightPixelCB(NULL),
+	m_pCapsuleLightVertexShader(NULL), m_pCapsuleLightHullShader(NULL), m_pCapsuleLightDomainShader(NULL), m_pCapsuleLightPixelShader(NULL),
+	m_pCapsuleLightDomainCB(NULL), m_pCapsuleLightPixelCB(NULL),
+	m_pNoDepthWriteLessStencilMaskState(NULL), m_pNoDepthWriteGreatherStencilMaskState(NULL),
+	m_pAdditiveBlendState(NULL), m_pNoDepthClipFrontRS(NULL), m_pWireframeRS(NULL)
 {
 }
 
@@ -171,7 +171,7 @@ HRESULT CLightMgr::Initialize()
 		D3D11_BLEND_ONE, D3D11_BLEND_ONE, D3D11_BLEND_OP_ADD,
 		D3D11_COLOR_WRITE_ENABLE_ALL,
 	};
-	
+
 	for (UINT i = 0; i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; ++i)
 	{
 		descBlend.RenderTarget[i] = defaultRenderTargetBlendDesc;
@@ -204,6 +204,21 @@ HRESULT CLightMgr::Initialize()
 
 void CLightMgr::Release()
 {
+	::Safe_Delete(m_pDirLightVertexShader);
+	::Safe_Delete(m_pDirLightPixelShader);
+	::Safe_Delete(m_pPointLightVertexShader);
+	::Safe_Delete(m_pPointLightHullShader);
+	::Safe_Delete(m_pPointLightDomainShader);
+	::Safe_Delete(m_pPointLightPixelShader);
+
+	::Safe_Delete(m_pSpotLightVertexShader);
+	::Safe_Delete(m_pSpotLightHullShader);
+	::Safe_Delete(m_pSpotLightDomainShader);
+	::Safe_Delete(m_pSpotLightPixelShader);
+	::Safe_Delete(m_pCapsuleLightVertexShader);
+	::Safe_Delete(m_pCapsuleLightHullShader);
+	::Safe_Delete(m_pCapsuleLightDomainShader);
+	::Safe_Delete(m_pCapsuleLightPixelShader);
 	Safe_Release(m_pDirLightCB);
 
 	Safe_Release(m_pPointLightDomainCB);
@@ -372,7 +387,7 @@ void CLightMgr::DirectionalLight(ID3D11DeviceContext* pd3dImmediateContext)
 {
 	// Fill the directional and ambient values constant buffer
 	D3D11_MAPPED_SUBRESOURCE MappedResource;
-	FAILED_CHECK_RETURN(pd3dImmediateContext->Map(m_pDirLightCB, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource),);
+	FAILED_CHECK_RETURN(pd3dImmediateContext->Map(m_pDirLightCB, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource), );
 	CB_DIRECTIONAL* pDirectionalValuesCB = (CB_DIRECTIONAL*)MappedResource.pData;
 	pDirectionalValuesCB->vAmbientLower = GammaToLinear(m_vAmbientLowerColor);
 	pDirectionalValuesCB->vAmbientRange = GammaToLinear(m_vAmbientUpperColor) - GammaToLinear(m_vAmbientLowerColor);
@@ -414,13 +429,13 @@ void CLightMgr::PointLight(ID3D11DeviceContext* pd3dImmediateContext, const D3DX
 	D3DXMATRIX mWorldViewProjection = mLightWorldScale * mLightWorldTrans * mView * mProj;
 
 	D3D11_MAPPED_SUBRESOURCE MappedResource;
-	FAILED_CHECK_RETURN(pd3dImmediateContext->Map(m_pPointLightDomainCB, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource),);
+	FAILED_CHECK_RETURN(pd3dImmediateContext->Map(m_pPointLightDomainCB, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource), );
 	CB_POINT_LIGHT_DOMAIN* pPointLightDomainCB = (CB_POINT_LIGHT_DOMAIN*)MappedResource.pData;
 	D3DXMatrixTranspose(&pPointLightDomainCB->WolrdViewProj, &mWorldViewProjection);
 	pd3dImmediateContext->Unmap(m_pPointLightDomainCB, 0);
 	pd3dImmediateContext->DSSetConstantBuffers(0, 1, &m_pPointLightDomainCB);
 
-	FAILED_CHECK_RETURN(pd3dImmediateContext->Map(m_pPointLightPixelCB, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource),);
+	FAILED_CHECK_RETURN(pd3dImmediateContext->Map(m_pPointLightPixelCB, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource), );
 	CB_POINT_LIGHT_PIXEL* pPointLightPixelCB = (CB_POINT_LIGHT_PIXEL*)MappedResource.pData;
 	pPointLightPixelCB->PointLightPos = vPos;
 	pPointLightPixelCB->PointLightRangeRcp = 1.0f / fRange;
@@ -478,7 +493,7 @@ void CLightMgr::SpotLight(ID3D11DeviceContext* pd3dImmediateContext, const D3DXV
 
 	// Write the matrix to the domain shader constant buffer
 	D3D11_MAPPED_SUBRESOURCE MappedResource;
-	FAILED_CHECK_RETURN(pd3dImmediateContext->Map(m_pSpotLightDomainCB, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource),);
+	FAILED_CHECK_RETURN(pd3dImmediateContext->Map(m_pSpotLightDomainCB, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource), );
 	CB_SPOT_LIGHT_DOMAIN* pPointLightDomainCB = (CB_SPOT_LIGHT_DOMAIN*)MappedResource.pData;
 	D3DXMatrixTranspose(&pPointLightDomainCB->WolrdViewProj, &mWorldViewProjection);
 	pPointLightDomainCB->fSinAngle = fSinOuterAngle;
@@ -486,7 +501,7 @@ void CLightMgr::SpotLight(ID3D11DeviceContext* pd3dImmediateContext, const D3DXV
 	pd3dImmediateContext->Unmap(m_pSpotLightDomainCB, 0);
 	pd3dImmediateContext->DSSetConstantBuffers(0, 1, &m_pSpotLightDomainCB);
 
-	FAILED_CHECK_RETURN(pd3dImmediateContext->Map(m_pSpotLightPixelCB, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource),);
+	FAILED_CHECK_RETURN(pd3dImmediateContext->Map(m_pSpotLightPixelCB, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource), );
 	CB_SPOT_LIGHT_PIXEL* pPointLightPixelCB = (CB_SPOT_LIGHT_PIXEL*)MappedResource.pData;
 	pPointLightPixelCB->SpotLightPos = vPos;
 	pPointLightPixelCB->SpotLightRangeRcp = 1.0f / fRange;
@@ -537,7 +552,7 @@ void CLightMgr::CapsuleLight(ID3D11DeviceContext* pd3dImmediateContext, const D3
 	D3DXMATRIX mWorldViewProjection = m_LightWorldTransRotate * mView * mProj;
 
 	D3D11_MAPPED_SUBRESOURCE MappedResource;
-	FAILED_CHECK_RETURN(pd3dImmediateContext->Map(m_pCapsuleLightDomainCB, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource),);
+	FAILED_CHECK_RETURN(pd3dImmediateContext->Map(m_pCapsuleLightDomainCB, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource), );
 	CB_CAPSULE_LIGHT_DOMAIN* pCapsuleLightDomainCB = (CB_CAPSULE_LIGHT_DOMAIN*)MappedResource.pData;
 	D3DXMatrixTranspose(&pCapsuleLightDomainCB->WolrdViewProj, &mWorldViewProjection);
 	pCapsuleLightDomainCB->HalfCapsuleLen = 0.5f * fLen;
@@ -545,7 +560,7 @@ void CLightMgr::CapsuleLight(ID3D11DeviceContext* pd3dImmediateContext, const D3
 	pd3dImmediateContext->Unmap(m_pCapsuleLightDomainCB, 0);
 	pd3dImmediateContext->DSSetConstantBuffers(0, 1, &m_pCapsuleLightDomainCB);
 
-	FAILED_CHECK_RETURN(pd3dImmediateContext->Map(m_pCapsuleLightPixelCB, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource),);
+	FAILED_CHECK_RETURN(pd3dImmediateContext->Map(m_pCapsuleLightPixelCB, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource), );
 	CB_CAPSULE_LIGHT_PIXEL* pCapsuleLightPixelCB = (CB_CAPSULE_LIGHT_PIXEL*)MappedResource.pData;
 	pCapsuleLightPixelCB->CapsuleLightPos = vPos;
 	pCapsuleLightPixelCB->CapsuleLightRangeRcp = 1.0f / fRange;

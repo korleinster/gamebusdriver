@@ -50,7 +50,7 @@ HRESULT CSceneMgr::ChangeScene(Scene_Tyep _eType)
 	if (m_pScene != NULL)
 	{
 		map<Scene_Tyep, CScene*>::iterator deliter = m_mapScene.find(m_eType);
-		::Safe_Release(m_pScene);
+		::Safe_Delete(m_pScene);
 		m_mapScene.erase(deliter);
 	}
 
@@ -84,13 +84,12 @@ Scene_Tyep CSceneMgr::GetScene(void)
 
 void CSceneMgr::Release(void)
 {
-	map<Scene_Tyep, CScene*>::iterator iter = m_mapScene.begin();
-	map<Scene_Tyep, CScene*>::iterator iter_end = m_mapScene.end();
+	map<Scene_Tyep, CScene*>::iterator iter =		m_mapScene.begin();
+	map<Scene_Tyep, CScene*>::iterator iter_end =	m_mapScene.end();
 
 	for (iter; iter != iter_end; ++iter)
 	{
-		::Safe_Release(iter->second);
-		//::Safe_Delete(iter->second);
+		::Safe_Delete(iter->second);
 	}
 	m_mapScene.clear();
 }

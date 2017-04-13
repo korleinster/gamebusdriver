@@ -51,10 +51,9 @@ void CShaderMgr::Release(void)
 	map<wstring, CShader*>::iterator iter = m_mapShader.begin();
 	map<wstring, CShader*>::iterator iter_end = m_mapShader.end();
 
-	for (iter; iter != iter_end;)
+	for (iter; iter != iter_end; ++iter)
 	{
 		Safe_Delete(iter->second);
-		m_mapShader.erase(iter++);
 	}
 
 	m_mapShader.clear();

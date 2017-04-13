@@ -13,7 +13,7 @@ public:
 	virtual DWORD Release(void);
 	void	AddRef(void);
 
-protected:
+public:
 	DWORD		m_dwRefCount;
 
 };

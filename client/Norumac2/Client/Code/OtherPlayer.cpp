@@ -43,6 +43,8 @@ COtherPlayer::COtherPlayer()
 	m_pPixelShader = NULL;
 	m_pTexture = NULL;
 	m_pVerTex = NULL;
+
+
 	m_pTerrainCol = NULL;
 	m_ePlayerState = PLAYER_IDLE;
 	m_bKey = false;
@@ -53,11 +55,24 @@ COtherPlayer::COtherPlayer()
 
 COtherPlayer::~COtherPlayer()
 {
-
+	CObj::Release();
 }
 
 HRESULT COtherPlayer::Initialize(void)
 {
+	m_pBuffer = NULL;
+	m_pVertexShader = NULL;
+	m_pPixelShader = NULL;
+	m_pTexture = NULL;
+	m_pVerTex = NULL;
+
+
+	m_pTerrainCol = NULL;
+	m_ePlayerState = PLAYER_IDLE;
+	m_bKey = false;
+	m_pSceneVertexShaderCB = NULL;
+	m_pScenePixelShaderCB = NULL;
+
 	if (FAILED(AddComponent()))
 		return E_FAIL;
 
@@ -183,13 +198,6 @@ COtherPlayer * COtherPlayer::Create(void)
 	return pObj;
 }
 
-void COtherPlayer::Release(void)
-{
-	Safe_Release(m_pBuffer);
-	Safe_Release(m_pTexture);
-	Safe_Release(m_pInfo);
-
-}
 
 HRESULT COtherPlayer::AddComponent(void)
 {
@@ -220,8 +228,10 @@ HRESULT COtherPlayer::AddComponent(void)
 	NULL_CHECK_RETURN(m_pTexture, E_FAIL);
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Texture", pComponent));
 
-	m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"RenderSceneVS_ANI");
-	m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"RenderScenePS");;
+	pComponent = m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"RenderSceneVS_ANI");
+	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"VS_Shader", pComponent));
+	pComponent = m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"RenderScenePS");
+	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"PS_Shader", pComponent));
 
 
 	return S_OK;

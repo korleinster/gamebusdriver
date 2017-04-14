@@ -15,12 +15,14 @@
 #include "NaviMgr.h"
 #include "StaticMesh.h"
 #include "NaviTool.h"
+#include "NaviCell.h"
 
 CBack::CBack()
 	:m_pTerrainVtx(NULL)
 	,m_pTerrain(NULL)
 	,m_bPickFirst(false)
 	,m_bPickSecond(false)
+	,m_bGetMousePt(false)
 {
 }
 
@@ -72,6 +74,7 @@ HRESULT CBack::Initialize(void)
 int CBack::Update(void)
 {
 	CObjMgr::GetInstance()->Update();
+	CNaviMgr::GetInstance()->Update();
 
 	CInterface* pInterFace = &((CMainFrame*)AfxGetMainWnd())->m_pMyForm->m_InterFace;
 
@@ -323,7 +326,6 @@ void CBack::NaviMeshMode()
 	}
 	else if (TRUE == pNavimeshTool->m_PickingMode[1].GetCheck())
 	{
-		D3DXVECTOR3 vIndex;
 
 		list<CObj*>::iterator iter = m_ToolObjList.begin();
 		list<CObj*>::iterator iter_end = m_ToolObjList.end();
@@ -391,6 +393,105 @@ void CBack::NaviMeshMode()
 				return;
 		}
 	}
+	else if (TRUE == pNavimeshTool->m_NaviMode[0].GetCheck())
+	{
+		vector<CNaviCell*>* vecCell = CNaviMgr::GetInstance()->GetCell();
+		vector<CNaviCell*>::iterator Navi_iter = vecCell->begin();
+		vector<CNaviCell*>::iterator Navi_iter_end = vecCell->end();
+		D3DXVECTOR3 temp;
+		for (Navi_iter; Navi_iter != Navi_iter_end; ++Navi_iter)
+		{
+			if (m_pMouseCol->PickNaviCell(&temp, *Navi_iter, &m_iNaviIndex))
+			{
+				m_pSelectedCell = (*Navi_iter);
+				pNavimeshTool->SetPickCell(m_pSelectedCell,m_iNaviIndex);
+				break;
+			}
+			else
+				pNavimeshTool->SetPickCell(NULL, -1);
+		}
+	}
+	else if (TRUE == pNavimeshTool->m_NaviMode[3].GetCheck())
+	{
+		if (TRUE == pNavimeshTool->m_DeleteMode[0].GetCheck())
+		{
+			// Vtx 삭제
+			if (CNaviMgr::GetInstance()->GetSize() == 0)
+				return;
+
+			if (!m_bGetMousePt)
+			{
+				CNaviMgr::GetInstance()->GetNearPoint(vIndex, pNavimeshTool->m_fNearRange);
+				m_vGetMousePt = vIndex;
+				m_bGetMousePt = true;
+			}
+			else
+			{
+				CNaviMgr::GetInstance()->Unlink_Cell();
+
+				CNaviMgr::GetInstance()->DeletePoint(vIndex, m_vGetMousePt);
+				m_vGetMousePt = D3DXVECTOR3(0.f, 0.f, 0.f);
+				m_bGetMousePt = false;
+
+				CNaviMgr::GetInstance()->ResetIndex();
+
+				CNaviMgr::GetInstance()->Link_Cell();
+			}
+		}
+		if (TRUE == pNavimeshTool->m_DeleteMode[1].GetCheck())
+		{
+			// Tri 삭제
+			if (CNaviMgr::GetInstance()->GetSize() == 0)
+				return;
+
+
+
+			vector<CNaviCell*>* vecCell = CNaviMgr::GetInstance()->GetCell();
+			vector<CNaviCell*>::iterator Navi_iter = vecCell->begin();
+			vector<CNaviCell*>::iterator Navi_iter_end = vecCell->end();
+			D3DXVECTOR3 temp;
+			for (Navi_iter; Navi_iter != Navi_iter_end; ++Navi_iter)
+			{
+				if (m_pMouseCol->PickNaviCell(&temp, *Navi_iter, &m_iNaviIndex))
+				{
+					CNaviMgr::GetInstance()->Unlink_Cell();
+					Safe_Release(*Navi_iter);
+					CNaviMgr::GetInstance()->GetCell()->erase(Navi_iter);
+					CNaviMgr::GetInstance()->ResetIndex();
+					CNaviMgr::GetInstance()->Link_Cell();
+					break;
+				}
+				else
+					return;
+			}
+
+			
+
+			//if (!m_bGetMousePt)
+			//{
+			//	//m_pNaviMgr->GetNearPoint(vIndex);
+			//	m_vGetMousePt = vIndex;
+			//	m_bGetMousePt = true;
+			//}
+			//else
+			//{
+			//	CNaviMgr::GetInstance()->Unlink_Cell();
+
+			//	CNaviMgr::GetInstance()->DeleteTriangle(vIndex, m_vGetMousePt);
+			//	m_vGetMousePt = D3DXVECTOR3(0.f, 0.f, 0.f);
+			//	m_bGetMousePt = false;
+
+			//	CNaviMgr::GetInstance()->ResetIndex();
+
+			//	CNaviMgr::GetInstance()->Link_Cell();
+			//}
+		}
+	}
+	pNavimeshTool->m_iNaviCnt = CNaviMgr::GetInstance()->GetSize();
+
+	((CMainFrame*)AfxGetMainWnd())->m_pMainView->Invalidate(FALSE);
+	pNavimeshTool->UpdateData(FALSE);
+
 }
 
 void CBack::BuildNavimesh()
@@ -418,6 +519,8 @@ void CBack::BuildNavimesh()
 		pNavimeshTool->m_PointCx = m_vPoint[2].x;
 		pNavimeshTool->m_PointCy = m_vPoint[2].y;
 		pNavimeshTool->m_PointCz = m_vPoint[2].z;
+
+		pNavimeshTool->m_iCellNum = CNaviMgr::GetInstance()->GetCell()->back()->GetIndex();
 
 		CNaviMgr::GetInstance()->Link_Cell();
 

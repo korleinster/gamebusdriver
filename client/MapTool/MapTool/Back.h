@@ -7,6 +7,7 @@ class CObj;
 class CTerrain;
 class CMapToolView;
 class CComponent;
+class CNaviCell;
 class CBack :
 	public CScene
 {
@@ -22,6 +23,10 @@ public:
 	bool		m_bPickFirst;
 	bool		m_bPickSecond;
 	D3DXVECTOR3	m_vPoint[3];
+	CNaviCell*	m_pSelectedCell;
+	int			m_iNaviIndex;
+	bool		m_bGetMousePt;
+	D3DXVECTOR3		m_vGetMousePt;
 public:
 	CBack();
 	virtual ~CBack();

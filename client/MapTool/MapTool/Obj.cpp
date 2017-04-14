@@ -11,6 +11,7 @@ CObj::CObj()
 	, m_pGrapicDevice(CDevice::GetInstance())
 	, m_eReleaseType(Release_End)
 	, m_fSelect(SELECT_OFF)
+	, m_bWireFrame(false)
 {
 	ZeroMemory(m_tcKey, sizeof(TCHAR) * 256);
 }

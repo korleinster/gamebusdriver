@@ -301,7 +301,6 @@ HRESULT CStaticMesh::Initalize(const char * szFilePath, const char * szFileName)
 		return E_FAIL;
 
 
-	CMesh::CreateRasterizerState();
 	//Init_Shader();
 
 	pFBXScene->Destroy();

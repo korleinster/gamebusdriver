@@ -15,6 +15,8 @@
 #include "SceneMgr.h"
 #include "ObjMgr.h"
 #include "RenderMgr.h"
+#include "NaviTool.h"
+#include "MyForm.h"
 
 
 // CObjectTool 대화 상자입니다.
@@ -81,6 +83,7 @@ void CObjectTool::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT10, m_stCurrentMeshKey);
 
 
+	DDX_Control(pDX, IDC_CHECK1, m_WireFrame);
 }
 
 
@@ -102,6 +105,7 @@ BEGIN_MESSAGE_MAP(CObjectTool, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON6, &CObjectTool::OnInfoReset)
 	ON_LBN_SELCHANGE(IDC_LIST1, &CObjectTool::OnStaticListSel)
 	ON_LBN_SELCHANGE(IDC_LIST2, &CObjectTool::OnDynamicListSel)
+	ON_BN_CLICKED(IDC_CHECK1, &CObjectTool::OnWireFrameCheck)
 END_MESSAGE_MAP()
 
 
@@ -1072,4 +1076,19 @@ BOOL CObjectTool::PreTranslateMessage(MSG* pMsg)
 		pMsg->wParam = NULL;
 	}
 	return CDialog::PreTranslateMessage(pMsg);
+}
+
+
+void CObjectTool::OnWireFrameCheck()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	CNaviTool* pNaviTool = &((CMainFrame*)AfxGetMainWnd())->m_pMyForm->m_Tab2;
+	if(m_WireFrame.GetCheck() == TRUE)
+	{
+		pNaviTool->m_ObjectWire.SetCheck(TRUE);
+	}
+	else
+	{
+		pNaviTool->m_ObjectWire.SetCheck(FALSE);
+	}
 }

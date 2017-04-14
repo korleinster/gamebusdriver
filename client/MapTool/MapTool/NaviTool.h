@@ -27,7 +27,7 @@ public:
 	CNaviCell* m_pCurCell;
 public:
 	void SetPickPos(D3DXVECTOR3 vIndex);
-	void SetPickCell(CNaviCell* pCell);
+	void SetPickCell(CNaviCell* pCell,int iIndex);
 public:
 	int m_iNaviCnt;
 	CButton m_WireFrame;
@@ -37,7 +37,6 @@ public:
 	CButton m_PickingMode[2];
 	CButton m_CellType[2];
 	CButton m_DeleteMode[2];
-	CButton m_PosDecimal[5];
 	float m_fPosX;
 	float m_fPosY;
 	float m_fPosZ;
@@ -55,4 +54,6 @@ public:
 	CButton m_NaviView;
 	afx_msg void OnNaviSave();
 	afx_msg void OnNaviLoad();
+	afx_msg void OnObjWireCheck();
+	int m_iCellNum;
 };

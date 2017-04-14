@@ -10,6 +10,8 @@
 #include "Component.h"
 //#include "NaviCell.h"
 #include "Camera.h"
+#include "NaviCell.h"
+#include "NaviMgr.h"
 
 CMouseCol::CMouseCol(void)
 //: m_pInfoSubject(Engine::Get_InfoSubject())
@@ -258,36 +260,36 @@ bool CMouseCol::MeshPick(D3DXVECTOR3* pOut, CInfo* pInfo, vector<VTXTEX>* pVecVt
 	return false;
 }
 
-//bool CMouseCol::PickNaviCell(D3DXVECTOR3* pOut, CNaviCell* pCell, int* pOutIndex)
-//{
-//	Translation_ViewSpace();
-//	D3DXMATRIX matIdentity;
-//	D3DXMatrixIdentity(&matIdentity);
-//	Translation_Local(&matIdentity);
-//
-//	const D3DXVECTOR3* vPoint1 = (*pCell).GetPoint(Engine::CNaviCell::POINT_A);
-//	const D3DXVECTOR3* vPoint2 = (*pCell).GetPoint(Engine::CNaviCell::POINT_B);
-//	const D3DXVECTOR3* vPoint3 = (*pCell).GetPoint(Engine::CNaviCell::POINT_C);
-//
-//	float fU, fV, fDist;
-//
-//	int iSize = Get_Cell().size();
-//
-//	for (int z = 0; z < iSize; ++z)
-//	{
-//		if (D3DXIntersectTri(vPoint1, vPoint2, vPoint3, &m_vPivotPos, &m_vRayDir, &fU, &fV, &fDist))
-//		{
-//			*pOut = *vPoint1 + (*vPoint2 - *vPoint1) * fU + (*vPoint3 - *vPoint1) * fV;
-//			*pOutIndex = pCell->GetIndex();
-//			return true;
-//		}
-//	}
-//
-//
-//	*pOut = D3DXVECTOR3(0.f, 0.f, 0.f);
-//	*pOutIndex = NULL;
-//	return false;
-//}
+bool CMouseCol::PickNaviCell(D3DXVECTOR3* pOut, CNaviCell* pCell, int* pOutIndex)
+{
+	Translation_ViewSpace();
+	D3DXMATRIX matIdentity;
+	D3DXMatrixIdentity(&matIdentity);
+	Translation_Local(&matIdentity);
+
+	const D3DXVECTOR3* vPoint1 = (*pCell).GetPoint(CNaviCell::POINT_A);
+	const D3DXVECTOR3* vPoint2 = (*pCell).GetPoint(CNaviCell::POINT_B);
+	const D3DXVECTOR3* vPoint3 = (*pCell).GetPoint(CNaviCell::POINT_C);
+
+	float fU, fV, fDist;
+
+	int iSize = CNaviMgr::GetInstance()->GetSize();
+
+	for (int z = 0; z < iSize; ++z)
+	{
+		if (D3DXIntersectTri(vPoint1, vPoint2, vPoint3, &m_vPivotPos, &m_vRayDir, &fU, &fV, &fDist))
+		{
+			*pOut = *vPoint1 + (*vPoint2 - *vPoint1) * fU + (*vPoint3 - *vPoint1) * fV;
+			*pOutIndex = pCell->GetIndex();
+			return true;
+		}
+	}
+
+
+	*pOut = D3DXVECTOR3(0.f, 0.f, 0.f);
+	*pOutIndex = NULL;
+	return false;
+}
 
 //bool CMouseCol::PickOccBox(D3DXVECTOR3* pOut, Engine::VTXCOL* pVertex, Engine::INDEX16* pIndex, const D3DXMATRIX* pmatWorld)
 //{

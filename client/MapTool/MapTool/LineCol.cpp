@@ -38,15 +38,15 @@ HRESULT CLineCol::CreateBuffer(CNaviCell* pNeviCell)
 
 		m_vCol[1].vPos = *((pNeviCell)->GetPoint(CNaviCell::POINT_B));
 		if ((pNeviCell)->GetType() == TYPE_TERRAIN)
-			m_vCol[1].dwColor = D3DXCOLOR(1.f, 0.98f, 0.f, 1.f);
+			m_vCol[1].dwColor = D3DXCOLOR(1.f, 0.f, 0.f, 1.f);
 		else if ((pNeviCell)->GetType() == TYPE_MESH)
-			m_vCol[1].dwColor = D3DXCOLOR(1.f, 0.f, 1.f, 1.f);
+			m_vCol[1].dwColor = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 
 		m_vCol[2].vPos = *((pNeviCell)->GetPoint(CNaviCell::POINT_C));
 		if ((pNeviCell)->GetType() == TYPE_TERRAIN)
-			m_vCol[2].dwColor = D3DXCOLOR(0.11f, 0.85f, 0.08f, 1.f);
+			m_vCol[2].dwColor = D3DXCOLOR(1.f, 0.f, 0.f, 1.f);
 		else if ((pNeviCell)->GetType() == TYPE_MESH)
-			m_vCol[2].dwColor = D3DXCOLOR(0.f, 0.f, 0.f, 1.f);
+			m_vCol[2].dwColor = D3DXCOLOR(0.f, 1.f, 1.f, 1.f);
 
 
 
@@ -95,7 +95,9 @@ HRESULT CLineCol::CreateBuffer(CNaviCell* pNeviCell)
 	cb.StructureByteStride = 0;
 	hr = CDevice::GetInstance()->m_pDevice->CreateBuffer(&cb, NULL, &m_ConstantBuffer);
 
-	CreateRasterizerState();
+
+	CreateRasterizerState2();
+
 
 
 	return S_OK;

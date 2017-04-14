@@ -61,6 +61,16 @@ HRESULT CNaviMgr::Add_Cell(const D3DXVECTOR3* pPointA, const D3DXVECTOR3* pPoint
 	return S_OK;
 }
 
+void CNaviMgr::Update(void)
+{
+	UINT		iSize = m_vecNaviMesh.size();
+
+	for (UINT i = 0; i < iSize; ++i)
+	{
+		m_vecNaviMesh[i]->Update();
+	}
+}
+
 void CNaviMgr::Render(void)
 {
 	UINT		iSize = m_vecNaviMesh.size();

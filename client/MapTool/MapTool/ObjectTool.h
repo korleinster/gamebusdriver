@@ -84,4 +84,6 @@ public:
 	afx_msg void OnDynamicListSel();
 	CString m_stCurrentMeshKey;
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	CButton m_WireFrame;
+	afx_msg void OnWireFrameCheck();
 };

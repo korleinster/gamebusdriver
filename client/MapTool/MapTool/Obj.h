@@ -24,6 +24,7 @@ public:
 	TCHAR						m_tcKey[256];
 	TCHAR						m_tcMeshKey[256];
 	float						m_fSelect;
+	bool						m_bWireFrame;
 
 public:
 	virtual HRESULT Initialize(void);

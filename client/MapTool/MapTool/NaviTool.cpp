@@ -6,6 +6,10 @@
 #include "NaviTool.h"
 #include "afxdialogex.h"
 #include "NaviCell.h"
+#include "ObjectTool.h"
+#include "MainFrm.h"
+#include "MyForm.h"
+#include "NaviMgr.h"
 
 
 // CNaviTool 대화 상자입니다.
@@ -29,6 +33,7 @@ CNaviTool::CNaviTool(CWnd* pParent /*=NULL*/)
 	, m_PointBz(0)
 	, m_PointCz(0)
 	, m_bStart(true)
+	, m_iCellNum(-1)
 {
 
 }
@@ -60,11 +65,6 @@ void CNaviTool::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_RADIO11, m_DeleteMode[0]);
 	DDX_Control(pDX, IDC_RADIO12, m_DeleteMode[1]);
 
-	DDX_Control(pDX, IDC_RADIO13, m_PosDecimal[0]);
-	DDX_Control(pDX, IDC_RADIO14, m_PosDecimal[1]);
-	DDX_Control(pDX, IDC_RADIO15, m_PosDecimal[2]);
-	DDX_Control(pDX, IDC_RADIO16, m_PosDecimal[3]);
-	DDX_Control(pDX, IDC_RADIO17, m_PosDecimal[4]);
 	DDX_Control(pDX, IDC_CHECK3, m_NaviView);
 
 	DDX_Text(pDX, IDC_EDIT2, m_fPosX);
@@ -83,6 +83,8 @@ void CNaviTool::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT14, m_PointCy);
 	DDX_Text(pDX, IDC_EDIT15, m_PointCz);
 	DDX_Text(pDX, IDC_EDIT6, m_fNearRange);
+	DDX_Text(pDX, IDC_EDIT5, m_iCellNum);
+	DDX_Text(pDX, IDC_EDIT1, m_iNaviCnt);
 
 	if (m_bStart == true)
 	{
@@ -91,8 +93,7 @@ void CNaviTool::DoDataExchange(CDataExchange* pDX)
 		m_DeleteMode[0].SetCheck(TRUE);
 		m_PickingMode[0].SetCheck(TRUE);
 		m_CellType[0].SetCheck(TRUE);
-		m_PosDecimal[0].SetCheck(TRUE);
-		m_NaviView.SetCheck(TRUE);
+		m_NaviView.SetCheck(FALSE);
 
 		m_bStart = false;
 	}
@@ -103,6 +104,7 @@ void CNaviTool::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CNaviTool, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON2, &CNaviTool::OnNaviSave)
 	ON_BN_CLICKED(IDC_BUTTON3, &CNaviTool::OnNaviLoad)
+	ON_BN_CLICKED(IDC_CHECK2, &CNaviTool::OnObjWireCheck)
 END_MESSAGE_MAP()
 
 
@@ -120,7 +122,7 @@ void CNaviTool::SetPickPos(D3DXVECTOR3 vIndex)
 }
 
 
-void CNaviTool::SetPickCell(CNaviCell* pCell)
+void CNaviTool::SetPickCell(CNaviCell* pCell, int iIndex)
 {
 	UpdateData(TRUE);
 
@@ -139,6 +141,8 @@ void CNaviTool::SetPickCell(CNaviCell* pCell)
 		m_PointCx = pCell->GetPoint(CNaviCell::POINT_C)->x;
 		m_PointCy = pCell->GetPoint(CNaviCell::POINT_C)->y;
 		m_PointCz = pCell->GetPoint(CNaviCell::POINT_C)->z;
+
+		m_iCellNum = iIndex;
 	}
 	else
 	{
@@ -155,6 +159,8 @@ void CNaviTool::SetPickCell(CNaviCell* pCell)
 		m_PointCx = 0.f;
 		m_PointCy = 0.f;
 		m_PointCz = 0.f;
+
+		m_iCellNum = -1;
 	}
 
 	UpdateData(FALSE);
@@ -164,10 +170,96 @@ void CNaviTool::SetPickCell(CNaviCell* pCell)
 void CNaviTool::OnNaviSave()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+
+	int savecheck = AfxMessageBox(L"저장하겠습니까? 확인을 누르면 돌이킬수 없슴.", MB_OKCANCEL);
+	if (savecheck == 2)
+		return;
+
+
+	HANDLE	hFile = CreateFile(L"..\\Norumac2Navi.dat", GENERIC_WRITE,
+		0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	DWORD	dwByte;
+
+	vector<CNaviCell*>* vecNavi = CNaviMgr::GetInstance()->GetCell();
+	vector<CNaviCell*>::iterator iter = vecNavi->begin();
+
+	int iNaviNum = CNaviMgr::GetInstance()->GetSize();
+	WriteFile(hFile, &iNaviNum, sizeof(int), &dwByte, NULL);
+
+	for (iter; iter != vecNavi->end(); ++iter)
+	{
+		D3DXVECTOR3 vPoint[3];
+		DWORD		dwType;
+		vPoint[0] = *((*iter)->GetPoint(CNaviCell::POINT_A));
+		vPoint[1] = *((*iter)->GetPoint(CNaviCell::POINT_B));
+		vPoint[2] = *((*iter)->GetPoint(CNaviCell::POINT_C));
+		dwType = ((*iter)->GetType());
+
+		WriteFile(hFile, vPoint, sizeof(D3DXVECTOR3) * 3, &dwByte, NULL);
+		WriteFile(hFile, &dwType, sizeof(DWORD), &dwByte, NULL);
+	}
+
+	CloseHandle(hFile);
+
 }
 
 
 void CNaviTool::OnNaviLoad()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+
+	CNaviMgr::GetInstance()->ResetNavimesh();
+
+	CFileDialog Dlg(TRUE, L"dat", NULL,//화일명 없음 
+		OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
+		NULL, NULL);
+
+	//옵션 선택 부분.
+	if (Dlg.DoModal() == IDOK)
+	{
+		CString strPathName = Dlg.GetPathName();//path를 돌려줌
+		wstring wstrPath = strPathName;
+	}
+
+	HANDLE	hFile = CreateFile(Dlg.GetPathName(), GENERIC_READ,
+		0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	DWORD	dwByte;
+
+	int iNaviNum;
+	ReadFile(hFile, &iNaviNum, sizeof(int), &dwByte, NULL);
+	CNaviMgr::GetInstance()->Reserve_CellContainerSize(iNaviNum);
+
+	for (int i = 0; i < iNaviNum; ++i)
+	{
+		D3DXVECTOR3 vPoint[3];
+		ReadFile(hFile, vPoint, sizeof(D3DXVECTOR3) * 3, &dwByte, NULL);
+		DWORD		dwType;
+		ReadFile(hFile, &dwType, sizeof(DWORD), &dwByte, NULL);
+
+		CNaviMgr::GetInstance()->Add_Cell(&vPoint[0], &vPoint[1], &vPoint[2], dwType);
+	}
+	CNaviMgr::GetInstance()->Link_Cell();
+
+	m_iNaviCnt = iNaviNum;
+	UpdateData(FALSE);
+
+	CloseHandle(hFile);
+}
+
+
+void CNaviTool::OnObjWireCheck()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	CObjectTool* pObjTool = &((CMainFrame*)AfxGetMainWnd())->m_pMyForm->m_Tab1;
+
+	if (m_ObjectWire.GetCheck() == TRUE)
+	{
+		pObjTool->m_WireFrame.SetCheck(TRUE);
+	}
+	else
+	{
+		pObjTool->m_WireFrame.SetCheck(FALSE);
+	}
 }

@@ -21,6 +21,7 @@ public:
 	void Render(void);
 	DWORD MoveOnNaviMesh(D3DXVECTOR3* pPos, const D3DXVECTOR3* pDir
 		, const DWORD& dwCurrentIdx);
+	void Update(void);
 	void Release(void);
 
 public:

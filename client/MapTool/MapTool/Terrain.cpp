@@ -10,6 +10,9 @@
 #include "Device.h"
 #include "Shader.h"
 #include "ResourcesMgr.h"
+#include "NaviMgr.h"
+#include "MyForm.h"
+#include "MainFrm.h"
 
 CTerrain::CTerrain()
 {
@@ -62,6 +65,12 @@ HRESULT CTerrain::Initialize(void)
 
 int CTerrain::Update(void)
 {
+	CNaviTool* pNaviTool = &((CMainFrame*)AfxGetMainWnd())->m_pMyForm->m_Tab2;
+
+	if (pNaviTool->m_WireFrame.GetCheck() == TRUE)
+		m_pTerrainBuffer->CreateRasterizerState2();
+	else
+		m_pTerrainBuffer->CreateRasterizerState();
 
 	CObj::Update();
 	return 0;
@@ -132,6 +141,7 @@ HRESULT CTerrain::AddComponent(void)
 	m_pTerrainBuffer = dynamic_cast<CVIBuffer*>(pComponent);
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Buffer", pComponent));
+	m_pTerrainBuffer->CreateRasterizerState();
 
 
 	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Texture_Terrain");

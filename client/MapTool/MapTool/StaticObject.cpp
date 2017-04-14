@@ -12,6 +12,10 @@
 #include "Device.h"
 #include "Camera.h"
 #include "ResourcesMgr.h"
+#include "ObjectTool.h"
+#include "NaviTool.h"
+#include "MainFrm.h"
+#include "MyForm.h"
 
 
 CStaticObject::CStaticObject()
@@ -55,6 +59,15 @@ HRESULT CStaticObject::Initialize(const TCHAR* pMeshKey, D3DXVECTOR3 vPos)
 int CStaticObject::Update(void)
 {
 	D3DXVec3TransformNormal(&m_pInfo->m_vDir, &g_vLook, &m_pInfo->m_matWorld);
+
+	CObjectTool* pObjTool = &((CMainFrame*)AfxGetMainWnd())->m_pMyForm->m_Tab1;
+
+	if (pObjTool->m_WireFrame.GetCheck() == TRUE)
+		m_pBuffer->CreateRasterizerState2();
+	else
+		m_pBuffer->CreateRasterizerState();
+
+
 	//SelectCheck();
 	CObj::Update();
 
@@ -111,6 +124,7 @@ HRESULT CStaticObject::AddComponent(const TCHAR* pMeshKey, const TCHAR* pTexture
 	m_pBuffer = dynamic_cast<CStaticMesh*>(pComponent);
 	NULL_CHECK_RETURN(m_pBuffer, E_FAIL);
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Mesh", pComponent));
+	m_pBuffer->CreateRasterizerState();
 
 	//Texture
 	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, pTextureKey);

@@ -43,6 +43,7 @@ public:
 		, const D3DXVECTOR3* pDir
 		, DWORD dwNeighborID);
 	HRESULT AddComponent(CLineCol* pLineCol);
+	void Update();
 	void Release();
 
 private:

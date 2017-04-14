@@ -8,6 +8,9 @@
 #include "ShaderMgr.h"
 #include "Shader.h"
 #include "Info.h"
+#include "NaviTool.h"
+#include "MainFrm.h"
+#include "MyForm.h"
 
 CNaviCell::CNaviCell(const D3DXVECTOR3* pPointA, const D3DXVECTOR3* pPointB, const D3DXVECTOR3* pPointC)
 	: m_dwIndex(0)
@@ -77,24 +80,15 @@ HRESULT CNaviCell::Init_Cell(const DWORD& dwIdx, const DWORD& dwType)
 	m_pLine2D[LINE_BC] = CLine2D::Create(&m_vPoint[POINT_B], &m_vPoint[POINT_C]);
 	m_pLine2D[LINE_CA] = CLine2D::Create(&m_vPoint[POINT_C], &m_vPoint[POINT_A]);
 
-	D3DXVECTOR3 vAverage;
-
-	vAverage = m_vPoint[POINT_A] + m_vPoint[POINT_B] + m_vPoint[POINT_C];
-	vAverage /= 3.f;
-
-	m_CellPos = vAverage; 
 
 	D3DXMatrixIdentity(&m_CellMat);
-	D3DXMATRIX	matScale, matRotX, matRotY, matRotZ, matTrans;
+	D3DXMATRIX	matScale, matTrans;
 
 	//스자이공
 	D3DXMatrixScaling(&matScale, 1.f,1.f,1.f);
-	D3DXMatrixRotationX(&matRotX, 0.f);
-	D3DXMatrixRotationY(&matRotY, 0.f);
-	D3DXMatrixRotationZ(&matRotZ, 0.f);
-	D3DXMatrixTranslation(&matTrans, m_CellPos.x, m_CellPos.y, m_CellPos.z);
+	D3DXMatrixTranslation(&matTrans, 0.f, 0.f, 0.f);
 
-	m_CellMat = matScale * matRotX * matRotY * matRotZ * matTrans;
+	m_CellMat = matScale * matTrans;
 
 
 	return S_OK;
@@ -102,7 +96,6 @@ HRESULT CNaviCell::Init_Cell(const DWORD& dwIdx, const DWORD& dwType)
 
 void CNaviCell::Render(void)
 {
-
 	ConstantBuffer cb;
 	D3DXMatrixTranspose(&cb.matWorld, &m_CellMat);
 	D3DXMatrixTranspose(&cb.matView, &CCamera::GetInstance()->m_matView);
@@ -230,4 +223,14 @@ HRESULT CNaviCell::AddComponent(CLineCol* pLineCol)
 	m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"PS_LINE");
 
 	return S_OK;
+}
+
+void CNaviCell::Update()
+{
+	CNaviTool* pNaviTool = &((CMainFrame*)AfxGetMainWnd())->m_pMyForm->m_Tab2;
+
+	if (pNaviTool->m_NaviView.GetCheck() == TRUE)
+		m_pBuffer->CreateRasterizerState();
+	else
+		m_pBuffer->CreateRasterizerState2();
 }

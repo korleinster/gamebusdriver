@@ -45,5 +45,5 @@ void CTerrainCol::CollisionTerrain(D3DXVECTOR3 * pPos, VTXTEX * pVertex)
 	// y  = (-Ax - Cz - D) / B;
 
 	pPos->y = (-Plane.a * pPos->x - Plane.c * pPos->z - Plane.d) / Plane.b;
-	pPos->y += 1.f;
+	//pPos->y += 1.f;
 }

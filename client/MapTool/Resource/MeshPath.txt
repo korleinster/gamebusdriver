@@ -1,6 +1,8 @@
 battlegroundcenter|..\Resource\Mesh\|battlegroundcenter.FBX
 grass|..\Resource\Mesh\|grass.FBX
 house1|..\Resource\Mesh\|house1.FBX
+house2|..\Resource\Mesh\|house2.FBX
+house3|..\Resource\Mesh\|house3.FBX
 longhouse|..\Resource\Mesh\|longhouse.FBX
 longrock|..\Resource\Mesh\|longrock.FBX
 magiccenter|..\Resource\Mesh\|magiccenter.FBX

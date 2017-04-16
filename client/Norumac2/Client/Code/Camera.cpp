@@ -35,6 +35,7 @@ HRESULT CCamera::Initialize(void)
 	m_dwTime = GetTickCount();
 
 	m_bMouseFix = true;
+	m_bDebugCam = false;
 
 	m_pInfo = CInfo::Create(D3DXVECTOR3(0.f, 0.f, 1.f));
 	
@@ -62,9 +63,14 @@ int CCamera::Update(void)
 	if (CSceneMgr::GetInstance()->m_eType != SCENE_LOGO)
 	{
 		KeyState();
-		//MouseMove();
-		//FixMouse();
-		TargetRenewal();
+
+		if (m_bDebugCam == true)
+		{
+			MouseMove();
+			FixMouse();
+		}
+		else if(m_bDebugCam == false)
+			TargetRenewal();
 	}
 	MakeView();
 	MakeProjection();
@@ -163,6 +169,21 @@ void CCamera::KeyState(void)
 		//m_pInfo->m_vDir.y = 0.f;
 		//m_vAt -= m_pInfo->m_vDir * fTime * m_fCameraSpeed * -1.f;
 	}
+
+	if (CInput::GetInstance()->GetDIKeyState(DIK_PGUP) & 0x80)
+	{
+		if (m_bDebugCam == true)
+			m_bDebugCam = false;
+
+
+	}
+
+	if (CInput::GetInstance()->GetDIKeyState(DIK_PGDN) & 0x80)
+	{
+		if (m_bDebugCam == false)
+			m_bDebugCam = true;
+	}
+
 
 }
 
@@ -334,6 +355,7 @@ void CCamera::TargetRenewal(void)
 	D3DXVec3TransformNormal(&m_vEye, &m_vEye, &matRotAxis);
 
 	m_vEye.x = m_pTargetInfo->m_vPos.x - 10.f;
+	m_vEye.y = m_pTargetInfo->m_vPos.y + 20.f;
 	m_vEye.z = m_pTargetInfo->m_vPos.z + 10.f;
 
 	m_vAt = m_pTargetInfo->m_vPos;

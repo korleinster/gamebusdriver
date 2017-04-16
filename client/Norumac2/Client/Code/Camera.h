@@ -31,6 +31,7 @@ private:
 	float m_fCameraDistance;
 	float m_fCameraSpeed;
 	bool  m_bMouseFix;	
+	bool  m_bDebugCam;
 	DWORD m_dwTime;
 	DWORD m_dwKey;
 	D3DXVECTOR3 m_vDirZ;

@@ -120,3 +120,8 @@ void CObj::SetPacketData(player_data* pPacketData)
 {
 	m_pInfo->m_ServerInfo = *pPacketData;
 }
+
+void CObj::SetPacketHp(int* pPacketData)
+{
+	m_pInfo->m_ServerInfo.state.hp = *pPacketData;
+}

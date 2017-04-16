@@ -309,9 +309,6 @@
     <ClInclude Include="..\Server_Code\ClientClass.h">
       <Filter>99.Default\Only for Server</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\server\serverBoostModel\serverBoostModel\protocol.h">
-      <Filter>99.Default\Only for Server</Filter>
-    </ClInclude>
     <ClInclude Include="..\Code\OtherPlayer.h">
       <Filter>02.Object\02.OtherPlayer</Filter>
     </ClInclude>
@@ -347,6 +344,9 @@
     </ClInclude>
     <ClInclude Include="..\Code\RenderTarget.h">
       <Filter>04.Manager\10.TargetMgr\MultiRenderTarget\RenderTaget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\server\2017 server\serverBoostModel\serverBoostModel\protocol.h">
+      <Filter>99.Default\Only for Server</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -60,11 +60,11 @@ BOOL CALLBACK AboutDlgProc(HWND, UINT, WPARAM, LPARAM);
 using namespace std;
 
 // 서버와 관련된 프로토콜
-#include"protocol.h"
+#include "../../../../server/2017 server/serverBoostModel/serverBoostModel/protocol.h"
 
 // client 통신 관련 class
-#include<fstream>
-#include"../Server_Code/ClientClass.h"
+#include <fstream>
+#include "../Server_Code/ClientClass.h"
 
 extern AsynchronousClientClass g_client;
 

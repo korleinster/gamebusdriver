@@ -60,24 +60,6 @@ void AsynchronousClientClass::processPacket(Packet *buf)
 			// 0 이하라면 지워버령
 			m_other_players.erase(p->under_attack_id);
 		}
-
-		// 내가 피해를 입은 것이라면, 내 hp 를 깎고 break;
-		//if (m_player.id == *(reinterpret_cast<UINT*>(&buf[sizeof(int) + 2]))) {
-		//	m_player.state.hp = *(reinterpret_cast<int*>(&buf[2]));
-		//	break;
-		//}
-		//
-		//// 내가 아니라면 다른애 hp 깎기
-		//unordered_map<UINT, player_data>::iterator ptr = m_other_players.find(*(reinterpret_cast<UINT*>(&buf[sizeof(int) + 2])));
-		//ptr->second.state.hp = *(reinterpret_cast<int*>(&buf[2]));
-		//
-		//// 만약 hp 가 0 이하라면, 클라이언트에서 지워주어야 한다.
-		//if (0 >= *(reinterpret_cast<int*>(&buf[2]))) {
-		//	// 지워진게 없다면!!
-		//	if (1 != m_other_players.erase(*(reinterpret_cast<UINT*>(&buf[sizeof(int) + 2])))) {
-		//
-		//	}			
-		//}
 		break;
 	}
 

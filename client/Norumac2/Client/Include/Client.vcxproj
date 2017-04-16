@@ -167,7 +167,7 @@
     <Text Include="ServerIP.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\server\serverBoostModel\serverBoostModel\protocol.h" />
+    <ClInclude Include="..\..\..\..\server\2017 server\serverBoostModel\serverBoostModel\protocol.h" />
     <ClInclude Include="..\Code\AniBuffer.h" />
     <ClInclude Include="..\Code\AnimationMgr.h" />
     <ClInclude Include="..\Code\Camera.h" />

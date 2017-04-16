@@ -113,7 +113,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 				list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->begin();
 				list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->end();
 
-				for (iter; iter != iter_end;)
+				for (iter; iter != iter_end; ++iter)
 				{
 					if ((*iter)->GetPacketData()->id == p->under_attack_id)
 					{

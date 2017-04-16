@@ -56,11 +56,11 @@ CObj * CObj::Create(ReleaseType _eType)
 
 void CObj::Release(void)
 {
-	map<wstring, CComponent*>::iterator iter = m_mapComponent.begin();
+ 	map<wstring, CComponent*>::iterator iter = m_mapComponent.begin();
 	map<wstring, CComponent*>::iterator iter_end = m_mapComponent.end();
 	for (iter; iter != iter_end; ++iter)
 	{
-		::Safe_Delete(iter->second);
+		::Safe_Release(iter->second);
 	}
 
 	m_mapComponent.clear();

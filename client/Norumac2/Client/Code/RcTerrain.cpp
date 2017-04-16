@@ -205,6 +205,7 @@ DWORD CRcTerrain::Release(void)
 CResources * CRcTerrain::CloneResource(void)
 {
 	CResources* pResource = this;
+	pResource->AddRef();
 	return pResource;
 }
 

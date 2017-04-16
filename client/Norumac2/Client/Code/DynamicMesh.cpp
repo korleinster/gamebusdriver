@@ -365,5 +365,6 @@ CResources * CDynamicMesh::CloneResource()
 {
 	CResources* pResource = this;
 
+	pResource->AddRef();
 	return pResource;
 }

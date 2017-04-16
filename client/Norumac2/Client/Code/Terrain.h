@@ -20,6 +20,8 @@ private:
 	CTexture*	m_pTexture;
 	VTXTEX*		m_pVerTex;
 	VTXTEX*		m_pConvertVerTex;
+	INDEX32*	m_pIndex;
+	DWORD		m_dwTriCnt;
 
 	// Scene meshes shader constant buffers
 	ID3D11Buffer*		m_pSceneVertexShaderCB;

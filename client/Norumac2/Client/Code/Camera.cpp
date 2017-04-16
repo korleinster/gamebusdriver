@@ -170,7 +170,7 @@ void CCamera::KeyState(void)
 		//m_vAt -= m_pInfo->m_vDir * fTime * m_fCameraSpeed * -1.f;
 	}
 
-	if (CInput::GetInstance()->GetDIKeyState(DIK_PGUP) & 0x80)
+	if (CInput::GetInstance()->GetDIKeyState(DIK_F11) & 0x80)
 	{
 		if (m_bDebugCam == true)
 			m_bDebugCam = false;
@@ -178,7 +178,7 @@ void CCamera::KeyState(void)
 
 	}
 
-	if (CInput::GetInstance()->GetDIKeyState(DIK_PGDN) & 0x80)
+	if (CInput::GetInstance()->GetDIKeyState(DIK_F12) & 0x80)
 	{
 		if (m_bDebugCam == false)
 			m_bDebugCam = true;

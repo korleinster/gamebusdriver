@@ -11,6 +11,7 @@
 #include "Shader.h"
 #include "ResourcesMgr.h"
 #include "RenderMgr.h"
+#include "Frustum.h"
 
 #pragma pack(push,1)
 struct CB_VS_PER_OBJECT
@@ -36,6 +37,7 @@ CTerrain::CTerrain()
 	m_pTexture = NULL;
 	m_pVerTex = NULL;
 	m_pConvertVerTex = NULL;
+	m_dwTriCnt = 0;
 }
 
 CTerrain::~CTerrain()
@@ -87,6 +89,8 @@ HRESULT CTerrain::Initialize(void)
 
 	cbDesc.ByteWidth = sizeof(CB_PS_PER_OBJECT);
 	FAILED_CHECK(m_pGrapicDevice->m_pDevice->CreateBuffer(&cbDesc, NULL, &m_pScenePixelShaderCB));
+
+	m_pIndex = new INDEX32[(VERTEXCOUNTX - 1) * (VERTEXCOUNTZ - 1) * 2];
 
 	return S_OK;
 }

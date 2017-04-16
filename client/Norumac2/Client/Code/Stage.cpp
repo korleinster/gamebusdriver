@@ -11,6 +11,7 @@
 #include "Camera.h"
 #include "Info.h"
 #include "ResourcesMgr.h"
+#include "Frustum.h"
 
 CStage::CStage()
 	: m_bFirstLogin(false)
@@ -28,7 +29,6 @@ HRESULT CStage::Initialize(void)
 	if (FAILED(CreateObj()))
 		return E_FAIL;
 
-	// 서버와 통신을 위해서, 윈도우 핸들 값을 받아온다.
 	
 
 	return S_OK;
@@ -43,22 +43,6 @@ int CStage::Update(void)
 	}
 
 	CObjMgr::GetInstance()->Update();
-
-
-	/*if (GetAsyncKeyState('0'))
-	{
-		list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"Flower")->begin();
-		list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"Flower")->end();
-
-		for (iter; iter != iter_end;)
-		{
-			CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
-			::Safe_Release(*iter);
-			CObjMgr::GetInstance()->Get_ObjList(L"Flower")->erase(iter++);
-			cout << CObjMgr::GetInstance()->Get_ObjList(L"Flower")->size() << endl;
-		}		
-		
-	}*/
 
 	return 0;
 }

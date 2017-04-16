@@ -13,6 +13,7 @@
 #include "SceneMgr.h"
 #include "ParsingDevice9.h"
 #include "AnimationMgr.h"
+#include "Frustum.h"
 
 //¿œπ›∞¥√º
 #include "Shader.h"

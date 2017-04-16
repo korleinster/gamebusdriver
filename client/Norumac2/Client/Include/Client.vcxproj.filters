@@ -166,6 +166,18 @@
     <Filter Include="95.System\02.Time\01.Device">
       <UniqueIdentifier>{dd34141e-2394-445e-8a57-8cda25588b51}</UniqueIdentifier>
     </Filter>
+    <Filter Include="96.Utility\03.Optimization">
+      <UniqueIdentifier>{8bf12b9c-6fbc-49c9-8399-16ffcd21a722}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.Utility\03.Optimization\01.Frustum">
+      <UniqueIdentifier>{e03b9be9-7107-4ae8-814a-2245d044f4e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.Utility\03.Optimization\02.QuardTree">
+      <UniqueIdentifier>{995c48e5-4076-4726-914b-69e8878ed4ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.Utility\03.Optimization\02.QuardTree\Node">
+      <UniqueIdentifier>{09244366-0d27-4ad5-9c2d-ca6c0af065bf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -348,6 +360,15 @@
     <ClInclude Include="..\..\..\..\server\2017 server\serverBoostModel\serverBoostModel\protocol.h">
       <Filter>99.Default\Only for Server</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\Frustum.h">
+      <Filter>96.Utility\03.Optimization\01.Frustum</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\QuardTree.h">
+      <Filter>96.Utility\03.Optimization\02.QuardTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Node.h">
+      <Filter>96.Utility\03.Optimization\02.QuardTree\Node</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\MainApp.cpp">
@@ -502,6 +523,15 @@
     </ClCompile>
     <ClCompile Include="..\Code\RenderTarget.cpp">
       <Filter>04.Manager\10.TargetMgr\MultiRenderTarget\RenderTaget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Frustum.cpp">
+      <Filter>96.Utility\03.Optimization\01.Frustum</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\QuardTree.cpp">
+      <Filter>96.Utility\03.Optimization\02.QuardTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Node.cpp">
+      <Filter>96.Utility\03.Optimization\02.QuardTree\Node</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -180,6 +180,7 @@
     <ClInclude Include="..\Code\Flower.h" />
     <ClInclude Include="..\Code\Font.h" />
     <ClInclude Include="..\Code\FontMgr.h" />
+    <ClInclude Include="..\Code\Frustum.h" />
     <ClInclude Include="..\Code\Info.h" />
     <ClInclude Include="..\Code\Input.h" />
     <ClInclude Include="..\Code\LightMgr.h" />
@@ -189,11 +190,13 @@
     <ClInclude Include="..\Code\MainApp.h" />
     <ClInclude Include="..\Code\Mesh.h" />
     <ClInclude Include="..\Code\MultiRenderTarget.h" />
+    <ClInclude Include="..\Code\Node.h" />
     <ClInclude Include="..\Code\Obj.h" />
     <ClInclude Include="..\Code\ObjMgr.h" />
     <ClInclude Include="..\Code\OtherPlayer.h" />
     <ClInclude Include="..\Code\ParsingDevice9.h" />
     <ClInclude Include="..\Code\Player.h" />
+    <ClInclude Include="..\Code\QuardTree.h" />
     <ClInclude Include="..\Code\RcCol.h" />
     <ClInclude Include="..\Code\RcTerrain.h" />
     <ClInclude Include="..\Code\RcTex.h" />
@@ -238,6 +241,7 @@
     <ClCompile Include="..\Code\Flower.cpp" />
     <ClCompile Include="..\Code\Font.cpp" />
     <ClCompile Include="..\Code\FontMgr.cpp" />
+    <ClCompile Include="..\Code\Frustum.cpp" />
     <ClCompile Include="..\Code\Info.cpp" />
     <ClCompile Include="..\Code\Input.cpp" />
     <ClCompile Include="..\Code\LightMgr.cpp" />
@@ -247,11 +251,13 @@
     <ClCompile Include="..\Code\MainApp.cpp" />
     <ClCompile Include="..\Code\Mesh.cpp" />
     <ClCompile Include="..\Code\MultiRenderTarget.cpp" />
+    <ClCompile Include="..\Code\Node.cpp" />
     <ClCompile Include="..\Code\Obj.cpp" />
     <ClCompile Include="..\Code\ObjMgr.cpp" />
     <ClCompile Include="..\Code\OtherPlayer.cpp" />
     <ClCompile Include="..\Code\ParsingDevice9.cpp" />
     <ClCompile Include="..\Code\Player.cpp" />
+    <ClCompile Include="..\Code\QuardTree.cpp" />
     <ClCompile Include="..\Code\RcCol.cpp" />
     <ClCompile Include="..\Code\RcTerrain.cpp" />
     <ClCompile Include="..\Code\RcTex.cpp" />

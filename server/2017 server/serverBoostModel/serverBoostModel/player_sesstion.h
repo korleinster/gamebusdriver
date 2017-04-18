@@ -11,10 +11,14 @@ public:
 
 	void Init();
 
-	bool* get_hp_adding() { return &is_hp_adding; }
-	unsigned int get_id() { return m_id; }
-	bool get_current_connect_state() { return m_connect_state; }
-	player_data* get_player_data() { return &m_player_data; }
+	inline bool* get_hp_adding() { return &is_hp_adding; }
+	inline bool set_hp(int hp) { m_player_data.state.hp = hp; return true; }
+	inline int get_maxhp() { return m_player_data.state.maxhp; }
+
+	inline unsigned int get_id() { return m_id; }
+	inline bool get_current_connect_state() { return m_connect_state; }
+	inline bool set_connect_state(bool b) { m_connect_state = b; return b; }
+	inline player_data* get_player_data() { return &m_player_data; }
 	void send_packet(Packet *packet);
 	bool check_login();
 

@@ -38,5 +38,5 @@ extern vector<player_session*> g_clients;
 //static AI_session g_AIs[MAX_AI_NUM];
 
 // DB 통신용 변수
-extern DB database;
-extern TimerQueue time_queue;
+extern DB g_database;
+extern TimerQueue g_time_queue;

@@ -7,7 +7,7 @@ boostAsioServer::boostAsioServer() : m_acceptor(g_io_service, tcp::endpoint(tcp:
 	CheckThisCPUcoreCount();
 
 	// DB SQL 서버에 접속
-	database.Init();
+	g_database.Init();
 
 	// ai 봇 초기화
 	g_client_init();
@@ -49,7 +49,7 @@ void boostAsioServer::start_io_service()
 	// DB 서버를 위해 -1
 	// Timer Thread 를 위해 -1
 	for (int i = 0; i < m_cpuCore - 2; ++i) { m_worker_threads.emplace_back(new thread{ [&]() -> void { g_io_service.run(); } }); }
-	m_worker_threads.emplace_back(new thread{ [&]() -> void { time_queue.TimerThread(); } });
+	m_worker_threads.emplace_back(new thread{ [&]() -> void { g_time_queue.TimerThread(); } });
 
 	while (m_ServerShutdown) { Sleep(1000); }
 

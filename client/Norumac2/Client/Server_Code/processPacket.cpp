@@ -54,6 +54,8 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 	case SERVER_MESSAGE_HP_CHANGED: {
 		sc_hp *p = reinterpret_cast<sc_hp*>(buf);
 
+		cout << "[ " << p->id << " ] 변경된 HP = " << p->hp << "\n";
+
 		if (CSceneMgr::GetInstance()->GetScene() != SCENE_LOGO)
 		{
 			if (m_player.id == p->id) {
@@ -70,6 +72,8 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 	case KEYINPUT_ATTACK: {
 		sc_atk *p = reinterpret_cast<sc_atk*>(buf);
+
+		cout << "[ " << p->attacking_id << " ] -> [ " << p->under_attack_id << " ] 를 공격함. 현재 HP = " << p->hp << "\n";
 
 		if (CSceneMgr::GetInstance()->GetScene() != SCENE_LOGO)
 		{
@@ -110,10 +114,10 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			if (0 >= p->hp)
 			{
 				list<CObj*>* ListObj = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer");
-				list<CObj*>::iterator iter = ListObj->begin();//CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->begin();
-				list<CObj*>::iterator iter_end = ListObj->end();//ObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->end();
+				list<CObj*>::iterator iter = ListObj->begin();
+				list<CObj*>::iterator iter_end = ListObj->end();
 
-				for (iter; iter != iter_end; ++iter)
+				for (; iter != iter_end; ++iter)
 				{
 					if ((*iter)->GetPacketData()->id == p->under_attack_id)
 					{
@@ -123,7 +127,6 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 					}
 				}
 			}
-
 		}
 		break;
 	}
@@ -140,6 +143,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			break;
 		case INIT_CLIENT: {
 			m_player = reinterpret_cast<sc_client_init_info *>(buf)->player_info;
+			(*CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin())->SetPos(D3DXVECTOR3(m_player.pos.x, 0.f, m_player.pos.y));
 			break;
 		}
 		case INIT_OTHER_CLIENT: {

@@ -25,9 +25,9 @@ void TimerQueue::add_event(const unsigned int& id, const int& sec, time_queue_ev
 
 	event_type *ptr = new event_type;
 
-	ptr->obj_id = id;
+	ptr->id = id;
 	ptr->wakeup_time = GetTickCount() + (sec * 1000);
-	ptr->event_id = type;
+	ptr->type = type;
 	ptr->is_ai = is_ai;
 
 	time_lock.lock();
@@ -37,32 +37,26 @@ void TimerQueue::add_event(const unsigned int& id, const int& sec, time_queue_ev
 
 void TimerQueue::processPacket(event_type *p) {
 
-	switch (p->event_id)
+	switch (p->type)
 	{
 	case HP_ADD: {	// 1초마다 hp 5씩 채우기
 
 		// 이미 통신이 끊기거나 ( ai 가 죽은 녀석이면 pass )
-		if (DISCONNECTED == g_clients[p->obj_id]->get_current_connect_state()) { break; }
+		if (DISCONNECTED == g_clients[p->id]->get_current_connect_state()) { break; }
 
 		int adding_hp_size = 5;
 
 		// hp가 maxhp 이상이 아니면, 아래 실행
-		if (false == (g_clients[p->obj_id]->get_player_data()->state.hp > (g_clients[p->obj_id]->get_player_data()->state.maxhp - 1))) {
-			g_clients[p->obj_id]->get_player_data()->state.hp += adding_hp_size;
+		if (false == (g_clients[p->id]->get_player_data()->state.hp > (g_clients[p->id]->get_player_data()->state.maxhp - 1))) {
+			g_clients[p->id]->get_player_data()->state.hp += adding_hp_size;
 
 			// 만피가 되었다면, 계속 hp 더해주는 모드 끄기
-			if (g_clients[p->obj_id]->get_player_data()->state.maxhp == g_clients[p->obj_id]->get_player_data()->state.hp) { *g_clients[p->obj_id]->get_hp_adding() = false; }
-			add_event(p->obj_id, 1, HP_ADD, false);
-
-			//Packet buf[MAX_BUF_SIZE]{ 0 };
-			//buf[0] = (sizeof(int) * 2) + 2;	// 패킷 size
-			//buf[1] = SERVER_MESSAGE_HP_CHANGED;
-			//*reinterpret_cast<int *>(&buf[2]) = g_clients[p->obj_id]->get_player_data()->state.hp;	// hp 입력
-			//*reinterpret_cast<int *>(&buf[6]) = p->obj_id;	// id 입력
-
+			if (g_clients[p->id]->get_player_data()->state.maxhp == g_clients[p->id]->get_player_data()->state.hp) { *g_clients[p->id]->get_hp_adding() = false; }
+			add_event(p->id, 1, HP_ADD, false);
+			
 			sc_hp packet;
-			packet.hp == g_clients[p->obj_id]->get_player_data()->state.hp;
-			packet.id = p->obj_id;
+			packet.hp = g_clients[p->id]->get_player_data()->state.hp;
+			packet.id = p->id;
 
 			for (auto players : g_clients) {
 				if (DISCONNECTED == players->get_current_connect_state()) { continue; }
@@ -72,8 +66,30 @@ void TimerQueue::processPacket(event_type *p) {
 				players->send_packet(reinterpret_cast<Packet*>(&packet));
 			}
 		}
-	}
 		break;
+	}
+	case DEAD_TO_ALIVE: {
+
+		if (true == p->is_ai) {
+			g_clients[p->id]->set_connect_state(CONNECTED);
+			*g_clients[p->id]->get_hp_adding() = false;
+			g_clients[p->id]->set_hp(g_clients[p->id]->get_maxhp());
+
+			sc_other_init_info packet;
+			packet.playerData = *g_clients[p->id]->get_player_data();
+			for (auto players : g_clients) {
+				if (DISCONNECTED == players->get_current_connect_state()) { continue; }
+				// 내 자신 아이디는 검색 안해도 됨. ai 니까..
+				if (true == players->get_player_data()->is_ai) { continue; }
+				players->send_packet(reinterpret_cast<Packet*>(&packet));
+			}
+		}
+		else {	// player 일 경우
+
+		}
+
+		break;
+	}
 	default:
 		break;
 	}

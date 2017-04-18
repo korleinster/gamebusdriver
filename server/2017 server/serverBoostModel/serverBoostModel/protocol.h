@@ -67,11 +67,11 @@ using status = struct Status {
 using sub_status = struct Sub_status
 {
 	unsigned char critical = { 20 };
-	unsigned short def{ 5 };
-	unsigned short str{ 5 };
-	unsigned short agi{ 5 };
-	unsigned short intel{ 5 };
-	unsigned short health{ 5 };
+	unsigned short def{ 10 };
+	unsigned short str{ 10 };
+	unsigned short agi{ 10 };
+	unsigned short intel{ 10 };
+	unsigned short health{ 10 };
 };
 
 /// 플레이어 전체 정보 64 ( dir -3 ) ( nickname - 2 ) bytes

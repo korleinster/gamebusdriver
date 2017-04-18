@@ -8,11 +8,10 @@ boost::asio::io_service g_io_service;
 // 플레이어가 담긴 변수
 mutex g_clients_lock;
 vector<player_session*> g_clients;
-//static AI_session g_AIs[MAX_AI_NUM];
 
 // DB 통신용 변수
-DB database;
-TimerQueue time_queue;
+DB g_database;
+TimerQueue g_time_queue;
 
 int main()
 {

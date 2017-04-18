@@ -3,14 +3,15 @@
 enum time_queue_event
 {
 	HP_ADD = 1,
+	DEAD_TO_ALIVE,
 
 };
 
 using event_type = struct Event_type
 {
-	unsigned int obj_id;
+	unsigned int id;
 	unsigned int wakeup_time;
-	int event_id;
+	int type;
 	bool is_ai{ false };
 };
 

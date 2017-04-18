@@ -21,7 +21,7 @@ bool player_session::check_login() {
 			return true;
 		}
 
-		if (true == database.DB_Login(m_login_id, m_login_pw)) {
+		if (true == g_database.DB_Login(m_login_id, m_login_pw)) {
 			// 로그인 성공 시 여기서 플레이어 데이터 불러와서 입력
 
 			/// ( 성공했다고 클라한테 메세지 전송 )
@@ -49,10 +49,10 @@ void player_session::Init()
 {
 	m_connect_state = true;
 
-	// 기본 셋팅 초기화 정보 보내기 *****************>>>> player_data 초기화에 대한 기본 필요 정보 수정시, 여기서 해야함.
+	// 기본 셋팅 초기화 정보 보내기
 
 	m_player_data.id = m_id;
-	m_player_data.pos.x = 150;
+	m_player_data.pos.x = 160;
 	m_player_data.pos.y = 400;
 	m_player_data.dir = 0;
 	m_player_data.state.maxhp = 100;
@@ -64,16 +64,16 @@ void player_session::Init()
 	m_player_data.is_ai = false;
 
 	m_sub_status.critical = 20;	// const
-	m_sub_status.def = 1;
-	m_sub_status.str = 5;
-	m_sub_status.agi = 2;
-	m_sub_status.intel = 1;
-	m_sub_status.health = 3;
+	m_sub_status.def = 1 + 10;
+	m_sub_status.str = 5 + 10;
+	m_sub_status.agi = 2 + 10;
+	m_sub_status.intel = 1 + 10;
+	m_sub_status.health = 3 + 10;
 
 	if (0 == wcscmp(L"guest", m_login_id)) {
 		// guest 입장이라면, 초기화를 여기에서 진행한다.
 		m_player_data.id = m_id;
-		m_player_data.pos.x = 150;
+		m_player_data.pos.x = 160;
 		m_player_data.pos.y = 400;
 		m_player_data.dir = 0;
 		m_player_data.state.maxhp = 100;
@@ -85,11 +85,11 @@ void player_session::Init()
 		m_player_data.is_ai = false;
 
 		m_sub_status.critical = 20;	// const
-		m_sub_status.def = 1;
-		m_sub_status.str = 5;
-		m_sub_status.agi = 2;
-		m_sub_status.intel = 1;
-		m_sub_status.health = 3;
+		m_sub_status.def = 1 + 10;
+		m_sub_status.str = 5 + 10;
+		m_sub_status.agi = 2 + 10;
+		m_sub_status.intel = 1 + 10;
+		m_sub_status.health = 3 + 10;
 	}
 	
 	sc_client_init_info init_player;
@@ -98,7 +98,7 @@ void player_session::Init()
 	init_player.player_info = m_player_data;
 	g_clients[m_id]->send_packet(reinterpret_cast<Packet*>(&init_player));
 
-	// 초기화 정보 보내기 2 - 얘 정보를 다른 애들한테 보내고, 다른 애들 정보를 얘한테 보내기  *****************>>>> player_data 에서 추가되는 내용을 전송 시, 수정해주어야 한다.
+	// 초기화 정보 보내기 2 - 얘 정보를 다른 애들한테 보내고, 다른 애들 정보를 얘한테 보내기
 	sc_other_init_info my_info_to_other;
 	sc_other_init_info other_info_to_me;
 
@@ -119,7 +119,6 @@ void player_session::Init()
 	}
 
 	/*
-	근처 플레이어에게, 현재 플레이어의 입장을 알리며
 	view list 같은 곳에서도 추가하자 ~ !!
 	*/
 
@@ -142,8 +141,8 @@ void player_session::m_recv_packet()
 			m_connect_state = false;
 
 			/*
-			근처 플레이어에게, 현재 플레이어의 퇴장을 알리며
-			view list 같은 곳에서도 빼주자 ~ !!
+				DB 저장도 하장
+				view list 같은 곳에서도 빼주자 ~ !!
 			*/
 
 			sc_disconnect p;
@@ -221,12 +220,6 @@ void player_session::m_process_packet(Packet buf[])
 	{
 		switch (buf[1])
 		{
-		case TEST:
-			// 받은 패킷을 그대로 돌려준다.
-			cout << "Client No. [ " << m_id << " ] TEST Packet Recived !!\n";
-			printf("buf[0] = %d, buf[1] = %d, buf[2] = %d\n\n", buf[0], buf[1], buf[2]);
-			send_packet(buf);
-			break;
 
 		case CHANGED_POSITION: {
 			
@@ -245,8 +238,8 @@ void player_session::m_process_packet(Packet buf[])
 
 				players->send_packet(reinterpret_cast<Packet*>(&p));
 			}
-		}
 			break;
+		}
 
 		case CHANGED_DIRECTION: {
 			
@@ -265,8 +258,8 @@ void player_session::m_process_packet(Packet buf[])
 
 				players->send_packet(reinterpret_cast<Packet*>(&p));
 			}
+			break;
 		}
-								break;
 
 		case KEYINPUT_ATTACK:		// 기본 공격 ( 데미지 계산, hit box 범위 조정, 전부 여기서 다 조절해야 한다. )
 		{
@@ -289,35 +282,27 @@ void player_session::m_process_packet(Packet buf[])
 				int tempx = x - players->m_player_data.pos.x;
 				int tempy = y - players->m_player_data.pos.y;
 				if (((tempx * tempx) + (tempy * tempy)) <= (player_size * player_size)) {
-					players->m_player_data.state.hp -= 70;
+					players->m_player_data.state.hp -= m_sub_status.str;
 
 					if (false == *players->get_hp_adding()) {
 						*players->get_hp_adding() = true;
-						time_queue.add_event(players->m_player_data.id, 1, HP_ADD, false);	// AI 타격 일때, 따로 hp 추가해 주는 함수가 없다 !!! -> 일반 플레이어와 동일하게 처리함
+						g_time_queue.add_event(players->m_player_data.id, 1, HP_ADD, false);	// AI 타격 일때, 따로 hp 추가해 주는 함수가 없다 !!! -> 일반 플레이어와 동일하게 처리함
 					}
-
-					//Packet temp_hp_buf[MAX_BUF_SIZE]{ 0 };
-					//temp_hp_buf[0] = sizeof(int) + sizeof(UINT) + sizeof(UINT) + 2;	// hp + id + packet size addition(2)
-					//temp_hp_buf[1] = KEYINPUT_ATTACK;
-					//*(reinterpret_cast<int*>(&temp_hp_buf[2])) = players->m_player_data.state.hp;
-					//*(reinterpret_cast<int*>(&temp_hp_buf[6])) = players->m_id;		// 맞는 사람의 id
-					//*(reinterpret_cast<int*>(&temp_hp_buf[10])) = m_id;				// 공격한 사람의 id
-
+					
 					sc_atk p;
 					p.attacking_id = m_id;					// 공격자 id
 					p.under_attack_id = players->m_id;		// 맞는 놈의 id
 					p.hp = players->m_player_data.state.hp;	// 맞은 놈의 hp
 
-					// hp 가 0 이 되면 사망처리를 한다. -> 각각의 클라이언트에서 hp 가 0 된 녀석을 지워주자...
+					// hp 가 0 이 되면 사망처리를 한다. -> 각각의 클라이언트에서 hp 가 0 된 녀석을 지워줌
 					if (0 >= players->m_player_data.state.hp) {
-						//*(reinterpret_cast<int*>(&temp_hp_buf[2])) = players->m_player_data.state.hp = 0; // 굳이 0 으로 만들어줄 필요는 없는듯
 
-						// 맞은 애가 ai 면 그냥 연결 끊어서 죽이기
+						// 맞은 애가 ai 면 그냥 연결 끊어서 죽이기 ( 몹 10초후 리젠 )
 						if (MAX_AI_NUM > players->get_id()) {
 							players->m_connect_state = DISCONNECTED;
 
-							// 10 초후 리젠을 하는 타이머 큐에 집어넣는건 어떨까 싶다.
 							// 잡은 녀석에는 경험치도 주도록 하자.
+							g_time_queue.add_event(players->m_player_data.id, 10, DEAD_TO_ALIVE, true);
 						}
 					}
 
@@ -330,10 +315,24 @@ void player_session::m_process_packet(Packet buf[])
 					}
 				}
 			}
-
+			break;
 		}
-		break;
 		default:
+			// 잘 안날아 오는 패킷
+			switch (buf[1])
+			{
+			case TEST:
+				// 받은 패킷을 그대로 돌려준다.
+				cout << "Client No. [ " << m_id << " ] TEST Packet Recived !!\n";
+				printf("buf[0] = %d, buf[1] = %d, buf[2] = %d\n\n", buf[0], buf[1], buf[2]);
+				send_packet(buf);
+				break;
+
+			default:
+				break;
+			}
+
+			// default end
 			break;
 		}
 	}

@@ -123,17 +123,17 @@ int CPlayer::Update(void)
 
 	//cout << m_pInfo->m_vDir.x << "/" << m_pInfo->m_vDir.y << "/" << m_pInfo->m_vDir.z << endl;
 
-	cout << "Player pos: " << m_pInfo->m_vPos.x << "/" << m_pInfo->m_vPos.y << "/" << m_pInfo->m_vPos.z << endl;
+	//cout << "Player pos: " << m_pInfo->m_vPos.x << "/" << m_pInfo->m_vPos.y << "/" << m_pInfo->m_vPos.z << endl;
 
 
 	KeyInput();
 	AniMove();
 
-	cout <<"³» Ã¤·Â:" << m_pInfo->m_ServerInfo.state.hp << endl;
+	//cout << "³» Ã¤·Â:" << m_pInfo->m_ServerInfo.state.hp << endl;
 
 	CObj::Update();
 
-	cout << m_bPush << endl;
+	//cout << m_bPush << endl;
 
 	if (m_bPush == false)
 		m_ePlayerState = PLAYER_IDLE;
@@ -267,10 +267,11 @@ void CPlayer::KeyInput()
 		m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 		m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 
-
-		m_pInfo->m_ServerInfo.dir = KEYINPUT_UP;
+		if (m_pInfo->m_ServerInfo.dir != KEYINPUT_UP) {
+			m_pInfo->m_ServerInfo.dir = KEYINPUT_UP;
+			g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
+		}
 		g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
-		g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
 
 		
 		if (m_ePlayerState == PLAYER_MOVE)
@@ -286,6 +287,7 @@ void CPlayer::KeyInput()
 		//m_ePlayerState = PLAYER_MOVE;
 
 		//cout << "»ó" << endl;
+		cout << "ÇÃ·¹ÀÌ¾î ÁÂÇ¥ ( " << m_pInfo->m_vPos.x << " , " << m_pInfo->m_vPos.z << " )\n";
 	}
 	/*else
 		m_bPush = false;*/
@@ -299,9 +301,11 @@ void CPlayer::KeyInput()
 		m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 
 
-		m_pInfo->m_ServerInfo.dir = KEYINPUT_DOWN;
+		if (m_pInfo->m_ServerInfo.dir != KEYINPUT_DOWN) {
+			m_pInfo->m_ServerInfo.dir = KEYINPUT_DOWN;
+			g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
+		}
 		g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
-		g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
 
 		
 		if (m_ePlayerState == PLAYER_MOVE)
@@ -318,6 +322,7 @@ void CPlayer::KeyInput()
 		//m_ePlayerState = PLAYER_MOVE;
 
 		//cout << "ÇÏ" << endl;
+		cout << "ÇÃ·¹ÀÌ¾î ÁÂÇ¥ ( " << m_pInfo->m_vPos.x << " , " << m_pInfo->m_vPos.z << " )\n";
 	}
 	/*else
 		m_bPush = false;*/
@@ -332,9 +337,11 @@ void CPlayer::KeyInput()
 		m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 
 
-		m_pInfo->m_ServerInfo.dir = KEYINPUT_LEFT;
+		if (m_pInfo->m_ServerInfo.dir != KEYINPUT_LEFT) {
+			m_pInfo->m_ServerInfo.dir = KEYINPUT_LEFT;
+			g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
+		}
 		g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
-		g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
 
 		
 		if (m_ePlayerState == PLAYER_MOVE)
@@ -351,6 +358,7 @@ void CPlayer::KeyInput()
 		//m_ePlayerState = PLAYER_MOVE;
 
 		//cout << "ÁÂ" << endl;
+		cout << "ÇÃ·¹ÀÌ¾î ÁÂÇ¥ ( " << m_pInfo->m_vPos.x << " , " << m_pInfo->m_vPos.z << " )\n";
 	}
 	/*else
 		m_bPush = false;*/
@@ -364,9 +372,11 @@ void CPlayer::KeyInput()
 		m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 
 
-		m_pInfo->m_ServerInfo.dir = KEYINPUT_RIGHT;
+		if (m_pInfo->m_ServerInfo.dir != KEYINPUT_RIGHT) {
+			m_pInfo->m_ServerInfo.dir = KEYINPUT_RIGHT;
+			g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
+		}
 		g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
-		g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
 
 		if (m_ePlayerState == PLAYER_MOVE)
 			return;
@@ -382,6 +392,7 @@ void CPlayer::KeyInput()
 		//m_ePlayerState = PLAYER_MOVE;
 
 		//cout << "¿ì" << endl;
+		cout << "ÇÃ·¹ÀÌ¾î ÁÂÇ¥ ( " << m_pInfo->m_vPos.x << " , " << m_pInfo->m_vPos.z << " )\n";
 	}
 	/*else
 		m_bPush = false;*/

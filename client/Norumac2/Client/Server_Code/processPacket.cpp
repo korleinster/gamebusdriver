@@ -105,21 +105,20 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			}
 
 			// 내가 아니라면 다른애 hp 깎기
-			CObjMgr::GetInstance()->Get_PlayerServerData(p->under_attack_id)->state.hp = p->hp;
+ 			CObjMgr::GetInstance()->Get_PlayerServerData(p->under_attack_id)->state.hp = p->hp;
 
 			if (0 >= p->hp)
 			{
 				list<CObj*>* ListObj = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer");
-				list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->begin();
-				list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->end();
+				list<CObj*>::iterator iter = ListObj->begin();//CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->begin();
+				list<CObj*>::iterator iter_end = ListObj->end();//ObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->end();
 
 				for (iter; iter != iter_end; ++iter)
 				{
 					if ((*iter)->GetPacketData()->id == p->under_attack_id)
 					{
 						CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
-						::Safe_Delete(*iter);
-						iter = ListObj->erase(iter);
+						(*iter)->m_bDeath = true;
 						break;
 					}
 				}

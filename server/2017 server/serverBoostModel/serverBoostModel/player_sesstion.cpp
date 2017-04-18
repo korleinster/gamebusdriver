@@ -52,8 +52,8 @@ void player_session::Init()
 	// 기본 셋팅 초기화 정보 보내기 *****************>>>> player_data 초기화에 대한 기본 필요 정보 수정시, 여기서 해야함.
 
 	m_player_data.id = m_id;
-	m_player_data.pos.x = 100;
-	m_player_data.pos.y = 100;
+	m_player_data.pos.x = 150;
+	m_player_data.pos.y = 400;
 	m_player_data.dir = 0;
 	m_player_data.state.maxhp = 100;
 	m_player_data.state.mp = 10;
@@ -73,8 +73,8 @@ void player_session::Init()
 	if (0 == wcscmp(L"guest", m_login_id)) {
 		// guest 입장이라면, 초기화를 여기에서 진행한다.
 		m_player_data.id = m_id;
-		m_player_data.pos.x = 100;
-		m_player_data.pos.y = 100;
+		m_player_data.pos.x = 150;
+		m_player_data.pos.y = 400;
 		m_player_data.dir = 0;
 		m_player_data.state.maxhp = 100;
 		m_player_data.state.mp = 10;
@@ -289,7 +289,7 @@ void player_session::m_process_packet(Packet buf[])
 				int tempx = x - players->m_player_data.pos.x;
 				int tempy = y - players->m_player_data.pos.y;
 				if (((tempx * tempx) + (tempy * tempy)) <= (player_size * player_size)) {
-					players->m_player_data.state.hp -= 10;
+					players->m_player_data.state.hp -= 70;
 
 					if (false == *players->get_hp_adding()) {
 						*players->get_hp_adding() = true;

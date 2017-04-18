@@ -75,7 +75,9 @@ void CObjMgr::Update(void)
 		{
 			if ((*Listiter)->Update() == 100)
 			{
-				::Safe_Delete(*Listiter);
+				//::Safe_Delete(*Listiter);
+				delete (*Listiter);
+				*Listiter = NULL;
 				Listiter = iter->second.erase(Listiter);
 			}
 			else

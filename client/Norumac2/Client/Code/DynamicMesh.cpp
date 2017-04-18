@@ -213,6 +213,7 @@ int CDynamicMesh::Update()
 
 DWORD CDynamicMesh::Release()
 {
+
 	if (m_dwRefCount == 0)
 	{
 		for (unsigned int i = 0; i < m_vecAni.size(); ++i)
@@ -225,12 +226,13 @@ DWORD CDynamicMesh::Release()
 
 		m_vecAni.clear();
 	}
+
 	else
 		--m_dwRefCount;
 
 	
 
-	return 0;
+	return m_dwRefCount;
 }
 
 void CDynamicMesh::Release_Animation()
@@ -361,10 +363,11 @@ void CDynamicMesh::BWPlayAnim(int _iIdx)
 	//return false;
 }
 
-CResources * CDynamicMesh::CloneResource()
+CResources * CDynamicMesh::CloneResource() // 문제의 포인트
 {
 	CResources* pResource = this;
 
-	pResource->AddRef();
+	//++m_dwRefCount;
+
 	return pResource;
 }

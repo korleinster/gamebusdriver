@@ -56,6 +56,10 @@ COtherPlayer::COtherPlayer()
 COtherPlayer::~COtherPlayer()
 {
 	CObj::Release();
+
+	/*DWORD ReleasePoint = m_pBuffer->Release();
+	if (ReleasePoint  == 1)
+		::Safe_Delete(m_pBuffer);*/
 }
 
 HRESULT COtherPlayer::Initialize(void)
@@ -130,7 +134,15 @@ int COtherPlayer::Update(void)
 		cout << "다른 플레이어" << m_pInfo->m_ServerInfo.id << "번의 체력:" << m_pInfo->m_ServerInfo.state.hp << endl;
 
 	CObj::Update();
-	return 0;
+	
+
+
+
+	if (!m_bDeath)
+		return 0;
+
+	else
+		return 100;
 }
 
 void COtherPlayer::Render(void)
@@ -216,11 +228,15 @@ HRESULT COtherPlayer::AddComponent(void)
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Transform", pComponent));
 
 
+	vector<string> vecName;
+	vecAniName.push_back("player_normalidle");
 	//DynamicMesh
+	//m_pBuffer = CDynamicMesh::Create("../Resource", vecAniName);//dynamic_cast<CDynamicMesh*>(pComponent);
+	//pComponent = m_pBuffer; //CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Player_IDLE");
 	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Player_IDLE");
 	m_pBuffer = dynamic_cast<CDynamicMesh*>(pComponent);
 	NULL_CHECK_RETURN(m_pBuffer, E_FAIL);
-	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Mesh", pComponent));
+//	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Mesh", pComponent));
 
 	//Texture
 	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Texture_Player");

@@ -23,6 +23,11 @@ HRESULT CObj::Initialize(void)
 
 int CObj::Update(void)
 {
+
+	if (m_bDeath == true)
+		return 100;
+
+
 	map<wstring, CComponent*>::iterator iter = m_mapComponent.begin();
 	map<wstring, CComponent*>::iterator iter_end = m_mapComponent.end();
 
@@ -60,7 +65,7 @@ void CObj::Release(void)
 	map<wstring, CComponent*>::iterator iter_end = m_mapComponent.end();
 	for (iter; iter != iter_end; ++iter)
 	{
-		::Safe_Release(iter->second);
+		::Safe_Delete(iter->second);
 	}
 
 	m_mapComponent.clear();

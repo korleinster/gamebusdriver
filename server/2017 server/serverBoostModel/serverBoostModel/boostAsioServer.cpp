@@ -69,8 +69,10 @@ void boostAsioServer::g_client_init() {
 		g_clients[i]->get_player_data()->id = m_playerIndex;
 		g_clients[i]->get_player_data()->is_ai = true;
 		g_clients[i]->get_player_data()->dir = KEYINPUT_UP;
-		g_clients[i]->get_player_data()->pos.x = rand() % 500;
-		g_clients[i]->get_player_data()->pos.y = rand() % 500;
+		g_clients[i]->get_player_data()->pos.x = (150 + i * 2);
+		g_clients[i]->get_player_data()->pos.y = (400 + i * 2);
+		/*g_clients[i]->get_player_data()->pos.x = rand() % 500;
+		g_clients[i]->get_player_data()->pos.y = rand() % 500;*/
 		g_clients[i]->get_player_data()->state.maxhp = 100;
 		g_clients[i]->get_player_data()->state.hp = g_clients[i]->get_player_data()->state.maxhp;
 	}

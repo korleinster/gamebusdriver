@@ -20,6 +20,10 @@ protected:
 	//OBJECT_DIR					m_eObjDir;
 	TCHAR						m_tcKey[256];
 	TCHAR						m_tcMeshKey[256];
+	
+
+public:
+	bool						m_bDeath = false;
 
 public:
 	virtual HRESULT Initialize(void);

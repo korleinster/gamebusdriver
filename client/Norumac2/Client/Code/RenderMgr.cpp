@@ -67,7 +67,9 @@ void CRenderMgr::DelRenderGroup(RENDERGROUP eRednerID, CObj* pObj)
 	for (; iter != iter_end; )
 	{
 		if ((*iter) == pObj)
-			m_RenderGroup[eRednerID].erase(iter++);
+			iter = m_RenderGroup[eRednerID].erase(iter);
+ 
+		
 		else
 			++iter;
 

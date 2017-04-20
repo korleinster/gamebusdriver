@@ -154,6 +154,6 @@ void CStage::DataLoad(void)
 			ReadFile(hFile, ((CInfo*)pComponent)->m_matWorld, sizeof(D3DXMATRIX), &dwByte, NULL);
 		}
 	}
-
+	CloseHandle(hFile);
 }
 

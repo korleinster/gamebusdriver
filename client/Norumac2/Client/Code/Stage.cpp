@@ -12,6 +12,7 @@
 #include "Info.h"
 #include "ResourcesMgr.h"
 #include "Frustum.h"
+#include "FaceUI.h"
 
 CStage::CStage()
 	: m_bFirstLogin(false)
@@ -104,6 +105,12 @@ HRESULT CStage::CreateObj(void)
 
 		CObjMgr::GetInstance()->AddObject(L"Flower", pObj);
 	}*/
+
+	pObj = CFaceUI::Create();
+	if (pObj == NULL)
+		return E_FAIL;
+
+	CObjMgr::GetInstance()->AddObject(L"FaceUI", pObj);
 
 	pObj = CPlayer::Create();
 	pObj->SetPos(D3DXVECTOR3(155.f, 0.f, 400.f));

@@ -76,6 +76,11 @@ void CLoading::StageLoading(void)
 		, L"Texture_Player"
 		, L"../Resource/MeshImage/newplayer.png");
 
+	hr = CResourcesMgr::GetInstance()->AddTexture(
+		RESOURCE_STAGE
+		, L"Texture_FaceUI"
+		, L"../Resource/Uiimage/profile.png");
+
 
 	//lstrcpy(m_szLoadMessage, L"버퍼 로딩중...");
 	cout << "StaticBufferLoading" << endl;
@@ -91,6 +96,12 @@ void CLoading::StageLoading(void)
 		L"Buffer_RcTerrain",
 		VERTEXCOUNTX,
 		VERTEXCOUNTX);
+	FAILED_CHECK_RETURN(hr, );
+
+	hr = CResourcesMgr::GetInstance()->AddBuffer(
+		RESOURCE_STAGE, 
+		BUFFER_RCTEX, 
+		L"Buffer_RcUI");
 	FAILED_CHECK_RETURN(hr, );
 
 	StaticMeshLoad();

@@ -178,6 +178,18 @@
     <Filter Include="96.Utility\03.Optimization\02.QuardTree\Node">
       <UniqueIdentifier>{09244366-0d27-4ad5-9c2d-ca6c0af065bf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Object\06.Monster">
+      <UniqueIdentifier>{b34f5559-2e11-4a8e-8c44-fadb03ee4e10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\07.UI">
+      <UniqueIdentifier>{dc969811-dc26-40fd-86e0-f602df08bed7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\07.UI\01.HpBar">
+      <UniqueIdentifier>{79724ac1-cc31-4dad-8352-e3326485d29e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\07.UI\02.FaceUI">
+      <UniqueIdentifier>{8d783b87-375a-4715-a14b-645dc65d5b96}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -369,6 +381,15 @@
     <ClInclude Include="..\Code\Node.h">
       <Filter>96.Utility\03.Optimization\02.QuardTree\Node</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\Monster.h">
+      <Filter>02.Object\06.Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\UI.h">
+      <Filter>02.Object\07.UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\FaceUI.h">
+      <Filter>02.Object\07.UI\02.FaceUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\MainApp.cpp">
@@ -532,6 +553,15 @@
     </ClCompile>
     <ClCompile Include="..\Code\Node.cpp">
       <Filter>96.Utility\03.Optimization\02.QuardTree\Node</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Monster.cpp">
+      <Filter>02.Object\06.Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\UI.cpp">
+      <Filter>02.Object\07.UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\FaceUI.cpp">
+      <Filter>02.Object\07.UI\02.FaceUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

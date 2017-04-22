@@ -176,6 +176,7 @@
     <ClInclude Include="..\Code\CubeCol.h" />
     <ClInclude Include="..\Code\Device.h" />
     <ClInclude Include="..\Code\DynamicMesh.h" />
+    <ClInclude Include="..\Code\FaceUI.h" />
     <ClInclude Include="..\Code\FbxParser.h" />
     <ClInclude Include="..\Code\Flower.h" />
     <ClInclude Include="..\Code\Font.h" />
@@ -189,6 +190,7 @@
     <ClInclude Include="..\Code\LogoBack.h" />
     <ClInclude Include="..\Code\MainApp.h" />
     <ClInclude Include="..\Code\Mesh.h" />
+    <ClInclude Include="..\Code\Monster.h" />
     <ClInclude Include="..\Code\MultiRenderTarget.h" />
     <ClInclude Include="..\Code\Node.h" />
     <ClInclude Include="..\Code\Obj.h" />
@@ -216,6 +218,7 @@
     <ClInclude Include="..\Code\TerrainCol.h" />
     <ClInclude Include="..\Code\Texture.h" />
     <ClInclude Include="..\Code\TimeMgr.h" />
+    <ClInclude Include="..\Code\UI.h" />
     <ClInclude Include="..\Code\VIBuffer.h" />
     <ClInclude Include="..\Headers\Enum.h" />
     <ClInclude Include="..\Headers\Include.h" />
@@ -237,6 +240,7 @@
     <ClCompile Include="..\Code\CubeCol.cpp" />
     <ClCompile Include="..\Code\Device.cpp" />
     <ClCompile Include="..\Code\DynamicMesh.cpp" />
+    <ClCompile Include="..\Code\FaceUI.cpp" />
     <ClCompile Include="..\Code\FbxParser.cpp" />
     <ClCompile Include="..\Code\Flower.cpp" />
     <ClCompile Include="..\Code\Font.cpp" />
@@ -250,6 +254,7 @@
     <ClCompile Include="..\Code\LogoBack.cpp" />
     <ClCompile Include="..\Code\MainApp.cpp" />
     <ClCompile Include="..\Code\Mesh.cpp" />
+    <ClCompile Include="..\Code\Monster.cpp" />
     <ClCompile Include="..\Code\MultiRenderTarget.cpp" />
     <ClCompile Include="..\Code\Node.cpp" />
     <ClCompile Include="..\Code\Obj.cpp" />
@@ -277,6 +282,7 @@
     <ClCompile Include="..\Code\TerrainCol.cpp" />
     <ClCompile Include="..\Code\Texture.cpp" />
     <ClCompile Include="..\Code\TimeMgr.cpp" />
+    <ClCompile Include="..\Code\UI.cpp" />
     <ClCompile Include="..\Code\VIBuffer.cpp" />
     <ClCompile Include="..\Server_Code\ClientClass.cpp" />
     <ClCompile Include="..\Server_Code\processPacket.cpp" />

@@ -141,14 +141,19 @@ HRESULT CLogo::Add_Dynamic_Buffer(void)
 
 		//여기에 아마 메모장통해서 벡터에다가 꼴아박아야할거같음. 일단 가라침
 
+
+
+		//////////////////////플레이어//////////////////////////
 		vecAni.push_back("player_normalidle");
 		vecAni.push_back("player_fightrun");
 		vecAni.push_back("player_normalattack1");
+		vecAni.push_back("player_normalattack2");
+		vecAni.push_back("player_normalattack3");
 
 		hr = CResourcesMgr::GetInstance()->AddMesh(
 			RESOURCE_STAGE,
 			MESH_DYNAMIC,
-			L"Player_IDLE",
+			L"Player",
 			"../Resource/Mesh/",
 			"", vecAni);
 		FAILED_CHECK_RETURN(hr, E_FAIL);
@@ -157,6 +162,27 @@ HRESULT CLogo::Add_Dynamic_Buffer(void)
 		CAnimationMgr::GetInstance()->AddAnimation(L"Player", &vecAni);
 
 		vecAni.clear();
+		//////////////////////////////////////////////////////////////
+
+		vecAni.push_back("slime_idle");
+		vecAni.push_back("slime_run");
+		vecAni.push_back("slime_attack");
+		vecAni.push_back("slime_nuckback");
+		vecAni.push_back("slime_dead");
+
+		hr = CResourcesMgr::GetInstance()->AddMesh(
+			RESOURCE_STAGE,
+			MESH_DYNAMIC,
+			L"Slime",
+			"../Resource/Mesh/",
+			"", vecAni);
+		FAILED_CHECK_RETURN(hr, E_FAIL);
+
+
+		CAnimationMgr::GetInstance()->AddAnimation(L"Slime", &vecAni);
+
+		vecAni.clear();
+
 
 		cout << "SceneLoading" << endl;
 

@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "OtherPlayer.h"
+#include "Monster.h"
 #include "StaticMesh.h"
 #include "Texture.h"
 #include "Info.h"
@@ -36,7 +36,7 @@ struct CB_PS_PER_OBJECT
 };
 #pragma pack(pop)
 
-COtherPlayer::COtherPlayer()
+CMonster::CMonster()
 {
 	m_pBuffer = NULL;
 	m_pVertexShader = NULL;
@@ -53,16 +53,16 @@ COtherPlayer::COtherPlayer()
 }
 
 
-COtherPlayer::~COtherPlayer()
+CMonster::~CMonster()
 {
 	CObj::Release();
 
 	/*DWORD ReleasePoint = m_pBuffer->Release();
 	if (ReleasePoint  == 1)
-		::Safe_Delete(m_pBuffer);*/
+	::Safe_Delete(m_pBuffer);*/
 }
 
-HRESULT COtherPlayer::Initialize(void)
+HRESULT CMonster::Initialize(void)
 {
 	m_pBuffer = NULL;
 	m_pVertexShader = NULL;
@@ -106,7 +106,7 @@ HRESULT COtherPlayer::Initialize(void)
 	return S_OK;
 }
 
-int COtherPlayer::Update(void)
+int CMonster::Update(void)
 
 {
 	m_fSeverTime += CTimeMgr::GetInstance()->GetTime();
@@ -118,12 +118,11 @@ int COtherPlayer::Update(void)
 
 	m_pInfo->m_vPos.x = m_pInfo->m_ServerInfo.pos.x;
 	m_pInfo->m_vPos.z = m_pInfo->m_ServerInfo.pos.y;
-	ChangeDir();
 	D3DXVec3TransformNormal(&m_pInfo->m_vDir, &g_vLook, &m_pInfo->m_matWorld);
 	if (m_ePlayerState != PLAYER_IDLE)
 	{
 		//if (dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd == true) // 여기가 잘못됬다
-		if(m_bKey == false)
+		if (m_bKey == false)
 			m_ePlayerState = PLAYER_IDLE;
 	}
 
@@ -133,7 +132,7 @@ int COtherPlayer::Update(void)
 	//if (m_pInfo->m_ServerInfo.state.hp < 100) {	cout << "다른 플레이어" << m_pInfo->m_ServerInfo.id << "번의 체력:" << m_pInfo->m_ServerInfo.state.hp << endl; }
 
 	CObj::Update();
-	
+
 
 
 
@@ -144,7 +143,7 @@ int COtherPlayer::Update(void)
 		return 100;
 }
 
-void COtherPlayer::Render(void)
+void CMonster::Render(void)
 {
 
 	//ConstantBuffer cb;
@@ -200,9 +199,9 @@ void COtherPlayer::Render(void)
 	dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(m_ePlayerState);
 }
 
-COtherPlayer * COtherPlayer::Create(void)
+CMonster * CMonster::Create(void)
 {
-	COtherPlayer* pObj = new COtherPlayer;
+	CMonster* pObj = new CMonster;
 	if (FAILED(pObj->Initialize()))
 		::Safe_Delete(pObj);
 
@@ -210,7 +209,7 @@ COtherPlayer * COtherPlayer::Create(void)
 }
 
 
-HRESULT COtherPlayer::AddComponent(void)
+HRESULT CMonster::AddComponent(void)
 {
 	CComponent* pComponent = NULL;
 
@@ -235,7 +234,7 @@ HRESULT COtherPlayer::AddComponent(void)
 	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Player");
 	m_pBuffer = dynamic_cast<CDynamicMesh*>(pComponent);
 	NULL_CHECK_RETURN(m_pBuffer, E_FAIL);
-//	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Mesh", pComponent));
+	//	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Mesh", pComponent));
 
 	//Texture
 	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Texture_Player");
@@ -252,23 +251,4 @@ HRESULT COtherPlayer::AddComponent(void)
 	return S_OK;
 }
 
-void COtherPlayer::ChangeDir(void)
-{
-	if (m_pInfo->m_ServerInfo.dir == KEYINPUT_UP)
-	{
-		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(135.f);
-	}
-	else if (m_pInfo->m_ServerInfo.dir == KEYINPUT_DOWN)
-	{
-		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(315.f);
-	}
-	else if (m_pInfo->m_ServerInfo.dir == KEYINPUT_LEFT)
-	{
-		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(45.f);
-	}
-	else if (m_pInfo->m_ServerInfo.dir == KEYINPUT_RIGHT)
-	{
-		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(225.f);
-	}
-}
 

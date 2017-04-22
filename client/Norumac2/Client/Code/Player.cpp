@@ -220,11 +220,6 @@ HRESULT CPlayer::AddComponent(void)
 	CComponent* pComponent = NULL;
 
 	vecAniName = *(CAnimationMgr::GetInstance()->GetAnimaiton(L"Player"));
-	//vecName.push_back("Fall");
-	//vecName.push_back("Dead");
-	//vecName.push_back("Damage");
-	//vecAniName.push_back("Booster");
-	//vecName.push_back("Break");
 
 	//TransForm
 	pComponent = m_pInfo = CInfo::Create(g_vLook);
@@ -233,7 +228,7 @@ HRESULT CPlayer::AddComponent(void)
 
 
 	//DynamicMesh
-	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Player_IDLE");
+	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Player");
 	m_pBuffer = dynamic_cast<CDynamicMesh*>(pComponent);
 	NULL_CHECK_RETURN(m_pBuffer, E_FAIL);
 	//m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Mesh", pComponent));

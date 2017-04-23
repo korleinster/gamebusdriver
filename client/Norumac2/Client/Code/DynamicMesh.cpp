@@ -141,8 +141,6 @@ HRESULT CDynamicMesh::Load_Model(const char* _pPath, vector<string> _vecAniName,
 		CFbxParser::ParsingVertex(pFbxRootNode, pAni);
 		//버텍스와 uv , 노말을 파싱한다.
 
-		//pAni->pAniBuffer->CreateBuffer2();
-
 		// Animation -----------------------
 		auto AnimStack = _pFBXScene->GetSrcObject<FbxAnimStack>();
 		NULL_CHECK_RETURN(AnimStack, E_FAIL);

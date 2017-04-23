@@ -140,7 +140,8 @@ int CPlayer::Update(void)
 
 
 	//if(dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd = false)
-	
+
+	cout << dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_fAniPlayTimer << endl;
 
 	//m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 	//m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
@@ -405,8 +406,8 @@ void CPlayer::KeyInput()
 
 		m_ePlayerState = PLAYER_ATT1;
 
-		//dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd = false;
-		//dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_fAniPlayTimer = 0;
+		dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd = false;
+		dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_fAniPlayTimer = 0;
 	}
 	else
 	{

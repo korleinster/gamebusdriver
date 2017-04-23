@@ -19,6 +19,7 @@
 #include "RenderMgr.h"
 #include "ResourcesMgr.h"
 #include "AnimationMgr.h"
+#include "Player.h"
 
 #pragma pack(push,1)
 struct CB_VS_PER_OBJECT
@@ -132,10 +133,11 @@ int COtherPlayer::Update(void)
 
 	//if (m_pInfo->m_ServerInfo.state.hp < 100) {	cout << "다른 플레이어" << m_pInfo->m_ServerInfo.id << "번의 체력:" << m_pInfo->m_ServerInfo.state.hp << endl; }
 
-	CObj::Update();
+
+	//SetCurrling();
 	
 
-
+	CObj::Update();
 
 	if (!m_bDeath)
 		return 0;
@@ -146,7 +148,8 @@ int COtherPlayer::Update(void)
 
 void COtherPlayer::Render(void)
 {
-
+	if(m_bCurred == false)
+	{
 	//ConstantBuffer cb;
 	//D3DXMatrixTranspose(&cb.matWorld, &m_pInfo->m_matWorld);
 	//D3DXMatrixTranspose(&cb.matView, &CCamera::GetInstance()->m_matView);
@@ -198,6 +201,7 @@ void COtherPlayer::Render(void)
 	m_pBuffer->Render();
 
 	dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(m_ePlayerState);
+	}
 }
 
 COtherPlayer * COtherPlayer::Create(void)
@@ -227,11 +231,8 @@ HRESULT COtherPlayer::AddComponent(void)
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Transform", pComponent));
 
 
-	vector<string> vecName;
-	vecAniName.push_back("player_normalidle");
+
 	//DynamicMesh
-	//m_pBuffer = CDynamicMesh::Create("../Resource", vecAniName);//dynamic_cast<CDynamicMesh*>(pComponent);
-	//pComponent = m_pBuffer; //CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Player_IDLE");
 	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Player");
 	m_pBuffer = dynamic_cast<CDynamicMesh*>(pComponent);
 	NULL_CHECK_RETURN(m_pBuffer, E_FAIL);
@@ -243,9 +244,9 @@ HRESULT COtherPlayer::AddComponent(void)
 	NULL_CHECK_RETURN(m_pTexture, E_FAIL);
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Texture", pComponent));
 
-	pComponent = m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"RenderSceneVS_ANI");
+	pComponent = m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"VS_ANI");
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"VS_Shader", pComponent));
-	pComponent = m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"RenderScenePS");
+	pComponent = m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"PS");
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"PS_Shader", pComponent));
 
 
@@ -270,5 +271,17 @@ void COtherPlayer::ChangeDir(void)
 	{
 		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(225.f);
 	}
+}
+
+void COtherPlayer::SetCurrling(void)
+{
+	auto player = CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin();
+
+	D3DXVECTOR3 vPlayerPos = (*player)->GetInfo()->m_vPos;
+
+	if (abs(m_pInfo->m_vPos.x - vPlayerPos.x) > 30.f && abs(m_pInfo->m_vPos.z - vPlayerPos.z) > 30.f)
+		m_bCurred = true;
+	else
+		m_bCurred = false;
 }
 

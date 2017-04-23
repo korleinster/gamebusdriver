@@ -46,5 +46,6 @@ public:
 private:
 	HRESULT	AddComponent(void);
 	void ChangeDir(void);
+	void SetCurrling(void);
 };
 

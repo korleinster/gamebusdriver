@@ -20,7 +20,7 @@ CFaceUI::CFaceUI()
 
 CFaceUI::~CFaceUI()
 {
-
+	CObj::Release();
 }
 
 HRESULT CFaceUI::Initialize(void)

@@ -20,6 +20,7 @@ protected:
 	//OBJECT_DIR					m_eObjDir;
 	TCHAR						m_tcKey[256];
 	TCHAR						m_tcMeshKey[256];
+	bool						m_bCurred;
 	
 
 public:

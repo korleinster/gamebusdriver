@@ -50,7 +50,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	UpdateWindow(hWnd);
 
 	// 이거 지우지 않으면 release 모드에서 문제생길 확률이 매우 높다.
-	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
 
 	HACCEL hAccelTable = LoadAccelerators(hInstance, 0);

@@ -37,5 +37,6 @@ public:
 
 private:
 	HRESULT	AddComponent(const TCHAR* pMeshKey, const TCHAR* pTextureKey);
+	void SetCurrling(void);
 };
 

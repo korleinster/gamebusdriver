@@ -461,8 +461,6 @@ void CBack::NaviMeshMode()
 					CNaviMgr::GetInstance()->Link_Cell();
 					break;
 				}
-				else
-					return;
 			}
 
 			

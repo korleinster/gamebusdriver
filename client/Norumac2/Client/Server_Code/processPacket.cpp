@@ -65,7 +65,9 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			}
 
 			// 내가 아니라면 다른애 hp 깎기
-			(CObjMgr::GetInstance()->Get_PlayerServerData(p->id))->state.hp = p->hp;
+			if (NULL != (CObjMgr::GetInstance()->Get_PlayerServerData(p->id))) {
+				(CObjMgr::GetInstance()->Get_PlayerServerData(p->id))->state.hp = p->hp;
+			}
 		}
 		break;
 	}
@@ -73,6 +75,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 	case KEYINPUT_ATTACK: {
 		sc_atk *p = reinterpret_cast<sc_atk*>(buf);
 
+		// 갑자기 왜 여기서 다른 플레이어 공격 패킷이 안날아 오는지 알 수가 없다 ( 한번 꼭 확인해 보자 *************************** )
 		cout << "[ " << p->attacking_id << " ] -> [ " << p->under_attack_id << " ] 를 공격함. 현재 HP = " << p->hp << "\n";
 
 		if (CSceneMgr::GetInstance()->GetScene() != SCENE_LOGO)
@@ -109,7 +112,9 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			}
 
 			// 내가 아니라면 다른애 hp 깎기
- 			CObjMgr::GetInstance()->Get_PlayerServerData(p->under_attack_id)->state.hp = p->hp;
+ 			if (NULL != (CObjMgr::GetInstance()->Get_PlayerServerData(p->under_attack_id))) {
+				(CObjMgr::GetInstance()->Get_PlayerServerData(p->under_attack_id))->state.hp = p->hp;
+			}
 
 			if (0 >= p->hp)
 			{
@@ -167,7 +172,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->begin();
 			list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->end();
 
-			for (iter; iter != iter_end;)
+			for (; iter != iter_end; ++iter)
 			{
 				if ((*iter)->GetPacketData()->id == p->id)
 				{

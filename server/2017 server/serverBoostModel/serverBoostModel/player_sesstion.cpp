@@ -106,21 +106,24 @@ void player_session::Init()
 
 	for (auto players : g_clients)
 	{
-		if (DISCONNECTED == players->get_current_connect_state()) { continue; }
+		if (DISCONNECTED == players->m_connect_state) { continue; }
 		if (m_id == players->get_id()) { continue; }
+		if (false == is_in_view_range(players->get_id())) { continue; }
 
-		// 다른 애들 정보를 복사해서 넣고, 얘한테 먼저 보내고...
-		other_info_to_me.playerData = *(players->get_player_data());
-		send_packet(reinterpret_cast<Packet*>(&other_info_to_me));
-
-		if (true == players->get_player_data()->is_ai) { continue; }
-		// 얘 정보를 이제 다른 애들한테 보내면 되는데..
-		players->send_packet(reinterpret_cast<Packet*>(&my_info_to_other));
+		// view list 에 넣어주기
+		vl_add(players->get_id());
+		players->vl_add(m_id);
 	}
 
-	/*
-	view list 같은 곳에서도 추가하자 ~ !!
-	*/
+	for (auto id : m_view_list) {
+		// 다른 애들 정보를 복사해서 넣고, 얘한테 먼저 보내고...
+		other_info_to_me.playerData = *(g_clients[id]->get_player_data());
+		send_packet(reinterpret_cast<Packet*>(&other_info_to_me));
+
+		if (true == g_clients[id]->get_player_data()->is_ai) { continue; }	// ai 면 pass
+		// 얘 정보를 이제 다른 애들한테 보내면 되는데..
+		g_clients[id]->send_packet(reinterpret_cast<Packet*>(&my_info_to_other));
+	}
 
 	m_recv_packet();
 }
@@ -142,19 +145,17 @@ void player_session::m_recv_packet()
 
 			/*
 				DB 저장도 하장
-				view list 같은 곳에서도 빼주자 ~ !!
 			*/
 
 			sc_disconnect p;
 			p.id = m_id;
 
-			for (auto players : g_clients)
-			{
-				if (DISCONNECTED == players->m_connect_state) { continue; }
-				if (m_id == players->m_id) { continue; }
-				//if (true == players->get_player_data()->is_ai) { continue; }
+			for (auto id : m_view_list) {				
+				g_clients[id]->vl_remove(id);
 
-				players->send_packet(reinterpret_cast<Packet*>(&p));
+				if (DISCONNECTED == g_clients[id]->m_connect_state) { continue; }
+				if (true == g_clients[id]->get_player_data()->is_ai) { continue; }
+				g_clients[id]->send_packet(reinterpret_cast<Packet*>(&p));
 			}
 
 			return;
@@ -194,6 +195,16 @@ void player_session::m_recv_packet()
 	});
 }
 
+bool player_session::is_in_view_range(unsigned int id) {
+	float x = g_clients[id]->m_player_data.pos.x;
+	float y = g_clients[id]->m_player_data.pos.y;
+	float my_x = m_player_data.pos.x;
+	float my_y = m_player_data.pos.y;
+
+	if ((VIEW_RANGE * VIEW_RANGE) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) { return true; }
+	return false;
+}
+
 void player_session::send_packet(Packet *packet)
 {
 	int packet_size = packet[0];
@@ -229,15 +240,58 @@ void player_session::m_process_packet(Packet buf[])
 			p.id = m_id;
 			p.pos = m_player_data.pos;
 
-			// 필요한 애들한테 이동 정보를 뿌려주자 - 현재는 애들 다 뿌린다.
+			// 필요한 애들한테 이동 정보를 뿌려주자
 			for (auto players : g_clients)
+			{
+				if (DISCONNECTED == players->m_connect_state) { continue; }
+				if (m_id == players->get_id()) { continue; }
+				if (false == is_in_view_range(players->get_id())) {
+					if (true == vl_find(players->get_id())) {
+						players->vl_remove(m_id);
+						vl_remove(players->get_id());
+
+						sc_disconnect send_to_me;
+						send_to_me.id = players->get_id();
+						send_packet(reinterpret_cast<Packet*>(&send_to_me));
+
+						if (true == players->get_player_data()->is_ai) { continue; }
+						sc_disconnect send_to_other;
+						send_to_other.id = m_id;
+						players->send_packet(reinterpret_cast<Packet*>(&send_to_other));
+					}
+					continue;
+				}
+
+				// view list 에 있으면 skip
+				if (true == vl_find(players->get_id())) { continue;	}
+
+				vl_add(players->get_id());
+				players->vl_add(m_id);
+
+				sc_other_init_info other_player_info_to_me;
+				other_player_info_to_me.playerData = *(players->get_player_data());
+				send_packet(reinterpret_cast<Packet*>(&other_player_info_to_me));
+
+				if (true == players->get_player_data()->is_ai) { continue; }
+				sc_other_init_info my_info_to_other_player;
+				my_info_to_other_player.playerData = m_player_data;
+				players->send_packet(reinterpret_cast<Packet*>(&my_info_to_other_player));
+			}
+
+			for (auto id : m_view_list) {
+				if (true == g_clients[id]->get_player_data()->is_ai) { continue; }
+
+				g_clients[id]->send_packet(reinterpret_cast<Packet*>(&p));
+			}
+
+			/*for (auto players : g_clients)
 			{
 				if (DISCONNECTED == players->m_connect_state) { continue; }
 				if (m_id == players->m_id) { continue; }
 				if (true == players->get_player_data()->is_ai) { continue; }
 
 				players->send_packet(reinterpret_cast<Packet*>(&p));
-			}
+			}*/
 			break;
 		}
 
@@ -249,70 +303,90 @@ void player_session::m_process_packet(Packet buf[])
 			p.id = m_id;
 			p.dir = m_player_data.dir;
 
+			for (auto id : m_view_list) {
+				if (true == g_clients[id]->get_player_data()->is_ai) { continue; }
+
+				g_clients[id]->send_packet(reinterpret_cast<Packet*>(&p));
+			}
+
 			// 필요한 애들한테 방향 정보를 뿌려주자 - 현재는 애들 다 뿌린다.
-			for (auto players : g_clients)
+			/*for (auto players : g_clients)
 			{
 				if (DISCONNECTED == players->m_connect_state) { continue; }
 				if (m_id == players->m_id) { continue; }
 				if (true == players->get_player_data()->is_ai) { continue; }
 
 				players->send_packet(reinterpret_cast<Packet*>(&p));
-			}
+			}*/
 			break;
 		}
 
 		case KEYINPUT_ATTACK:		// 기본 공격 ( 데미지 계산, hit box 범위 조정, 전부 여기서 다 조절해야 한다. )
 		{
+			// 왼쪽 키 = 우측 + 아래
+			// 우측 키 = 왼쪽 + 위
+			// 위 키 = 우측 + 위
+			// 아래 키 = 왼쪽 + 아래
+
 			// 충돌체크 검사하고 난 뒤에.. ( 현재는 임시 충돌 체크, 실제 클라와 연동시 충돌 범위 체크해야 한다. )
-			int att_x = 0.1, att_y = 0.1;		// 테스트용 클라 공격 리치가 요정도
-			int x = m_player_data.pos.x, y = m_player_data.pos.y;
-			int player_size = 1;	// 테스트용 클라 원 반지름이 크기 5...
+			float att_x = 0.5, att_y = 0.5;		// 테스트용 클라 공격 리치가 요정도
+			float my_x = m_player_data.pos.x, my_y = m_player_data.pos.y;
+			float player_size = 0.7;	// 객체 충돌 크기 반지름
 			char *dir = &m_player_data.dir;
 
-			if ((*dir & KEYINPUT_RIGHT) == (KEYINPUT_RIGHT)) { x += att_x; }
-			if ((*dir & KEYINPUT_LEFT) == (KEYINPUT_LEFT)) { x -= att_x; }
-			if ((*dir & KEYINPUT_UP) == (KEYINPUT_UP)) { y -= att_y; }
-			if ((*dir & KEYINPUT_DOWN) == (KEYINPUT_DOWN)) { y += att_y; }
+			if ((*dir & KEYINPUT_RIGHT) == (KEYINPUT_RIGHT)) { my_x -= att_x; my_y -= att_y; }
+			if ((*dir & KEYINPUT_LEFT) == (KEYINPUT_LEFT)) { my_x += att_x; my_y += att_y; }
+			if ((*dir & KEYINPUT_UP) == (KEYINPUT_UP)) { my_x += att_x; my_y -= att_y; }
+			if ((*dir & KEYINPUT_DOWN) == (KEYINPUT_DOWN)) { my_x -= att_x; my_y += att_y; }
 
-			for (auto players : g_clients) {
-				if (DISCONNECTED == players->m_connect_state) { continue; }
-				if (m_id == players->m_id) { continue; }
+			for (auto id : m_view_list) {
+				if (DISCONNECTED == g_clients[id]->m_connect_state) { continue; }
+				//if (m_id == g_clients[id]->m_id) { continue; }
 				//if (true == players->get_player_data()->is_ai) { continue; }
 
-				int tempx = x - players->m_player_data.pos.x;
-				int tempy = y - players->m_player_data.pos.y;
-				if (((tempx * tempx) + (tempy * tempy)) <= (player_size * player_size)) {
-					players->m_player_data.state.hp -= m_sub_status.str;
+				float x = g_clients[id]->m_player_data.pos.x;
+				float y = g_clients[id]->m_player_data.pos.y;
+				if((player_size * player_size) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) {
+					g_clients[id]->m_player_data.state.hp -= m_sub_status.str;
 
-					if (false == *players->get_hp_adding()) {
-						*players->get_hp_adding() = true;
-						g_time_queue.add_event(players->m_player_data.id, 1, HP_ADD, false);	// AI 타격 일때, 따로 hp 추가해 주는 함수가 없다 !!! -> 일반 플레이어와 동일하게 처리함
+					if (false == *g_clients[id]->get_hp_adding()) {
+						*g_clients[id]->get_hp_adding() = true;
+						g_time_queue.add_event(id, 1, HP_ADD, false);	// AI 타격 일때, 따로 hp 추가해 주는 함수가 없다 !!! -> 일반 플레이어와 동일하게 처리함
 					}
 					
 					sc_atk p;
 					p.attacking_id = m_id;					// 공격자 id
-					p.under_attack_id = players->m_id;		// 맞는 놈의 id
-					p.hp = players->m_player_data.state.hp;	// 맞은 놈의 hp
+					p.under_attack_id = id;		// 맞는 놈의 id
+					p.hp = g_clients[id]->m_player_data.state.hp;	// 맞은 놈의 hp
 
 					// hp 가 0 이 되면 사망처리를 한다. -> 각각의 클라이언트에서 hp 가 0 된 녀석을 지워줌
-					if (0 >= players->m_player_data.state.hp) {
+					if (0 >= g_clients[id]->m_player_data.state.hp) {
+						
+						// 맞은 애가 ai 면 그냥 연결 끊어서 죽이기
+						if (MAX_AI_NUM > g_clients[id]->get_id()) {
+							g_clients[id]->m_connect_state = DISCONNECTED;
 
-						// 맞은 애가 ai 면 그냥 연결 끊어서 죽이기 ( 몹 10초후 리젠 )
-						if (MAX_AI_NUM > players->get_id()) {
-							players->m_connect_state = DISCONNECTED;
+							sc_disconnect dis_p;
+							dis_p.id = id;
 
+							for (auto v_id : g_clients[id]->m_view_list) {
+								if (true == g_clients[v_id]->get_player_data()->is_ai) { continue; }
+								g_clients[v_id]->send_packet(reinterpret_cast<Packet*>(&dis_p));
+							}
+							g_clients[id]->m_view_list.clear();
+							g_time_queue.add_event(g_clients[id]->m_player_data.id, 10, DEAD_TO_ALIVE, true);	// bot 리젠
+							
 							// 잡은 녀석에는 경험치도 주도록 하자.
-							g_time_queue.add_event(players->m_player_data.id, 10, DEAD_TO_ALIVE, true);
+						}
+						else {
+							// 죽은 애가 player 일 경우..
+
 						}
 					}
 
-					for (auto other_players : g_clients) {
-						if (DISCONNECTED == other_players->m_connect_state) { continue; }
-						//if (players->m_id == other_players->m_id) { continue; }	// 자기 hp 가 깎였을 경우, 자기 한테도 보내야 한다...
-						if (true == other_players->get_player_data()->is_ai) { continue; }
-
-						other_players->send_packet(reinterpret_cast<Packet*>(&p));
-					}
+					send_packet(reinterpret_cast<Packet*>(&p));
+					if (true == g_clients[id]->get_player_data()->is_ai) { continue; }
+					g_clients[id]->send_packet(reinterpret_cast<Packet*>(&p));
 				}
 			}
 			break;

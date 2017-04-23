@@ -58,13 +58,16 @@ void TimerQueue::processPacket(event_type *p) {
 			packet.hp = g_clients[p->id]->get_player_data()->state.hp;
 			packet.id = p->id;
 
-			for (auto players : g_clients) {
-				if (DISCONNECTED == players->get_current_connect_state()) { continue; }
-				//if (players->m_id == other_players->m_id) { continue; }	// 자기 hp 가 변해도 해당 패킷을 받아야 한다.
-				if (true == players->get_player_data()->is_ai) { continue; }
+			for (auto id : *g_clients[p->id]->get_view_list()) {
+				if (DISCONNECTED == g_clients[id]->get_current_connect_state()) { continue; }
+				if (true == g_clients[id]->get_player_data()->is_ai) { continue; }
 
-				players->send_packet(reinterpret_cast<Packet*>(&packet));
+				g_clients[id]->send_packet(reinterpret_cast<Packet*>(&packet));
 			}
+
+			// 컴퓨터가 아니라면, 자기한테도 한번 보내주자
+			if (true == g_clients[p->id]->get_player_data()->is_ai) { break; }
+			g_clients[p->id]->send_packet(reinterpret_cast<Packet*>(&packet));
 		}
 		break;
 	}
@@ -75,14 +78,35 @@ void TimerQueue::processPacket(event_type *p) {
 			*g_clients[p->id]->get_hp_adding() = false;
 			g_clients[p->id]->set_hp(g_clients[p->id]->get_maxhp());
 
-			sc_other_init_info packet;
-			packet.playerData = *g_clients[p->id]->get_player_data();
 			for (auto players : g_clients) {
 				if (DISCONNECTED == players->get_current_connect_state()) { continue; }
-				// 내 자신 아이디는 검색 안해도 됨. ai 니까..
-				if (true == players->get_player_data()->is_ai) { continue; }
-				players->send_packet(reinterpret_cast<Packet*>(&packet));
+				if (p->id == players->get_id()) { continue; }
+				if (false == players->is_in_view_range(p->id)) { continue; }
+
+				// view list 에 넣어주기
+				g_clients[p->id]->vl_add(players->get_id());
+				players->vl_add(p->id);
 			}
+
+			sc_other_init_info packet;
+			packet.playerData = *g_clients[p->id]->get_player_data();
+
+			for (auto id : *g_clients[p->id]->get_view_list()) {
+				if (DISCONNECTED == g_clients[id]->get_current_connect_state()) { continue; }
+				if (true == g_clients[id]->get_player_data()->is_ai) { continue; }
+
+				g_clients[id]->send_packet(reinterpret_cast<Packet*>(&packet));
+			}
+
+
+			//for (auto players : g_clients) {
+			//	if (DISCONNECTED == players->get_current_connect_state()) { continue; }
+			//	// 내 자신 아이디는 검색 안해도 됨. ai 니까..
+			//	if (true == players->get_player_data()->is_ai) { continue; }
+			//	players->vl_add(p->id);
+			//	g_clients[p->id]->vl_add(players->get_id());
+			//	players->send_packet(reinterpret_cast<Packet*>(&packet));
+			//}
 		}
 		else {	// player 일 경우
 

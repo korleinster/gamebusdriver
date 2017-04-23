@@ -75,6 +75,13 @@ void boostAsioServer::g_client_init() {
 		g_clients[i]->get_player_data()->pos.y = rand() % 500;*/
 		g_clients[i]->get_player_data()->state.maxhp = 100;
 		g_clients[i]->get_player_data()->state.hp = g_clients[i]->get_player_data()->state.maxhp;
+
+		g_clients[i]->get_sub_data()->critical = 0;	// const
+		g_clients[i]->get_sub_data()->def = 1;
+		g_clients[i]->get_sub_data()->str = 5;
+		g_clients[i]->get_sub_data()->agi = 2;
+		g_clients[i]->get_sub_data()->intel = 1;
+		g_clients[i]->get_sub_data()->health = 3;
 	}
 
 	cout << "\nAI bots created number of " << MAX_AI_NUM << ", Compelete\n";

@@ -244,9 +244,9 @@ HRESULT COtherPlayer::AddComponent(void)
 	NULL_CHECK_RETURN(m_pTexture, E_FAIL);
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Texture", pComponent));
 
-	pComponent = m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"VS_ANI");
+	pComponent = m_pVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"RenderSceneVS_ANI");
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"VS_Shader", pComponent));
-	pComponent = m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"PS");
+	pComponent = m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"RenderScenePS");
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"PS_Shader", pComponent));
 
 

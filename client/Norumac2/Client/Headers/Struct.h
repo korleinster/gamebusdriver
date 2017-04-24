@@ -53,7 +53,15 @@ struct VertexAni
 	int				iBoneIdx[BONE_NUM];
 	float			fBoneWeight[BONE_NUM];
 
-	VertexAni() {}
+	VertexAni() { 
+		vPos = D3DXVECTOR3(0.f, 0.f, 0.f);
+		vNormal = D3DXVECTOR3(0.f, 0.f, 0.f);
+		vTextureUV = D3DXVECTOR2(0.f, 0.f);
+		ZeroMemory(&iBoneIdx, sizeof(int) * BONE_NUM);
+		ZeroMemory(&fBoneWeight, sizeof(float) * BONE_NUM);
+
+
+	}
 	VertexAni(D3DXVECTOR3 _vPos, D3DXVECTOR3 _vNormal)
 		: vPos(_vPos), vNormal(_vNormal) {}
 	VertexAni(D3DXVECTOR3 _vPos, D3DXVECTOR3 _vNormal, D3DXVECTOR2 _vTextureUV)

@@ -5,6 +5,7 @@ class CShader;
 class CVIBuffer;
 class CTexture;
 class CDynamicMesh;
+class CLightMgr;
 class CStaticObject :
 	public CObj
 {
@@ -23,6 +24,9 @@ private:
 	ID3D11Buffer*		m_pSceneVertexShaderCB;
 	ID3D11Buffer*		m_pScenePixelShaderCB;
 
+	CLightMgr*			m_pLightMgr;
+
+	
 
 
 public:

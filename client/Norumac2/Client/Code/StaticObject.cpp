@@ -13,6 +13,7 @@
 #include "Camera.h"
 #include "RenderMgr.h"
 #include "ResourcesMgr.h"
+#include "LightMgr.h"
 #include "Player.h"
 
 #pragma pack(push,1)
@@ -40,6 +41,7 @@ CStaticObject::CStaticObject()
 	m_pVerTex = NULL;
 	m_pSceneVertexShaderCB = NULL;
 	m_pScenePixelShaderCB = NULL;
+	m_pLightMgr = CLightMgr::GetInstance();
 }
 
 
@@ -62,14 +64,20 @@ HRESULT CStaticObject::Initialize(const TCHAR* pMeshKey)
 	_tcscpy_s(m_tcMeshKey, pMeshKey);
 
 	_tcscat_s(m_tcKey, L".png");
-
-
+	
 	if (FAILED(AddComponent(pMeshKey, m_tcKey)))
 		return E_FAIL;
 	m_pInfo->m_fAngle[ANGLE_X] = /*D3DX_PI / 2 * -1.f;*/D3DXToRadian(-90);
 	//m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 	//m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 	//m_pInfo->m_vScale = D3DXVECTOR3(0.01f, 0.01f, 0.01f);
+
+	if (0 == wcscmp(pMeshKey, L"streetlamp"))
+	{
+		m_pLightMgr->AddPointLight(D3DXVECTOR3(m_pInfo->m_vPos), 20.f, D3DXVECTOR3(1.0f, 0.8f, 0.0f));
+	}
+
+	
 
 	CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, this);
 
@@ -83,6 +91,8 @@ HRESULT CStaticObject::Initialize(const TCHAR* pMeshKey)
 
 	cbDesc.ByteWidth = sizeof(CB_PS_PER_OBJECT);
 	FAILED_CHECK(m_pGrapicDevice->m_pDevice->CreateBuffer(&cbDesc, NULL, &m_pScenePixelShaderCB));
+
+	
 
 	return S_OK;
 }
@@ -153,7 +163,6 @@ void CStaticObject::Render(void)
 
 		m_pBuffer->Render();
 	}
-
 }
 
 CStaticObject * CStaticObject::Create(const TCHAR* pMeshKey)
@@ -189,7 +198,6 @@ HRESULT CStaticObject::AddComponent(const TCHAR* pMeshKey, const TCHAR* pTexture
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"VS_Shader", pComponent));
 	pComponent = m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"RenderScenePS");
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"PS_Shader", pComponent));
-
 
 	return S_OK;
 }

@@ -29,16 +29,24 @@ CRenderMgr::CRenderMgr()
 
 	m_fDirColor[RGB_RED] = 0.8f;
 	m_fDirColor[RGB_GREEN] = 0.8f;
-	m_fDirColor[RGB_BLUE] = 0.5f;
+	m_fDirColor[RGB_BLUE] = 0.8f;
 
 	m_vDirLight = D3DXVECTOR3(1.0f, -1.0f, 1.0f);
-
-	//m_pLightMgr->SetAmbient(D3DXVECTOR3(0.0f, 0.0f, 1.f), D3DXVECTOR3(0.0f, 1.f, 0.0f));
 
 	m_pLightMgr->SetAmbient(D3DXVECTOR3(0.4f, 0.5f, 0.4f), D3DXVECTOR3(0.4f, 0.5f, 0.4f));
 	m_pLightMgr->SetDirectional(
 		D3DXVECTOR3(m_vDirLight.x, m_vDirLight.y, m_vDirLight.z),
 		D3DXVECTOR3(m_fDirColor[RGB_RED], m_fDirColor[RGB_GREEN], m_fDirColor[RGB_BLUE]));
+
+	/*for (int i = 0; i < 100; ++i)
+	{
+		if (i % 3 == 0)
+			m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f, 20.f, 0.f + i * 5), 20.f, D3DXVECTOR3(0.0f, 0.0f, i));
+		else if (i % 3 == 1)
+			m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f, 0.f + i * 5, 0.f), 20.f, D3DXVECTOR3(0.0f, i, 0.0f));
+		else if (i % 3 == 2)
+			m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f + i * 5, 20.f, 0.f), 20.f, D3DXVECTOR3(i, 0.0f, 0.0f));
+	}*/
 }
 
 
@@ -94,9 +102,9 @@ void CRenderMgr::Render(const float & fTime)
 			D3DXVECTOR3(m_fDirColor[RGB_RED], m_fDirColor[RGB_GREEN], m_fDirColor[RGB_BLUE]));
 
 		// 조명 클리어
-		m_pLightMgr->ClearLights();
-		// 점조명 갱신
-		for (int i = 0; i < 100; ++i)
+		//m_pLightMgr->ClearLights();
+		//// 점조명 갱신
+		/*for (int i = 0; i < 100; ++i)
 		{
 			if (i % 3 == 0)
 				m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f, 20.f, 0.f + i * 5), 20.f, D3DXVECTOR3(0.0f, 0.0f, i));
@@ -104,7 +112,7 @@ void CRenderMgr::Render(const float & fTime)
 				m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f, 0.f + i * 5, 0.f), 20.f, D3DXVECTOR3(0.0f, i, 0.0f));
 			else if (i % 3 == 2)
 				m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f + i * 5, 20.f, 0.f), 20.f, D3DXVECTOR3(i, 0.0f, 0.0f));
-		}
+		}*/
 	}		
 
 	ID3D11DepthStencilState* pPrevDepthState;

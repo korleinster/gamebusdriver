@@ -41,7 +41,6 @@ CStaticObject::CStaticObject()
 	m_pVerTex = NULL;
 	m_pSceneVertexShaderCB = NULL;
 	m_pScenePixelShaderCB = NULL;
-	m_pLightMgr = CLightMgr::GetInstance();
 }
 
 
@@ -71,13 +70,6 @@ HRESULT CStaticObject::Initialize(const TCHAR* pMeshKey)
 	//m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 	//m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 	//m_pInfo->m_vScale = D3DXVECTOR3(0.01f, 0.01f, 0.01f);
-
-	if (0 == wcscmp(pMeshKey, L"streetlamp"))
-	{
-		m_pLightMgr->AddPointLight(D3DXVECTOR3(m_pInfo->m_vPos), 20.f, D3DXVECTOR3(1.0f, 0.8f, 0.0f));
-	}
-
-	
 
 	CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, this);
 

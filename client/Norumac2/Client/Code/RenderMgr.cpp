@@ -27,9 +27,9 @@ CRenderMgr::CRenderMgr()
 	m_pTargetMgr->Initialize();
 	m_pLightMgr->Initialize();
 
-	m_fDirColor[RGB_RED] = 0.8f;
-	m_fDirColor[RGB_GREEN] = 0.8f;
-	m_fDirColor[RGB_BLUE] = 0.8f;
+	m_fDirColor[RGB_RED] = 0.7f;
+	m_fDirColor[RGB_GREEN] = 0.7f;
+	m_fDirColor[RGB_BLUE] = 0.7f;
 
 	m_vDirLight = D3DXVECTOR3(1.0f, -1.0f, 1.0f);
 
@@ -38,15 +38,15 @@ CRenderMgr::CRenderMgr()
 		D3DXVECTOR3(m_vDirLight.x, m_vDirLight.y, m_vDirLight.z),
 		D3DXVECTOR3(m_fDirColor[RGB_RED], m_fDirColor[RGB_GREEN], m_fDirColor[RGB_BLUE]));
 
-	/*for (int i = 0; i < 100; ++i)
+	for (int i = 0; i < 100; ++i)
 	{
-		if (i % 3 == 0)
-			m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f, 20.f, 0.f + i * 5), 20.f, D3DXVECTOR3(0.0f, 0.0f, i));
-		else if (i % 3 == 1)
-			m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f, 0.f + i * 5, 0.f), 20.f, D3DXVECTOR3(0.0f, i, 0.0f));
-		else if (i % 3 == 2)
-			m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f + i * 5, 20.f, 0.f), 20.f, D3DXVECTOR3(i, 0.0f, 0.0f));
-	}*/
+	if (i % 3 == 0)
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f, 20.f, 0.f + i * 5), 20.f, D3DXVECTOR3(0.0f, 0.0f, i));
+	else if (i % 3 == 1)
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f, 0.f + i * 5, 0.f), 20.f, D3DXVECTOR3(0.0f, i, 0.0f));
+	else if (i % 3 == 2)
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f + i * 5, 20.f, 0.f), 20.f, D3DXVECTOR3(i, 0.0f, 0.0f));
+	}
 }
 
 

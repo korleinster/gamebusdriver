@@ -5,7 +5,6 @@ class CShader;
 class CVIBuffer;
 class CTexture;
 class CDynamicMesh;
-class CLightMgr;
 class CStaticObject :
 	public CObj
 {
@@ -23,11 +22,6 @@ private:
 	// Scene meshes shader constant buffers
 	ID3D11Buffer*		m_pSceneVertexShaderCB;
 	ID3D11Buffer*		m_pScenePixelShaderCB;
-
-	CLightMgr*			m_pLightMgr;
-
-	
-
 
 public:
 	virtual HRESULT Initialize(const TCHAR* pMeshKey);

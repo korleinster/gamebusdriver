@@ -13,6 +13,7 @@
 #include "ResourcesMgr.h"
 #include "Frustum.h"
 #include "FaceUI.h"
+#include "LightMgr.h"
 
 CStage::CStage()
 	: m_bFirstLogin(false)
@@ -130,7 +131,7 @@ void CStage::DataLoad(void)
 {
 	HANDLE	hFile = CreateFile(L"..\\Resource\\Data\\Norumac2.dat", GENERIC_READ,
 		0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-
+	CLightMgr* pLightMgr = CLightMgr::GetInstance();
 	DWORD dwByte;
 
 	int iObjSize = 0;
@@ -154,11 +155,23 @@ void CStage::DataLoad(void)
 			CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, pGameObject);
 
 			const CComponent* pComponent = pGameObject->GetComponent(L"Transform");
+			
 			ReadFile(hFile, ((CInfo*)pComponent)->m_fAngle, sizeof(float) * ANGLE_END, &dwByte, NULL);
 			ReadFile(hFile, ((CInfo*)pComponent)->m_vScale, sizeof(D3DXVECTOR3), &dwByte, NULL);
 			ReadFile(hFile, ((CInfo*)pComponent)->m_vPos, sizeof(D3DXVECTOR3), &dwByte, NULL);
 			ReadFile(hFile, ((CInfo*)pComponent)->m_vDir, sizeof(D3DXVECTOR3), &dwByte, NULL);
 			ReadFile(hFile, ((CInfo*)pComponent)->m_matWorld, sizeof(D3DXMATRIX), &dwByte, NULL);
+
+			
+
+			if (0 == wcscmp(pObjectKey, L"streetlamp"))
+			{
+				D3DXVECTOR3 vPos;
+				vPos.x = ((CInfo*)pComponent)->m_vPos.x - 0.5f;
+				vPos.y = ((CInfo*)pComponent)->m_vPos.y+1;
+				vPos.z = ((CInfo*)pComponent)->m_vPos.z;
+				pLightMgr->AddPointLight(vPos, 3.f, D3DXVECTOR3(1.0f, 0.0f, 0.0f));
+			}
 		}
 	}
 	CloseHandle(hFile);

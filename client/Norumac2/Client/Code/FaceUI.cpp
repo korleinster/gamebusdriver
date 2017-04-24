@@ -32,6 +32,7 @@ HRESULT CFaceUI::Initialize(void)
 	m_fSizeX = 33.f;
 	m_fSizeY = 33.f;
 
+	//
 	CRenderMgr::GetInstance()->AddRenderGroup(TYPE_UI, this);
 
 	return S_OK;

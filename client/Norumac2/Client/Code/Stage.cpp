@@ -106,6 +106,7 @@ HRESULT CStage::CreateObj(void)
 
 		CObjMgr::GetInstance()->AddObject(L"Flower", pObj);
 	}*/
+	//
 
 	pObj = CFaceUI::Create();
 	if (pObj == NULL)

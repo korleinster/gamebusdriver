@@ -6,6 +6,7 @@ class CFaceUI : public CUI
 public:
 	CFaceUI();
 	virtual ~CFaceUI();
+	//
 
 public:
 	virtual HRESULT Initialize(void);

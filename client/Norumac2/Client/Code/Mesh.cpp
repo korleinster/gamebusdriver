@@ -39,11 +39,11 @@ void CMesh::SetNormalVectorByBasic(BYTE * _pVertices)
 		vNormal = GetTriAngleNormal(_pVertices, (i * 3 + 0), (i * 3 + 1), (i * 3 + 2));
 
 		pVertex = (VTXTEX*)(_pVertices + ((i * 3 + 0) * m_iVertexStrides));
-		pVertex->vNormal = vNormal;
+		pVertex->vNormal = -vNormal;
 		pVertex = (VTXTEX*)(_pVertices + ((i * 3 + 1) * m_iVertexStrides));
-		pVertex->vNormal = vNormal;
+		pVertex->vNormal = -vNormal;
 		pVertex = (VTXTEX*)(_pVertices + ((i * 3 + 2) * m_iVertexStrides));
-		pVertex->vNormal = vNormal;
+		pVertex->vNormal = -vNormal;
 	}
 }
 

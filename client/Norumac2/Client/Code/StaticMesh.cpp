@@ -406,7 +406,7 @@ HRESULT CStaticMesh::Load_StaticMesh(const char* szFilePath,const char* szFileNa
 					case FbxGeometryElement::eDirect:
 					{
 						vOutNormal.x = static_cast<float>(VtxNormal->GetDirectArray().GetAt(iControlPointIndex).mData[0]);
-						vOutNormal.y = 1 - static_cast<float>(VtxNormal->GetDirectArray().GetAt(iControlPointIndex).mData[1]);
+						vOutNormal.y = static_cast<float>(VtxNormal->GetDirectArray().GetAt(iControlPointIndex).mData[1]);
 						vOutNormal.z = static_cast<float>(VtxNormal->GetDirectArray().GetAt(iControlPointIndex).mData[2]);
 					}
 					break;

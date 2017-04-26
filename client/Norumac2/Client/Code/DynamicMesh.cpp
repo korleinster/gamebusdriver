@@ -16,6 +16,7 @@ CDynamicMesh::CDynamicMesh()
 :m_wCurrenAniIdx(-1),
  m_fAniPlayTimer(0.f)
 {
+
 }
 
 

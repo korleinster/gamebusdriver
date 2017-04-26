@@ -69,17 +69,43 @@ void CLoading::StageLoading(void)
 		RESOURCE_STAGE
 		, L"Texture_Flower"
 		, L"../Resource/Flower.png");*/
-	FAILED_CHECK_RETURN(hr, );
+	//FAILED_CHECK_RETURN(hr, );
 
 	hr = CResourcesMgr::GetInstance()->AddTexture(
 		RESOURCE_STAGE
 		, L"Texture_Player"
 		, L"../Resource/MeshImage/newplayer.png");
+	FAILED_CHECK_RETURN(hr, );
 
 	hr = CResourcesMgr::GetInstance()->AddTexture(
 		RESOURCE_STAGE
 		, L"Texture_FaceUI"
 		, L"../Resource/Uiimage/profile.png");
+	FAILED_CHECK_RETURN(hr, );
+
+	hr = CResourcesMgr::GetInstance()->AddTexture(
+		RESOURCE_STAGE
+		, L"Texture_BaseUI"
+		, L"../Resource/Uiimage/hpbar.png");
+	FAILED_CHECK_RETURN(hr, );
+
+	hr = CResourcesMgr::GetInstance()->AddTexture(
+		RESOURCE_STAGE
+		, L"Texture_HpBar"
+		, L"../Resource/Uiimage/hpgay.png");
+	FAILED_CHECK_RETURN(hr, );
+
+	hr = CResourcesMgr::GetInstance()->AddTexture(
+		RESOURCE_STAGE
+		, L"Texture_HpZero"
+		, L"../Resource/Uiimage/hp.png");
+	FAILED_CHECK_RETURN(hr, );
+
+	hr = CResourcesMgr::GetInstance()->AddTexture(
+		RESOURCE_STAGE
+		, L"Texture_FeverBar"
+		, L"../Resource/Uiimage/firegay.png");
+	FAILED_CHECK_RETURN(hr, );
 
 
 	//lstrcpy(m_szLoadMessage, L"버퍼 로딩중...");

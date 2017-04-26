@@ -185,13 +185,11 @@
     <ClInclude Include="..\Code\FaceUI.h" />
     <ClInclude Include="..\Code\FbxParser.h" />
     <ClInclude Include="..\Code\FeverBar.h" />
-    <ClInclude Include="..\Code\FeverZero.h" />
     <ClInclude Include="..\Code\Flower.h" />
     <ClInclude Include="..\Code\Font.h" />
     <ClInclude Include="..\Code\FontMgr.h" />
     <ClInclude Include="..\Code\Frustum.h" />
     <ClInclude Include="..\Code\HpBar.h" />
-    <ClInclude Include="..\Code\HpZero.h" />
     <ClInclude Include="..\Code\Info.h" />
     <ClInclude Include="..\Code\Input.h" />
     <ClInclude Include="..\Code\LightMgr.h" />
@@ -216,6 +214,7 @@
     <ClInclude Include="..\Code\RenderTarget.h" />
     <ClInclude Include="..\Code\Resources.h" />
     <ClInclude Include="..\Code\ResourcesMgr.h" />
+    <ClInclude Include="..\Code\RuneBar.h" />
     <ClInclude Include="..\Code\Scene.h" />
     <ClInclude Include="..\Code\SceneMgr.h" />
     <ClInclude Include="..\Code\Shader.h" />
@@ -254,13 +253,11 @@
     <ClCompile Include="..\Code\FaceUI.cpp" />
     <ClCompile Include="..\Code\FbxParser.cpp" />
     <ClCompile Include="..\Code\FeverBar.cpp" />
-    <ClCompile Include="..\Code\FeverZero.cpp" />
     <ClCompile Include="..\Code\Flower.cpp" />
     <ClCompile Include="..\Code\Font.cpp" />
     <ClCompile Include="..\Code\FontMgr.cpp" />
     <ClCompile Include="..\Code\Frustum.cpp" />
     <ClCompile Include="..\Code\HpBar.cpp" />
-    <ClCompile Include="..\Code\HpZero.cpp" />
     <ClCompile Include="..\Code\Info.cpp" />
     <ClCompile Include="..\Code\Input.cpp" />
     <ClCompile Include="..\Code\LightMgr.cpp" />
@@ -285,6 +282,7 @@
     <ClCompile Include="..\Code\RenderTarget.cpp" />
     <ClCompile Include="..\Code\Resources.cpp" />
     <ClCompile Include="..\Code\ResourcesMgr.cpp" />
+    <ClCompile Include="..\Code\RuneBar.cpp" />
     <ClCompile Include="..\Code\Scene.cpp" />
     <ClCompile Include="..\Code\SceneMgr.cpp" />
     <ClCompile Include="..\Code\Shader.cpp" />

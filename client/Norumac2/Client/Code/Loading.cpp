@@ -97,14 +97,15 @@ void CLoading::StageLoading(void)
 
 	hr = CResourcesMgr::GetInstance()->AddTexture(
 		RESOURCE_STAGE
-		, L"Texture_HpZero"
-		, L"../Resource/Uiimage/hp.png");
-	FAILED_CHECK_RETURN(hr, );
+		, L"Texture_FeverBar"
+		, L"../Resource/Uiimage/firegay.png");
 
 	hr = CResourcesMgr::GetInstance()->AddTexture(
 		RESOURCE_STAGE
-		, L"Texture_FeverBar"
-		, L"../Resource/Uiimage/firegay.png");
+		, L"Texture_RuneBar"
+		, L"../Resource/Uiimage/rune_active.png");
+
+
 	FAILED_CHECK_RETURN(hr, );
 
 

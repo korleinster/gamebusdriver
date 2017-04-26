@@ -16,8 +16,8 @@
 #include "LightMgr.h"
 #include "BaseUI.h"
 #include "HpBar.h"
-#include "HpZero.h"
 #include "FeverBar.h"
+#include "RuneBar.h"
 
 CStage::CStage()
 	: m_bFirstLogin(false)
@@ -117,15 +117,18 @@ HRESULT CStage::CreateObj(void)
 		return E_FAIL;
 	CObjMgr::GetInstance()->AddObject(L"HpBar", pObj);
 
-	pObj = CHpZero::Create();
-	if (pObj == NULL)
-		return E_FAIL;
-	CObjMgr::GetInstance()->AddObject(L"HpZero", pObj);
-
 	pObj = CFeverBar::Create();
 	if (pObj == NULL)
 		return E_FAIL;
 	CObjMgr::GetInstance()->AddObject(L"FeverBar", pObj);
+
+	for (int i = 0; i < 10; ++i)
+	{
+		pObj = CRuneBar::Create(80.f+(22.f * i),50.f);
+		if (pObj == NULL)
+			return E_FAIL;
+		CObjMgr::GetInstance()->AddObject(L"FeverBar", pObj);
+	}
 
 	pObj = CFaceUI::Create();
 	if (pObj == NULL)

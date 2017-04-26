@@ -190,17 +190,14 @@
     <Filter Include="02.Object\07.UI\01.BaseUI">
       <UniqueIdentifier>{79724ac1-cc31-4dad-8352-e3326485d29e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Object\07.UI\03.HpZero">
-      <UniqueIdentifier>{4510a6dd-31b4-4381-95cf-8fa19182aa87}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Object\07.UI\04.HpBar">
       <UniqueIdentifier>{778a2df4-5606-49c5-a4a8-ef0395c45ccc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Object\07.UI\05.FeverZero">
-      <UniqueIdentifier>{803583c8-9e76-4201-b361-a54483f37d68}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Object\07.UI\06.FeverBar">
       <UniqueIdentifier>{c20c77f6-3e50-48f7-b28c-2ae93ce4b74a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\07.UI\07.RuneBar">
+      <UniqueIdentifier>{a74728bd-3afd-48e6-8fe4-b6a355d2063f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -405,17 +402,14 @@
     <ClInclude Include="..\Code\BaseUI.h">
       <Filter>02.Object\07.UI\01.BaseUI</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\HpZero.h">
-      <Filter>02.Object\07.UI\03.HpZero</Filter>
-    </ClInclude>
     <ClInclude Include="..\Code\HpBar.h">
       <Filter>02.Object\07.UI\04.HpBar</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\FeverZero.h">
-      <Filter>02.Object\07.UI\05.FeverZero</Filter>
-    </ClInclude>
     <ClInclude Include="..\Code\FeverBar.h">
       <Filter>02.Object\07.UI\06.FeverBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\RuneBar.h">
+      <Filter>02.Object\07.UI\07.RuneBar</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -593,17 +587,14 @@
     <ClCompile Include="..\Code\BaseUI.cpp">
       <Filter>02.Object\07.UI\01.BaseUI</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\HpZero.cpp">
-      <Filter>02.Object\07.UI\03.HpZero</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\HpBar.cpp">
       <Filter>02.Object\07.UI\04.HpBar</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\FeverZero.cpp">
-      <Filter>02.Object\07.UI\05.FeverZero</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\FeverBar.cpp">
       <Filter>02.Object\07.UI\06.FeverBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\RuneBar.cpp">
+      <Filter>02.Object\07.UI\07.RuneBar</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

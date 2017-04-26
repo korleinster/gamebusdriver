@@ -1,5 +1,6 @@
 battlegroundcenter.png|..\Resource\MeshImage\battlegroundcenter.png
 grass.png|..\Resource\MeshImage\grass.png
+grass2.png|..\Resource\MeshImage\grass2.png
 house1.png|..\Resource\MeshImage\house1.png
 house2.png|..\Resource\MeshImage\house2.png
 house3.png|..\Resource\MeshImage\house3.png

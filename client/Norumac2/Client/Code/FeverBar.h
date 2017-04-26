@@ -1,11 +1,11 @@
 #pragma once
 #include "UI.h"
 
-class CFeverZero : public CUI
+class CFeverBar : public CUI
 {
 public:
-	CFeverZero();
-	virtual ~CFeverZero();
+	CFeverBar();
+	virtual ~CFeverBar();
 	//
 
 public:
@@ -17,7 +17,7 @@ public:
 	virtual HRESULT AddComponent(void);
 
 public:
-	static CFeverZero* Create();
+	static CFeverBar* Create();
 
 
 };

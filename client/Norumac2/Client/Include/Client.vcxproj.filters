@@ -190,13 +190,13 @@
     <Filter Include="02.Object\07.UI\01.BaseUI">
       <UniqueIdentifier>{79724ac1-cc31-4dad-8352-e3326485d29e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Object\07.UI\04.HpBar">
+    <Filter Include="02.Object\07.UI\03.HpBar">
       <UniqueIdentifier>{778a2df4-5606-49c5-a4a8-ef0395c45ccc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Object\07.UI\06.FeverBar">
+    <Filter Include="02.Object\07.UI\04.FeverBar">
       <UniqueIdentifier>{c20c77f6-3e50-48f7-b28c-2ae93ce4b74a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Object\07.UI\07.RuneBar">
+    <Filter Include="02.Object\07.UI\05.RuneBar">
       <UniqueIdentifier>{a74728bd-3afd-48e6-8fe4-b6a355d2063f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -403,13 +403,13 @@
       <Filter>02.Object\07.UI\01.BaseUI</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\HpBar.h">
-      <Filter>02.Object\07.UI\04.HpBar</Filter>
+      <Filter>02.Object\07.UI\03.HpBar</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\FeverBar.h">
-      <Filter>02.Object\07.UI\06.FeverBar</Filter>
+      <Filter>02.Object\07.UI\04.FeverBar</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\RuneBar.h">
-      <Filter>02.Object\07.UI\07.RuneBar</Filter>
+      <Filter>02.Object\07.UI\05.RuneBar</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -588,13 +588,13 @@
       <Filter>02.Object\07.UI\01.BaseUI</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\HpBar.cpp">
-      <Filter>02.Object\07.UI\04.HpBar</Filter>
+      <Filter>02.Object\07.UI\03.HpBar</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\FeverBar.cpp">
-      <Filter>02.Object\07.UI\06.FeverBar</Filter>
+      <Filter>02.Object\07.UI\04.FeverBar</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\RuneBar.cpp">
-      <Filter>02.Object\07.UI\07.RuneBar</Filter>
+      <Filter>02.Object\07.UI\05.RuneBar</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

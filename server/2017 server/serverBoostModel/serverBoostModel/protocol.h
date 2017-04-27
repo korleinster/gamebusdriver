@@ -61,6 +61,7 @@ using status = struct Status {
 	unsigned char mp = 10;
 	unsigned char level = 1;
 	unsigned short exp{ 0 };
+	short maxgauge{ 400 };
 	short gauge{ 0 };
 };
 

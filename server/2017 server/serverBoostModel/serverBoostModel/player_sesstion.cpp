@@ -59,6 +59,7 @@ void player_session::Init()
 	m_player_data.state.mp = 10;
 	m_player_data.state.level = 1;
 	m_player_data.state.exp = 0;
+	m_player_data.state.maxgauge = 400;
 	m_player_data.state.gauge = 0;
 	m_player_data.state.hp = m_player_data.state.maxhp;
 	m_player_data.is_ai = false;
@@ -80,6 +81,7 @@ void player_session::Init()
 		m_player_data.state.mp = 10;
 		m_player_data.state.level = 1;
 		m_player_data.state.exp = 0;
+		m_player_data.state.maxgauge = 400;
 		m_player_data.state.gauge = 0;
 		m_player_data.state.hp = m_player_data.state.maxhp;
 		m_player_data.is_ai = false;

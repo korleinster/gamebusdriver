@@ -285,15 +285,6 @@ void player_session::m_process_packet(Packet buf[])
 
 				g_clients[id]->send_packet(reinterpret_cast<Packet*>(&p));
 			}
-
-			/*for (auto players : g_clients)
-			{
-				if (DISCONNECTED == players->m_connect_state) { continue; }
-				if (m_id == players->m_id) { continue; }
-				if (true == players->get_player_data()->is_ai) { continue; }
-
-				players->send_packet(reinterpret_cast<Packet*>(&p));
-			}*/
 			break;
 		}
 
@@ -310,16 +301,6 @@ void player_session::m_process_packet(Packet buf[])
 
 				g_clients[id]->send_packet(reinterpret_cast<Packet*>(&p));
 			}
-
-			// 필요한 애들한테 방향 정보를 뿌려주자 - 현재는 애들 다 뿌린다.
-			/*for (auto players : g_clients)
-			{
-				if (DISCONNECTED == players->m_connect_state) { continue; }
-				if (m_id == players->m_id) { continue; }
-				if (true == players->get_player_data()->is_ai) { continue; }
-
-				players->send_packet(reinterpret_cast<Packet*>(&p));
-			}*/
 			break;
 		}
 
@@ -335,6 +316,7 @@ void player_session::m_process_packet(Packet buf[])
 			float my_x = m_player_data.pos.x, my_y = m_player_data.pos.y;
 			float player_size = 0.7;	// 객체 충돌 크기 반지름
 			char *dir = &m_player_data.dir;
+			bool is_gauge_on = false;
 
 			if ((*dir & KEYINPUT_RIGHT) == (KEYINPUT_RIGHT)) { my_x -= att_x; my_y -= att_y; }
 			if ((*dir & KEYINPUT_LEFT) == (KEYINPUT_LEFT)) { my_x += att_x; my_y += att_y; }
@@ -350,14 +332,15 @@ void player_session::m_process_packet(Packet buf[])
 				float y = g_clients[id]->m_player_data.pos.y;
 				if((player_size * player_size) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) {
 					g_clients[id]->m_player_data.state.hp -= m_sub_status.str;
+					is_gauge_on = true; // 발열 게이지를 마지막 체크 때 올려주자
 
-					if (false == *g_clients[id]->get_hp_adding()) {
-						*g_clients[id]->get_hp_adding() = true;
+					if (false == g_clients[id]->get_hp_adding()) {
+						g_clients[id]->set_hp_adding(true);
 						g_time_queue.add_event(id, 1, HP_ADD, false);	// AI 타격 일때, 따로 hp 추가해 주는 함수가 없다 !!! -> 일반 플레이어와 동일하게 처리함
 					}
 					
 					sc_atk p;
-					p.attacking_id = m_id;					// 공격자 id
+					p.attacking_id = m_id;		// 공격자 id
 					p.under_attack_id = id;		// 맞는 놈의 id
 					p.hp = g_clients[id]->m_player_data.state.hp;	// 맞은 놈의 hp
 
@@ -390,6 +373,23 @@ void player_session::m_process_packet(Packet buf[])
 					if (true == g_clients[id]->get_player_data()->is_ai) { continue; }
 					g_clients[id]->send_packet(reinterpret_cast<Packet*>(&p));
 				}
+			}
+
+			// 발열 게이지가 올라가야 한다면 ---- ( AI 는 필요 없으니 skip 하게 하자 )
+			if (true == is_gauge_on) {
+				// 발열 게이지 값을 올리고
+				m_player_data.state.gauge += 10;
+				if (m_player_data.state.maxgauge < m_player_data.state.gauge) { m_player_data.state.gauge = m_player_data.state.maxgauge; }
+
+				if (false == is_gauge_reducing) {
+					is_gauge_reducing = true;
+					g_time_queue.add_event(m_id, 1, FEVER_REDUCE, false);
+				}
+
+				// 패킷을 당사자에게 하나 보내주자.
+				sc_fever p;
+				p.gauge = m_player_data.state.gauge;
+				send_packet(reinterpret_cast<Packet*>(&p));
 			}
 			break;
 		}

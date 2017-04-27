@@ -26,9 +26,10 @@ enum PacketProtocolType {
 	INIT_OTHER_CLIENT,
 	PLAYER_DISCONNECTED,
 
-	// 캐릭터 좌표 및 방향 관련
+	// 캐릭터 좌표 및 방향, 발열 관련
 	CHANGED_POSITION,
 	CHANGED_DIRECTION,
+	CHANGED_FEVER,
 
 	// 캐릭터 장비
 	CHANGED_INVENTORY,
@@ -141,6 +142,13 @@ using sc_hp = struct server_to_client_changed_hp
 	unsigned char type = SERVER_MESSAGE_HP_CHANGED;
 	unsigned int id;
 	int hp;
+};
+
+using sc_fever = struct server_to_client_changed_fever_gauge
+{
+	unsigned char size = sizeof(short) + sizeof(unsigned char) + sizeof(unsigned char);
+	unsigned char type = CHANGED_FEVER;
+	short gauge;
 };
 
 #pragma pack (pop)

@@ -13,7 +13,12 @@ public:
 
 	void Init();
 
-	inline bool* get_hp_adding() { return &is_hp_adding; }
+	void set_hp_adding(bool b) { is_hp_adding = b; }
+	inline bool get_hp_adding() { return is_hp_adding; }
+
+	void set_gauge_reducing(bool b) { is_gauge_reducing = b; }
+	inline bool get_gauge_reducing() { return is_gauge_reducing; }
+
 	inline bool set_hp(int hp) { m_player_data.state.hp = hp; return true; }
 	inline int get_maxhp() { return m_player_data.state.maxhp; }
 
@@ -55,6 +60,7 @@ private:
 	bool m_connect_state{ true };
 	unsigned int m_id{ 0 };
 	bool is_hp_adding{ false };
+	bool is_gauge_reducing{ false };
 
 	// 버퍼 변수
 	Packet m_recv_buf[MAX_BUF_SIZE]{ 0 };

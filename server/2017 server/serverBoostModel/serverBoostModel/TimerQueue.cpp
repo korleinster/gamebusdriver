@@ -12,8 +12,17 @@ void TimerQueue::TimerThread() {
 			timer_queue.pop();
 			time_lock.unlock();
 
-			processPacket(event_ptr);
-			if (event_ptr != nullptr) { delete event_ptr; }
+			/*processPacket(event_ptr);
+			if (event_ptr != nullptr) { delete event_ptr; }*/
+
+			g_io_service.post(
+				[this, event_ptr]()
+				{
+					processPacket(event_ptr);
+					if (event_ptr != nullptr) { delete event_ptr; }
+				}
+			);
+
 
 			time_lock.lock();
 		}
@@ -21,7 +30,7 @@ void TimerQueue::TimerThread() {
 	}
 }
 
-void TimerQueue::add_event(const unsigned int& id, const int& sec, time_queue_event type, bool is_ai) {
+void TimerQueue::add_event(const unsigned int& id, const float& sec, time_queue_event type, bool is_ai) {
 
 	event_type *ptr = new event_type;
 
@@ -51,7 +60,7 @@ void TimerQueue::processPacket(event_type *p) {
 			g_clients[p->id]->get_player_data()->state.hp += adding_hp_size;
 
 			// 만피가 되었다면, 계속 hp 더해주는 모드 끄기
-			if (g_clients[p->id]->get_player_data()->state.maxhp == g_clients[p->id]->get_player_data()->state.hp) { *g_clients[p->id]->get_hp_adding() = false; }
+			if (g_clients[p->id]->get_player_data()->state.maxhp == g_clients[p->id]->get_player_data()->state.hp) { g_clients[p->id]->set_hp_adding(false); }
 			add_event(p->id, 1, HP_ADD, false);
 			
 			sc_hp packet;
@@ -75,7 +84,7 @@ void TimerQueue::processPacket(event_type *p) {
 
 		if (true == p->is_ai) {
 			g_clients[p->id]->set_connect_state(CONNECTED);
-			*g_clients[p->id]->get_hp_adding() = false;
+			g_clients[p->id]->set_hp_adding(false);
 			g_clients[p->id]->set_hp(g_clients[p->id]->get_maxhp());
 
 			for (auto players : g_clients) {
@@ -97,20 +106,30 @@ void TimerQueue::processPacket(event_type *p) {
 
 				g_clients[id]->send_packet(reinterpret_cast<Packet*>(&packet));
 			}
-
-
-			//for (auto players : g_clients) {
-			//	if (DISCONNECTED == players->get_current_connect_state()) { continue; }
-			//	// 내 자신 아이디는 검색 안해도 됨. ai 니까..
-			//	if (true == players->get_player_data()->is_ai) { continue; }
-			//	players->vl_add(p->id);
-			//	g_clients[p->id]->vl_add(players->get_id());
-			//	players->send_packet(reinterpret_cast<Packet*>(&packet));
-			//}
 		}
 		else {	// player 일 경우
 
 		}
+
+		break;
+	}
+
+	case FEVER_REDUCE: {
+
+		int reduce_size = 2;
+
+		g_clients[p->id]->get_player_data()->state.gauge -= reduce_size;
+
+		if (1 > g_clients[p->id]->get_player_data()->state.gauge) {
+			g_clients[p->id]->get_player_data()->state.gauge = 0;
+			g_clients[p->id]->set_gauge_reducing(false);
+		}
+
+		sc_fever packet;
+		packet.gauge = g_clients[p->id]->get_player_data()->state.gauge;
+		g_clients[p->id]->send_packet(reinterpret_cast<Packet*>(&packet));
+
+		if (true == g_clients[p->id]->get_gauge_reducing()) { add_event(p->id, 1, FEVER_REDUCE, p->is_ai); }
 
 		break;
 	}

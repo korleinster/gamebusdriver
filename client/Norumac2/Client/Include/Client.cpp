@@ -25,6 +25,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_ LPWSTR    lpCmdLine,
 	_In_ int       nCmdShow)
 {
+	_wsetlocale(LC_ALL, L"korean");
+
 	// 윈도우 클래스 등록
 	WNDCLASS wndclass;
 	wndclass.style = CS_HREDRAW | CS_VREDRAW;

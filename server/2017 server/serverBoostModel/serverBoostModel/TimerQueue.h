@@ -4,7 +4,7 @@ enum time_queue_event
 {
 	HP_ADD = 1,
 	DEAD_TO_ALIVE,
-
+	FEVER_REDUCE,
 };
 
 using event_type = struct Event_type
@@ -28,7 +28,7 @@ public:
 	void unlock() { time_lock.unlock(); }
 
 	void TimerThread();
-	void add_event(const unsigned int& id, const int& sec, time_queue_event type, bool is_ai);
+	void add_event(const unsigned int& id, const float& sec, time_queue_event type, bool is_ai);
 private:
 	void processPacket(event_type *p);
 

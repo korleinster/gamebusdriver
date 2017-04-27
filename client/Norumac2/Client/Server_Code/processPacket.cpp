@@ -51,6 +51,13 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		break;
 	}
 
+	case CHANGED_FEVER: {
+		sc_fever *p = reinterpret_cast<sc_fever*>(buf);
+		cout << "내 Fever Gauge 현재 양 = " << p->gauge << "\n";
+
+		break;
+	}
+
 	case SERVER_MESSAGE_HP_CHANGED: {
 		sc_hp *p = reinterpret_cast<sc_hp*>(buf);
 

@@ -54,6 +54,8 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 	case CHANGED_FEVER: {
 		sc_fever *p = reinterpret_cast<sc_fever*>(buf);
 		cout << "내 Fever Gauge 현재 양 = " << p->gauge << "\n";
+		m_player.state.gauge = p->gauge;
+		(*(CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin()))->SetPacketFever(&p->gauge);
 
 		break;
 	}

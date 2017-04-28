@@ -49,6 +49,7 @@ public:
 	player_data*	GetPacketData(void);
 	void SetPacketData(player_data* pPacketData);
 	void SetPacketHp(int* pPacketData);
+	void SetPacketFever(short* pPacketData);
 
 protected:
 	void Compute_ViewZ(const D3DXVECTOR3* pPos);

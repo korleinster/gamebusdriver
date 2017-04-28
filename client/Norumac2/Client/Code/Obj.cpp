@@ -130,3 +130,7 @@ void CObj::SetPacketHp(int* pPacketData)
 {
 	m_pInfo->m_ServerInfo.state.hp = *pPacketData;
 }
+void CObj::SetPacketFever(short* pPacketData)
+{
+	m_pInfo->m_ServerInfo.state.gauge = *pPacketData;
+}

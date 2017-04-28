@@ -12,6 +12,7 @@
 #include "Camera.h"
 #include "Device.h"
 #include "RenderMgr.h"
+#include "ObjMgr.h"
 
 CHpBar::CHpBar()
 {
@@ -40,6 +41,11 @@ HRESULT CHpBar::Initialize(void)
 
 int CHpBar::Update(void)
 {
+
+	auto player = CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin();
+
+	float fHp = (*player)->GetPacketData()->state.hp / 100.f;
+
 	D3DXMatrixOrthoLH(&m_matProj, WINCX, WINCY, 0.f, 1.f);
 
 	D3DXMatrixIdentity(&m_matView);
@@ -51,10 +57,9 @@ int CHpBar::Update(void)
 	m_matView._41 = m_fX - (WINCX >> 1);
 	m_matView._42 = -m_fY + (WINCY >> 1);
 
-	RECT	rcHpBarZero = { long(m_fX - m_fSizeX * 0.5f)
-		, long(m_fY - m_fSizeY * 0.5f)
-		, long(m_fX + m_fSizeX * 0.5f)
-		, long(m_fY + m_fSizeY * 0.5f) };
+
+	m_fSizeX = 102.5f * fHp;
+	m_fX = 174.f - (102.5f * (1.f - fHp));
 
 	CObj::Update();
 

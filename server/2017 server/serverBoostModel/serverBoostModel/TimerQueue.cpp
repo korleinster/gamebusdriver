@@ -12,9 +12,6 @@ void TimerQueue::TimerThread() {
 			timer_queue.pop();
 			time_lock.unlock();
 
-			/*processPacket(event_ptr);
-			if (event_ptr != nullptr) { delete event_ptr; }*/
-
 			g_io_service.post(
 				[this, event_ptr]()
 				{
@@ -115,6 +112,11 @@ void TimerQueue::processPacket(event_type *p) {
 	}
 
 	case FEVER_REDUCE: {
+
+		/// 공격을 안한지 3초 부터 게이지가 감소하도록 한다. *************************************************
+		if (true == g_clients[p->id]->get_gauge_reducing()) {
+
+		}
 
 		int reduce_size = 2;
 

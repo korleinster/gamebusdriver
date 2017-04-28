@@ -381,9 +381,10 @@ void player_session::m_process_packet(Packet buf[])
 				m_player_data.state.gauge += 10;
 				if (m_player_data.state.maxgauge < m_player_data.state.gauge) { m_player_data.state.gauge = m_player_data.state.maxgauge; }
 
+				/// 공격을 안한지 3초 부터 게이지가 감소하도록 한다. *************************************************
 				if (false == is_gauge_reducing) {
 					is_gauge_reducing = true;
-					g_time_queue.add_event(m_id, 1, FEVER_REDUCE, false);
+					g_time_queue.add_event(m_id, 3, FEVER_REDUCE, false);
 				}
 
 				// 패킷을 당사자에게 하나 보내주자.

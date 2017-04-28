@@ -39,14 +39,14 @@
     <ClInclude Include="boostAsioServer.h">
       <Filter>소스 파일\00.boostAsioServer</Filter>
     </ClInclude>
-    <ClInclude Include="player_sesstion.h">
-      <Filter>소스 파일\01.player_session</Filter>
-    </ClInclude>
     <ClInclude Include="DB.h">
       <Filter>소스 파일\02.DB class</Filter>
     </ClInclude>
     <ClInclude Include="TimerQueue.h">
       <Filter>소스 파일\03.Timer class</Filter>
+    </ClInclude>
+    <ClInclude Include="player_session.h">
+      <Filter>소스 파일\01.player_session</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -59,14 +59,14 @@
     <ClCompile Include="main.cpp">
       <Filter>소스 파일\99. Default</Filter>
     </ClCompile>
-    <ClCompile Include="player_sesstion.cpp">
-      <Filter>소스 파일\01.player_session</Filter>
-    </ClCompile>
     <ClCompile Include="DB.cpp">
       <Filter>소스 파일\02.DB class</Filter>
     </ClCompile>
     <ClCompile Include="TimerQueue.cpp">
       <Filter>소스 파일\03.Timer class</Filter>
+    </ClCompile>
+    <ClCompile Include="player_session.cpp">
+      <Filter>소스 파일\01.player_session</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

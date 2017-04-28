@@ -4,7 +4,10 @@ enum time_queue_event
 {
 	HP_ADD = 1,
 	DEAD_TO_ALIVE,
+	CHANGE_PLAYER_STATE,
 	FEVER_REDUCE,
+	AI_STATE_ATT,
+
 };
 
 using event_type = struct Event_type

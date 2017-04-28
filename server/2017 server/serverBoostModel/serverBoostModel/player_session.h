@@ -5,6 +5,12 @@ using boost::asio::ip::tcp;
 #define VIEW_RANGE 10
 #define DISTANCE_TRIANGLE(x , y, m_x, m_y) ((((x) - (m_x)) * ((x) - (m_x))) + ((((y) - (m_y)) * ((y) - (m_y)))))
 
+enum player_state {
+	mov,
+	att,
+
+};
+
 class player_session //: public std::enable_shared_from_this<player_session>
 {
 public:
@@ -18,6 +24,9 @@ public:
 
 	void set_gauge_reducing(bool b) { is_gauge_reducing = b; }
 	inline bool get_gauge_reducing() { return is_gauge_reducing; }
+
+	void set_state(player_state s) { m_state = s; }
+	player_state get_state() { return m_state; }
 
 	inline bool set_hp(int hp) { m_player_data.state.hp = hp; return true; }
 	inline int get_maxhp() { return m_player_data.state.maxhp; }
@@ -75,6 +84,7 @@ private:
 	// 플레이어 캐릭터 관련 정보
 	player_data m_player_data;
 	sub_status m_sub_status;
+	player_state m_state;
 
 	// 현재 플레이어의 view list
 	/// 고민 1. 기본 unorderd_set 자료형을 쓸 것인가 ?

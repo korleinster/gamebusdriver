@@ -42,7 +42,7 @@ void TimerQueue::add_event(const unsigned int& id, const float& sec, time_queue_
 }
 
 void TimerQueue::processPacket(event_type *p) {
-
+	
 	switch (p->type)
 	{
 	case HP_ADD: {	// 1초마다 hp 5씩 채우기
@@ -110,13 +110,29 @@ void TimerQueue::processPacket(event_type *p) {
 
 		break;
 	}
+	case CHANGE_PLAYER_STATE: {
+
+		if (DISCONNECTED == g_clients[p->id]->get_current_connect_state()) { return; }
+
+		if (mov != g_clients[p->id]->get_state()) {
+			g_clients[p->id]->set_state(mov);
+			add_event(p->id, 1, FEVER_REDUCE, false);
+		}
+
+		break;
+	}
 
 	case FEVER_REDUCE: {
 
-		/// 공격을 안한지 3초 부터 게이지가 감소하도록 한다. *************************************************
-		if (true == g_clients[p->id]->get_gauge_reducing()) {
+		if (DISCONNECTED == g_clients[p->id]->get_current_connect_state()) { return; }
 
+		/// 공격을 안한지 3초 부터 게이지가 감소하도록 하자
+		if (att == g_clients[p->id]->get_state()) {
+			g_clients[p->id]->set_gauge_reducing(false);
+			break;
 		}
+
+		g_clients[p->id]->set_gauge_reducing(true);
 
 		int reduce_size = 2;
 

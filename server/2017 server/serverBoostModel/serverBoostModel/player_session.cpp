@@ -235,6 +235,7 @@ void player_session::m_process_packet(Packet buf[])
 		{
 
 		case CHANGED_POSITION: {
+			m_state = mov;
 			
 			m_player_data.pos = *(reinterpret_cast<position*>(&buf[2]));
 			
@@ -331,12 +332,19 @@ void player_session::m_process_packet(Packet buf[])
 				float x = g_clients[id]->m_player_data.pos.x;
 				float y = g_clients[id]->m_player_data.pos.y;
 				if((player_size * player_size) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) {
+					m_state = att;
 					g_clients[id]->m_player_data.state.hp -= m_sub_status.str;
 					is_gauge_on = true; // 발열 게이지를 마지막 체크 때 올려주자
 
 					if (false == g_clients[id]->get_hp_adding()) {
 						g_clients[id]->set_hp_adding(true);
 						g_time_queue.add_event(id, 1, HP_ADD, false);	// AI 타격 일때, 따로 hp 추가해 주는 함수가 없다 !!! -> 일반 플레이어와 동일하게 처리함
+					}
+
+					// 맞은 놈이 ai 면, 반격을 하자.
+					if (MAX_AI_NUM > id) {
+						g_clients[id]->m_state = att;
+						g_time_queue.add_event(id, 1, AI_STATE_ATT, true);
 					}
 					
 					sc_atk p;
@@ -382,10 +390,10 @@ void player_session::m_process_packet(Packet buf[])
 				if (m_player_data.state.maxgauge < m_player_data.state.gauge) { m_player_data.state.gauge = m_player_data.state.maxgauge; }
 
 				/// 공격을 안한지 3초 부터 게이지가 감소하도록 한다. *************************************************
-				if (false == is_gauge_reducing) {
-					is_gauge_reducing = true;
-					g_time_queue.add_event(m_id, 3, FEVER_REDUCE, false);
-				}
+				g_time_queue.add_event(m_id, 2, CHANGE_PLAYER_STATE, false);
+				//if (false == is_gauge_reducing) {
+				//	//is_gauge_reducing = true;
+				//}
 
 				// 패킷을 당사자에게 하나 보내주자.
 				sc_fever p;

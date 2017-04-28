@@ -15,6 +15,7 @@ playcenter.png|..\Resource\MeshImage\playcenter.png
 playerhousebottom.png|..\Resource\MeshImage\playerhousebottom.png
 playerhousetop.png|..\Resource\MeshImage\playerhousetop.png
 rdcenter.png|..\Resource\MeshImage\rdcenter.png
+rock.png|..\Resource\MeshImage\rock.png
 slime.png|..\Resource\MeshImage\slime.png
 streetlamp.png|..\Resource\MeshImage\streetlamp.png
 temple.png|..\Resource\MeshImage\temple.png

@@ -14,6 +14,7 @@ playcenter|..\Resource\Mesh\|playcenter.FBX
 playerhousebottom|..\Resource\Mesh\|playerhousebottom.FBX
 playerhousetop|..\Resource\Mesh\|playerhousetop.FBX
 rdcenter|..\Resource\Mesh\|rdcenter.FBX
+rock|..\Resource\Mesh\|rock.FBX
 streetlamp|..\Resource\Mesh\|streetlamp.FBX
 temple|..\Resource\Mesh\|temple.FBX
 templestair|..\Resource\Mesh\|templestair.FBX

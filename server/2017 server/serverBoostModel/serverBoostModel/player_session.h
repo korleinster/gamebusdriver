@@ -57,6 +57,7 @@ public:
 	void send_packet(Packet *packet);
 	bool check_login();
 
+	unsigned int m_target_id{ 0 };
 private:
 	// Function
 	void m_recv_packet();

@@ -312,7 +312,7 @@ void player_session::m_process_packet(Packet buf[])
 			// 위 키 = 우측 + 위
 			// 아래 키 = 왼쪽 + 아래
 
-			// 충돌체크 검사하고 난 뒤에.. ( 현재는 임시 충돌 체크, 실제 클라와 연동시 충돌 범위 체크해야 한다. )
+			// 충돌체크 검사하고 난 뒤에..
 			float att_x = 0.5, att_y = 0.5;		// 테스트용 클라 공격 리치가 요정도
 			float my_x = m_player_data.pos.x, my_y = m_player_data.pos.y;
 			float player_size = 0.7;	// 객체 충돌 크기 반지름
@@ -343,8 +343,11 @@ void player_session::m_process_packet(Packet buf[])
 
 					// 맞은 놈이 ai 면, 반격을 하자.
 					if (MAX_AI_NUM > id) {
+						if (att != g_clients[id]->m_state) {
+							g_clients[id]->m_target_id = m_id;
+							g_time_queue.add_event(id, 1, AI_STATE_ATT, true);
+						}
 						g_clients[id]->m_state = att;
-						g_time_queue.add_event(id, 1, AI_STATE_ATT, true);
 					}
 					
 					sc_atk p;
@@ -383,17 +386,15 @@ void player_session::m_process_packet(Packet buf[])
 				}
 			}
 
-			// 발열 게이지가 올라가야 한다면 ---- ( AI 는 필요 없으니 skip 하게 하자 )
+			if (true == m_player_data.is_ai) { break; }
+			// 발열 게이지가 올라가야 한다면 ---- ( AI 는 필요 없으니 skip )
 			if (true == is_gauge_on) {
 				// 발열 게이지 값을 올리고
 				m_player_data.state.gauge += 10;
 				if (m_player_data.state.maxgauge < m_player_data.state.gauge) { m_player_data.state.gauge = m_player_data.state.maxgauge; }
 
-				/// 공격을 안한지 3초 부터 게이지가 감소하도록 한다. *************************************************
+				/// 공격을 안한지 3초 부터 게이지가 감소하도록 한다.
 				g_time_queue.add_event(m_id, 2, CHANGE_PLAYER_STATE, false);
-				//if (false == is_gauge_reducing) {
-				//	//is_gauge_reducing = true;
-				//}
 
 				// 패킷을 당사자에게 하나 보내주자.
 				sc_fever p;

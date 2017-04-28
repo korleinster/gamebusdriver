@@ -151,6 +151,49 @@ void TimerQueue::processPacket(event_type *p) {
 
 		break;
 	}
+
+	case AI_STATE_ATT: {
+
+		if (DISCONNECTED == g_clients[p->id]->get_current_connect_state()) { return; }
+		
+		unsigned int target_id = g_clients[p->id]->m_target_id;
+		float x = g_clients[target_id]->get_player_data()->pos.x;
+		float y = g_clients[target_id]->get_player_data()->pos.y;
+		float my_x = g_clients[p->id]->get_player_data()->pos.x, my_y = g_clients[p->id]->get_player_data()->pos.y;
+		float player_size = 1.5;	// 객체 충돌 크기 반지름
+
+		if ((player_size * player_size) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) {
+			
+			g_clients[target_id]->get_player_data()->state.hp -= g_clients[target_id]->get_sub_data()->str;
+			int target_hp = g_clients[target_id]->get_player_data()->state.hp;
+			
+			sc_atk packet;
+			packet.attacking_id = p->id;
+			packet.under_attack_id = target_id;
+			packet.hp = target_hp;
+
+			for (auto player_id : *g_clients[p->id]->get_view_list()) {
+				if (DISCONNECTED == g_clients[player_id]->get_current_connect_state()) { continue; }
+				if (true == g_clients[player_id]->get_player_data()->is_ai) { continue; }
+
+				g_clients[player_id]->send_packet(reinterpret_cast<Packet*>(&packet));
+			}
+
+			if (1 > target_hp) {
+				g_clients[target_id]->set_state(mov);
+				break;
+			}
+
+			//add_event(target_id, 1, HP_ADD, false);
+			add_event(p->id, 1, AI_STATE_ATT, true);
+		}
+		else
+		{
+			g_clients[target_id]->set_state(mov);
+		}
+
+		break;
+	}
 	default:
 		break;
 	}

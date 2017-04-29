@@ -9,6 +9,17 @@
 #include "TimeMgr.h"
 #include "Input.h"
 #include "camera.h"
+#include "Shader.h"
+#include "ShaderMgr.h"
+#include "RcTex.h"
+#include "ResourcesMgr.h"
+
+#pragma pack(push,1)
+struct CB_LINEAR_DEPTH
+{
+	D3DXVECTOR4 PerspectiveValues;
+};
+#pragma pack(pop)
 
 IMPLEMENT_SINGLETON(CRenderMgr)
 
@@ -21,6 +32,12 @@ CRenderMgr::CRenderMgr()
 	, m_bRenderGBuffer(false)
 	, m_bDefferdOn(true)
 	, m_fTimeCheck(0.f)
+	, m_pBorderLineVS(nullptr)
+	, m_pBorderLinePS(nullptr)
+	, m_pRcTex(nullptr)
+	, m_pSamplerState(nullptr)
+	, m_pLinearDepthCB(nullptr)
+	, m_fSobelValue(115.f)
 {
 	ZeroMemory(m_szFps, sizeof(TCHAR) * 128);
 
@@ -38,15 +55,30 @@ CRenderMgr::CRenderMgr()
 		D3DXVECTOR3(m_vDirLight.x, m_vDirLight.y, m_vDirLight.z),
 		D3DXVECTOR3(m_fDirColor[RGB_RED], m_fDirColor[RGB_GREEN], m_fDirColor[RGB_BLUE]));
 
-	for (int i = 0; i < 100; ++i)
-	{
-	if (i % 3 == 0)
-	m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f, 20.f, 0.f + i * 5), 20.f, D3DXVECTOR3(0.0f, 0.0f, i));
-	else if (i % 3 == 1)
-	m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f, 0.f + i * 5, 0.f), 20.f, D3DXVECTOR3(0.0f, i, 0.0f));
-	else if (i % 3 == 2)
-	m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f + i * 5, 20.f, 0.f), 20.f, D3DXVECTOR3(i, 0.0f, 0.0f));
-	}
+	m_pBorderLineVS = CShaderMgr::GetInstance()->Clone_Shader(L"BorderLineVS");
+	m_pBorderLinePS = CShaderMgr::GetInstance()->Clone_Shader(L"BorderLinePS");
+
+	m_pRcTex = dynamic_cast<CVIBuffer*>(CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STATIC, L"Buffer_RcTex"));
+
+	//Create Sampler State
+	D3D11_SAMPLER_DESC sampDesc;
+	ZeroMemory(&sampDesc, sizeof(sampDesc));
+	sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	sampDesc.MinLOD = 0;
+	sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
+	CDevice::GetInstance()->m_pDevice->CreateSamplerState(&sampDesc, &m_pSamplerState);
+
+	D3D11_BUFFER_DESC cbDesc;
+	ZeroMemory(&cbDesc, sizeof(cbDesc));
+	cbDesc.Usage = D3D11_USAGE_DYNAMIC;
+	cbDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	cbDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	cbDesc.ByteWidth = sizeof(CB_LINEAR_DEPTH);
+	CDevice::GetInstance()->m_pDevice->CreateBuffer(&cbDesc, NULL, &m_pLinearDepthCB);
 }
 
 
@@ -54,6 +86,13 @@ CRenderMgr::~CRenderMgr()
 {
 	m_pTargetMgr->DestroyInstance();
 	m_pLightMgr->DestroyInstance();
+
+	Safe_Delete(m_pBorderLineVS);
+	Safe_Delete(m_pBorderLinePS);
+	Safe_Delete(m_pRcTex);
+
+	Safe_Release(m_pSamplerState);
+	Safe_Release(m_pLinearDepthCB);
 }
 
 void CRenderMgr::SetCurrentScene(CScene * pScene)
@@ -75,9 +114,7 @@ void CRenderMgr::DelRenderGroup(RENDERGROUP eRednerID, CObj* pObj)
 	for (; iter != iter_end; )
 	{
 		if ((*iter) == pObj)
-			iter = m_RenderGroup[eRednerID].erase(iter);
- 
-		
+			iter = m_RenderGroup[eRednerID].erase(iter);		
 		else
 			++iter;
 
@@ -133,6 +170,8 @@ void CRenderMgr::Render(const float & fTime)
 	}		
 
 	m_pTargetMgr->GetGBuffer()->End_MRT(m_pDevice->m_pDeviceContext);
+
+	Render_BorderLine();
 
 	// Set the render target and do the lighting
 	m_pDevice->m_pDeviceContext->OMSetRenderTargets(1, &m_pDevice->m_pRenderTargetView, m_pTargetMgr->GetGBuffer()->GetDepthReadOnlyDSV());
@@ -270,6 +309,46 @@ void CRenderMgr::Render_FPS(const float & fTime)
 	::SetWindowText(g_hWnd, m_szFps);
 }
 
+void CRenderMgr::Render_BorderLine(void)
+{
+	ID3D11DeviceContext* pd3dImmediateContext = m_pDevice->m_pDeviceContext;
+
+	// Fill the GBuffer unpack constant buffer
+	D3D11_MAPPED_SUBRESOURCE MappedResource;
+	// 상수 버퍼의 내용을 쓸 수 있도록 잠금
+	pd3dImmediateContext->Map(m_pLinearDepthCB, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource);
+	// 상수 버퍼의 데이터에 대한 포인터를 가져옴
+	CB_LINEAR_DEPTH* pGBufferUnpackCB = (CB_LINEAR_DEPTH*)MappedResource.pData;
+	const D3DXMATRIX* pProj = CCamera::GetInstance()->GetProjMatrix();
+
+	// 상수 버퍼에 값을 복사
+	pGBufferUnpackCB->PerspectiveValues.x = m_fSobelValue;
+	pGBufferUnpackCB->PerspectiveValues.y = 1.0f / pProj->m[1][1];
+	pGBufferUnpackCB->PerspectiveValues.z = pProj->m[3][2];
+	pGBufferUnpackCB->PerspectiveValues.w = -pProj->m[2][2];
+
+	// 상수 버퍼의 잠금을 품
+	pd3dImmediateContext->Unmap(m_pLinearDepthCB, 0);
+
+	// 픽셀 셰이더의 상수 버퍼를 바뀐 값으로 바꿈
+	pd3dImmediateContext->PSSetConstantBuffers(0, 1, &m_pLinearDepthCB);
+
+	m_pTargetMgr->GetBorderMRT()->Begin_MRT(pd3dImmediateContext);
+
+	pd3dImmediateContext->IASetInputLayout(m_pBorderLineVS->m_pVertexLayout);
+
+	pd3dImmediateContext->VSSetShader(m_pBorderLineVS->m_pVertexShader, NULL, 0);
+
+	pd3dImmediateContext->PSSetShader(m_pBorderLinePS->m_pPixelShader, NULL, 0);
+	ID3D11ShaderResourceView* pDepthSRV = m_pTargetMgr->GetGBuffer()->GetDepthView();
+	pd3dImmediateContext->PSSetShaderResources(0, 1, &pDepthSRV);
+	pd3dImmediateContext->PSSetSamplers(0, 1, &m_pSamplerState);
+
+	m_pRcTex->Render();
+
+	m_pTargetMgr->GetBorderMRT()->End_MRT(pd3dImmediateContext);
+}
+
 void CRenderMgr::Release(void)
 {
 }
@@ -310,6 +389,17 @@ void CRenderMgr::Input(float fTime)
 		}
 	}
 
+	if (CInput::GetInstance()->GetDIKeyState(DIK_O) & 0x80)
+	{
+		m_fSobelValue += 0.1f;
+		cout << "SobelValue : " << m_fSobelValue << endl;
+	}
+
+	if (CInput::GetInstance()->GetDIKeyState(DIK_P) & 0x80)
+	{
+		m_fSobelValue -= 0.1f;
+		cout << "SobelValue : " << m_fSobelValue << endl;
+	}
 
 	// For.Red
 	if (CInput::GetInstance()->GetDIKeyState(DIK_R) & 0x80)

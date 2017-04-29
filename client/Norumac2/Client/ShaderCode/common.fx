@@ -10,7 +10,7 @@ SamplerState PointSampler             : register( s0 ); // 샘플러(슬롯 번호 0번�
 cbuffer cbGBufferUnpack : register( b0 )
 {
   float4 PerspectiveValues : packoffset( c0 ); // 퍼스펙티브
-  float4x4 ViewInv         : packoffset( c1 ); // 퍼스펙티브 뷰의 역행렬
+  float4x4 ViewInv         : packoffset( c1 ); // 퍼스펙티브
 }
 
 cbuffer cbFog : register( b2 )
@@ -68,6 +68,7 @@ struct SURFACE_DATA
 SURFACE_DATA UnpackGBuffer(float2 UV)
 {
 	SURFACE_DATA Out;
+
 	// sample 텍스쳐를 셈플링
 	float depth = DepthTexture.Sample( PointSampler, UV.xy ).x;
 	Out.LinearDepth = ConvertZToLinearDepth(depth);

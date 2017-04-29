@@ -10,7 +10,6 @@
 #include "ObjMgr.h"
 #include "Shader.h"
 #include "Device.h"
-#include "Camera.h"
 #include "RenderMgr.h"
 #include "ResourcesMgr.h"
 #include "LightMgr.h"
@@ -82,9 +81,7 @@ HRESULT CStaticObject::Initialize(const TCHAR* pMeshKey)
 	FAILED_CHECK(m_pGrapicDevice->m_pDevice->CreateBuffer(&cbDesc, NULL, &m_pSceneVertexShaderCB));
 
 	cbDesc.ByteWidth = sizeof(CB_PS_PER_OBJECT);
-	FAILED_CHECK(m_pGrapicDevice->m_pDevice->CreateBuffer(&cbDesc, NULL, &m_pScenePixelShaderCB));
-
-	
+	FAILED_CHECK(m_pGrapicDevice->m_pDevice->CreateBuffer(&cbDesc, NULL, &m_pScenePixelShaderCB));	
 
 	return S_OK;
 }

@@ -4,7 +4,6 @@
 #include "Shader.h"
 #include "ShaderMgr.h"
 
-
 CVIBuffer::CVIBuffer()
 {
 	m_VertexBuffer = NULL;
@@ -51,7 +50,7 @@ CVIBuffer::~CVIBuffer()
 void CVIBuffer::Render(void)
 {
 	CDevice* pGrapicDevice = CDevice::GetInstance();
-	
+
 	pGrapicDevice->m_pDeviceContext->IASetVertexBuffers(
 		m_iSlot,
 		1,
@@ -59,7 +58,7 @@ void CVIBuffer::Render(void)
 		&m_iVertexStrides,
 		&m_iVertexOffsets);
 
-	if(m_IndexBuffer)
+	if (m_IndexBuffer)
 		pGrapicDevice->m_pDeviceContext->IASetIndexBuffer(
 			m_IndexBuffer,
 			DXGI_FORMAT_R32_UINT,
@@ -71,7 +70,7 @@ void CVIBuffer::Render(void)
 	if (m_pRasterizerState)
 		pGrapicDevice->m_pDeviceContext->RSSetState(m_pRasterizerState);
 
-	if(m_eDrawType == DRAW_INDEX)
+	if (m_eDrawType == DRAW_INDEX)
 		pGrapicDevice->m_pDeviceContext->DrawIndexed(m_iIndex, m_iStartIndex, m_iBaseVertex);
 
 	else
@@ -103,5 +102,3 @@ void CVIBuffer::CreateRasterizerState()
 	//tRasterizerDesc.FillMode = D3D11_FILL_WIREFRAME;
 	pGrapicDevice->m_pDevice->CreateRasterizerState(&tRasterizerDesc, &m_pRasterizerState);
 }
-
-

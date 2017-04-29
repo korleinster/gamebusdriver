@@ -309,7 +309,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\ShaderCode\BorderLine.fx" />
     <FxCompile Include="..\ShaderCode\common.fx" />
+    <FxCompile Include="..\ShaderCode\DebugBuffer.fx" />
     <FxCompile Include="..\ShaderCode\DeferredShading.fx" />
     <FxCompile Include="..\ShaderCode\DirLight.fx" />
     <FxCompile Include="..\ShaderCode\GBufferVis.fx" />

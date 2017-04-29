@@ -616,6 +616,12 @@
     <FxCompile Include="..\ShaderCode\PointLight.fx">
       <Filter>97.Resources\03.Shader\ShaderCode</Filter>
     </FxCompile>
+    <FxCompile Include="..\ShaderCode\BorderLine.fx">
+      <Filter>97.Resources\03.Shader\ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderCode\DebugBuffer.fx">
+      <Filter>97.Resources\03.Shader\ShaderCode</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ip_and_login.rc">

@@ -33,9 +33,7 @@ CStage::~CStage()
 HRESULT CStage::Initialize(void)
 {
 	if (FAILED(CreateObj()))
-		return E_FAIL;
-
-	
+		return E_FAIL;	
 
 	return S_OK;
 }
@@ -92,10 +90,7 @@ HRESULT CStage::CreateObj(void)
 	if (pObj == NULL)
 		return E_FAIL;
 
-	CObjMgr::GetInstance()->AddObject(L"Terrain", pObj);
-
-	
-	
+	CObjMgr::GetInstance()->AddObject(L"Terrain", pObj);	
 
 	/*for (int i = 0; i < 20; ++i)
 	{

@@ -18,6 +18,7 @@
 #include "HpBar.h"
 #include "FeverBar.h"
 #include "RuneBar.h"
+#include "Input.h"
 
 CStage::CStage()
 	: m_bFirstLogin(false)
@@ -44,6 +45,14 @@ int CStage::Update(void)
 	{
 		
 		m_bFirstLogin = true;
+	}
+
+	if (CInput::GetInstance()->GetDIKeyState(DIK_F10) & 0x80)
+	{
+		if (CRenderMgr::GetInstance()->m_bUIRender)
+			CRenderMgr::GetInstance()->m_bUIRender = false;
+		else if (!CRenderMgr::GetInstance()->m_bUIRender)
+			CRenderMgr::GetInstance()->m_bUIRender = true;
 	}
 
 	CObjMgr::GetInstance()->Update();

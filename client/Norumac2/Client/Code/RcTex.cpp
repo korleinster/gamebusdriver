@@ -91,7 +91,7 @@ HRESULT CRcTex::CreateBuffer(void)
 	//bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	//CDevice::GetInstance()->m_pDevice->CreateBuffer(&bd, NULL, &m_ConstantBuffer);
 
-	CreateRasterizerState();
+	//CreateRasterizerState();
 	
 
 	if (FAILED(hr))

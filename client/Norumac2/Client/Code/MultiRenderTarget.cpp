@@ -2,6 +2,11 @@
 #include "MultiRenderTarget.h"
 #include "Device.h"
 #include "Camera.h"
+#include "RenderTarget.h"
+#include "ShaderMgr.h"
+#include "Shader.h"
+#include "ResourcesMgr.h"
+#include "VIBuffer.h"
 
 #pragma pack(push,1)
 struct CB_GBUFFER_UNPACK
@@ -10,13 +15,22 @@ struct CB_GBUFFER_UNPACK
 	D3DXMATRIX  ViewInv;
 };
 #pragma pack(pop)
+#pragma pack(push,1)
+struct CB_VS
+{
+	D3DXMATRIX m_mWorld;
+};
+#pragma pack(pop)
 
 CMultiRenderTarget::CMultiRenderTarget()
-: m_pGBufferUnpackCB(NULL), 
-m_DepthStencilRT(NULL), m_ColorSpecIntensityRT(NULL), m_NormalRT(NULL), m_SpecPowerRT(NULL),
-m_DepthStencilDSV(NULL), m_DepthStencilReadOnlyDSV(NULL), m_ColorSpecIntensityRTV(NULL), m_NormalRTV(NULL), m_SpecPowerRTV(NULL),
-m_DepthStencilSRV(NULL), m_ColorSpecIntensitySRV(NULL), m_NormalSRV(NULL), m_SpecPowerSRV(NULL),
-m_DepthStencilState(NULL)
+	: m_pCB(NULL),
+	m_DepthStencilRT(NULL),// m_ColorSpecIntensityRT(NULL), m_NormalRT(NULL), m_SpecPowerRT(NULL),
+	m_DepthStencilDSV(NULL),// m_DepthStencilReadOnlyDSV(NULL), m_ColorSpecIntensityRTV(NULL), m_NormalRTV(NULL), m_SpecPowerRTV(NULL),
+	m_DepthStencilSRV(NULL), // m_ColorSpecIntensitySRV(NULL), m_NormalSRV(NULL), m_SpecPowerSRV(NULL),
+	m_DepthStencilState(NULL),
+	m_pGBufferVisVertexShader(NULL),
+	m_pGBufferVisPixelShader(NULL),
+	m_pDepthDebugBuffer(NULL)
 {
 
 }
@@ -28,25 +42,6 @@ CMultiRenderTarget::~CMultiRenderTarget()
 
 HRESULT CMultiRenderTarget::Initialize(UINT width, UINT height)
 {
-	Release();
-
-	// Texture formats
-	static const DXGI_FORMAT depthStencilTextureFormat = DXGI_FORMAT_R24G8_TYPELESS;
-	static const DXGI_FORMAT basicColorTextureFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
-	static const DXGI_FORMAT normalTextureFormat = DXGI_FORMAT_R11G11B10_FLOAT;
-	static const DXGI_FORMAT specPowTextureFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
-
-	// Render view formats
-	static const DXGI_FORMAT depthStencilRenderViewFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	static const DXGI_FORMAT basicColorRenderViewFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
-	static const DXGI_FORMAT normalRenderViewFormat = DXGI_FORMAT_R11G11B10_FLOAT;
-	static const DXGI_FORMAT specPowRenderViewFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
-
-	// Resource view formats
-	static const DXGI_FORMAT depthStencilResourceViewFormat = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
-	static const DXGI_FORMAT basicColorResourceViewFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
-	static const DXGI_FORMAT normalResourceViewFormat = DXGI_FORMAT_R11G11B10_FLOAT;
-	static const DXGI_FORMAT specPowResourceViewFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 
 	// Allocate the depth stencil target
 	D3D11_TEXTURE2D_DESC dtd =
@@ -68,19 +63,6 @@ HRESULT CMultiRenderTarget::Initialize(UINT width, UINT height)
 	dtd.Format = depthStencilTextureFormat;
 	FAILED_CHECK(CDevice::GetInstance()->m_pDevice->CreateTexture2D(&dtd, NULL, &m_DepthStencilRT));
 
-	// Allocate the base color with specular intensity target
-	dtd.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-	dtd.Format = basicColorTextureFormat;
-	FAILED_CHECK(CDevice::GetInstance()->m_pDevice->CreateTexture2D(&dtd, NULL, &m_ColorSpecIntensityRT));
-
-	// Allocate the base color with specular intensity target
-	dtd.Format = normalTextureFormat;
-	FAILED_CHECK(CDevice::GetInstance()->m_pDevice->CreateTexture2D(&dtd, NULL, &m_NormalRT));
-
-	// Allocate the specular power target
-	dtd.Format = specPowTextureFormat;
-	FAILED_CHECK(CDevice::GetInstance()->m_pDevice->CreateTexture2D(&dtd, NULL, &m_SpecPowerRT));
-
 	// Create the render target views
 	D3D11_DEPTH_STENCIL_VIEW_DESC dsvd =
 	{
@@ -98,13 +80,6 @@ HRESULT CMultiRenderTarget::Initialize(UINT width, UINT height)
 		basicColorRenderViewFormat,
 		D3D11_RTV_DIMENSION_TEXTURE2D
 	};
-	FAILED_CHECK(CDevice::GetInstance()->m_pDevice->CreateRenderTargetView(m_ColorSpecIntensityRT, &rtsvd, &m_ColorSpecIntensityRTV));
-
-	rtsvd.Format = normalRenderViewFormat;
-	FAILED_CHECK(CDevice::GetInstance()->m_pDevice->CreateRenderTargetView(m_NormalRT, &rtsvd, &m_NormalRTV));
-
-	rtsvd.Format = specPowRenderViewFormat;
-	FAILED_CHECK(CDevice::GetInstance()->m_pDevice->CreateRenderTargetView(m_SpecPowerRT, &rtsvd, &m_SpecPowerRTV));
 
 	// Create the resource views
 	D3D11_SHADER_RESOURCE_VIEW_DESC dsrvd =
@@ -116,15 +91,6 @@ HRESULT CMultiRenderTarget::Initialize(UINT width, UINT height)
 	};
 	dsrvd.Texture2D.MipLevels = 1;
 	FAILED_CHECK(CDevice::GetInstance()->m_pDevice->CreateShaderResourceView(m_DepthStencilRT, &dsrvd, &m_DepthStencilSRV));
-
-	dsrvd.Format = basicColorResourceViewFormat;
-	FAILED_CHECK(CDevice::GetInstance()->m_pDevice->CreateShaderResourceView(m_ColorSpecIntensityRT, &dsrvd, &m_ColorSpecIntensitySRV));
-
-	dsrvd.Format = normalResourceViewFormat;
-	FAILED_CHECK(CDevice::GetInstance()->m_pDevice->CreateShaderResourceView(m_NormalRT, &dsrvd, &m_NormalSRV));
-
-	dsrvd.Format = specPowResourceViewFormat;
-	FAILED_CHECK(CDevice::GetInstance()->m_pDevice->CreateShaderResourceView(m_SpecPowerRT, &dsrvd, &m_SpecPowerSRV));
 
 	D3D11_DEPTH_STENCIL_DESC descDepth;
 	descDepth.DepthEnable = TRUE;
@@ -144,36 +110,101 @@ HRESULT CMultiRenderTarget::Initialize(UINT width, UINT height)
 	cbDesc.Usage = D3D11_USAGE_DYNAMIC;
 	cbDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	cbDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	cbDesc.ByteWidth = sizeof(CB_GBUFFER_UNPACK);
+	cbDesc.ByteWidth = sizeof(CB_VS);
 	// constant buffer¿ë ¹öÆÛ »ý¼º
+	FAILED_CHECK(CDevice::GetInstance()->m_pDevice->CreateBuffer(&cbDesc, NULL, &m_pCB));
+	cbDesc.ByteWidth = sizeof(CB_GBUFFER_UNPACK);
 	FAILED_CHECK(CDevice::GetInstance()->m_pDevice->CreateBuffer(&cbDesc, NULL, &m_pGBufferUnpackCB));
+
+	m_pGBufferVisVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"DebugBufferVS");
+	m_pGBufferVisPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"DebugBufferPS_Red");
+
+	//Clone DebugBuffer
+	m_pDepthDebugBuffer = dynamic_cast<CVIBuffer*>(CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STATIC, L"Buffer_RcTex"));
+
+	//Create Sampler State
+	D3D11_SAMPLER_DESC sampDesc;
+	ZeroMemory(&sampDesc, sizeof(sampDesc));
+	sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	sampDesc.MinLOD = 0;
+	sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
+	CDevice::GetInstance()->m_pDevice->CreateSamplerState(&sampDesc, &m_pSamplerState);
+
+	//Calculate World Matrix
+	D3DXMATRIX matScale, matTransform;
+	D3DXMatrixIdentity(&m_matDepthWorld);
+
+	D3DXMatrixScaling(&matScale, 0.1f, 0.1f, 1.f);
+	D3DXMatrixTranslation(&matTransform, -0.8f, 0.8f, 0.f);
+
+	m_matDepthWorld = matScale * matTransform;
 
 	return S_OK;
 }
 
+void CMultiRenderTarget::SetRT(CRenderTarget* pRT)
+{
+	m_vecRT.push_back(pRT);
+}
+
+void CMultiRenderTarget::RenderMRT(ID3D11DeviceContext* pd3dImmediateContext)
+{
+	pd3dImmediateContext->RSSetState(NULL);
+
+	int rtSize = m_vecRT.size();
+	for (UINT i = 0; i < rtSize; ++i)
+	{
+		m_vecRT[i]->RenderRT(pd3dImmediateContext);
+	}
+}
+
+void CMultiRenderTarget::RenderDepth(ID3D11DeviceContext* pd3dImmediateContext)
+{
+	D3D11_MAPPED_SUBRESOURCE MappedResource;
+	FAILED_CHECK_RETURN(pd3dImmediateContext->Map(m_pCB, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource), );
+	CB_VS* pVSPerObject = (CB_VS*)MappedResource.pData;
+	D3DXMatrixTranspose(&pVSPerObject->m_mWorld, &m_matDepthWorld);
+	pd3dImmediateContext->Unmap(m_pCB, 0);
+
+	pd3dImmediateContext->IASetInputLayout(m_pGBufferVisVertexShader->m_pVertexLayout);
+
+	pd3dImmediateContext->VSSetShader(m_pGBufferVisVertexShader->m_pVertexShader, NULL, 0);
+	pd3dImmediateContext->VSSetConstantBuffers(0, 1, &m_pCB);
+
+	pd3dImmediateContext->PSSetShader(m_pGBufferVisPixelShader->m_pPixelShader, NULL, 0);
+	pd3dImmediateContext->PSSetShaderResources(0, 1, &m_DepthStencilSRV);
+	pd3dImmediateContext->PSSetSamplers(0, 1, &m_pSamplerState);
+
+	m_pDepthDebugBuffer->Render();
+}
+
+
+
 void CMultiRenderTarget::Release()
 {
-	Safe_Release(m_pGBufferUnpackCB);
+	Safe_Release(m_pCB);
 
 	// Clear all allocated targets
 	Safe_Release(m_DepthStencilRT);
-	Safe_Release(m_ColorSpecIntensityRT);
-	Safe_Release(m_NormalRT);
-	Safe_Release(m_SpecPowerRT);
 
 	// Clear all views
 	Safe_Release(m_DepthStencilDSV);
 	Safe_Release(m_DepthStencilReadOnlyDSV);
-	Safe_Release(m_ColorSpecIntensityRTV);
-	Safe_Release(m_NormalRTV);
-	Safe_Release(m_SpecPowerRTV);
-	Safe_Release(m_DepthStencilSRV);
-	Safe_Release(m_ColorSpecIntensitySRV);
-	Safe_Release(m_NormalSRV);
-	Safe_Release(m_SpecPowerSRV);
 
 	// Clear the depth stencil state
 	Safe_Release(m_DepthStencilState);
+
+	Safe_Delete(m_pGBufferVisVertexShader);
+	Safe_Delete(m_pGBufferVisPixelShader);
+
+	for (int i = 0; i < m_vecRT.size(); ++i)
+	{
+		Safe_Delete(m_vecRT[i]);
+	}
 }
 
 void CMultiRenderTarget::Begin_MRT(ID3D11DeviceContext* pd3dImmediateContext)
@@ -185,22 +216,30 @@ void CMultiRenderTarget::Begin_MRT(ID3D11DeviceContext* pd3dImmediateContext)
 		1.0f,  // ±íÀÌ ¹öÆÛÀÇ ¸ðµç ÇÈ¼¿¿¡ ¼³Á¤ÇÒ °ª
 		0); // ½ºÅÙ½Ç ¹öÆÛ ¸ðµç ÇÈ¼¿¿¡ ¼³Á¤ÇÒ °ª
 
-	// You only need to do this if your scene doesn't cover the whole visible area
+			// You only need to do this if your scene doesn't cover the whole visible area
 	float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	// °¢°¢ÀÇ ·»´õÅ¸°Ùºä Å¬¸®¾î
-	pd3dImmediateContext->ClearRenderTargetView(m_ColorSpecIntensityRTV, ClearColor);
-	pd3dImmediateContext->ClearRenderTargetView(m_NormalRTV, ClearColor);
-	pd3dImmediateContext->ClearRenderTargetView(m_SpecPowerRTV, ClearColor);
+	int rtSize = m_vecRT.size();
+	for (UINT i = 0; i < rtSize; ++i)
+	{
+		pd3dImmediateContext->ClearRenderTargetView(m_vecRT[i]->GetRTV(), ClearColor);
+	}
 
 	// Bind all the render targets togther
-	ID3D11RenderTargetView* rt[4] = { m_ColorSpecIntensityRTV, m_NormalRTV, m_SpecPowerRTV/*, m_SobelRTV*/ };
+	ID3D11RenderTargetView** rt = new ID3D11RenderTargetView*[rtSize];
+	for (UINT i = 0; i < rtSize; ++i)
+	{
+		rt[i] = m_vecRT[i]->GetRTV();
+	}
 
 	pd3dImmediateContext->OMSetRenderTargets(
-		4, // ·»´õÅ¸°ÙÀÇ ¼ö
+		rtSize, // ·»´õÅ¸°ÙÀÇ ¼ö
 		rt, // ·»´õÅ¸°Ù ºäÀÇ ¹è¿­
 		m_DepthStencilDSV);
 
 	pd3dImmediateContext->OMSetDepthStencilState(m_DepthStencilState, 1);
+
+	delete[] rt;
 }
 
 void CMultiRenderTarget::End_MRT(ID3D11DeviceContext* pd3dImmediateContext)
@@ -209,11 +248,21 @@ void CMultiRenderTarget::End_MRT(ID3D11DeviceContext* pd3dImmediateContext)
 	pd3dImmediateContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// Little cleanup
-	ID3D11RenderTargetView* rt[4] = { NULL, NULL, NULL, NULL };
+	//ID3D11RenderTargetView* rt[4] = { NULL, NULL, NULL, NULL };
+
+	int rtSize = m_vecRT.size();
+	ID3D11RenderTargetView** rt = new ID3D11RenderTargetView*[rtSize];
+	for (UINT i = 0; i < rtSize; ++i)
+	{
+		rt[i] = NULL;
+	}
+
 	pd3dImmediateContext->OMSetRenderTargets(
-		4, // ·»´õÅ¸°ÙÀÇ ¼ö
+		rtSize, // ·»´õÅ¸°ÙÀÇ ¼ö
 		rt, // ·»´õÅ¸°Ù ºäÀÇ ¹è¿­
 		m_DepthStencilReadOnlyDSV);
+
+	delete[] rt;
 }
 
 void CMultiRenderTarget::PrepareForUnpack(ID3D11DeviceContext* pd3dImmediateContext)
@@ -221,7 +270,7 @@ void CMultiRenderTarget::PrepareForUnpack(ID3D11DeviceContext* pd3dImmediateCont
 	// Fill the GBuffer unpack constant buffer
 	D3D11_MAPPED_SUBRESOURCE MappedResource;
 	// »ó¼ö ¹öÆÛÀÇ ³»¿ëÀ» ¾µ ¼ö ÀÖµµ·Ï Àá±Ý
-	FAILED_CHECK_RETURN(pd3dImmediateContext->Map(m_pGBufferUnpackCB, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource),);
+	FAILED_CHECK_RETURN(pd3dImmediateContext->Map(m_pGBufferUnpackCB, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource), );
 	// »ó¼ö ¹öÆÛÀÇ µ¥ÀÌÅÍ¿¡ ´ëÇÑ Æ÷ÀÎÅÍ¸¦ °¡Á®¿È
 	CB_GBUFFER_UNPACK* pGBufferUnpackCB = (CB_GBUFFER_UNPACK*)MappedResource.pData;
 	const D3DXMATRIX* pProj = CCamera::GetInstance()->GetProjMatrix();

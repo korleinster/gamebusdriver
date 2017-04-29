@@ -4,6 +4,7 @@
 #include "Camera.h"
 //#include "TargetMgr.h"
 #include "MultiRenderTarget.h"
+#include "RenderTarget.h"
 #include "Shader.h"
 #include "ShaderMgr.h"
 
@@ -248,7 +249,7 @@ void CLightMgr::DoLighting(ID3D11DeviceContext * pd3dImmediateContext, CMultiRen
 	pd3dImmediateContext->OMSetDepthStencilState(m_pNoDepthWriteLessStencilMaskState, 1);
 
 	// Set the GBuffer views
-	ID3D11ShaderResourceView* arrViews[4] = { pGBuffer->GetDepthView(), pGBuffer->GetColorView(), pGBuffer->GetNormalView() , pGBuffer->GetSpecPowerView() };
+	ID3D11ShaderResourceView* arrViews[4] = { pGBuffer->GetDepthView(), pGBuffer->GetRT(0)->GetSRV(), pGBuffer->GetRT(1)->GetSRV() , pGBuffer->GetRT(2)->GetSRV() };
 	pd3dImmediateContext->PSSetShaderResources(0, 4, arrViews);
 
 	// Do the directional light
@@ -410,7 +411,7 @@ void CLightMgr::DirectionalLight(ID3D11DeviceContext* pd3dImmediateContext)
 		4, // gpu로 보낸 버텍스의 갯수
 		0); // 처음시작할 버텍스의 인덱스
 
-	// Cleanup
+			// Cleanup
 	ID3D11ShaderResourceView *arrRV[1] = { NULL };
 	pd3dImmediateContext->PSSetShaderResources(4, 1, arrRV);
 	pd3dImmediateContext->VSSetShader(NULL, NULL, 0);

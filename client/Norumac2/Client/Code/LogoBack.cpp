@@ -80,7 +80,7 @@ HRESULT CLogoBack::AddBuffer(void)
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Transform", pComponent));
 
 	//Buffer
-	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STATIC, L"Buffer_RcTex");
+	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_LOGO, L"Buffer_RcLogo");
 	m_pPolygon = dynamic_cast<CVIBuffer*>(pComponent);
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Buffer", pComponent));

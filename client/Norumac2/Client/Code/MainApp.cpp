@@ -68,6 +68,9 @@ HRESULT CMainApp::Initialize(void)
 	hr = CResourcesMgr::GetInstance()->AddBuffer(RESOURCE_STATIC, BUFFER_RCTEX, L"Buffer_RcTex");
 	FAILED_CHECK_RETURN_MSG(hr, E_FAIL, L"Buffer_RcTex 생성 실패");
 
+	hr = CResourcesMgr::GetInstance()->AddBuffer(RESOURCE_LOGO, BUFFER_RCTEX, L"Buffer_RcLogo");
+	FAILED_CHECK_RETURN_MSG(hr, E_FAIL, L"Buffer_RcLogo 생성 실패");
+
 
 	//// Real 디퍼드용
 	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"DebugBufferVS", L"../ShaderCode/DebugBuffer.fx", "DebugBufferVS", "vs_5_0", SHADER_VS);

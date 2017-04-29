@@ -65,6 +65,46 @@ HRESULT CMainApp::Initialize(void)
 	
 	HRESULT hr = S_OK;
 
+	hr = CResourcesMgr::GetInstance()->AddBuffer(RESOURCE_STATIC, BUFFER_RCTEX, L"Buffer_RcTex");
+	FAILED_CHECK_RETURN_MSG(hr, E_FAIL, L"Buffer_RcTex 생성 실패");
+
+
+	//// Real 디퍼드용
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"DebugBufferVS", L"../ShaderCode/DebugBuffer.fx", "DebugBufferVS", "vs_5_0", SHADER_VS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"DebugBuffer Vertex Shader Create Failed", MB_OK);
+		return hr;
+	}
+
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"DebugBufferPS", L"../ShaderCode/DebugBuffer.fx", "DebugBufferPS", "ps_5_0", SHADER_PS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"DebugBuffer Pixel Shader Create Failed", MB_OK);
+		return hr;
+	}
+
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"DebugBufferPS_Red", L"../ShaderCode/DebugBuffer.fx", "DebugBufferPS_Red", "ps_5_0", SHADER_PS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"DebugBuffer_Red Pixel Shader Create Failed", MB_OK);
+		return hr;
+	}
+
+	//// 윤곽선
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"BorderLineVS", L"../ShaderCode/BorderLine.fx", "BorderLineVS", "vs_5_0", SHADER_VS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"DebugBuffer Vertex Shader Create Failed", MB_OK);
+		return hr;
+	}
+
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"BorderLinePS", L"../ShaderCode/BorderLine.fx", "BorderLinePS", "ps_5_0", SHADER_PS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"DebugBuffer Pixel Shader Create Failed", MB_OK);
+		return hr;
+	}
 
 	//일반
 	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"VS", L"../ShaderCode/Shader.fx", "VS", "vs_5_0", SHADER_VS);
@@ -113,6 +153,8 @@ HRESULT CMainApp::Initialize(void)
 		MessageBox(NULL, L"System Message", L"GBuffer Pixel Shader Create Failed", MB_OK);
 		return hr;
 	}
+
+
 
 	// 디퍼드 오브젝트용
 	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"RenderSceneVS", L"../ShaderCode/DeferredShading.fx", "RenderSceneVS", "vs_5_0", SHADER_VS);
@@ -188,9 +230,6 @@ HRESULT CMainApp::Initialize(void)
 		MessageBox(NULL, L"DInput Create Failed", L"Fail", MB_OK);
 		return E_FAIL;
 	}
-
-	hr = CResourcesMgr::GetInstance()->AddBuffer(RESOURCE_STATIC, BUFFER_RCTEX, L"Buffer_RcTex");
-	FAILED_CHECK_RETURN_MSG(hr, E_FAIL, L"Buffer_RcTex 생성 실패");
 
 	CScene* pScene = NULL;
 

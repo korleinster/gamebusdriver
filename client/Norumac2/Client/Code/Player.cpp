@@ -72,7 +72,7 @@ HRESULT CPlayer::Initialize(void)
 	//m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 	//m_pInfo->m_vScale = D3DXVECTOR3(0.05f, 0.05f, 0.05f);
 	m_pInfo->m_vScale = D3DXVECTOR3(1.f, 1.f, 1.f);
-	m_fSpeed = 5.f;
+	m_fSpeed = 3.4;
 
 	list<CObj*>::iterator iter = CObjMgr::GetInstance()->m_mapObj[L"Terrain"].begin();
 	list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->m_mapObj[L"Terrain"].end();

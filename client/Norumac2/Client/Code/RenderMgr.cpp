@@ -38,7 +38,6 @@ CRenderMgr::CRenderMgr()
 	, m_pSamplerState(nullptr)
 	, m_pLinearDepthCB(nullptr)
 	, m_fSobelValue(0.f)
-	, m_bUIRender(true)
 {
 	ZeroMemory(m_szFps, sizeof(TCHAR) * 128);
 
@@ -284,8 +283,6 @@ void CRenderMgr::Render_UI(void)
 	list<CObj*>::iterator	iter = m_RenderGroup[TYPE_UI].begin();
 	list<CObj*>::iterator	iter_end = m_RenderGroup[TYPE_UI].end();
 
-	if (m_bUIRender)
-	{
 		for (; iter != iter_end; iter)
 		{
 			if ((*iter) == NULL)
@@ -296,7 +293,6 @@ void CRenderMgr::Render_UI(void)
 				++iter;
 			}
 		}
-	}
 	//m_pDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 	//m_pDevice->SetRenderState(D3DRS_ZENABLE, TRUE);
 }

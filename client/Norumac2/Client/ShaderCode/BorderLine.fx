@@ -88,6 +88,4 @@ float4 BorderLinePS(VS_OUTPUT In) : SV_TARGET
 	}
 	
 	return float4(0.f, 0.f, 0.f, 1.f);
-
-	//return float4(linearDepth, 1.0f, 1.0, 1.0f);
 }

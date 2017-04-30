@@ -37,7 +37,7 @@ CRenderMgr::CRenderMgr()
 	, m_pRcTex(nullptr)
 	, m_pSamplerState(nullptr)
 	, m_pLinearDepthCB(nullptr)
-	, m_fSobelValue(115.f)
+	, m_fSobelValue(0.f)
 	, m_bUIRender(true)
 {
 	ZeroMemory(m_szFps, sizeof(TCHAR) * 128);
@@ -45,11 +45,11 @@ CRenderMgr::CRenderMgr()
 	m_pTargetMgr->Initialize();
 	m_pLightMgr->Initialize();
 
-	m_fDirColor[RGB_RED] = 0.7f;
-	m_fDirColor[RGB_GREEN] = 0.7f;
-	m_fDirColor[RGB_BLUE] = 0.7f;
+	m_fDirColor[RGB_RED] = 0.8f;
+	m_fDirColor[RGB_GREEN] = 0.8f;
+	m_fDirColor[RGB_BLUE] = 0.8f;
 
-	m_vDirLight = D3DXVECTOR3(1.0f, -1.0f, 1.0f);
+	m_vDirLight = D3DXVECTOR3(-0.2f, -1.0f, -0.0f);
 
 	m_pLightMgr->SetAmbient(D3DXVECTOR3(0.4f, 0.5f, 0.4f), D3DXVECTOR3(0.4f, 0.5f, 0.4f));
 	m_pLightMgr->SetDirectional(
@@ -182,7 +182,7 @@ void CRenderMgr::Render(const float & fTime)
 
 	if (m_bRenderGBuffer)
 	{
-		m_pLightMgr->DoDebugLightVolume(m_pDevice->m_pDeviceContext);
+		//m_pLightMgr->DoDebugLightVolume(m_pDevice->m_pDeviceContext);
 		m_pTargetMgr->RenderGBuffer(m_pDevice->m_pDeviceContext);
 	}
 
@@ -393,15 +393,15 @@ void CRenderMgr::Input(float fTime)
 		}
 	}
 
-	if (CInput::GetInstance()->GetDIKeyState(DIK_O) & 0x80)
+	if (CInput::GetInstance()->GetDIKeyState(DIK_Z) & 0x80)
 	{
-		m_fSobelValue += 0.1f;
+		m_fSobelValue += 0.0001f;
 		cout << "SobelValue : " << m_fSobelValue << endl;
 	}
 
-	if (CInput::GetInstance()->GetDIKeyState(DIK_P) & 0x80)
+	if (CInput::GetInstance()->GetDIKeyState(DIK_X) & 0x80)
 	{
-		m_fSobelValue -= 0.1f;
+		m_fSobelValue -= 0.0001f;
 		cout << "SobelValue : " << m_fSobelValue << endl;
 	}
 

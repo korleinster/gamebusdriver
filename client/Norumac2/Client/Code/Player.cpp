@@ -263,8 +263,8 @@ void CPlayer::KeyInput()
 			m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 			m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 
-			if (m_pInfo->m_ServerInfo.dir != KEYINPUT_UP | KEYINPUT_LEFT) {
-				m_pInfo->m_ServerInfo.dir = KEYINPUT_UP | KEYINPUT_LEFT;
+			if (m_pInfo->m_ServerInfo.dir != (KEYINPUT_UP | KEYINPUT_LEFT)) {
+				m_pInfo->m_ServerInfo.dir = (KEYINPUT_UP | KEYINPUT_LEFT);
 				g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
 			}
 			g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
@@ -276,8 +276,8 @@ void CPlayer::KeyInput()
 			m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 			m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 
-			if (m_pInfo->m_ServerInfo.dir != KEYINPUT_UP | KEYINPUT_RIGHT) {
-				m_pInfo->m_ServerInfo.dir = KEYINPUT_UP | KEYINPUT_RIGHT;
+			if (m_pInfo->m_ServerInfo.dir != (KEYINPUT_UP | KEYINPUT_RIGHT)) {
+				m_pInfo->m_ServerInfo.dir = (KEYINPUT_UP | KEYINPUT_RIGHT);
 				g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
 			}
 			g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
@@ -326,8 +326,8 @@ void CPlayer::KeyInput()
 			m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 			m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 
-			if (m_pInfo->m_ServerInfo.dir != KEYINPUT_DOWN | KEYINPUT_LEFT) {
-				m_pInfo->m_ServerInfo.dir = KEYINPUT_DOWN | KEYINPUT_LEFT;
+			if (m_pInfo->m_ServerInfo.dir != (KEYINPUT_DOWN | KEYINPUT_LEFT)) {
+				m_pInfo->m_ServerInfo.dir = (KEYINPUT_DOWN | KEYINPUT_LEFT);
 				g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
 			}
 			g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
@@ -339,8 +339,8 @@ void CPlayer::KeyInput()
 			m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 			m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 
-			if (m_pInfo->m_ServerInfo.dir != KEYINPUT_DOWN | KEYINPUT_RIGHT) {
-				m_pInfo->m_ServerInfo.dir = KEYINPUT_DOWN | KEYINPUT_RIGHT;
+			if (m_pInfo->m_ServerInfo.dir != (KEYINPUT_DOWN | KEYINPUT_RIGHT)) {
+				m_pInfo->m_ServerInfo.dir = (KEYINPUT_DOWN | KEYINPUT_RIGHT);
 				g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
 			}
 			g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));

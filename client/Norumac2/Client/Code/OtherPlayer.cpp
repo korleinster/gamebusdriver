@@ -259,7 +259,23 @@ void COtherPlayer::ChangeDir(void)
 	{
 		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(135.f);
 	}
+	else if (m_pInfo->m_ServerInfo.dir == KEYINPUT_UP | KEYINPUT_LEFT)
+	{
+		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(90.f);
+	}
+	else if (m_pInfo->m_ServerInfo.dir == KEYINPUT_UP | KEYINPUT_RIGHT)
+	{
+		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(180.f);
+	}
 	else if (m_pInfo->m_ServerInfo.dir == KEYINPUT_DOWN)
+	{
+		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(315.f);
+	}
+	else if (m_pInfo->m_ServerInfo.dir == KEYINPUT_DOWN | KEYINPUT_LEFT)
+	{
+		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(270.f);
+	}
+	else if (m_pInfo->m_ServerInfo.dir == KEYINPUT_DOWN | KEYINPUT_RIGHT)
 	{
 		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(315.f);
 	}
@@ -271,6 +287,8 @@ void COtherPlayer::ChangeDir(void)
 	{
 		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(225.f);
 	}
+	
+	
 }
 
 void COtherPlayer::SetCurrling(void)

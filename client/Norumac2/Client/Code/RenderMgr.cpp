@@ -195,11 +195,13 @@ void CRenderMgr::Render(const float & fTime)
 	{ 
 		Render_Priority();
 		Render_NoneAlpha();
-	}	
-	
+	}		
 
 	Render_Alpha();
-	Render_UI();
+
+	if(!m_bRenderGBuffer)
+		Render_UI();
+
 	Render_FPS(fTime);
 }
 

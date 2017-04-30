@@ -54,8 +54,6 @@ private:
 	bool				m_bRenderGBuffer;
 	bool				m_bDefferdOn;
 	float				m_fTimeCheck;
-public:
-	bool				m_bUIRender;
 private:
 	float				m_fTime;
 	TCHAR				m_szFps[128];

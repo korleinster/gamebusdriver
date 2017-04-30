@@ -14,6 +14,7 @@ CRcTex::CRcTex(CRcTex * rhs)
 
 CRcTex::~CRcTex()
 {
+	Release();
 }
 
 HRESULT CRcTex::CreateBuffer(void)
@@ -122,4 +123,12 @@ CResources * CRcTex::CloneResource(void)
 	pResource->AddRef();
 
 	return pResource;
+}
+
+DWORD CRcTex::Release()
+{
+	if(m_dwRefCount != 0)
+		--m_dwRefCount;
+
+	return m_dwRefCount;
 }

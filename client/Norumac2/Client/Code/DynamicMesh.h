@@ -67,6 +67,7 @@ class CDynamicMesh :public CMesh
 {
 public:
 	CDynamicMesh();
+	CDynamicMesh(const CDynamicMesh& rhs);
 	virtual ~CDynamicMesh();
 
 private:

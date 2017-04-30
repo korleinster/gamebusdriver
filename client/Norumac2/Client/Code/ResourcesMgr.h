@@ -19,6 +19,7 @@ private:
 public:
 	CResources* FindResources(const WORD& wContainerIndex, const wstring strResourceKey);
 	CResources* CloneResource(const WORD& wContainerIndex, const wstring strResourceKey);
+	void		DeleteResource(const WORD& wContainerIndex, const wstring strResourceKey);
 
 public:
 	HRESULT ReserveContainerSize(const WORD& wSize);

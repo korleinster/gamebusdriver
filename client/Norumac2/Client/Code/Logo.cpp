@@ -94,6 +94,7 @@ void CLogo::Release(void)
 	{
 		CRenderMgr::GetInstance()->DelRenderGroup(TYPE_UI, *iter);
 		::Safe_Delete(*iter);
+		CResourcesMgr::GetInstance()->DeleteResource(RESOURCE_LOGO, L"Buffer_RcLogo");
 	}
 
 	CObjMgr::GetInstance()->Get_ObjList(L"LogoBack")->clear();

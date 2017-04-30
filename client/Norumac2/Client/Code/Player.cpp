@@ -256,16 +256,45 @@ void CPlayer::KeyInput()
 	if (CInput::GetInstance()->GetDIKeyState(DIK_UP) & 0x80)
 	{
 		m_bPush = true;
-		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(135.f);
-		m_pInfo->m_vPos += m_pInfo->m_vDir * 5.f * fTime;
-		m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
-		m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
+		if (CInput::GetInstance()->GetDIKeyState(DIK_LEFT) & 0x80)
+		{
+			m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(90.f);
+			m_pInfo->m_vPos += m_pInfo->m_vDir * 5.f * fTime;
+			m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
+			m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 
-		if (m_pInfo->m_ServerInfo.dir != KEYINPUT_UP) {
-			m_pInfo->m_ServerInfo.dir = KEYINPUT_UP;
-			g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
+			if (m_pInfo->m_ServerInfo.dir != KEYINPUT_UP | KEYINPUT_LEFT) {
+				m_pInfo->m_ServerInfo.dir = KEYINPUT_UP | KEYINPUT_LEFT;
+				g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
+			}
+			g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
 		}
-		g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
+		else if (CInput::GetInstance()->GetDIKeyState(DIK_RIGHT) & 0x80)
+		{
+			m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(180.f);
+			m_pInfo->m_vPos += m_pInfo->m_vDir * 5.f * fTime;
+			m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
+			m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
+
+			if (m_pInfo->m_ServerInfo.dir != KEYINPUT_UP | KEYINPUT_RIGHT) {
+				m_pInfo->m_ServerInfo.dir = KEYINPUT_UP | KEYINPUT_RIGHT;
+				g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
+			}
+			g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
+		}
+		else
+		{
+			m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(135.f);
+			m_pInfo->m_vPos += m_pInfo->m_vDir * 5.f * fTime;
+			m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
+			m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
+
+			if (m_pInfo->m_ServerInfo.dir != KEYINPUT_UP) {
+				m_pInfo->m_ServerInfo.dir = KEYINPUT_UP;
+				g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
+			}
+			g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
+		}
 
 		
 		if (m_ePlayerState == PLAYER_MOVE)
@@ -289,17 +318,47 @@ void CPlayer::KeyInput()
 	else if (CInput::GetInstance()->GetDIKeyState(DIK_DOWN) & 0x80)
 	{
 		m_bPush = true;
-		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(315.f);
-		m_pInfo->m_vPos += m_pInfo->m_vDir * 5.f * fTime;
-		m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
-		m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 
+		if (CInput::GetInstance()->GetDIKeyState(DIK_LEFT) & 0x80)
+		{
+			m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(0.f);
+			m_pInfo->m_vPos += m_pInfo->m_vDir * 5.f * fTime;
+			m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
+			m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 
-		if (m_pInfo->m_ServerInfo.dir != KEYINPUT_DOWN) {
-			m_pInfo->m_ServerInfo.dir = KEYINPUT_DOWN;
-			g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
+			if (m_pInfo->m_ServerInfo.dir != KEYINPUT_DOWN | KEYINPUT_LEFT) {
+				m_pInfo->m_ServerInfo.dir = KEYINPUT_DOWN | KEYINPUT_LEFT;
+				g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
+			}
+			g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
 		}
-		g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
+		else if (CInput::GetInstance()->GetDIKeyState(DIK_RIGHT) & 0x80)
+		{
+			m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(270.f);
+			m_pInfo->m_vPos += m_pInfo->m_vDir * 5.f * fTime;
+			m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
+			m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
+
+			if (m_pInfo->m_ServerInfo.dir != KEYINPUT_DOWN | KEYINPUT_RIGHT) {
+				m_pInfo->m_ServerInfo.dir = KEYINPUT_DOWN | KEYINPUT_RIGHT;
+				g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
+			}
+			g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
+		}
+		else
+		{
+			m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(315.f);
+			m_pInfo->m_vPos += m_pInfo->m_vDir * 5.f * fTime;
+			m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
+			m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
+
+
+			if (m_pInfo->m_ServerInfo.dir != KEYINPUT_DOWN) {
+				m_pInfo->m_ServerInfo.dir = KEYINPUT_DOWN;
+				g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
+			}
+			g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
+		}
 
 		
 		if (m_ePlayerState == PLAYER_MOVE)

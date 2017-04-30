@@ -13,10 +13,19 @@
 
 
 CDynamicMesh::CDynamicMesh()
-:m_wCurrenAniIdx(-1),
- m_fAniPlayTimer(0.f)
+:m_wCurrenAniIdx(0),
+ m_fAniPlayTimer(0.f),
+ m_iRepeatTime(0)
 {
 
+}
+
+CDynamicMesh::CDynamicMesh(const CDynamicMesh& rhs)
+{
+	m_vecAni = rhs.m_vecAni;
+	m_wCurrenAniIdx = rhs.m_wCurrenAniIdx;
+	m_iRepeatTime = rhs.m_iRepeatTime;
+	m_fAniPlayTimer = rhs.m_fAniPlayTimer;
 }
 
 
@@ -250,7 +259,7 @@ void CDynamicMesh::PlayAnimation(int _iIdx)
 	m_pGrapicDevice->m_pDeviceContext->RSSetState(m_pRasterizerState);
 
 	//m_vecAni[_iIdx]->fAniPlayTimer
-	m_fAniPlayTimer	+= (m_vecAni[_iIdx]->fAniPlaySpeed / 8.f) * CTimeMgr::GetInstance()->GetTime();
+	m_fAniPlayTimer	+= m_vecAni[_iIdx]->fAniPlaySpeed * CTimeMgr::GetInstance()->GetTime();
 
 	//if (m_vecAni[_iIdx]->fAniPlayTimer > m_vecAni[_iIdx]->llAniMaxTime / 10)
 		//m_vecAni[_iIdx]->fAniPlayTimer = 0;
@@ -364,9 +373,7 @@ void CDynamicMesh::BWPlayAnim(int _iIdx)
 
 CResources * CDynamicMesh::CloneResource() // 문제의 포인트
 {
-	CResources* pResource = this;
 
-	//++m_dwRefCount;
 
-	return pResource;
+	return new CDynamicMesh(*this);
 }

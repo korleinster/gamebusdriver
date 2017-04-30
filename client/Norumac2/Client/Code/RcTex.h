@@ -17,5 +17,6 @@ public:
 	static CRcTex* Create(void);
 public:
 	virtual CResources* CloneResource(void);
+	virtual DWORD Release();
 };
 

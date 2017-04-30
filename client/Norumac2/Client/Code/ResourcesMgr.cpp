@@ -46,6 +46,19 @@ CResources * CResourcesMgr::CloneResource(const WORD & wContainerIndex, const ws
 }
 
 
+void CResourcesMgr::DeleteResource(const WORD& wContainerIndex, const wstring strResourceKey)
+{
+	map<wstring, CResources*>::iterator iter = m_pmapResource[wContainerIndex].find(strResourceKey);
+
+	if (iter == m_pmapResource[wContainerIndex].end())
+	{
+		return;
+	}
+
+	m_pmapResource->erase(iter);
+	
+}
+
 HRESULT CResourcesMgr::AddBuffer(const WORD & wContainerIndex, BUFFERTYPE eBufferType, const wstring wstrResourceKey, const WORD & wCountX, const WORD & wCountZ, const WORD & wInterval)
 {
 

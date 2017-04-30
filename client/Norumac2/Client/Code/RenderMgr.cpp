@@ -37,12 +37,7 @@ CRenderMgr::CRenderMgr()
 	, m_pRcTex(nullptr)
 	, m_pSamplerState(nullptr)
 	, m_pLinearDepthCB(nullptr)
-<<<<<<< HEAD
 	, m_fSobelValue(0.01f)
-	, m_bUIRender(true)
-=======
-	, m_fSobelValue(0.f)
->>>>>>> origin/master
 {
 	ZeroMemory(m_szFps, sizeof(TCHAR) * 128);
 

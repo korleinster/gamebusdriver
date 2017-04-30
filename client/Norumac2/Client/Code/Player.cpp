@@ -72,6 +72,7 @@ HRESULT CPlayer::Initialize(void)
 	//m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 	//m_pInfo->m_vScale = D3DXVECTOR3(0.05f, 0.05f, 0.05f);
 	m_pInfo->m_vScale = D3DXVECTOR3(1.f, 1.f, 1.f);
+	m_fSpeed = 5.f;
 
 	list<CObj*>::iterator iter = CObjMgr::GetInstance()->m_mapObj[L"Terrain"].begin();
 	list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->m_mapObj[L"Terrain"].end();
@@ -259,7 +260,7 @@ void CPlayer::KeyInput()
 		if (CInput::GetInstance()->GetDIKeyState(DIK_LEFT) & 0x80)
 		{
 			m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(90.f);
-			m_pInfo->m_vPos += m_pInfo->m_vDir * 5.f * fTime;
+			m_pInfo->m_vPos += m_pInfo->m_vDir * m_fSpeed * fTime;
 			m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 			m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 
@@ -272,7 +273,7 @@ void CPlayer::KeyInput()
 		else if (CInput::GetInstance()->GetDIKeyState(DIK_RIGHT) & 0x80)
 		{
 			m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(180.f);
-			m_pInfo->m_vPos += m_pInfo->m_vDir * 5.f * fTime;
+			m_pInfo->m_vPos += m_pInfo->m_vDir * m_fSpeed* fTime;
 			m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 			m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 
@@ -285,7 +286,7 @@ void CPlayer::KeyInput()
 		else
 		{
 			m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(135.f);
-			m_pInfo->m_vPos += m_pInfo->m_vDir * 5.f * fTime;
+			m_pInfo->m_vPos += m_pInfo->m_vDir * m_fSpeed * fTime;
 			m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 			m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 
@@ -322,7 +323,7 @@ void CPlayer::KeyInput()
 		if (CInput::GetInstance()->GetDIKeyState(DIK_LEFT) & 0x80)
 		{
 			m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(0.f);
-			m_pInfo->m_vPos += m_pInfo->m_vDir * 5.f * fTime;
+			m_pInfo->m_vPos += m_pInfo->m_vDir * m_fSpeed * fTime;
 			m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 			m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 
@@ -335,7 +336,7 @@ void CPlayer::KeyInput()
 		else if (CInput::GetInstance()->GetDIKeyState(DIK_RIGHT) & 0x80)
 		{
 			m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(270.f);
-			m_pInfo->m_vPos += m_pInfo->m_vDir * 5.f * fTime;
+			m_pInfo->m_vPos += m_pInfo->m_vDir * m_fSpeed * fTime;
 			m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 			m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 
@@ -348,7 +349,7 @@ void CPlayer::KeyInput()
 		else
 		{
 			m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(315.f);
-			m_pInfo->m_vPos += m_pInfo->m_vDir * 5.f * fTime;
+			m_pInfo->m_vPos += m_pInfo->m_vDir * m_fSpeed * fTime;
 			m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 			m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 
@@ -385,7 +386,7 @@ void CPlayer::KeyInput()
 	{
 		m_bPush = true;
 		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(45.f);
-		m_pInfo->m_vPos += m_pInfo->m_vDir * 5.f * fTime;
+		m_pInfo->m_vPos += m_pInfo->m_vDir * m_fSpeed * fTime;
 		m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 		m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 
@@ -420,7 +421,7 @@ void CPlayer::KeyInput()
 	{
 		m_bPush = true;
 		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(225.f);
-		m_pInfo->m_vPos += m_pInfo->m_vDir * 5.f * fTime;
+		m_pInfo->m_vPos += m_pInfo->m_vDir * m_fSpeed * fTime;
 		m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 		m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 

@@ -350,7 +350,11 @@ void player_session::m_process_packet(Packet buf[])
 							sc_dir p;
 							p.id = id;
 							p.dir = ai_dir;
-							g_clients[id]->send_packet(reinterpret_cast<Packet*>(&p));
+							for (auto p_id : *g_clients[id]->get_view_list()) {
+								if (DISCONNECTED == g_clients[p_id]->m_connect_state) { continue; }
+								if (true == g_clients[p_id]->m_player_data.is_ai) { continue; }
+								g_clients[id]->send_packet(reinterpret_cast<Packet*>(&p));
+							}
 						}
 
 						if (att != g_clients[id]->m_state) {

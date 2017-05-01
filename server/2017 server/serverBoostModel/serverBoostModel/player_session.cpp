@@ -319,6 +319,13 @@ void player_session::m_process_packet(Packet buf[])
 			char *dir = &m_player_data.dir;
 			bool is_gauge_on = false;
 
+			auto dir_check = [](unsigned int id, char dir) {
+				cout << "Player ID = " << id << ", Dir = 0b0000" << (dir & KEYINPUT_RIGHT)
+					<< (dir & KEYINPUT_LEFT) << (dir & KEYINPUT_DOWN)
+					<< (dir & KEYINPUT_UP) << "\n";
+			};
+			dir_check(m_id, m_player_data.dir);
+
 			if ((*dir & KEYINPUT_RIGHT) == (KEYINPUT_RIGHT)) { my_x -= att_x; my_y -= att_y; }
 			if ((*dir & KEYINPUT_LEFT) == (KEYINPUT_LEFT)) { my_x += att_x; my_y += att_y; }
 			if ((*dir & KEYINPUT_UP) == (KEYINPUT_UP)) { my_x += att_x; my_y -= att_y; }
@@ -343,6 +350,7 @@ void player_session::m_process_packet(Packet buf[])
 
 					// 맞은 놈이 ai 면, 반격을 하자.
 					if (MAX_AI_NUM > id) {
+						// 단방향 공격일 경우 - AI 나머지 방향값에 모두 불이 들어온다.. 버그...
 						char ai_dir = DIR_XOR(m_player_data.dir);
 						if (g_clients[id]->get_player_data()->dir != ai_dir) {
 							g_clients[id]->get_player_data()->dir = ai_dir;
@@ -350,6 +358,9 @@ void player_session::m_process_packet(Packet buf[])
 							sc_dir p;
 							p.id = id;
 							p.dir = ai_dir;
+
+							dir_check(id, ai_dir);
+
 							for (auto p_id : *g_clients[id]->get_view_list()) {
 								if (DISCONNECTED == g_clients[p_id]->m_connect_state) { continue; }
 								if (true == g_clients[p_id]->m_player_data.is_ai) { continue; }

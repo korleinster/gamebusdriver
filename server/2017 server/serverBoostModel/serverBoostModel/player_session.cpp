@@ -343,6 +343,16 @@ void player_session::m_process_packet(Packet buf[])
 
 					// 맞은 놈이 ai 면, 반격을 하자.
 					if (MAX_AI_NUM > id) {
+						char ai_dir = DIR_XOR(m_player_data.dir);
+						if (g_clients[id]->get_player_data()->dir != ai_dir) {
+							g_clients[id]->get_player_data()->dir = ai_dir;
+
+							sc_dir p;
+							p.id = id;
+							p.dir = ai_dir;
+							g_clients[id]->send_packet(reinterpret_cast<Packet*>(&p));
+						}
+
 						if (att != g_clients[id]->m_state) {
 							g_clients[id]->m_target_id = m_id;
 							g_time_queue.add_event(id, 1, AI_STATE_ATT, true);

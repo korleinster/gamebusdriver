@@ -56,8 +56,10 @@ using position = struct Position {
 #define KEYINPUT_LEFT	0b00000100
 #define KEYINPUT_RIGHT	0b00001000
 
+#define KEYINPUT_MASKLR 0b00001100
+#define KEYINPUT_MASKUD 0b00000011
 #define KEYINPUT_MASK	0b00001111
-#define DIR_XOR(dir)	((~dir) & KEYINPUT_MASK)
+#define DIR_XOR(dir)	((((~(dir)) & (dir << 1)) & KEYINPUT_RIGHT) | (((dir >> 1) & (~(dir))) & KEYINPUT_LEFT) | (((~(dir)) & (dir << 1)) & KEYINPUT_DOWN) | (((dir >> 1) & (~(dir))) & KEYINPUT_UP))
 
 using status = struct Status {
 	int maxhp{ 100 };

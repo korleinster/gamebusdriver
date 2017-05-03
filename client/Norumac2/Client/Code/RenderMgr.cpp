@@ -37,7 +37,7 @@ CRenderMgr::CRenderMgr()
 	, m_pRcTex(nullptr)
 	, m_pSamplerState(nullptr)
 	, m_pLinearDepthCB(nullptr)
-	, m_fSobelValue(0.01f)
+	, m_fSobelValue(0.05f)
 {
 	ZeroMemory(m_szFps, sizeof(TCHAR) * 128);
 

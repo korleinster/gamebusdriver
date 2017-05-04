@@ -19,6 +19,7 @@ streetlamp|..\Resource\Mesh\|streetlamp.FBX
 temple|..\Resource\Mesh\|temple.FBX
 templestair|..\Resource\Mesh\|templestair.FBX
 tower|..\Resource\Mesh\|tower.FBX
+townbigtile|..\Resource\Mesh\|townbigtile.FBX
 towntile|..\Resource\Mesh\|towntile.FBX
 towntilemid|..\Resource\Mesh\|towntilemid.FBX
 tree1|..\Resource\Mesh\|tree1.FBX

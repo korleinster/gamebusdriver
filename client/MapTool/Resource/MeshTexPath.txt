@@ -21,6 +21,7 @@ streetlamp.png|..\Resource\MeshImage\streetlamp.png
 temple.png|..\Resource\MeshImage\temple.png
 templestair.png|..\Resource\MeshImage\templestair.png
 tower.png|..\Resource\MeshImage\tower.png
+townbigtile.png|..\Resource\MeshImage\townbigtile.png
 towntile.png|..\Resource\MeshImage\towntile.png
 towntilemid.png|..\Resource\MeshImage\towntilemid.png
 tree1.png|..\Resource\MeshImage\tree1.png

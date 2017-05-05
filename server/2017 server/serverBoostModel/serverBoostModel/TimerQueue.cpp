@@ -112,7 +112,7 @@ void TimerQueue::processPacket(event_type *p) {
 	}
 	case CHANGE_PLAYER_STATE: {
 
-		if (DISCONNECTED == g_clients[p->id]->get_current_connect_state()) { return; }
+		if (DISCONNECTED == g_clients[p->id]->get_current_connect_state()) { break; }
 
 		if (mov != g_clients[p->id]->get_state()) {
 			g_clients[p->id]->set_state(mov);
@@ -124,7 +124,7 @@ void TimerQueue::processPacket(event_type *p) {
 
 	case FEVER_REDUCE: {
 
-		if (DISCONNECTED == g_clients[p->id]->get_current_connect_state()) { return; }
+		if (DISCONNECTED == g_clients[p->id]->get_current_connect_state()) { break; }
 
 		/// 공격을 안한지 3초 부터 게이지가 감소하도록 하자
 		if (att == g_clients[p->id]->get_state()) {
@@ -154,7 +154,7 @@ void TimerQueue::processPacket(event_type *p) {
 
 	case AI_STATE_ATT: {
 
-		if (DISCONNECTED == g_clients[p->id]->get_current_connect_state()) { return; }
+		if (DISCONNECTED == g_clients[p->id]->get_current_connect_state()) { break; }
 		
 		unsigned int target_id = g_clients[p->id]->m_target_id;
 		float x = g_clients[target_id]->get_player_data()->pos.x;

@@ -343,7 +343,7 @@ void player_session::m_process_packet(Packet buf[])
 
 					// 맞은 놈이 ai 면, 반격을 하자.
 					if (MAX_AI_NUM > id) {
-						// 단방향 공격일 경우 - AI 나머지 방향값에 모두 불이 들어온다.. 버그...
+						// 단방향 공격일 경우
 						char ai_dir = DIR_XOR(m_player_data.dir);
 						if (g_clients[id]->get_player_data()->dir != ai_dir) {
 							g_clients[id]->get_player_data()->dir = ai_dir;

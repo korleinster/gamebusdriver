@@ -106,16 +106,7 @@ void player_session::Init()
 
 	my_info_to_other.playerData = m_player_data;
 
-	for (auto players : g_clients)
-	{
-		if (DISCONNECTED == players->m_connect_state) { continue; }
-		if (m_id == players->get_id()) { continue; }
-		if (false == is_in_view_range(players->get_id())) { continue; }
-
-		// view list 에 넣어주기
-		vl_add(players->get_id());
-		players->vl_add(m_id);
-	}
+	refresh_view_list();
 
 	for (auto id : m_view_list) {
 		// 다른 애들 정보를 복사해서 넣고, 얘한테 먼저 보내고...
@@ -197,6 +188,21 @@ void player_session::m_recv_packet()
 	});
 }
 
+void player_session::refresh_view_list()
+{
+	for (auto players : g_clients)
+	{
+		if (DISCONNECTED == players->m_connect_state) { continue; }
+		if (m_id == players->get_id()) { continue; }
+		if (false == is_in_view_range(players->get_id())) { continue; }
+
+		// view list 에 넣어주기
+		vl_add(players->get_id());
+		players->vl_add(m_id);
+	}
+}
+
+
 bool player_session::is_in_view_range(unsigned int id) {
 	float x = g_clients[id]->m_player_data.pos.x;
 	float y = g_clients[id]->m_player_data.pos.y;
@@ -235,6 +241,7 @@ void player_session::m_process_packet(Packet buf[])
 		{
 
 		case CHANGED_POSITION: {
+			if (dead == m_state) { break; }
 			m_state = mov;
 			
 			m_player_data.pos = *(reinterpret_cast<position*>(&buf[2]));
@@ -290,7 +297,8 @@ void player_session::m_process_packet(Packet buf[])
 		}
 
 		case CHANGED_DIRECTION: {
-			
+			if (dead == m_state) { break; }
+
 			m_player_data.dir = *(reinterpret_cast<char*>(&buf[2]));
 			
 			sc_dir p;
@@ -305,8 +313,21 @@ void player_session::m_process_packet(Packet buf[])
 			break;
 		}
 
+		case KEYINPUT_POTION: {
+			if (dead == m_state) { break; }
+
+			if (true == is_hp_postion) { break; }
+
+			is_hp_postion = true;
+			g_time_queue.add_event(m_id, 0, HP_ADD, false);
+			g_time_queue.add_event(m_id, 10, POSTION, false);
+
+			break;
+		}
+
 		case KEYINPUT_ATTACK:		// 기본 공격 ( 데미지 계산, hit box 범위 조정, 전부 여기서 다 조절해야 한다. )
 		{
+			if (dead == m_state) { break; }
 			// 왼쪽 키 = 우측 + 아래
 			// 우측 키 = 왼쪽 + 위
 			// 위 키 = 우측 + 위
@@ -318,12 +339,14 @@ void player_session::m_process_packet(Packet buf[])
 			float player_size = 0.7;	// 객체 충돌 크기 반지름
 			char *dir = &m_player_data.dir;
 			bool is_gauge_on = false;
+			unsigned int deleting_id = 0;
 			
 			if ((*dir & KEYINPUT_RIGHT) == (KEYINPUT_RIGHT)) { my_x -= att_x; my_y -= att_y; }
 			if ((*dir & KEYINPUT_LEFT) == (KEYINPUT_LEFT)) { my_x += att_x; my_y += att_y; }
 			if ((*dir & KEYINPUT_UP) == (KEYINPUT_UP)) { my_x += att_x; my_y -= att_y; }
 			if ((*dir & KEYINPUT_DOWN) == (KEYINPUT_DOWN)) { my_x -= att_x; my_y += att_y; }
 
+			m_view_lock.lock();
 			for (auto id : m_view_list) {
 				if (DISCONNECTED == g_clients[id]->m_connect_state) { continue; }
 				//if (m_id == g_clients[id]->m_id) { continue; }
@@ -332,7 +355,7 @@ void player_session::m_process_packet(Packet buf[])
 				float x = g_clients[id]->m_player_data.pos.x;
 				float y = g_clients[id]->m_player_data.pos.y;
 				if((player_size * player_size) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) {
-					m_state = att;
+					set_state(att);
 					g_clients[id]->m_player_data.state.hp -= m_sub_status.str;
 					is_gauge_on = true; // 발열 게이지를 마지막 체크 때 올려주자
 
@@ -393,6 +416,23 @@ void player_session::m_process_packet(Packet buf[])
 						else {
 							// 죽은 애가 player 일 경우..
 
+							sc_disconnect dis_p;
+							dis_p.id = id;
+
+							g_clients[id]->send_packet(reinterpret_cast<Packet*>(&dis_p));
+							g_clients[id]->set_state(dead);
+
+							for (auto player_view_ids : *g_clients[id]->get_view_list()) {
+								// dead lock 방지용 continue;
+								if (player_view_ids == m_id) { deleting_id = id; continue; }
+								g_clients[player_view_ids]->vl_remove(id);
+
+								if (true == g_clients[player_view_ids]->m_player_data.is_ai) { continue; }
+								g_clients[player_view_ids]->send_packet(reinterpret_cast<Packet*>(&dis_p));
+							}
+
+							g_clients[id]->vl_clear();
+							g_time_queue.add_event(g_clients[id]->m_player_data.id, 5, DEAD_TO_ALIVE, false);
 						}
 					}
 
@@ -401,6 +441,8 @@ void player_session::m_process_packet(Packet buf[])
 					g_clients[id]->send_packet(reinterpret_cast<Packet*>(&p));
 				}
 			}
+			m_view_lock.unlock();
+			if (0 < deleting_id) { vl_remove(deleting_id); }
 
 			if (true == m_player_data.is_ai) { break; }
 			// 발열 게이지가 올라가야 한다면 ---- ( AI 는 필요 없으니 skip )
@@ -410,7 +452,7 @@ void player_session::m_process_packet(Packet buf[])
 				if (m_player_data.state.maxgauge < m_player_data.state.gauge) { m_player_data.state.gauge = m_player_data.state.maxgauge; }
 
 				/// 공격을 안한지 3초 부터 게이지가 감소하도록 한다.
-				g_time_queue.add_event(m_id, 2, CHANGE_PLAYER_STATE, false);
+				g_time_queue.add_event(m_id, 3, CHANGE_PLAYER_STATE, false);
 
 				// 패킷을 당사자에게 하나 보내주자.
 				sc_fever p;

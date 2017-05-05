@@ -36,10 +36,10 @@ enum PacketProtocolType {
 
 	// 키 입력관련 상호작용
 	KEYINPUT_ATTACK,
+	KEYINPUT_POTION,
 
 	// 패시브 효과로 인한 서버의 통보
 	SERVER_MESSAGE_HP_CHANGED,
-
 };
 
 using Packet = unsigned char;

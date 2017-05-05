@@ -51,6 +51,7 @@ void TimerQueue::processPacket(event_type *p) {
 		if (DISCONNECTED == g_clients[p->id]->get_current_connect_state()) { break; }
 
 		int adding_hp_size = 5;
+		if (true == g_clients[p->id]->is_hp_postion) { adding_hp_size *= 2; }
 
 		// hp가 maxhp 이상이 아니면, 아래 실행
 		if (false == (g_clients[p->id]->get_player_data()->state.hp > (g_clients[p->id]->get_player_data()->state.maxhp - 1))) {
@@ -83,6 +84,7 @@ void TimerQueue::processPacket(event_type *p) {
 			g_clients[p->id]->set_connect_state(CONNECTED);
 			g_clients[p->id]->set_hp_adding(false);
 			g_clients[p->id]->set_hp(g_clients[p->id]->get_maxhp());
+			g_clients[p->id]->set_state(mov);
 
 			for (auto players : g_clients) {
 				if (DISCONNECTED == players->get_current_connect_state()) { continue; }
@@ -104,9 +106,40 @@ void TimerQueue::processPacket(event_type *p) {
 				g_clients[id]->send_packet(reinterpret_cast<Packet*>(&packet));
 			}
 		}
-		else {	// player 일 경우
+		else {
+			// player 일 경우
+			g_clients[p->id]->set_state(mov);
+			g_clients[p->id]->get_player_data()->pos.x = 160;
+			g_clients[p->id]->get_player_data()->pos.y = 400;
+			g_clients[p->id]->get_player_data()->state.mp = 10;
+			g_clients[p->id]->get_player_data()->state.gauge = 0;
+			g_clients[p->id]->get_player_data()->state.hp = g_clients[p->id]->get_player_data()->state.maxhp;
 
+			sc_client_init_info init_player;
+			init_player.size = sizeof(sc_client_init_info);
+			init_player.type = INIT_CLIENT;
+			init_player.player_info = *g_clients[p->id]->get_player_data();
+			g_clients[p->id]->send_packet(reinterpret_cast<Packet*>(&init_player));
+			
+			// 초기화 정보 보내기 2 - 얘 정보를 다른 애들한테 보내고, 다른 애들 정보를 얘한테 보내기
+			sc_other_init_info my_info_to_other;
+			sc_other_init_info other_info_to_me;
+
+			my_info_to_other.playerData = *g_clients[p->id]->get_player_data();
+
+			g_clients[p->id]->refresh_view_list();
+
+			for (auto id : *g_clients[p->id]->get_view_list()) {
+				// 다른 애들 정보를 복사해서 넣고, 얘한테 먼저 보내고...
+				other_info_to_me.playerData = *(g_clients[id]->get_player_data());
+				g_clients[p->id]->send_packet(reinterpret_cast<Packet*>(&other_info_to_me));
+
+				if (true == g_clients[id]->get_player_data()->is_ai) { continue; }	// ai 면 pass
+																					// 얘 정보를 이제 다른 애들한테 보내면 되는데..
+				g_clients[id]->send_packet(reinterpret_cast<Packet*>(&my_info_to_other));
+			}
 		}
+
 
 		break;
 	}
@@ -114,10 +147,10 @@ void TimerQueue::processPacket(event_type *p) {
 
 		if (DISCONNECTED == g_clients[p->id]->get_current_connect_state()) { break; }
 
-		if (mov != g_clients[p->id]->get_state()) {
-			g_clients[p->id]->set_state(mov);
-			add_event(p->id, 1, FEVER_REDUCE, false);
-		}
+		if (mov != g_clients[p->id]->get_state()) {	g_clients[p->id]->set_state(mov); }
+
+		if (true == g_clients[p->id]->get_gauge_reducing()) { break; }
+		add_event(p->id, 0, FEVER_REDUCE, false);
 
 		break;
 	}
@@ -161,6 +194,7 @@ void TimerQueue::processPacket(event_type *p) {
 		float y = g_clients[target_id]->get_player_data()->pos.y;
 		float my_x = g_clients[p->id]->get_player_data()->pos.x, my_y = g_clients[p->id]->get_player_data()->pos.y;
 		float player_size = 1.5;	// 객체 충돌 크기 반지름
+		unsigned int deleting_id = 0;
 
 		if ((player_size * player_size) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) {
 			
@@ -180,7 +214,25 @@ void TimerQueue::processPacket(event_type *p) {
 			}
 
 			if (1 > target_hp) {
-				g_clients[target_id]->set_state(mov);
+				g_clients[target_id]->set_state(dead);
+				g_clients[p->id]->set_state(mov);
+				
+				sc_disconnect dis_p;
+				dis_p.id = target_id;
+				g_clients[target_id]->send_packet(reinterpret_cast<Packet*>(&dis_p));
+
+				for (auto player_view_ids : *g_clients[target_id]->get_view_list()) {
+					// dead lock 방지용 continue;
+					//if (player_view_ids == p->id) { deleting_id = target_id; continue; }
+					g_clients[player_view_ids]->vl_remove(target_id);
+
+					if (true == g_clients[player_view_ids]->get_player_data()->is_ai) { continue; }
+					g_clients[player_view_ids]->send_packet(reinterpret_cast<Packet*>(&dis_p));
+				}
+
+				g_clients[target_id]->vl_clear();
+				g_time_queue.add_event(target_id, 5, DEAD_TO_ALIVE, false);
+
 				break;
 			}
 
@@ -189,11 +241,19 @@ void TimerQueue::processPacket(event_type *p) {
 		}
 		else
 		{
-			g_clients[target_id]->set_state(mov);
+			g_clients[p->id]->set_state(mov);
 		}
 
 		break;
 	}
+
+	case POSTION: {
+
+		g_clients[p->id]->is_hp_postion = false;
+
+		break;
+	}
+
 	default:
 		break;
 	}

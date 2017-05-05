@@ -7,6 +7,7 @@ enum time_queue_event
 	CHANGE_PLAYER_STATE,
 	FEVER_REDUCE,
 	AI_STATE_ATT,
+	POSTION,
 
 };
 

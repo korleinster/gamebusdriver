@@ -177,6 +177,13 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		}
 		case PLAYER_DISCONNECTED: {
 			sc_disconnect *p = reinterpret_cast<sc_disconnect*>(buf);
+
+			if (p->id == (*CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin())->GetPacketData()->id) {
+				// 끊긴 메세지가 나와 같다는건, 내가 죽었다는 이야기와 같다.
+				// 여기서 사망 애니메이션 재생이든 키 막는 행위를 하든 자유.
+
+				break;
+			}
 			
 			list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->begin();
 			list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->end();

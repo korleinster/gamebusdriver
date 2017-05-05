@@ -8,7 +8,7 @@ using boost::asio::ip::tcp;
 enum player_state {
 	mov,
 	att,
-
+	dead,
 };
 
 class player_session //: public std::enable_shared_from_this<player_session>
@@ -19,38 +19,49 @@ public:
 
 	void Init();
 
+	// 귀찮아서, 그냥 공용 변수로 ( 플레이어 상태 변수 )
+	bool is_hp_postion{ false };
+
 	void set_hp_adding(bool b) { is_hp_adding = b; }
-	inline bool get_hp_adding() { return is_hp_adding; }
+	bool get_hp_adding() { return is_hp_adding; }
 
 	void set_gauge_reducing(bool b) { is_gauge_reducing = b; }
-	inline bool get_gauge_reducing() { return is_gauge_reducing; }
+	bool get_gauge_reducing() { return is_gauge_reducing; }
 
 	void set_state(player_state s) { m_state = s; }
 	player_state get_state() { return m_state; }
 
-	inline bool set_hp(int hp) { m_player_data.state.hp = hp; return true; }
-	inline int get_maxhp() { return m_player_data.state.maxhp; }
+	bool set_hp(int hp) { m_player_data.state.hp = hp; return true; }
+	int get_maxhp() { return m_player_data.state.maxhp; }
 
-	inline unsigned int get_id() { return m_id; }
-	inline bool get_current_connect_state() { return m_connect_state; }
-	inline bool set_connect_state(bool b) { m_connect_state = b; return b; }
-	inline player_data* get_player_data() { return &m_player_data; }
-	inline sub_status* get_sub_data() { return &m_sub_status; }
+	unsigned int get_id() { return m_id; }
+	bool get_current_connect_state() { return m_connect_state; }
+	bool set_connect_state(bool b) { m_connect_state = b; return b; }
+	player_data* get_player_data() { return &m_player_data; }
+	sub_status* get_sub_data() { return &m_sub_status; }
 
-	inline void vl_add(unsigned int id) {
+	void vl_clear() {
+		m_view_lock.lock();
+		m_view_list.clear();
+		m_view_lock.unlock();
+	}
+	void vl_add(unsigned int id) {
 		m_view_lock.lock();
 		m_view_list.insert(id);
 		m_view_lock.unlock();
 	}
-	inline void vl_remove(unsigned int id) {
+	void vl_remove(unsigned int id) {
 		m_view_lock.lock();
 		m_view_list.erase(id);
 		m_view_lock.unlock();
 	}
-	inline bool vl_find(unsigned int id) {
+	bool vl_find(unsigned int id) {
 		if (m_view_list.end() != m_view_list.find(id)) { return true; }
 		return false;
 	}
+
+	void refresh_view_list();
+
 	bool is_in_view_range(unsigned int id);
 	inline unordered_set<unsigned int>* get_view_list() { return &m_view_list; }
 
@@ -86,6 +97,7 @@ private:
 	player_data m_player_data;
 	sub_status m_sub_status;
 	player_state m_state;
+	mutex state_lock;
 
 	// 현재 플레이어의 view list
 	/// 고민 1. 기본 unorderd_set 자료형을 쓸 것인가 ?

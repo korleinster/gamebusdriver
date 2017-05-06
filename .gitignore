@@ -50,3 +50,4 @@ Release/
 *.suo
 *.log
 packages/
+bin/

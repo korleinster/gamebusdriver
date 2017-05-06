@@ -198,7 +198,7 @@ void TimerQueue::processPacket(event_type *p) {
 
 		if ((player_size * player_size) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) {
 			
-			g_clients[target_id]->get_player_data()->state.hp -= g_clients[target_id]->get_sub_data()->str;
+			g_clients[target_id]->get_player_data()->state.hp -= (g_clients[target_id]->get_sub_data()->str - g_clients[target_id]->get_sub_data()->def);
 			int target_hp = g_clients[target_id]->get_player_data()->state.hp;
 			
 			sc_atk packet;

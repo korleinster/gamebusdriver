@@ -356,7 +356,7 @@ void player_session::m_process_packet(Packet buf[])
 				float y = g_clients[id]->m_player_data.pos.y;
 				if((player_size * player_size) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) {
 					set_state(att);
-					g_clients[id]->m_player_data.state.hp -= m_sub_status.str;
+					g_clients[id]->m_player_data.state.hp -= ((m_sub_status.str * 2) - g_clients[id]->m_sub_status.def);
 					is_gauge_on = true; // 발열 게이지를 마지막 체크 때 올려주자
 
 					if (false == g_clients[id]->get_hp_adding()) {

@@ -18,6 +18,7 @@ public:
 	D3DXVECTOR3 m_vEye;
 	D3DXVECTOR3 m_vAt;
 	D3DXVECTOR3 m_vUp;
+	D3DXVECTOR3 m_vTarget;
 
 
 private:
@@ -56,6 +57,7 @@ private:
 	void FixMouse(void);
 	void MouseMove(void);
 	void TargetRenewal(void);
+	void SetTargetCam(void);
 
 
 };

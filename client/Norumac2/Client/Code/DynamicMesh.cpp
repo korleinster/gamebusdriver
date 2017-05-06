@@ -371,6 +371,12 @@ void CDynamicMesh::BWPlayAnim(int _iIdx)
 	//return false;
 }
 
+void CDynamicMesh::ResetPlayTimer()
+{
+	m_fAniPlayTimer = 0.f;
+	m_bAniEnd = false;
+}
+
 CResources * CDynamicMesh::CloneResource() // 문제의 포인트
 {
 

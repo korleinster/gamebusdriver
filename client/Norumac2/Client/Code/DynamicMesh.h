@@ -99,6 +99,7 @@ private:
 public:
 	void		PlayAnimation(int _iIdx);
 	void		BWPlayAnim(int _iIdx);
+	void		ResetPlayTimer();
 
 
 	// CMesh을(를) 통해 상속됨

@@ -26,6 +26,11 @@ private:
 	PLAYER_STATE	m_ePlayerState;
 	bool			m_bPush;
 	DWORD			m_dwTime;
+	bool			m_bMoving;
+	bool			m_bPotionCool;
+	float			m_fPotionTime;
+	float			m_fTpTime;
+	bool			m_bTpCool;
 
 	// Scene meshes shader constant buffers
 	ID3D11Buffer*		m_pSceneVertexShaderCB;

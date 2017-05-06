@@ -52,6 +52,12 @@ CPlayer::CPlayer()
 	m_bPush = false;
 	m_pSceneVertexShaderCB = NULL;
 	m_pScenePixelShaderCB = NULL;
+	m_bMoving = false;
+	m_fPotionTime = 0.f;
+	m_bPotionCool = false;
+	m_bTpCool = false;
+	m_fTpTime = 0.f;
+
 
 	m_Packet = new Packet[MAX_BUF_SIZE];
 }
@@ -101,9 +107,11 @@ int CPlayer::Update(void)
 {
 	//m_pInfo->m_fAngle[1] += 0.1f;
 	m_fSeverTime += CTimeMgr::GetInstance()->GetTime();
+	if(m_bPotionCool == true)
+		m_fPotionTime += CTimeMgr::GetInstance()->GetTime();
+	if(m_bTpCool == true)
+		m_fTpTime += CTimeMgr::GetInstance()->GetTime();
 	m_pTerrainCol->CollisionTerrain(&m_pInfo->m_vPos, m_pVerTex);
-	/*if (dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd == true)
-		dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd = false;*/
 
 	if (m_bSendServer == false)
 	{
@@ -116,34 +124,68 @@ int CPlayer::Update(void)
 
 	if (m_fSeverTime > 0.5f)
 	{
-		
 		m_fSeverTime = 0.f;
+	}
+
+	if (m_fPotionTime > 1.f)
+	{
+		m_fPotionTime = 0.f;
+		if (m_bPotionCool == true)
+		{
+			m_bPotionCool = false;
+			cout << "포션 쿨타임 끝" << endl;
+		}
+	}
+
+	if (m_fTpTime > 5.f)
+	{
+		m_fTpTime = 0.f;
+		if (m_bTpCool == true)
+		{
+			m_bTpCool = false;
+			cout << "텔포 쿨타임 끝" << endl;
+		}
 	}
 
 	D3DXVec3TransformNormal(&m_pInfo->m_vDir, &g_vLook, &m_pInfo->m_matWorld);
 
-	//cout << m_pInfo->m_vDir.x << "/" << m_pInfo->m_vDir.y << "/" << m_pInfo->m_vDir.z << endl;
-
-	//cout << "Player pos: " << m_pInfo->m_vPos.x << "/" << m_pInfo->m_vPos.y << "/" << m_pInfo->m_vPos.z << endl;
-
-
 	KeyInput();
 	AniMove();
-
-	//cout << "내 채력:" << m_pInfo->m_ServerInfo.state.hp << endl;
-
 	CObj::Update();
 
 	//cout << m_bPush << endl;
 
-	if (m_bPush == false)
-		m_ePlayerState = PLAYER_IDLE;
+
+	if (dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd != false && m_bMoving == false)
+	{
+		if(m_bPush == false && m_bMoving == false)
+			m_ePlayerState = PLAYER_IDLE;
+	}
+
+	//if (m_bPush == false)
+	//{
+	//	if (m_ePlayerState == PLAYER_MOVE)
+	//		m_ePlayerState = PLAYER_IDLE;
+	//	else if (m_ePlayerState != PLAYER_MOVE)
+	//	{
+	//		if (dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd != false)
+	//			m_ePlayerState = PLAYER_IDLE;
+	//	}
+	//}
+
+	/*if (m_bPush == false && m_ePlayerState != PLAYER_MOVE)
+		m_ePlayerState = PLAYER_IDLE;*/
+
+	if (CInput::GetInstance()->GetDIKeyState(DIK_LBRACKET) & 0x80)// "["키 
+	{
+		m_fSpeed = 3.4;
+	}
+	if (CInput::GetInstance()->GetDIKeyState(DIK_RBRACKET) & 0x80)// "]"키
+	{
+		m_fSpeed = 10.2;
+	}
 
 
-	//if(dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd = false)
-
-	//m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
-	//m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 	return 0;
 }
 
@@ -199,8 +241,6 @@ void CPlayer::Render(void)
 
 	m_pGrapicDevice->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
 	m_pGrapicDevice->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
-
-	//m_pBuffer->Render();
 
 	dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(m_ePlayerState);
 }
@@ -303,22 +343,36 @@ void CPlayer::KeyInput()
 
 		m_ePlayerState = PLAYER_MOVE;
 		
-		//m_eObjDir = OBJDIR_UP;
-
-
-		//dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd = false;
-		//dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_fAniPlayTimer = 0;
-		//m_ePlayerState = PLAYER_MOVE;
+		dynamic_cast<CDynamicMesh*>(m_pBuffer)->ResetPlayTimer();
 
 		//cout << "상" << endl;
 		cout << "플레이어 좌표 ( " << m_pInfo->m_vPos.x << " , " << m_pInfo->m_vPos.z << " )\n";
 	}
-	/*else
-		m_bPush = false;*/
+	else
+	{
+		m_bPush = false;
+		m_bMoving = false;
+		if (m_dwTime + 120 < GetTickCount())
+		{
+			m_dwTime = GetTickCount();
 
-	else if (CInput::GetInstance()->GetDIKeyState(DIK_DOWN) & 0x80)
+			if (CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer") != NULL)
+			{
+				list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->begin();
+				list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->end();
+
+				for (iter; iter != iter_end; ++iter)
+				{
+					((COtherPlayer*)(*iter))->m_bKey = false;
+				}
+			}
+		}
+	}
+
+	if (CInput::GetInstance()->GetDIKeyState(DIK_DOWN) & 0x80)
 	{
 		m_bPush = true;
+		m_bMoving = true;
 
 		if (CInput::GetInstance()->GetDIKeyState(DIK_LEFT) & 0x80)
 		{
@@ -367,24 +421,38 @@ void CPlayer::KeyInput()
 
 
 		m_ePlayerState = PLAYER_MOVE;
-		
-		//m_eObjDir = OBJDIR_UP;
 
-
-		//dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd = false;
-		//dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_fAniPlayTimer = 0;
-		//m_ePlayerState = PLAYER_MOVE;
+		dynamic_cast<CDynamicMesh*>(m_pBuffer)->ResetPlayTimer();
 
 		//cout << "하" << endl;
 		cout << "플레이어 좌표 ( " << m_pInfo->m_vPos.x << " , " << m_pInfo->m_vPos.z << " )\n";
 	}
-	/*else
-		m_bPush = false;*/
+	else
+	{
+		m_bPush = false;
+		m_bMoving = false;
+		if (m_dwTime + 120 < GetTickCount())
+		{
+			m_dwTime = GetTickCount();
+
+			if (CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer") != NULL)
+			{
+				list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->begin();
+				list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->end();
+
+				for (iter; iter != iter_end; ++iter)
+				{
+					((COtherPlayer*)(*iter))->m_bKey = false;
+				}
+			}
+		}
+	}
 	
 
-	else if (CInput::GetInstance()->GetDIKeyState(DIK_LEFT) & 0x80)
+	if (CInput::GetInstance()->GetDIKeyState(DIK_LEFT) & 0x80)
 	{
 		m_bPush = true;
+		m_bMoving = true;
 		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(45.f);
 		m_pInfo->m_vPos += m_pInfo->m_vDir * m_fSpeed * fTime;
 		m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
@@ -403,23 +471,37 @@ void CPlayer::KeyInput()
 
 
 		m_ePlayerState = PLAYER_MOVE;
+
+		dynamic_cast<CDynamicMesh*>(m_pBuffer)->ResetPlayTimer();
 		
-		//m_eObjDir = OBJDIR_UP;
-
-
-		//dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd = false;
-		//dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_fAniPlayTimer = 0;
-		//m_ePlayerState = PLAYER_MOVE;
-
 		//cout << "좌" << endl;
 		cout << "플레이어 좌표 ( " << m_pInfo->m_vPos.x << " , " << m_pInfo->m_vPos.z << " )\n";
 	}
-	/*else
-		m_bPush = false;*/
+	else
+	{
+		m_bPush = false;
+		m_bMoving = false;
+		if (m_dwTime + 120 < GetTickCount())
+		{
+			m_dwTime = GetTickCount();
 
-	else if (CInput::GetInstance()->GetDIKeyState(DIK_RIGHT) & 0x80)
+			if (CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer") != NULL)
+			{
+				list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->begin();
+				list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->end();
+
+				for (iter; iter != iter_end; ++iter)
+				{
+					((COtherPlayer*)(*iter))->m_bKey = false;
+				}
+			}
+		}
+	}
+
+	if (CInput::GetInstance()->GetDIKeyState(DIK_RIGHT) & 0x80)
 	{
 		m_bPush = true;
+		m_bMoving = true;
 		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(225.f);
 		m_pInfo->m_vPos += m_pInfo->m_vDir * m_fSpeed * fTime;
 		m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
@@ -437,23 +519,36 @@ void CPlayer::KeyInput()
 
 		
 		m_ePlayerState = PLAYER_MOVE;
-		
-		//m_eObjDir = OBJDIR_UP;
 
-
-		//dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd = false;
-		//dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_fAniPlayTimer = 0;
-		//m_ePlayerState = PLAYER_MOVE;
+		dynamic_cast<CDynamicMesh*>(m_pBuffer)->ResetPlayTimer();
 
 		//cout << "우" << endl;
 		cout << "플레이어 좌표 ( " << m_pInfo->m_vPos.x << " , " << m_pInfo->m_vPos.z << " )\n";
 	}
-	/*else
-		m_bPush = false;*/
+	else
+	{
+		m_bPush = false;
+		m_bMoving = false;
+		if (m_dwTime + 120 < GetTickCount())
+		{
+			m_dwTime = GetTickCount();
+
+			if (CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer") != NULL)
+			{
+				list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->begin();
+				list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->end();
+
+				for (iter; iter != iter_end; ++iter)
+				{
+					((COtherPlayer*)(*iter))->m_bKey = false;
+				}
+			}
+		}
+	}
 	
 	
 
-	else if (CInput::GetInstance()->GetDIKeyState(DIK_SPACE) & 0x80)
+	if (CInput::GetInstance()->GetDIKeyState(DIK_SPACE) & 0x80)
 	{
 		m_bPush = true;
 
@@ -464,10 +559,28 @@ void CPlayer::KeyInput()
 
 		m_ePlayerState = PLAYER_ATT1;
 
-		dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd = false;
-		dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_fAniPlayTimer = 0;
+		dynamic_cast<CDynamicMesh*>(m_pBuffer)->ResetPlayTimer();
 	}
 	else
+	{
+		m_bPush = false;
+		if (m_dwTime + 120 < GetTickCount())
+		{
+			m_dwTime = GetTickCount();
+
+			if (CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer") != NULL)
+			{
+				list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->begin();
+				list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->end();
+
+				for (iter; iter != iter_end; ++iter)
+				{
+					((COtherPlayer*)(*iter))->m_bKey = false;
+				}
+			}
+		}
+	}
+	/*else
 	{
 		m_bPush = false;
 
@@ -486,7 +599,67 @@ void CPlayer::KeyInput()
 				}
 			}
 		}
+	}*/
+
+
+	if (CInput::GetInstance()->GetDIKeyState(DIK_1) & 0x80)
+	{
+		//KEYINPUT_POTION
+		if (m_bPotionCool == true)
+		{
+			cout << "포션 쿨타임중" << endl;
+			return;
+		}
+		g_client.sendPacket(sizeof(nullptr), KEYINPUT_POTION, 0);
+		m_bPotionCool = true;
 	}
+
+	if (CInput::GetInstance()->GetDIKeyState(DIK_2) & 0x80)
+	{
+		//KEYINPUT_POTION
+		if (m_bTpCool == true)
+		{
+			cout << "텔포 쿨타임중" << endl;
+			return;
+		}
+
+		m_pInfo->m_vPos = D3DXVECTOR3(155.f, 0.f, 400.f);
+		m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
+		m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
+		g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
+		m_bTpCool = true;
+	}
+
+	if (CInput::GetInstance()->GetDIKeyState(DIK_3) & 0x80)
+	{
+		//KEYINPUT_POTION
+		if (m_bTpCool == true)
+		{
+			cout << "텔포 쿨타임중" << endl;
+			return;
+		}
+		m_pInfo->m_vPos = D3DXVECTOR3(330.f, 0.f, 408.f);
+		m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
+		m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
+		g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
+		m_bTpCool = true;
+	}
+
+	if (CInput::GetInstance()->GetDIKeyState(DIK_4) & 0x80)
+	{
+		//KEYINPUT_POTION
+		if (m_bTpCool == true)
+		{
+			cout << "텔포 쿨타임중" << endl;
+			return;
+		}
+		m_pInfo->m_vPos = D3DXVECTOR3(260.f, 0.f, 300.f);
+		m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
+		m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
+		g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
+		m_bTpCool = true;
+	}
+
 }
 
 

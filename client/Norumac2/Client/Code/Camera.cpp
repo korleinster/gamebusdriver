@@ -50,6 +50,8 @@ HRESULT CCamera::Initialize(void)
 	m_fCameraSpeed = 70.f;
 
 	m_fAngle = 0.f;
+
+	m_vTarget = D3DXVECTOR3(-10.f, 20.f, 10.f);
 	
 	return S_OK;
 }
@@ -69,8 +71,11 @@ int CCamera::Update(void)
 			MouseMove();
 			FixMouse();
 		}
-		else if(m_bDebugCam == false)
+		else if (m_bDebugCam == false)
+		{
 			TargetRenewal();
+			SetTargetCam();
+		}
 	}
 	MakeView();
 	MakeProjection();
@@ -247,94 +252,6 @@ void CCamera::MouseMove(void)
 
 		m_vAt = m_vEye + vDir;
 	}
-
-	//if (iDistance = CInput::GetInstance()->GetDIMouseMove(CInput::DIM_Z))
-	//{
-	//	iInput = 1;
-	//	m_fCameraDistance -= fTime * 800.f * iDistance * 0.01f;
-
-
-	//	if (m_fCameraDistance < 5.f)
-	//		m_fCameraDistance = 5.f;
-	//	// 444444
-	//	// 		if(m_fDistance > 700.f)
-	//	// 			m_fDistance = 700.f;
-
-	//	D3DXVec3Normalize(&m_vDirZ, &m_vDirZ);
-	//	m_vDirZ *= m_fCameraDistance;
-
-	//	m_vEye = m_vAt + m_vDirZ;
-
-	//}
-
-	//if (iDistance = CInput::GetInstance()->GetDIMouseMove(CInput::DIM_X))
-	//{
-	//	iInput = 1;
-	//	D3DXMATRIX		matAxis;
-	//	D3DXMatrixRotationAxis(&matAxis, &D3DXVECTOR3(0.f, 1.f, 0.f), D3DXToRadian(iDistance / 10.f));
-
-	//	//D3DXVECTOR3		vDir;
-	//	m_vDirZ = m_vEye - m_vAt;
-
-	//	D3DXVec3TransformNormal(&m_vDirZ, &m_vDirZ, &matAxis);
-
-	//	D3DXVec3Normalize(&m_vDirZ, &m_vDirZ);
-	//	m_pInfo->m_vDir.x = m_vDirZ.x;
-	//	m_pInfo->m_vDir.z = m_vDirZ.z;;
-	//	m_vDirZ *= m_fCameraDistance;
-
-	//	m_vEye = m_vAt + m_vDirZ;
-
-	//}
-
-	//if (iDistance = CInput::GetInstance()->GetDIMouseMove(CInput::DIM_Y))
-	//{
-	//	iInput = 1;
-	//	D3DXVECTOR3		vRight;
-	//	D3DXMATRIX		matCamState;
-
-	//	D3DXMatrixInverse(&matCamState, NULL, &m_matView);
-	//	memcpy(&vRight, &matCamState.m[0][0], sizeof(D3DXVECTOR3));
-	//	D3DXVec3Normalize(&vRight, &vRight);
-
-	//	D3DXMATRIX		matAxis;
-
-	//	D3DXMatrixRotationAxis(&matAxis, &vRight, D3DXToRadian(iDistance / 10.f));
-
-
-
-	//	m_vDirZ = m_vEye - m_vAt;
-	//	D3DXVec3TransformNormal(&m_vDirZ, &m_vDirZ, &matAxis);
-	//	D3DXVec3Normalize(&m_vDirZ, &m_vDirZ);
-
-	//	if (m_vDirZ.y > 0.75f)
-	//		m_vDirZ.y = 0.75f;
-
-	//	if (m_vDirZ.y < -0.35f)
-	//		m_vDirZ.y = -0.35f;
-
-	//	m_pInfo->m_vDir.x = m_vDirZ.x;
-	//	m_pInfo->m_vDir.z = m_vDirZ.z;
-	//	m_vDirZ *= m_fCameraDistance;
-	//	m_vEye = m_vAt + m_vDirZ;
-	//}
-
-	//if (iInput == 0)
-	//{
-	//	D3DXVec3Normalize(&m_vDirZ, &m_vDirZ);
-	//	m_pInfo->m_vDir.x = m_vDirZ.x;
-	//	m_pInfo->m_vDir.z = m_vDirZ.z;
-	//	m_vDirZ *= m_fCameraDistance;
-
-	//	m_vEye = m_vAt + m_vDirZ;
-	//}
-
-	//D3DXVec3Normalize(&m_pInfo->m_vDir, &m_pInfo->m_vDir);
-
-	//if()
-
-
-
 }
 
 void CCamera::TargetRenewal(void)
@@ -354,11 +271,45 @@ void CCamera::TargetRenewal(void)
 	D3DXMatrixRotationAxis(&matRotAxis, &vRight, m_fAngle);
 	D3DXVec3TransformNormal(&m_vEye, &m_vEye, &matRotAxis);
 
-	m_vEye.x = m_pTargetInfo->m_vPos.x - 10.f;
-	m_vEye.y = m_pTargetInfo->m_vPos.y + 20.f;
-	m_vEye.z = m_pTargetInfo->m_vPos.z + 10.f;
+	m_vEye.x = m_pTargetInfo->m_vPos.x + m_vTarget.x;
+	m_vEye.y = m_pTargetInfo->m_vPos.y + m_vTarget.y;
+	m_vEye.z = m_pTargetInfo->m_vPos.z + m_vTarget.z;
 
 	m_vAt = m_pTargetInfo->m_vPos;
 
 	MakeView();
+}
+
+void CCamera::SetTargetCam(void)
+{
+	if (CInput::GetInstance()->GetDIKeyState(DIK_Y) & 0x80)
+	{
+		m_vTarget.x += 0.1f;
+		cout << "m_vTarget.x:" << m_vTarget.x << endl;
+	}
+	if (CInput::GetInstance()->GetDIKeyState(DIK_H) & 0x80)
+	{
+		m_vTarget.x -= 0.1f;
+		cout << "m_vTarget.x:" << m_vTarget.x << endl;
+	}
+	if (CInput::GetInstance()->GetDIKeyState(DIK_U) & 0x80)
+	{
+		m_vTarget.y += 0.1f;
+		cout << "m_vTarget.y:" << m_vTarget.y << endl;
+	}
+	if (CInput::GetInstance()->GetDIKeyState(DIK_J) & 0x80)
+	{
+		m_vTarget.y -= 0.1f;
+		cout << "m_vTarget.y:" << m_vTarget.y << endl;
+	}
+	if (CInput::GetInstance()->GetDIKeyState(DIK_I) & 0x80)
+	{
+		m_vTarget.z += 0.1f;
+		cout << "m_vTarget.z:" << m_vTarget.z << endl;
+	}
+	if (CInput::GetInstance()->GetDIKeyState(DIK_K) & 0x80)
+	{
+		m_vTarget.z -= 0.1f;
+		cout << "m_vTarget.z:" << m_vTarget.z << endl;
+	}
 }

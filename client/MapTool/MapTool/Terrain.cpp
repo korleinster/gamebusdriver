@@ -13,6 +13,7 @@
 #include "NaviMgr.h"
 #include "MyForm.h"
 #include "MainFrm.h"
+#include "Input.h"
 
 CTerrain::CTerrain()
 {
@@ -22,6 +23,7 @@ CTerrain::CTerrain()
 	m_pTexture = NULL;
 	m_pVerTex = NULL;
 	m_pConvertVerTex = NULL;
+	m_bRender = true;
 }
 
 CTerrain::~CTerrain()
@@ -72,6 +74,15 @@ int CTerrain::Update(void)
 	else
 		m_pTerrainBuffer->CreateRasterizerState();
 
+	if (CInput::GetInstance()->GetDIKeyState(DIK_F12) & 0x80)
+	{
+		m_bRender = false;
+	}
+	if (CInput::GetInstance()->GetDIKeyState(DIK_F11) & 0x80)
+	{
+		m_bRender = true;
+	}
+
 	CObj::Update();
 	return 0;
 }
@@ -91,32 +102,35 @@ void CTerrain::Render(void)
 	//13 23 33 43
 	//14 24 34 44
 
-	D3DXMatrixTranspose(&cb.matWorld, &m_pInfo->m_matWorld);
-	D3DXMatrixTranspose(&cb.matView, &CCamera::GetInstance()->m_matView);
-	D3DXMatrixTranspose(&cb.matProjection, &CCamera::GetInstance()->m_matProj);
-	m_pGrapicDevice->m_pDeviceContext->UpdateSubresource(m_pTerrainBuffer->m_ConstantBuffer, 0, NULL, &cb, 0, 0);
+	if (m_bRender)
+	{
+		D3DXMatrixTranspose(&cb.matWorld, &m_pInfo->m_matWorld);
+		D3DXMatrixTranspose(&cb.matView, &CCamera::GetInstance()->m_matView);
+		D3DXMatrixTranspose(&cb.matProjection, &CCamera::GetInstance()->m_matProj);
+		m_pGrapicDevice->m_pDeviceContext->UpdateSubresource(m_pTerrainBuffer->m_ConstantBuffer, 0, NULL, &cb, 0, 0);
 
 
-	//ÀÌ¿ëÈñ ±³¼ö´ÔÀÇ ·¦ÇÁ·ÎÁ§Æ® ¹ßÃé - ¸Ê/ ¾ð¸Ê -  = Direct 9 Lock / unlock
-	//D3D11_MAPPED_SUBRESOURCE MapResource;
-	//m_pGrapicDevcie->m_pDeviceContext->Map(m_pRcCol->m_ConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &MapResource);
-	//ConstantBuffer* pConstantBuffer = (ConstantBuffer *)MapResource.pData;
-	////pConstantBuffer->matWorld = m_pInfo->m_matWorld;
-	////pConstantBuffer->matView = CCamera::GetInstance()->m_matView;
-	////pConstantBuffer->matProjection = CCamera::GetInstance()->m_matProj;
-	//D3DXMatrixTranspose(&pConstantBuffer->matWorld, &m_pInfo->m_matWorld);
-	//D3DXMatrixTranspose(&pConstantBuffer->matView, &CCamera::GetInstance()->m_matView);
-	//D3DXMatrixTranspose(&pConstantBuffer->matProjection, &CCamera::GetInstance()->m_matProj);
-	//m_pGrapicDevcie->m_pDeviceContext->Unmap(m_pRcCol->m_ConstantBuffer, 0);
+		//ÀÌ¿ëÈñ ±³¼ö´ÔÀÇ ·¦ÇÁ·ÎÁ§Æ® ¹ßÃé - ¸Ê/ ¾ð¸Ê -  = Direct 9 Lock / unlock
+		//D3D11_MAPPED_SUBRESOURCE MapResource;
+		//m_pGrapicDevcie->m_pDeviceContext->Map(m_pRcCol->m_ConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &MapResource);
+		//ConstantBuffer* pConstantBuffer = (ConstantBuffer *)MapResource.pData;
+		////pConstantBuffer->matWorld = m_pInfo->m_matWorld;
+		////pConstantBuffer->matView = CCamera::GetInstance()->m_matView;
+		////pConstantBuffer->matProjection = CCamera::GetInstance()->m_matProj;
+		//D3DXMatrixTranspose(&pConstantBuffer->matWorld, &m_pInfo->m_matWorld);
+		//D3DXMatrixTranspose(&pConstantBuffer->matView, &CCamera::GetInstance()->m_matView);
+		//D3DXMatrixTranspose(&pConstantBuffer->matProjection, &CCamera::GetInstance()->m_matProj);
+		//m_pGrapicDevcie->m_pDeviceContext->Unmap(m_pRcCol->m_ConstantBuffer, 0);
 
 
-	m_pGrapicDevice->m_pDeviceContext->VSSetShader(m_pVertexShader->m_pVertexShader, NULL, 0);
-	m_pGrapicDevice->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pTerrainBuffer->m_ConstantBuffer);
-	//////////////////
-	m_pGrapicDevice->m_pDeviceContext->PSSetShader(m_pPixelShader->m_pPixelShader, NULL, 0);
-	m_pGrapicDevice->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
-	m_pGrapicDevice->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
-	m_pTerrainBuffer->Render();
+		m_pGrapicDevice->m_pDeviceContext->VSSetShader(m_pVertexShader->m_pVertexShader, NULL, 0);
+		m_pGrapicDevice->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pTerrainBuffer->m_ConstantBuffer);
+		//////////////////
+		m_pGrapicDevice->m_pDeviceContext->PSSetShader(m_pPixelShader->m_pPixelShader, NULL, 0);
+		m_pGrapicDevice->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
+		m_pGrapicDevice->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
+		m_pTerrainBuffer->Render();
+	}
 }
 
 void CTerrain::Release(void)

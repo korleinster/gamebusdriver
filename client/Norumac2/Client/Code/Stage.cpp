@@ -19,6 +19,7 @@
 #include "FeverBar.h"
 #include "RuneBar.h"
 #include "Input.h"
+#include "NaviMgr.h"
 
 CStage::CStage()
 	: m_bFirstLogin(false)
@@ -202,3 +203,120 @@ void CStage::DataLoad(void)
 	CloseHandle(hFile);
 }
 
+
+void CStage::NaviLoad()
+{
+
+	HANDLE	hFile = CreateFile(L"..\\Resource\\Data\\Norumac2Navi.dat", GENERIC_READ,
+		0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	DWORD	dwByte;
+
+	int iNaviNum;
+	ReadFile(hFile, &iNaviNum, sizeof(int), &dwByte, NULL);
+	CNaviMgr::GetInstance()->Reserve_CellContainerSize(iNaviNum);
+
+	for (int i = 0; i < iNaviNum; ++i)
+	{
+		D3DXVECTOR3 vPoint[3];
+		ReadFile(hFile, vPoint, sizeof(D3DXVECTOR3) * 3, &dwByte, NULL);
+		DWORD dwType;
+		ReadFile(hFile, &dwType, sizeof(DWORD), &dwByte, NULL);
+
+		D3DXVECTOR3 vComparePoint[3];
+
+		vComparePoint[0] = ((vPoint[0].x < vPoint[1].x) ? vPoint[0] : vPoint[1]);
+		vPoint[0] = ((vComparePoint[0].x < vPoint[2].x) ? vComparePoint[0] : vPoint[2]);
+
+		if (vComparePoint[0] == vPoint[0])
+		{
+			vComparePoint[1] = ((vPoint[1].x < vPoint[2].x) ? vPoint[1] : vPoint[2]);
+			vComparePoint[2] = ((vPoint[1].x > vPoint[2].x) ? vPoint[1] : vPoint[2]);
+		}
+		else if (vComparePoint[0] == vPoint[1])
+		{
+			vComparePoint[0] = ((vPoint[0].x < vPoint[2].x) ? vPoint[0] : vPoint[2]);
+			vComparePoint[2] = ((vPoint[0].x > vPoint[2].x) ? vPoint[0] : vPoint[2]);
+		}
+		else
+		{
+			vComparePoint[0] = ((vPoint[0].x < vPoint[1].x) ? vPoint[0] : vPoint[1]);
+			vComparePoint[1] = ((vPoint[0].x > vPoint[1].x) ? vPoint[0] : vPoint[1]);
+		}
+
+		D3DXVECTOR3 vTemp[3];
+
+		vTemp[0] = vComparePoint[0];
+		vTemp[1] = vComparePoint[1];
+		vTemp[2] = vComparePoint[2];
+
+		if (vTemp[1].z < vTemp[2].z)
+		{
+			D3DXVECTOR3 vTemp2;
+
+			vTemp2 = vTemp[1];
+			vTemp[1] = vTemp[2];
+			vTemp[2] = vTemp2;
+
+			if (vTemp[0].z < vTemp[2].z)
+			{
+				D3DXVECTOR3 vTempDir[3];
+
+				vTempDir[0] = D3DXVECTOR3(0, 0, 0);
+				vTempDir[1] = D3DXVECTOR3(vTemp[2] - vTemp[0]);
+				vTempDir[2] = D3DXVECTOR3(vTemp[1] - vTemp[0]);
+
+				float fGradient = vTempDir[1].z / vTempDir[1].x;
+
+				float fZ = fGradient * (vTempDir[2].x);
+
+				if (fZ > vTempDir[2].z)
+				{
+					if (vTemp[0].z < vTemp[2].z)
+					{
+						D3DXVECTOR3 vTemp2;
+
+						vTemp2 = vTemp[1];
+						vTemp[1] = vTemp[2];
+						vTemp[2] = vTemp2;
+					}
+				}
+			}
+		}
+		else
+		{
+			if (vTemp[0].z > vTemp[2].z)
+			{
+				D3DXVECTOR3 vTempDir[3];
+
+				vTempDir[0] = D3DXVECTOR3(0, 0, 0);
+				vTempDir[1] = D3DXVECTOR3(vTemp[1] - vTemp[0]);
+				vTempDir[2] = D3DXVECTOR3(vTemp[2] - vTemp[0]);
+
+				float fGradient = vTempDir[1].z / vTempDir[1].x;
+
+				float fZ = fGradient * (vTempDir[2].x);
+
+				if (fZ < vTempDir[2].z)
+				{
+					D3DXVECTOR3 vTemp2;
+
+					vTemp2 = vTemp[1];
+					vTemp[1] = vTemp[2];
+					vTemp[2] = vTemp2;
+				}
+			}
+		}
+
+		vPoint[0] = vTemp[0];
+		vPoint[1] = vTemp[1];
+		vPoint[2] = vTemp[2];
+
+
+		CNaviMgr::GetInstance()->Add_Cell(&vPoint[0], &vPoint[1], &vPoint[2], dwType);
+	}
+
+	CNaviMgr::GetInstance()->Link_Cell();
+
+	CloseHandle(hFile);
+}

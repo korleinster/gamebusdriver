@@ -199,6 +199,18 @@
     <Filter Include="02.Object\07.UI\05.RuneBar">
       <UniqueIdentifier>{a74728bd-3afd-48e6-8fe4-b6a355d2063f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="96.Utility\04.NaviMgr">
+      <UniqueIdentifier>{950a68c3-81db-4375-9c4b-f62fe21af1b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.Utility\04.NaviMgr\NaviCell">
+      <UniqueIdentifier>{99df6ce8-1230-4f36-8e93-f4df24243aeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.Utility\04.NaviMgr\NaviCell\Line2D">
+      <UniqueIdentifier>{b85e6353-aacf-43e5-a3c9-6f04331ee974}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Resources\01.Buffer\6.LineCol">
+      <UniqueIdentifier>{06dade88-9f62-417c-9172-55f30c0510e0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -411,6 +423,18 @@
     <ClInclude Include="..\Code\RuneBar.h">
       <Filter>02.Object\07.UI\05.RuneBar</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\NaviMgr.h">
+      <Filter>96.Utility\04.NaviMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\NaviCell.h">
+      <Filter>96.Utility\04.NaviMgr\NaviCell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Line2D.h">
+      <Filter>96.Utility\04.NaviMgr\NaviCell\Line2D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\LineCol.h">
+      <Filter>97.Resources\01.Buffer\6.LineCol</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\MainApp.cpp">
@@ -596,6 +620,18 @@
     <ClCompile Include="..\Code\RuneBar.cpp">
       <Filter>02.Object\07.UI\05.RuneBar</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\NaviMgr.cpp">
+      <Filter>96.Utility\04.NaviMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\NaviCell.cpp">
+      <Filter>96.Utility\04.NaviMgr\NaviCell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Line2D.cpp">
+      <Filter>96.Utility\04.NaviMgr\NaviCell\Line2D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\LineCol.cpp">
+      <Filter>97.Resources\01.Buffer\6.LineCol</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\ShaderCode\Shader.fx">
@@ -620,6 +656,9 @@
       <Filter>97.Resources\03.Shader\ShaderCode</Filter>
     </FxCompile>
     <FxCompile Include="..\ShaderCode\DebugBuffer.fx">
+      <Filter>97.Resources\03.Shader\ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderCode\LineShader.fx">
       <Filter>97.Resources\03.Shader\ShaderCode</Filter>
     </FxCompile>
   </ItemGroup>

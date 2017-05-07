@@ -25,6 +25,9 @@ public:
 	static CTerrain* Create(void);
 
 public:
+	bool m_bRender;
+
+public:
 	HRESULT Initialize(void);
 	int		Update(void);
 	void	Render(void);

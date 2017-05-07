@@ -104,50 +104,6 @@ int CTerrain::Update(void)
 
 void CTerrain::Render(void)
 {
-
-	//// Initialize the projection matrix
-	//ConstantBuffer cb;
-
-	////11,12,13,14 = RIGHT = u
-	////21,22,23,24 = UP	  = v
-	////31,32,33,34 = LOOK  = w
-	////41,42,43,44 = Position
-	////11 21 31 41
-	////12 22 32 42
-	////13 23 33 43
-	////14 24 34 44
-
-	//D3DXMatrixTranspose(&cb.matWorld, &m_pInfo->m_matWorld);
-	//D3DXMatrixTranspose(&cb.matView, &CCamera::GetInstance()->m_matView);
-	//D3DXMatrixTranspose(&cb.matProjection, &CCamera::GetInstance()->m_matProj);
-	//m_pGrapicDevice->m_pDeviceContext->UpdateSubresource(m_pTerrainBuffer->m_ConstantBuffer, 0, NULL, &cb, 0, 0);
-
-
-	////ÀÌ¿ëÈñ ±³¼ö´ÔÀÇ ·¦ÇÁ·ÎÁ§Æ® ¹ßÃé - ¸Ê/ ¾ð¸Ê -  = Direct 9 Lock / unlock
-	////D3D11_MAPPED_SUBRESOURCE MapResource;
-	////m_pGrapicDevcie->m_pDeviceContext->Map(m_pRcCol->m_ConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &MapResource);
-	////ConstantBuffer* pConstantBuffer = (ConstantBuffer *)MapResource.pData;
-	//////pConstantBuffer->matWorld = m_pInfo->m_matWorld;
-	//////pConstantBuffer->matView = CCamera::GetInstance()->m_matView;
-	//////pConstantBuffer->matProjection = CCamera::GetInstance()->m_matProj;
-	////D3DXMatrixTranspose(&pConstantBuffer->matWorld, &m_pInfo->m_matWorld);
-	////D3DXMatrixTranspose(&pConstantBuffer->matView, &CCamera::GetInstance()->m_matView);
-	////D3DXMatrixTranspose(&pConstantBuffer->matProjection, &CCamera::GetInstance()->m_matProj);
-	////m_pGrapicDevcie->m_pDeviceContext->Unmap(m_pRcCol->m_ConstantBuffer, 0);
-
-
-	//m_pGrapicDevice->m_pDeviceContext->VSSetShader(m_pVertexShader->m_pVertexShader, NULL, 0);
-	//m_pGrapicDevice->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pTerrainBuffer->m_ConstantBuffer);
-	////////////////////
-	//m_pGrapicDevice->m_pDeviceContext->PSSetShader(m_pPixelShader->m_pPixelShader, NULL, 0);
-	//m_pGrapicDevice->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
-	//m_pGrapicDevice->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
-
-	//m_pTerrainBuffer->Render();
-
-
-	///////////////////////////////////////////////////////////////////////////////////////////////
-
 	// Get the projection & view matrix from the camera class
 	D3DXMATRIX mView = *(CCamera::GetInstance()->GetViewMatrix());
 	D3DXMATRIX mProj = *(CCamera::GetInstance()->GetProjMatrix());

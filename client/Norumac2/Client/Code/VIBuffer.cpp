@@ -102,3 +102,14 @@ void CVIBuffer::CreateRasterizerState()
 	//tRasterizerDesc.FillMode = D3D11_FILL_WIREFRAME;
 	pGrapicDevice->m_pDevice->CreateRasterizerState(&tRasterizerDesc, &m_pRasterizerState);
 }
+
+void CVIBuffer::CreateRasterizerStateLine()
+{
+	CDevice* pGrapicDevice = CDevice::GetInstance();
+
+	D3D11_RASTERIZER_DESC tRasterizerDesc;
+	ZeroMemory(&tRasterizerDesc, sizeof(D3D11_RASTERIZER_DESC));
+	tRasterizerDesc.CullMode = D3D11_CULL_NONE;
+	tRasterizerDesc.FillMode = D3D11_FILL_WIREFRAME;
+	pGrapicDevice->m_pDevice->CreateRasterizerState(&tRasterizerDesc, &m_pRasterizerState);
+}

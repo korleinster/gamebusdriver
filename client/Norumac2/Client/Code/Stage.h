@@ -20,6 +20,7 @@ public:
 public:
 	HRESULT	CreateObj(void);
 	void DataLoad(void);
+	void NaviLoad(void);
 
 public:
 	bool m_bFirstLogin;

@@ -54,6 +54,7 @@ BOOL CALLBACK AboutDlgProc(HWND, UINT, WPARAM, LPARAM);
 #include <process.h>
 #include <assert.h>
 #include <unordered_map>
+#include <algorithm>
 
 #include "Include.h"
 

@@ -42,6 +42,7 @@ public:
 	virtual void	Render(void);
 	virtual DWORD	Release(void);
 	virtual void	CreateRasterizerState();
+	virtual void	CreateRasterizerStateLine();
 	
 
 	

@@ -14,6 +14,7 @@
 #include "ParsingDevice9.h"
 #include "AnimationMgr.h"
 #include "Frustum.h"
+#include "NaviMgr.h"
 
 //일반객체
 #include "Shader.h"
@@ -142,6 +143,23 @@ HRESULT CMainApp::Initialize(void)
 		return hr;
 	}
 
+	//네비메쉬 라인용
+
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"VS_LINE", L"../ShaderCode/LineShader.fx", "VS_LINE", "vs_5_0", SHADER_LINE_VS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL,L"System Message", L"Vertex Shader(Line) Create Failed", MB_OK);
+		return hr;
+	}
+
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"PS_LINE", L"../ShaderCode/LineShader.fx", "PS_LINE", "ps_5_0", SHADER_PS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"Pixel Shader(Line) Create Failed", MB_OK);
+		return hr;
+	}
+	/////////////////////////////////
+
 	//// 디퍼드용
 	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"GBufferVisVS", L"../ShaderCode/GBufferVis.fx", "GBufferVisVS", "vs_5_0", SHADER_VS);
 	if (FAILED(hr))
@@ -234,23 +252,21 @@ HRESULT CMainApp::Initialize(void)
 		return E_FAIL;
 	}
 
+	hr = CNaviMgr::GetInstance()->Reserve_CellContainerSize(1);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"NaviCell Container Init Failed", L"Fail", MB_OK);
+		return E_FAIL;
+	}
+
+
 	CScene* pScene = NULL;
 
 	pScene = CLogo::Create();
 	CSceneMgr::GetInstance()->AddScene(SCENE_LOGO, pScene);
 
-	/*pScene = CStage::Create();
-	CSceneMgr::GetInstance()->AddScene(SCENE_STAGE, pScene);*/
-
 	CSceneMgr::GetInstance()->ChangeScene(SCENE_LOGO);
 
-	/*D3D11_RASTERIZER_DESC wireframeDesc;
-	ZeroMemory(&wireframeDesc, sizeof(D3D11_RASTERIZER_DESC));
-	wireframeDesc.FillMode = D3D11_FILL_WIREFRAME;
-	wireframeDesc.CullMode = D3D11_CULL_BACK;
-	wireframeDesc.FrontCounterClockwise = false;
-	wireframeDesc.DepthClipEnable = true;*/
-			
 	return S_OK;
 }
 
@@ -297,4 +313,5 @@ void CMainApp::Release(void)
 	CSceneMgr::GetInstance()->DestroyInstance();
 	CResourcesMgr::GetInstance()->DestroyInstance();
 	CAnimationMgr::GetInstance()->DestroyInstance();
+	CNaviMgr::GetInstance()->DestroyInstance();
 }

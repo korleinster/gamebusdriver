@@ -52,8 +52,6 @@ CStaticObject::~CStaticObject()
 		::Safe_Delete(iter->second);
 	}
 	m_mapComponent.clear();
-
-	//CObj::Release();
 }
 
 HRESULT CStaticObject::Initialize(const TCHAR* pMeshKey)
@@ -65,10 +63,7 @@ HRESULT CStaticObject::Initialize(const TCHAR* pMeshKey)
 	
 	if (FAILED(AddComponent(pMeshKey, m_tcKey)))
 		return E_FAIL;
-	m_pInfo->m_fAngle[ANGLE_X] = /*D3DX_PI / 2 * -1.f;*/D3DXToRadian(-90);
-	//m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
-	//m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
-	//m_pInfo->m_vScale = D3DXVECTOR3(0.01f, 0.01f, 0.01f);
+	m_pInfo->m_fAngle[ANGLE_X] = D3DXToRadian(-90);
 
 	CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, this);
 
@@ -90,7 +85,6 @@ int CStaticObject::Update(void)
 {
 
 	D3DXVec3TransformNormal(&m_pInfo->m_vDir, &g_vLook, &m_pInfo->m_matWorld);
-	//m_pInfo->m_fAngle[1] += 0.1f;
 
 	//SetCurrling();
 
@@ -103,21 +97,6 @@ void CStaticObject::Render(void)
 {
 	if(m_bCurred == false)
 	{
-		//ConstantBuffer cb;
-		//D3DXMatrixTranspose(&cb.matWorld, &m_pInfo->m_matWorld);
-		//D3DXMatrixTranspose(&cb.matView, &CCamera::GetInstance()->m_matView);
-		//D3DXMatrixTranspose(&cb.matProjection, &CCamera::GetInstance()->m_matProj);
-		//m_pGrapicDevice->m_pDeviceContext->UpdateSubresource(m_pBuffer->m_ConstantBuffer, 0, NULL, &cb, 0, 0);
-
-		//m_pGrapicDevice->m_pDeviceContext->VSSetShader(m_pVertexShader->m_pVertexShader, NULL, 0);
-		//m_pGrapicDevice->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pBuffer->m_ConstantBuffer);
-		////////////////////
-		//m_pGrapicDevice->m_pDeviceContext->PSSetShader(m_pPixelShader->m_pPixelShader, NULL, 0);
-		//m_pGrapicDevice->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
-		//m_pGrapicDevice->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
-
-		//m_pBuffer->Render();
-
 		// Get the projection & view matrix from the camera class
 		D3DXMATRIX mView = *(CCamera::GetInstance()->GetViewMatrix());
 		D3DXMATRIX mProj = *(CCamera::GetInstance()->GetProjMatrix());

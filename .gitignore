@@ -51,3 +51,4 @@ Release/
 *.log
 packages/
 bin/
+*.ipdb

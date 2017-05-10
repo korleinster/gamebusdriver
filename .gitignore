@@ -52,3 +52,6 @@ Release/
 packages/
 bin/
 *.ipdb
+client/Norumac2/Client/Releasebin/Client.iobj
+client/Norumac2/Client/Releasebin/Client.ipdb
+client/Norumac2/Client/Releasebin/Client.iobj

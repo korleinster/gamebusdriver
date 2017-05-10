@@ -352,7 +352,7 @@ DWORD CNaviMgr::MoveOnNaviMesh(D3DXVECTOR3* pPos, const D3DXVECTOR3* pDir, const
 
 			D3DXVec3Cross(&vCrossLine, &vLine[0], &vLine[1]);
 
-			if (m_vecNaviMesh[dwCurrentIdx]->GetCellType() == TYPE_CELL)
+			if (m_vecNaviMesh[dwCurrentIdx]->GetCellType() == TYPE_MESH)
 			{
 				pPos->y = ((-(pPos->x * vCrossLine.x)) + (vPoint[0].x * vCrossLine.x) + (vPoint[0].y * vCrossLine.y) - (pPos->z * vCrossLine.z) + (vPoint[0].z * vCrossLine.z)) / vCrossLine.y;
 			}
@@ -381,7 +381,7 @@ DWORD CNaviMgr::MoveOnNaviMesh(D3DXVECTOR3* pPos, const D3DXVECTOR3* pDir, const
 
 
 
-		if (m_vecNaviMesh[dwCurrentIdx]->GetCellType() == TYPE_CELL)
+		if (m_vecNaviMesh[dwCurrentIdx]->GetCellType() == TYPE_MESH)
 		{
 			//fY = ( (-(pPos->x * vCrossLine.x )) + (vPoint[0].x * vCrossLine.x) + (vPoint[0].y * vCrossLine.y) - (pPos->z * vCrossLine.z) + (vPoint[0].z * vCrossLine.z) ) / vCrossLine.y;
 			pPos->y = ((-(pPos->x * vCrossLine.x)) + (vPoint[0].x * vCrossLine.x) + (vPoint[0].y * vCrossLine.y) - (pPos->z * vCrossLine.z) + (vPoint[0].z * vCrossLine.z)) / vCrossLine.y;

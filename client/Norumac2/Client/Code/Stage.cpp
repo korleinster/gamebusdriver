@@ -57,6 +57,7 @@ void CStage::Render(void)
 {
 	float fTime = CTimeMgr::GetInstance()->GetTime();
 	CRenderMgr::GetInstance()->Render(fTime);
+	CNaviMgr::GetInstance()->Render();
 }
 
 void CStage::Release(void)
@@ -136,6 +137,8 @@ HRESULT CStage::CreateObj(void)
 	if (pObj == NULL)
 		return E_FAIL;
 	CObjMgr::GetInstance()->AddObject(L"BaseUI", pObj);
+
+	NaviLoad();
 
 	
 

@@ -31,6 +31,7 @@ private:
 	float			m_fPotionTime;
 	float			m_fTpTime;
 	bool			m_bTpCool;
+	DWORD			m_dwCellNum;
 
 	// Scene meshes shader constant buffers
 	ID3D11Buffer*		m_pSceneVertexShaderCB;
@@ -43,6 +44,7 @@ public:
 	void			KeyInput(void);
 	Packet*			GetPacket(void);
 	void			AniMove(void);
+	void			SetNaviIndex(DWORD dwIndex) { m_dwCellNum = dwIndex; }
 
 public:
 	static CPlayer* Create(void);

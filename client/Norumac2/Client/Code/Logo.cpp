@@ -145,7 +145,7 @@ HRESULT CLogo::Add_Dynamic_Buffer(void)
 
 
 		//////////////////////플레이어//////////////////////////
-		vecAni.push_back("player_normalidle");
+		vecAni.push_back("player_fightidle");
 		vecAni.push_back("player_fightrun");
 		vecAni.push_back("player_normalattack1");
 		vecAni.push_back("player_normalattack2");

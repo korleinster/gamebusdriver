@@ -12,5 +12,6 @@ extern HWND			g_hWnd;
 extern HINSTANCE	g_hInst;
 extern DWORD		g_dwLightIndex;
 extern D3DXVECTOR3	g_vLightDir;
+extern bool			g_bLogin;
 
 

@@ -59,6 +59,7 @@ CPlayer::CPlayer()
 	m_bTpCool = false;
 	m_fTpTime = 0.f;
 	m_dwCellNum = 0;
+	m_bStart = true;
 
 
 	m_Packet = new Packet[MAX_BUF_SIZE];
@@ -107,7 +108,20 @@ HRESULT CPlayer::Initialize(void)
 
 int CPlayer::Update(void)
 {
-	SetNaviIndex(CNaviMgr::GetInstance()->GetCellIndex(&m_pInfo->m_vPos));
+	if (m_bStart)
+	{
+		SetNaviIndex(CNaviMgr::GetInstance()->GetCellIndex(&m_pInfo->m_vPos));
+		m_bStart = false;
+	}
+	if (m_bSendServer == false)
+	{
+		m_pInfo->m_ServerInfo = *g_client.getPlayerData();
+		g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
+		g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
+		m_bSendServer = true;
+	}
+
+
 	//m_pInfo->m_fAngle[1] += 0.1f;
 	m_fSeverTime += CTimeMgr::GetInstance()->GetTime();
 	if(m_bPotionCool == true)
@@ -117,19 +131,6 @@ int CPlayer::Update(void)
 
 	if(CNaviMgr::GetInstance()->GetCellType(m_dwCellNum) == TYPE_TERRAIN)
 		m_pTerrainCol->CollisionTerrain(&m_pInfo->m_vPos, m_pVerTex);
-
-
-	cout << m_dwCellNum << endl;
-	
-		
-
-	if (m_bSendServer == false)
-	{
-		m_pInfo->m_ServerInfo = *g_client.getPlayerData();
-		g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
-		g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
-		m_bSendServer = true;
-	}
 
 
 	if (m_fSeverTime > 0.5f)
@@ -311,7 +312,7 @@ void CPlayer::KeyInput()
 		{
 			m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(90.f);
 			//m_pInfo->m_vPos += m_pInfo->m_vDir * m_fSpeed * fTime;
-			CNaviMgr::GetInstance()->MoveOnNaviMesh(&m_pInfo->m_vPos, &(m_pInfo->m_vDir * m_fSpeed * fTime), m_dwCellNum);
+			m_dwCellNum = CNaviMgr::GetInstance()->MoveOnNaviMesh(&m_pInfo->m_vPos, &(m_pInfo->m_vDir * m_fSpeed * fTime), m_dwCellNum);
 			m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 			m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 
@@ -325,7 +326,7 @@ void CPlayer::KeyInput()
 		{
 			m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(180.f);
 			//m_pInfo->m_vPos += m_pInfo->m_vDir * m_fSpeed* fTime;
-			CNaviMgr::GetInstance()->MoveOnNaviMesh(&m_pInfo->m_vPos, &(m_pInfo->m_vDir * m_fSpeed * fTime), m_dwCellNum);
+			m_dwCellNum = CNaviMgr::GetInstance()->MoveOnNaviMesh(&m_pInfo->m_vPos, &(m_pInfo->m_vDir * m_fSpeed * fTime), m_dwCellNum);
 			m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 			m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 
@@ -339,7 +340,7 @@ void CPlayer::KeyInput()
 		{
 			m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(135.f);
 			//m_pInfo->m_vPos += m_pInfo->m_vDir * m_fSpeed * fTime;
-			CNaviMgr::GetInstance()->MoveOnNaviMesh(&m_pInfo->m_vPos, &(m_pInfo->m_vDir * m_fSpeed * fTime), m_dwCellNum);
+			m_dwCellNum = CNaviMgr::GetInstance()->MoveOnNaviMesh(&m_pInfo->m_vPos, &(m_pInfo->m_vDir * m_fSpeed * fTime), m_dwCellNum);
 			m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 			m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 
@@ -391,7 +392,7 @@ void CPlayer::KeyInput()
 		{
 			m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(0.f);
 			//m_pInfo->m_vPos += m_pInfo->m_vDir * m_fSpeed * fTime;
-			CNaviMgr::GetInstance()->MoveOnNaviMesh(&m_pInfo->m_vPos, &(m_pInfo->m_vDir * m_fSpeed * fTime), m_dwCellNum);
+			m_dwCellNum = CNaviMgr::GetInstance()->MoveOnNaviMesh(&m_pInfo->m_vPos, &(m_pInfo->m_vDir * m_fSpeed * fTime), m_dwCellNum);
 			m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 			m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 
@@ -405,7 +406,7 @@ void CPlayer::KeyInput()
 		{
 			m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(270.f);
 			//m_pInfo->m_vPos += m_pInfo->m_vDir * m_fSpeed * fTime;
-			CNaviMgr::GetInstance()->MoveOnNaviMesh(&m_pInfo->m_vPos, &(m_pInfo->m_vDir * m_fSpeed * fTime), m_dwCellNum);
+			m_dwCellNum = CNaviMgr::GetInstance()->MoveOnNaviMesh(&m_pInfo->m_vPos, &(m_pInfo->m_vDir * m_fSpeed * fTime), m_dwCellNum);
 			m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 			m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 
@@ -419,7 +420,7 @@ void CPlayer::KeyInput()
 		{
 			m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(315.f);
 			//m_pInfo->m_vPos += m_pInfo->m_vDir * m_fSpeed * fTime;
-			CNaviMgr::GetInstance()->MoveOnNaviMesh(&m_pInfo->m_vPos, &(m_pInfo->m_vDir * m_fSpeed * fTime), m_dwCellNum);
+			m_dwCellNum = CNaviMgr::GetInstance()->MoveOnNaviMesh(&m_pInfo->m_vPos, &(m_pInfo->m_vDir * m_fSpeed * fTime), m_dwCellNum);
 			m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 			m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 
@@ -471,7 +472,7 @@ void CPlayer::KeyInput()
 		m_bMoving = true;
 		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(45.f);
 		//m_pInfo->m_vPos += m_pInfo->m_vDir * m_fSpeed * fTime;
-		CNaviMgr::GetInstance()->MoveOnNaviMesh(&m_pInfo->m_vPos, &(m_pInfo->m_vDir * m_fSpeed * fTime), m_dwCellNum);
+		m_dwCellNum = CNaviMgr::GetInstance()->MoveOnNaviMesh(&m_pInfo->m_vPos, &(m_pInfo->m_vDir * m_fSpeed * fTime), m_dwCellNum);
 		m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 		m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 
@@ -644,6 +645,7 @@ void CPlayer::KeyInput()
 		m_pInfo->m_vPos = D3DXVECTOR3(155.f, 0.f, 400.f);
 		m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 		m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
+		SetNaviIndex(CNaviMgr::GetInstance()->GetCellIndex(&m_pInfo->m_vPos));
 		g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
 		m_bTpCool = true;
 	}
@@ -659,6 +661,7 @@ void CPlayer::KeyInput()
 		m_pInfo->m_vPos = D3DXVECTOR3(330.f, 0.f, 408.f);
 		m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 		m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
+		SetNaviIndex(CNaviMgr::GetInstance()->GetCellIndex(&m_pInfo->m_vPos));
 		g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
 		m_bTpCool = true;
 	}
@@ -674,6 +677,7 @@ void CPlayer::KeyInput()
 		m_pInfo->m_vPos = D3DXVECTOR3(260.f, 0.f, 300.f);
 		m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 		m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
+		SetNaviIndex(CNaviMgr::GetInstance()->GetCellIndex(&m_pInfo->m_vPos));
 		g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
 		m_bTpCool = true;
 	}

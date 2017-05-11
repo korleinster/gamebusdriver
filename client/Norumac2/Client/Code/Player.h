@@ -32,6 +32,7 @@ private:
 	float			m_fTpTime;
 	bool			m_bTpCool;
 	DWORD			m_dwCellNum;
+	bool			m_bStart;
 
 	// Scene meshes shader constant buffers
 	ID3D11Buffer*		m_pSceneVertexShaderCB;

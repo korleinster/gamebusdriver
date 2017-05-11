@@ -117,7 +117,10 @@ void AsynchronousClientClass::Login_access() {
 	send(m_sock, reinterpret_cast<char*>(&temp_buf), MAX_BUF_SIZE, 0);
 	recv(m_sock, reinterpret_cast<char*>(&temp_buf), MAX_BUF_SIZE, 0);
 
-	if (1 == temp_buf[0]) { return; }
+	if (1 == temp_buf[0]) 
+	{ 
+		return; 
+	}
 	else {
 		system("cls");
 		printf("Login Failed\n");

@@ -143,6 +143,7 @@ void CLoading::StageLoading(void)
 
 	if (m_serverConnected == false) {
 		g_client.Init(g_hWnd);
+		g_bLogin = true;
 		m_serverConnected = true;
 	}
 }

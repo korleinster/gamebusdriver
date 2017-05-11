@@ -44,25 +44,18 @@ HRESULT CLogo::Initialize(void)
 
 	FAILED_CHECK_RETURN_MSG(Add_Environment_Layer(), E_FAIL, L"Environment_Layer Add false");
 	FAILED_CHECK_RETURN_MSG(Add_GameLogic_Layer(), E_FAIL, L"GameLogic_Layer Add false");
-	//FAILED_CHECK_RETURN_MSG(Add_Light(), E_FAIL, L"Light Add false");
 	
 	return S_OK;
 }
 
 int CLogo::Update(void)
 {
-	/*if (GetAsyncKeyState(VK_RETURN))
-		CSceneMgr::GetInstance()->ChangeScene(SCENE_STAGE);*/
-
 	if (m_pLoading->GetComplete() == true)
 	{
-		// 일단 여기다 넣고 실행해보고, 결과 함 보자 ㄱ
-
-
 		if (m_bDynamicLoading == false)
 			Add_Dynamic_Buffer();
 
-		if (m_bDynamicLoading == true)
+		if (m_bDynamicLoading == true && g_bLogin == true)
 		{
 			if (GetAsyncKeyState(VK_RETURN))
 			{
@@ -70,8 +63,6 @@ int CLogo::Update(void)
 			}
 		}
 		return 0;
-
-		//스테이지마다 하는건 구조좀 바꿔야해서 일단 가라쳐서 로드.
 	}
 
 	return 0;
@@ -119,9 +110,6 @@ HRESULT CLogo::Add_Environment_Layer(void)
 
 HRESULT CLogo::Add_GameLogic_Layer(void)
 {
-	/*CLayer*		pLayer = Engine::CLayer::Create(m_pDevice);
-	NULL_CHECK_RETURN(pLayer, E_FAIL);*/
-
 	CObj*	pObj = NULL;
 
 	pObj = CLogoBack::Create();
@@ -142,14 +130,13 @@ HRESULT CLogo::Add_Dynamic_Buffer(void)
 
 		//여기에 아마 메모장통해서 벡터에다가 꼴아박아야할거같음. 일단 가라침
 
-
-
 		//////////////////////플레이어//////////////////////////
 		vecAni.push_back("player_fightidle");
 		vecAni.push_back("player_fightrun");
 		vecAni.push_back("player_normalattack1");
 		vecAni.push_back("player_normalattack2");
 		vecAni.push_back("player_normalattack3");
+		vecAni.push_back("player_dead");
 
 		hr = CResourcesMgr::GetInstance()->AddMesh(
 			RESOURCE_STAGE,
@@ -165,6 +152,8 @@ HRESULT CLogo::Add_Dynamic_Buffer(void)
 		vecAni.clear();
 		//////////////////////////////////////////////////////////////
 
+
+		//////////////////////슬라임//////////////////////////////////
 		vecAni.push_back("slime_idle");
 		vecAni.push_back("slime_run");
 		vecAni.push_back("slime_attack");
@@ -183,6 +172,7 @@ HRESULT CLogo::Add_Dynamic_Buffer(void)
 		CAnimationMgr::GetInstance()->AddAnimation(L"Slime", &vecAni);
 
 		vecAni.clear();
+		//////////////////////////////////////////////////////////////
 
 
 		cout << "SceneLoading" << endl;

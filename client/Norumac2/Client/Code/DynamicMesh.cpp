@@ -371,6 +371,40 @@ void CDynamicMesh::BWPlayAnim(int _iIdx)
 	//return false;
 }
 
+void CDynamicMesh::PlayAnimationOnce(int _iIdx)
+{
+	if (m_bAniEnd == true)
+		return;
+
+	if (_iIdx < 0 || (unsigned)_iIdx > m_vecAni.size())
+		return;
+
+	m_pGrapicDevice->m_pDeviceContext->RSSetState(m_pRasterizerState);
+
+	m_fAniPlayTimer += m_vecAni[_iIdx]->fAniPlaySpeed * CTimeMgr::GetInstance()->GetTime();
+
+	if (m_fAniPlayTimer > m_vecAni[_iIdx]->llAniMaxTime / 10)
+	{
+		m_fAniPlayTimer = m_vecAni[_iIdx]->llAniMaxTime;
+		m_bAniEnd = true;
+		return;
+	}
+
+	for (unsigned int i = 0; i < m_vecAni[_iIdx]->nAniNodeIdxCnt; ++i)
+	{
+		m_vecAni[_iIdx]->pBoneMatrix->m_XMmtxBone[i] = m_vecAni[_iIdx]->ppResultMatrix[int(m_fAniPlayTimer)][i];
+	}
+
+
+	if (m_vecAni[_iIdx]->pBoneMatrixBuffer != NULL)
+	{
+		m_pGrapicDevice->m_pDeviceContext->VSSetConstantBuffers(1, 1, &m_vecAni[_iIdx]->pBoneMatrixBuffer);
+	}
+
+	m_vecAni[_iIdx]->pAniBuffer->Render();
+	m_wCurrenAniIdx = _iIdx;
+}
+
 void CDynamicMesh::ResetPlayTimer()
 {
 	m_fAniPlayTimer = 0.f;

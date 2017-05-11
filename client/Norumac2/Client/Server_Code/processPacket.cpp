@@ -156,11 +156,14 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 #endif
 			break;
 		case INIT_CLIENT: {
+			//플레이어 최초 갱신 혹은 죽었다 부활했을시
 			m_player = reinterpret_cast<sc_client_init_info *>(buf)->player_info;
 			(*CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin())->SetPos(D3DXVECTOR3(m_player.pos.x, 0.f, m_player.pos.y));
+			(*CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin())->GetPacketData()->state.hp = m_player.state.hp;
 			break;
 		}
 		case INIT_OTHER_CLIENT: {
+			//다른플레이어 or NPC or 몬스터 최초갱신 혹은 부활
 			sc_other_init_info *p = reinterpret_cast<sc_other_init_info *>(buf);
 
 			player_data *data = CObjMgr::GetInstance()->Get_PlayerServerData(p->playerData.id);
@@ -179,8 +182,9 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			sc_disconnect *p = reinterpret_cast<sc_disconnect*>(buf);
 
 			if (p->id == (*CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin())->GetPacketData()->id) {
-				// 끊긴 메세지가 나와 같다는건, 내가 죽었다는 이야기와 같다.
-				// 여기서 사망 애니메이션 재생이든 키 막는 행위를 하든 자유.
+				// 플레이어가 죽었을시
+				(*CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin())->m_bDeath = true;
+
 
 				break;
 			}
@@ -190,6 +194,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 			for (; iter != iter_end; ++iter)
 			{
+				//NPC 혹은 다른플레이어 혹은 몬스터가 죽었을시
 				if ((*iter)->GetPacketData()->id == p->id)
 				{
 					CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);

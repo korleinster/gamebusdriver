@@ -115,6 +115,8 @@ DWORD CNaviMgr::MoveOnNaviMesh(D3DXVECTOR3* pPos, const D3DXVECTOR3* pDir, const
 	CNaviCell::NEIGHBOR		Neighbor;
 	DWORD		dwNextIndex = dwCurrentIdx;
 
+	D3DXVECTOR3 vBefore = *pPos;
+
 	bool		bPassNeighbor[CNaviCell::NEIGHBOR_END] = { false, false, false };
 	for (int i = 0; i < CNaviCell::NEIGHBOR_END; ++i)
 	{

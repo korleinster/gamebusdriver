@@ -160,17 +160,38 @@ int CPlayer::Update(void)
 
 	D3DXVec3TransformNormal(&m_pInfo->m_vDir, &g_vLook, &m_pInfo->m_matWorld);
 
-	KeyInput();
-	AniMove();
-	CObj::Update();
 
-	//cout << m_bPush << endl;
-
-
-	if (dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd != false && m_bMoving == false)
+	if (m_bDeath == false)
 	{
-		if(m_bPush == false && m_bMoving == false)
+		KeyInput();
+		AniMove();
+		CObj::Update();
+
+		//cout << m_bPush << endl;
+
+
+		if (dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd != false && m_bMoving == false)
+		{
+			if (m_bPush == false && m_bMoving == false)
+				m_ePlayerState = PLAYER_IDLE;
+		}
+
+		if (m_pInfo->m_ServerInfo.state.hp <=0)
+		{
+			m_bDeath = true;
+			m_ePlayerState = PLAYER_DEAD;
+			dynamic_cast<CDynamicMesh*>(m_pBuffer)->ResetPlayTimer();
+			
+		}
+	}
+	else if (m_bDeath == true)
+	{
+		if (m_pInfo->m_ServerInfo.state.hp > 0)
+		{
+			m_bDeath = false;
 			m_ePlayerState = PLAYER_IDLE;
+		}
+
 	}
 
 	//if (m_bPush == false)
@@ -253,7 +274,11 @@ void CPlayer::Render(void)
 	m_pGrapicDevice->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
 	m_pGrapicDevice->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
 
-	dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(m_ePlayerState);
+
+	if(m_bDeath == false)
+		dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(m_ePlayerState);
+	else if (m_bDeath == true)
+		dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimationOnce(PLAYER_DEAD);
 }
 
 CPlayer * CPlayer::Create(void)

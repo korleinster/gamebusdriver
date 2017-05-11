@@ -125,10 +125,8 @@ int COtherPlayer::Update(void)
 
 	if (m_ePlayerState != PLAYER_IDLE)
 	{
-		if (dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd == true) // 여기가 잘못됬다
-			m_ePlayerState = PLAYER_IDLE;
-		//if(m_bKey == false)
-			
+		if (dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd == true) 
+			m_ePlayerState = PLAYER_IDLE;		
 	}
 
 	//SetCurrling();
@@ -194,8 +192,6 @@ void COtherPlayer::Render(void)
 
 	m_pGrapicDevice->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
 	m_pGrapicDevice->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
-
-	m_pBuffer->Render();
 
 	dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(m_ePlayerState);
 	}

@@ -210,11 +210,11 @@ int CPlayer::Update(void)
 
 	if (CInput::GetInstance()->GetDIKeyState(DIK_LBRACKET) & 0x80)// "["Ű 
 	{
-		m_fSpeed = 3.4;
+		m_fSpeed = 4.7;
 	}
 	if (CInput::GetInstance()->GetDIKeyState(DIK_RBRACKET) & 0x80)// "]"Ű
 	{
-		m_fSpeed = 10.2;
+		m_fSpeed = 12.0;
 	}
 
 

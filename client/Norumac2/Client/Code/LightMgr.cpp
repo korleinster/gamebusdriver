@@ -238,7 +238,7 @@ void CLightMgr::Release()
 	Safe_Release(m_pWireframeRS);
 }
 
-void CLightMgr::DoLighting(ID3D11DeviceContext * pd3dImmediateContext, CMultiRenderTarget* pGBuffer)
+void CLightMgr::DoLighting(ID3D11DeviceContext * pd3dImmediateContext, CMultiRenderTarget* pGBuffer, CMultiRenderTarget* pLineMRT)
 {
 	// Store the previous depth state
 	ID3D11DepthStencilState* pPrevDepthState;
@@ -249,8 +249,8 @@ void CLightMgr::DoLighting(ID3D11DeviceContext * pd3dImmediateContext, CMultiRen
 	pd3dImmediateContext->OMSetDepthStencilState(m_pNoDepthWriteLessStencilMaskState, 1);
 
 	// Set the GBuffer views
-	ID3D11ShaderResourceView* arrViews[4] = { pGBuffer->GetDepthView(), pGBuffer->GetRT(0)->GetSRV(), pGBuffer->GetRT(1)->GetSRV() , pGBuffer->GetRT(2)->GetSRV() };
-	pd3dImmediateContext->PSSetShaderResources(0, 4, arrViews);
+	ID3D11ShaderResourceView* arrViews[5] = { pGBuffer->GetDepthView(), pGBuffer->GetRT(0)->GetSRV(), pGBuffer->GetRT(1)->GetSRV() , pGBuffer->GetRT(2)->GetSRV(), pLineMRT->GetRT(0)->GetSRV() };
+	pd3dImmediateContext->PSSetShaderResources(0, 5, arrViews);
 
 	// Do the directional light
 	DirectionalLight(pd3dImmediateContext);

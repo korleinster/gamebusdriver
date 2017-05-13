@@ -15,7 +15,7 @@ public:
 public:
 	HRESULT Initialize();
 	void Release();
-	void DoLighting(ID3D11DeviceContext* pd3dImmediateContext, CMultiRenderTarget* pGBuffer);
+	void DoLighting(ID3D11DeviceContext* pd3dImmediateContext, CMultiRenderTarget* pGBuffer, CMultiRenderTarget* pLineMRT);
 	void DoDebugLightVolume(ID3D11DeviceContext* pd3dImmediateContext);
 
 	// Set the ambient values

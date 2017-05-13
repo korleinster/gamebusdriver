@@ -42,8 +42,7 @@ HRESULT CTargetMgr::Initialize()
 	m_pMRT_Border->Initialize(WINCX, WINCY);
 
 	CRenderTarget* pRT_Border = CRenderTarget::Create(WINCX, WINCY, basicColorTextureFormat);
-	//pRT_Border->Ready_DebugBuffer(-0.8f, 0.5f, 0.1f, 0.1f, 0);
-	pRT_Border->Ready_DebugBuffer(0.f, 0.f, 1.f, 1.f, 0);
+	pRT_Border->Ready_DebugBuffer(-0.8f, 0.5f, 0.1f, 0.1f, 0);
 	m_pMRT_Border->SetRT(pRT_Border);
 
 	return S_OK;

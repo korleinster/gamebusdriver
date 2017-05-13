@@ -51,7 +51,8 @@ HRESULT CShader::Ready_ShaderFile(wstring wstrFilePath, LPCSTR wstrShaderName, L
 	{
 		if (pErrorBlob != NULL)
 			OutputDebugStringA((char*)pErrorBlob->GetBufferPointer());
-		if (pErrorBlob) pErrorBlob->Release();
+		if (pErrorBlob)
+			pErrorBlob->Release();
 		return hr;
 	}
 	if (pErrorBlob) pErrorBlob->Release();
@@ -131,7 +132,7 @@ HRESULT CShader::Ready_ShaderFile(wstring wstrFilePath, LPCSTR wstrShaderName, L
 	else if (_SType == SHADER_PS)
 	{
 		hr = CDevice::GetInstance()->m_pDevice->CreatePixelShader(pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), NULL, &m_pPixelShader);
-	
+
 		pShaderBlob->Release();
 
 		if (FAILED(hr))
@@ -140,7 +141,7 @@ HRESULT CShader::Ready_ShaderFile(wstring wstrFilePath, LPCSTR wstrShaderName, L
 	else if (_SType == SHADER_HS)
 	{
 		hr = CDevice::GetInstance()->m_pDevice->CreateHullShader(pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), NULL, &m_pHullShader);
-	
+
 		pShaderBlob->Release();
 
 		if (FAILED(hr))
@@ -149,7 +150,7 @@ HRESULT CShader::Ready_ShaderFile(wstring wstrFilePath, LPCSTR wstrShaderName, L
 	else if (_SType == SHADER_DS)
 	{
 		hr = CDevice::GetInstance()->m_pDevice->CreateDomainShader(pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), NULL, &m_pDomainShader);
-	
+
 		pShaderBlob->Release();
 
 		if (FAILED(hr))
@@ -183,7 +184,7 @@ HRESULT CShader::Ready_ShaderFile(wstring wstrFilePath, LPCSTR wstrShaderName, L
 		CDevice::GetInstance()->m_pDeviceContext->IASetInputLayout(m_pVertexLayout);
 
 	}
-	
+
 
 	return S_OK;
 }

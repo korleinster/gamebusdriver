@@ -23,7 +23,7 @@ private:
 
 public:
 	DECLARE_SINGLETON(CRenderMgr)
-	
+
 public:
 	void SetCurrentScene(CScene* pScene);
 public:
@@ -69,6 +69,7 @@ private:
 	class CVIBuffer*	m_pRcTex;
 	ID3D11SamplerState*	m_pSamplerState;
 	ID3D11Buffer*		m_pLinearDepthCB;
+
 	float				m_fSobelValue;
 };
 

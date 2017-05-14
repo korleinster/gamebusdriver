@@ -58,7 +58,10 @@ void TimerQueue::processPacket(event_type *p) {
 			g_clients[p->id]->get_player_data()->state.hp += adding_hp_size;
 
 			// 만피가 되었다면, 계속 hp 더해주는 모드 끄기
-			if (g_clients[p->id]->get_player_data()->state.maxhp == g_clients[p->id]->get_player_data()->state.hp) { g_clients[p->id]->set_hp_adding(false); }
+			if (g_clients[p->id]->get_player_data()->state.maxhp <= g_clients[p->id]->get_player_data()->state.hp) {
+				g_clients[p->id]->get_player_data()->state.hp = g_clients[p->id]->get_player_data()->state.maxhp;
+				g_clients[p->id]->set_hp_adding(false);
+			}
 			add_event(p->id, 1, HP_ADD, false);
 			
 			sc_hp packet;
@@ -193,7 +196,7 @@ void TimerQueue::processPacket(event_type *p) {
 		float x = g_clients[target_id]->get_player_data()->pos.x;
 		float y = g_clients[target_id]->get_player_data()->pos.y;
 		float my_x = g_clients[p->id]->get_player_data()->pos.x, my_y = g_clients[p->id]->get_player_data()->pos.y;
-		float player_size = 1.5;	// 객체 충돌 크기 반지름
+		float player_size = 2.1;	// 객체 충돌 크기 반지름
 		unsigned int deleting_id = 0;
 
 		if ((player_size * player_size) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) {

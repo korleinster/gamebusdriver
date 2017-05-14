@@ -336,7 +336,7 @@ void player_session::m_process_packet(Packet buf[])
 			// 충돌체크 검사하고 난 뒤에..
 			float att_x = 0.5, att_y = 0.5;		// 테스트용 클라 공격 리치가 요정도
 			float my_x = m_player_data.pos.x, my_y = m_player_data.pos.y;
-			float player_size = 0.7;	// 객체 충돌 크기 반지름
+			float player_size = 1.0;	// 객체 충돌 크기 반지름
 			char *dir = &m_player_data.dir;
 			bool is_gauge_on = false;
 			unsigned int deleting_id = 0;

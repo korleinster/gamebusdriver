@@ -129,9 +129,9 @@ HRESULT CRenderMgr::InitScene(void)
 void CRenderMgr::Render(const float & fTime)
 {
 	// Å°¼¼ÆÃ
-//#if defined( DEBUG ) || defined( _DEBUG )
+#if defined( DEBUG ) || defined( _DEBUG )
 	Input(fTime);
-//#endif
+#endif
 
 	if (m_bDefferdOn)
 	{

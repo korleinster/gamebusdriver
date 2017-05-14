@@ -37,7 +37,7 @@ CRenderMgr::CRenderMgr()
 	, m_pRcTex(nullptr)
 	, m_pSamplerState(nullptr)
 	, m_pLinearDepthCB(nullptr)
-	, m_fSobelValue(0.1757f)
+	, m_fSobelValue(0.0667f)
 {
 	ZeroMemory(m_szFps, sizeof(TCHAR) * 128);
 
@@ -129,9 +129,9 @@ HRESULT CRenderMgr::InitScene(void)
 void CRenderMgr::Render(const float & fTime)
 {
 	// Å°¼¼ÆÃ
-#if defined( DEBUG ) || defined( _DEBUG )
+//#if defined( DEBUG ) || defined( _DEBUG )
 	Input(fTime);
-#endif
+//#endif
 
 	if (m_bDefferdOn)
 	{

@@ -23,6 +23,7 @@
 
 CStage::CStage()
 	: m_bFirstLogin(false)
+	, m_bNaviRender(true)
 {
 }
 
@@ -48,6 +49,17 @@ int CStage::Update(void)
 		m_bFirstLogin = true;
 	}
 
+	if (CInput::GetInstance()->GetDIKeyState(DIK_F9) & 0x80)
+	{
+		m_bNaviRender = true;
+	}
+
+	if (CInput::GetInstance()->GetDIKeyState(DIK_F10) & 0x80)
+	{
+		m_bNaviRender = false;
+	}
+
+
 	CObjMgr::GetInstance()->Update();
 
 	return 0;
@@ -57,7 +69,9 @@ void CStage::Render(void)
 {
 	float fTime = CTimeMgr::GetInstance()->GetTime();
 	CRenderMgr::GetInstance()->Render(fTime);
-	CNaviMgr::GetInstance()->Render();
+
+	if(m_bNaviRender)
+		CNaviMgr::GetInstance()->Render();
 }
 
 void CStage::Release(void)

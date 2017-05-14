@@ -74,7 +74,6 @@ int CCamera::Update(void)
 		else if (m_bDebugCam == false)
 		{
 			TargetRenewal();
-			SetTargetCam();
 		}
 	}
 	MakeView();
@@ -280,36 +279,3 @@ void CCamera::TargetRenewal(void)
 	MakeView();
 }
 
-void CCamera::SetTargetCam(void)
-{
-	if (CInput::GetInstance()->GetDIKeyState(DIK_Y) & 0x80)
-	{
-		m_vTarget.x += 0.1f;
-		cout << "m_vTarget.x:" << m_vTarget.x << endl;
-	}
-	if (CInput::GetInstance()->GetDIKeyState(DIK_H) & 0x80)
-	{
-		m_vTarget.x -= 0.1f;
-		cout << "m_vTarget.x:" << m_vTarget.x << endl;
-	}
-	if (CInput::GetInstance()->GetDIKeyState(DIK_U) & 0x80)
-	{
-		m_vTarget.y += 0.1f;
-		cout << "m_vTarget.y:" << m_vTarget.y << endl;
-	}
-	if (CInput::GetInstance()->GetDIKeyState(DIK_J) & 0x80)
-	{
-		m_vTarget.y -= 0.1f;
-		cout << "m_vTarget.y:" << m_vTarget.y << endl;
-	}
-	if (CInput::GetInstance()->GetDIKeyState(DIK_I) & 0x80)
-	{
-		m_vTarget.z += 0.1f;
-		cout << "m_vTarget.z:" << m_vTarget.z << endl;
-	}
-	if (CInput::GetInstance()->GetDIKeyState(DIK_K) & 0x80)
-	{
-		m_vTarget.z -= 0.1f;
-		cout << "m_vTarget.z:" << m_vTarget.z << endl;
-	}
-}

@@ -57,7 +57,6 @@ private:
 	void FixMouse(void);
 	void MouseMove(void);
 	void TargetRenewal(void);
-	void SetTargetCam(void);
 
 
 };

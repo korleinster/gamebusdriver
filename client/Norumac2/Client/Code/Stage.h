@@ -16,6 +16,8 @@ public:
 public:
 	static CStage* Create(void);
 	
+public:
+	bool m_bNaviRender;
 
 public:
 	HRESULT	CreateObj(void);

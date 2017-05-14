@@ -21,7 +21,7 @@ private:
 	VTXTEX*			m_pVerTex;
 	CTerrainCol*	m_pTerrainCol;
 	float			m_fSeverTime;
-	PLAYER_STATE	m_ePlayerState;
+	MONSTER_STATE	m_eMonsterState;
 
 	// Scene meshes shader constant buffers
 	ID3D11Buffer*		m_pSceneVertexShaderCB;
@@ -40,10 +40,12 @@ public:
 
 public:
 	static CMonster* Create(void);
-	PLAYER_STATE GetAniState(void) { return m_ePlayerState; }
-	void SetAniState(PLAYER_STATE eState) { m_ePlayerState = eState; }
+	MONSTER_STATE GetAniState(void) { return m_eMonsterState; }
+	void SetAniState(MONSTER_STATE eState) { m_eMonsterState = eState; }
 
 private:
 	HRESULT	AddComponent(void);
+	void ChangeDir(void);
+	void SetCurrling(void);
 };
 

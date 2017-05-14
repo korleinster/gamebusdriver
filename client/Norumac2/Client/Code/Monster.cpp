@@ -19,6 +19,7 @@
 #include "RenderMgr.h"
 #include "ResourcesMgr.h"
 #include "AnimationMgr.h"
+#include "Player.h"
 
 #pragma pack(push,1)
 struct CB_VS_PER_OBJECT
@@ -46,7 +47,7 @@ CMonster::CMonster()
 
 
 	m_pTerrainCol = NULL;
-	m_ePlayerState = PLAYER_IDLE;
+	m_eMonsterState = MONSTER_IDLE;
 	m_bKey = false;
 	m_pSceneVertexShaderCB = NULL;
 	m_pScenePixelShaderCB = NULL;
@@ -72,7 +73,7 @@ HRESULT CMonster::Initialize(void)
 
 
 	m_pTerrainCol = NULL;
-	m_ePlayerState = PLAYER_IDLE;
+	m_eMonsterState = MONSTER_IDLE;
 	m_bKey = false;
 	m_pSceneVertexShaderCB = NULL;
 	m_pScenePixelShaderCB = NULL;
@@ -118,23 +119,20 @@ int CMonster::Update(void)
 
 	m_pInfo->m_vPos.x = m_pInfo->m_ServerInfo.pos.x;
 	m_pInfo->m_vPos.z = m_pInfo->m_ServerInfo.pos.y;
+	ChangeDir();
 	D3DXVec3TransformNormal(&m_pInfo->m_vDir, &g_vLook, &m_pInfo->m_matWorld);
-	if (m_ePlayerState != PLAYER_IDLE)
+
+
+	if (m_eMonsterState != MONSTER_IDLE)
 	{
-		//if (dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd == true) // 여기가 잘못됬다
-		if (m_bKey == false)
-			m_ePlayerState = PLAYER_IDLE;
+		if (dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd == true)
+			m_eMonsterState = MONSTER_IDLE;
 	}
 
+	//SetCurrling();
 
-	//cout <<"OtherPlayer pos: " << m_pInfo->m_vPos.x << "/" << m_pInfo->m_vPos.y << "/" << m_pInfo->m_vPos.z << endl;
-
-	//if (m_pInfo->m_ServerInfo.state.hp < 100) {	cout << "다른 플레이어" << m_pInfo->m_ServerInfo.id << "번의 체력:" << m_pInfo->m_ServerInfo.state.hp << endl; }
 
 	CObj::Update();
-
-
-
 
 	if (!m_bDeath)
 		return 0;
@@ -145,58 +143,58 @@ int CMonster::Update(void)
 
 void CMonster::Render(void)
 {
+	if (m_bCurred == false)
+	{
+		//ConstantBuffer cb;
+		//D3DXMatrixTranspose(&cb.matWorld, &m_pInfo->m_matWorld);
+		//D3DXMatrixTranspose(&cb.matView, &CCamera::GetInstance()->m_matView);
+		//D3DXMatrixTranspose(&cb.matProjection, &CCamera::GetInstance()->m_matProj);
+		//m_pGrapicDevice->m_pDeviceContext->UpdateSubresource(m_pBuffer->m_ConstantBuffer, 0, NULL, &cb, 0, 0);
 
-	//ConstantBuffer cb;
-	//D3DXMatrixTranspose(&cb.matWorld, &m_pInfo->m_matWorld);
-	//D3DXMatrixTranspose(&cb.matView, &CCamera::GetInstance()->m_matView);
-	//D3DXMatrixTranspose(&cb.matProjection, &CCamera::GetInstance()->m_matProj);
-	//m_pGrapicDevice->m_pDeviceContext->UpdateSubresource(m_pBuffer->m_ConstantBuffer, 0, NULL, &cb, 0, 0);
+		//m_pGrapicDevice->m_pDeviceContext->VSSetShader(m_pVertexShader->m_pVertexShader, NULL, 0);
+		//m_pGrapicDevice->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pBuffer->m_ConstantBuffer);
+		////////////////////
+		//m_pGrapicDevice->m_pDeviceContext->PSSetShader(m_pPixelShader->m_pPixelShader, NULL, 0);
+		//m_pGrapicDevice->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
+		//m_pGrapicDevice->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
 
-	//m_pGrapicDevice->m_pDeviceContext->VSSetShader(m_pVertexShader->m_pVertexShader, NULL, 0);
-	//m_pGrapicDevice->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pBuffer->m_ConstantBuffer);
-	////////////////////
-	//m_pGrapicDevice->m_pDeviceContext->PSSetShader(m_pPixelShader->m_pPixelShader, NULL, 0);
-	//m_pGrapicDevice->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
-	//m_pGrapicDevice->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
+		////m_pBuffer->Render();
+		//dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(m_ePlayerState);
 
-	////m_pBuffer->Render();
-	//dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(m_ePlayerState);
+		// Get the projection & view matrix from the camera class
+		D3DXMATRIX mView = *(CCamera::GetInstance()->GetViewMatrix());
+		D3DXMATRIX mProj = *(CCamera::GetInstance()->GetProjMatrix());
+		D3DXMATRIX mWorldViewProjection = m_pInfo->m_matWorld * mView * mProj;
 
-	// Get the projection & view matrix from the camera class
-	D3DXMATRIX mView = *(CCamera::GetInstance()->GetViewMatrix());
-	D3DXMATRIX mProj = *(CCamera::GetInstance()->GetProjMatrix());
-	D3DXMATRIX mWorldViewProjection = m_pInfo->m_matWorld * mView * mProj;
+		// Set the constant buffers
+		D3D11_MAPPED_SUBRESOURCE MappedResource;
+		FAILED_CHECK_RETURN(m_pGrapicDevice->m_pDeviceContext->Map(m_pSceneVertexShaderCB, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource), );
+		CB_VS_PER_OBJECT* pVSPerObject = (CB_VS_PER_OBJECT*)MappedResource.pData;
+		D3DXMatrixTranspose(&pVSPerObject->m_mWorldViewProjection, &mWorldViewProjection);
+		D3DXMatrixTranspose(&pVSPerObject->m_mWorld, &m_pInfo->m_matWorld);
+		m_pGrapicDevice->m_pDeviceContext->Unmap(m_pSceneVertexShaderCB, 0);
+		m_pGrapicDevice->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pSceneVertexShaderCB);
 
-	// Set the constant buffers
-	D3D11_MAPPED_SUBRESOURCE MappedResource;
-	FAILED_CHECK_RETURN(m_pGrapicDevice->m_pDeviceContext->Map(m_pSceneVertexShaderCB, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource), );
-	CB_VS_PER_OBJECT* pVSPerObject = (CB_VS_PER_OBJECT*)MappedResource.pData;
-	D3DXMatrixTranspose(&pVSPerObject->m_mWorldViewProjection, &mWorldViewProjection);
-	D3DXMatrixTranspose(&pVSPerObject->m_mWorld, &m_pInfo->m_matWorld);
-	m_pGrapicDevice->m_pDeviceContext->Unmap(m_pSceneVertexShaderCB, 0);
-	m_pGrapicDevice->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pSceneVertexShaderCB);
+		FAILED_CHECK_RETURN(m_pGrapicDevice->m_pDeviceContext->Map(m_pScenePixelShaderCB, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource), );
+		CB_PS_PER_OBJECT* pPSPerObject = (CB_PS_PER_OBJECT*)MappedResource.pData;
+		pPSPerObject->m_vEyePosition = CCamera::GetInstance()->m_vEye;
+		pPSPerObject->m_fSpecExp = 250.0f;
+		pPSPerObject->m_fSpecIntensity = 0.25f;
+		m_pGrapicDevice->m_pDeviceContext->Unmap(m_pScenePixelShaderCB, 0);
+		m_pGrapicDevice->m_pDeviceContext->PSSetConstantBuffers(0, 1, &m_pScenePixelShaderCB);
 
-	FAILED_CHECK_RETURN(m_pGrapicDevice->m_pDeviceContext->Map(m_pScenePixelShaderCB, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource), );
-	CB_PS_PER_OBJECT* pPSPerObject = (CB_PS_PER_OBJECT*)MappedResource.pData;
-	pPSPerObject->m_vEyePosition = CCamera::GetInstance()->m_vEye;
-	pPSPerObject->m_fSpecExp = 250.0f;
-	pPSPerObject->m_fSpecIntensity = 0.25f;
-	m_pGrapicDevice->m_pDeviceContext->Unmap(m_pScenePixelShaderCB, 0);
-	m_pGrapicDevice->m_pDeviceContext->PSSetConstantBuffers(0, 1, &m_pScenePixelShaderCB);
+		// Set the vertex layout
+		m_pGrapicDevice->m_pDeviceContext->IASetInputLayout(m_pVertexShader->m_pVertexLayout);
 
-	// Set the vertex layout
-	m_pGrapicDevice->m_pDeviceContext->IASetInputLayout(m_pVertexShader->m_pVertexLayout);
+		// Set the shaders
+		m_pGrapicDevice->m_pDeviceContext->VSSetShader(m_pVertexShader->m_pVertexShader, NULL, 0);
+		m_pGrapicDevice->m_pDeviceContext->PSSetShader(m_pPixelShader->m_pPixelShader, NULL, 0);
 
-	// Set the shaders
-	m_pGrapicDevice->m_pDeviceContext->VSSetShader(m_pVertexShader->m_pVertexShader, NULL, 0);
-	m_pGrapicDevice->m_pDeviceContext->PSSetShader(m_pPixelShader->m_pPixelShader, NULL, 0);
+		m_pGrapicDevice->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
+		m_pGrapicDevice->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
 
-	m_pGrapicDevice->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
-	m_pGrapicDevice->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
-
-	m_pBuffer->Render();
-
-	dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(m_ePlayerState);
+		dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(m_eMonsterState);
+	}
 }
 
 CMonster * CMonster::Create(void)
@@ -213,7 +211,7 @@ HRESULT CMonster::AddComponent(void)
 {
 	CComponent* pComponent = NULL;
 
-	vecAniName = *(CAnimationMgr::GetInstance()->GetAnimaiton(L"Player"));
+	vecAniName = *(CAnimationMgr::GetInstance()->GetAnimaiton(L"Slime"));
 	//vecName.push_back("Fall");
 	//vecName.push_back("Dead");
 	//vecName.push_back("Damage");
@@ -226,18 +224,15 @@ HRESULT CMonster::AddComponent(void)
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Transform", pComponent));
 
 
-	vector<string> vecName;
-	vecAniName.push_back("player_normalidle");
+
 	//DynamicMesh
-	//m_pBuffer = CDynamicMesh::Create("../Resource", vecAniName);//dynamic_cast<CDynamicMesh*>(pComponent);
-	//pComponent = m_pBuffer; //CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Player_IDLE");
-	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Player");
+	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Slime");
 	m_pBuffer = dynamic_cast<CDynamicMesh*>(pComponent);
 	NULL_CHECK_RETURN(m_pBuffer, E_FAIL);
 	//	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Mesh", pComponent));
 
 	//Texture
-	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Texture_Player");
+	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Texture_Slime");
 	m_pTexture = dynamic_cast<CTexture*>(pComponent);
 	NULL_CHECK_RETURN(m_pTexture, E_FAIL);
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Texture", pComponent));
@@ -251,4 +246,53 @@ HRESULT CMonster::AddComponent(void)
 	return S_OK;
 }
 
+void CMonster::ChangeDir(void)
+{
+	if (m_pInfo->m_ServerInfo.dir == KEYINPUT_UP)
+	{
+		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(135.f);
+	}
+	else if (m_pInfo->m_ServerInfo.dir == (KEYINPUT_UP | KEYINPUT_LEFT))
+	{
+		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(90.f);
+	}
+	else if (m_pInfo->m_ServerInfo.dir == (KEYINPUT_UP | KEYINPUT_RIGHT))
+	{
+		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(180.f);
+	}
+	else if (m_pInfo->m_ServerInfo.dir == KEYINPUT_DOWN)
+	{
+		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(315.f);
+	}
+	else if (m_pInfo->m_ServerInfo.dir == (KEYINPUT_DOWN | KEYINPUT_LEFT))
+	{
+		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(0.f);
+	}
+	else if (m_pInfo->m_ServerInfo.dir == (KEYINPUT_DOWN | KEYINPUT_RIGHT))
+	{
+		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(270.f);
+	}
+	else if (m_pInfo->m_ServerInfo.dir == KEYINPUT_LEFT)
+	{
+		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(45.f);
+	}
+	else if (m_pInfo->m_ServerInfo.dir == KEYINPUT_RIGHT)
+	{
+		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(225.f);
+	}
+
+
+}
+
+void CMonster::SetCurrling(void)
+{
+	auto player = CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin();
+
+	D3DXVECTOR3 vPlayerPos = (*player)->GetInfo()->m_vPos;
+
+	if (abs(m_pInfo->m_vPos.x - vPlayerPos.x) > 30.f && abs(m_pInfo->m_vPos.z - vPlayerPos.z) > 30.f)
+		m_bCurred = true;
+	else
+		m_bCurred = false;
+}
 

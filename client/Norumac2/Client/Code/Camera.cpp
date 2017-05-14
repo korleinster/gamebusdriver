@@ -51,7 +51,7 @@ HRESULT CCamera::Initialize(void)
 
 	m_fAngle = 0.f;
 
-	m_vTarget = D3DXVECTOR3(-10.f, 20.f, 10.f);
+	m_vTarget = D3DXVECTOR3(-6.f, 8.f, 6.f);
 	
 	return S_OK;
 }

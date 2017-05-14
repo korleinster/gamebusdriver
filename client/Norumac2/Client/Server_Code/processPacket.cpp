@@ -7,6 +7,7 @@
 #include "OtherPlayer.h"
 #include "SceneMgr.h"
 #include "Player.h"
+#include "Monster.h"
 
 void AsynchronousClientClass::processPacket(Packet* buf)
 {
@@ -24,16 +25,34 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			{
 				data->pos = p->pos;
 
-				for (auto iter : *CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer"))
+				if (p->id < 50)
 				{
-					if (iter->GetPacketData()->id == p->id) {
-						if (((COtherPlayer*)iter)->GetAniState() == PLAYER_IDLE) {
-							((COtherPlayer*)iter)->m_bKey = true;
-							((COtherPlayer*)iter)->SetAniState(PLAYER_MOVE);
+					for (auto iter : *CObjMgr::GetInstance()->Get_ObjList(L"Monster"))
+					{
+						if (iter->GetPacketData()->id == p->id) {
+							if (((CMonster*)iter)->GetAniState() == MONSTER_IDLE) {
+								((CMonster*)iter)->m_bKey = true;
+								((CMonster*)iter)->SetAniState(MONSTER_MOVE);
+							}
+							break;
 						}
-						break;
 					}
 				}
+
+				else
+				{
+					for (auto iter : *CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer"))
+					{
+						if (iter->GetPacketData()->id == p->id) {
+							if (((COtherPlayer*)iter)->GetAniState() == PLAYER_IDLE) {
+								((COtherPlayer*)iter)->m_bKey = true;
+								((COtherPlayer*)iter)->SetAniState(PLAYER_MOVE);
+							}
+							break;
+						}
+					}
+				}
+
 			}
 			else { break; }
 		}
@@ -93,14 +112,33 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			/// 만약 이 위치에 내 고유 id 가 들어있다면, 이미 키를 누른 시점에서 애니메이션을 재생했기 때문에, 그냥 if 문을 넘어간다.
 			if (m_player.id != p->attacking_id) {
 
-				for (auto iter : *CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")) {
-					if (iter->GetPacketData()->id == p->attacking_id) {
-						if ((reinterpret_cast<COtherPlayer*>(iter))->GetAniState() == PLAYER_IDLE)
-						{
-							(reinterpret_cast<COtherPlayer*>(iter))->m_bKey = true;
-							(reinterpret_cast<COtherPlayer*>(iter))->SetAniState(PLAYER_ATT1);
+				if (p->attacking_id < 50)
+				{
+					for (auto iter : *CObjMgr::GetInstance()->Get_ObjList(L"Monster"))
+					{
+						if (iter->GetPacketData()->id == p->attacking_id) {
+							if ((reinterpret_cast<CMonster*>(iter))->GetAniState() == MONSTER_IDLE)
+							{
+								(reinterpret_cast<CMonster*>(iter))->m_bKey = true;
+								(reinterpret_cast<CMonster*>(iter))->SetAniState(MONSTER_ATT);
+							}
+							break;
 						}
-						break;
+					}
+				}
+
+				else
+				{
+					for (auto iter : *CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer"))
+					{
+						if (iter->GetPacketData()->id == p->attacking_id) {
+							if ((reinterpret_cast<COtherPlayer*>(iter))->GetAniState() == PLAYER_IDLE)
+							{
+								(reinterpret_cast<COtherPlayer*>(iter))->m_bKey = true;
+								(reinterpret_cast<COtherPlayer*>(iter))->SetAniState(PLAYER_ATT1);
+							}
+							break;
+						}
 					}
 				}
 
@@ -127,17 +165,37 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 			if (0 >= p->hp)
 			{
-				list<CObj*>* ListObj = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer");
-				list<CObj*>::iterator iter = ListObj->begin();
-				list<CObj*>::iterator iter_end = ListObj->end();
-
-				for (; iter != iter_end; ++iter)
+				if (p->under_attack_id < 50)
 				{
-					if ((*iter)->GetPacketData()->id == p->under_attack_id)
+					list<CObj*>* ListObj = CObjMgr::GetInstance()->Get_ObjList(L"Monster");
+					list<CObj*>::iterator iter = ListObj->begin();
+					list<CObj*>::iterator iter_end = ListObj->end();
+
+					for (; iter != iter_end; ++iter)
 					{
-						CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
-						(*iter)->m_bDeath = true;
-						break;
+						if ((*iter)->GetPacketData()->id == p->under_attack_id)
+						{
+							CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
+							(*iter)->m_bDeath = true;
+							break;
+						}
+					}
+				}
+
+				else
+				{
+					list<CObj*>* ListObj = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer");
+					list<CObj*>::iterator iter = ListObj->begin();
+					list<CObj*>::iterator iter_end = ListObj->end();
+
+					for (; iter != iter_end; ++iter)
+					{
+						if ((*iter)->GetPacketData()->id == p->under_attack_id)
+						{
+							CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
+							(*iter)->m_bDeath = true;
+							break;
+						}
 					}
 				}
 			}
@@ -170,11 +228,23 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 			if (nullptr != data) { break; }
 			else {
-				CObj* pObj = COtherPlayer::Create();
-				pObj->SetPos(D3DXVECTOR3(m_player.pos.x, 1.f, m_player.pos.y));
-				pObj->SetPacketData(&p->playerData);
-				CObjMgr::GetInstance()->AddObject(L"OtherPlayer", pObj);
-				CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, pObj);
+
+				if(p->playerData.id < 50)
+				{ 
+					CObj* pObj = CMonster::Create();
+					pObj->SetPos(D3DXVECTOR3(m_player.pos.x, 1.f, m_player.pos.y));
+					pObj->SetPacketData(&p->playerData);
+					CObjMgr::GetInstance()->AddObject(L"Monster", pObj);
+					CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, pObj);
+				}
+				else
+				{
+					CObj* pObj = COtherPlayer::Create();
+					pObj->SetPos(D3DXVECTOR3(m_player.pos.x, 1.f, m_player.pos.y));
+					pObj->SetPacketData(&p->playerData);
+					CObjMgr::GetInstance()->AddObject(L"OtherPlayer", pObj);
+					CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, pObj);
+				}
 			}
 			break;
 		}
@@ -188,19 +258,40 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 				break;
 			}
-			
-			list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->begin();
-			list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->end();
 
-			for (; iter != iter_end; ++iter)
+			if (p->id < 50)
 			{
-				//NPC 혹은 다른플레이어 혹은 몬스터가 죽었을시
-				if ((*iter)->GetPacketData()->id == p->id)
+				list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"Monster")->begin();
+				list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"Monster")->end();
+
+				for (; iter != iter_end; ++iter)
 				{
-					CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
-					::Safe_Delete(*iter);
-					iter = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->erase(iter);
-					break;
+					//NPC 혹은 몬스터가 죽었을시
+					if ((*iter)->GetPacketData()->id == p->id)
+					{
+						CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
+						::Safe_Delete(*iter);
+						iter = CObjMgr::GetInstance()->Get_ObjList(L"Monster")->erase(iter);
+						break;
+					}
+				}
+			}
+			
+			else
+			{
+				list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->begin();
+				list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->end();
+
+				for (; iter != iter_end; ++iter)
+				{
+					//다른플레이어가 죽었을시
+					if ((*iter)->GetPacketData()->id == p->id)
+					{
+						CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
+						::Safe_Delete(*iter);
+						iter = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->erase(iter);
+						break;
+					}
 				}
 			}
 			break;

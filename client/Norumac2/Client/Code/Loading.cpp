@@ -79,6 +79,12 @@ void CLoading::StageLoading(void)
 
 	hr = CResourcesMgr::GetInstance()->AddTexture(
 		RESOURCE_STAGE
+		, L"Texture_Slime"
+		, L"../Resource/MeshImage/slime.png");
+	FAILED_CHECK_RETURN(hr, );
+
+	hr = CResourcesMgr::GetInstance()->AddTexture(
+		RESOURCE_STAGE
 		, L"Texture_FaceUI"
 		, L"../Resource/Uiimage/profile.png");
 	FAILED_CHECK_RETURN(hr, );

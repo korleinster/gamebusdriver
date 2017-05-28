@@ -15,7 +15,7 @@
 #define OP_SERVER_SEND 2
 
 // AI index
-#define MAX_AI_NUM 50
+#define MAX_AI_NUM 20
 
 // process protocol
 enum PacketProtocolType {

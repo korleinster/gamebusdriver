@@ -62,29 +62,79 @@ void boostAsioServer::start_io_service()
 
 void boostAsioServer::g_client_init() {
 
-	g_clients.reserve(MAX_AI_NUM + 1000);
+	LuaScript script("script/AI_default_status.lua");
 
-	for (auto i = 0; i < MAX_AI_NUM; ++i) {
-		g_clients.emplace_back(new player_session(boost::asio::ip::tcp::socket(g_io_service), ++m_playerIndex));
-		g_clients[i]->get_player_data()->id = m_playerIndex;
-		g_clients[i]->get_player_data()->is_ai = true;
-		g_clients[i]->get_player_data()->dir = KEYINPUT_UP;
-		g_clients[i]->get_player_data()->pos.x = (150 + i * 2);
-		g_clients[i]->get_player_data()->pos.y = (400 + i * 2);
-		/*g_clients[i]->get_player_data()->pos.x = rand() % 500;
-		g_clients[i]->get_player_data()->pos.y = rand() % 500;*/
-		g_clients[i]->get_player_data()->state.maxhp = 100;
-		g_clients[i]->get_player_data()->state.hp = g_clients[i]->get_player_data()->state.maxhp;
+	int aiDiffers = script.get<int>("ai_differs");
+	int cntAi;
 
-		g_clients[i]->get_sub_data()->critical = 0;	// const
-		g_clients[i]->get_sub_data()->def = 1;
-		g_clients[i]->get_sub_data()->str = 5;
-		g_clients[i]->get_sub_data()->agi = 2;
-		g_clients[i]->get_sub_data()->intel = 1;
-		g_clients[i]->get_sub_data()->health = 3;
+	int cntSlime = script.get<int>("ai_status_slime.howMany");
+	int cntGoblin = script.get<int>("ai_status_goblin.howMany");
+
+	cntAi = cntSlime + cntGoblin;
+
+	g_clients.reserve(cntAi + 1000);
+	srand((unsigned)time(NULL));
+
+	for (int re = 0; re < aiDiffers; ++re)
+	{
+		// 슬라임 AI
+		for (int i = 0; i < cntSlime; ++i)
+		{
+			g_clients.emplace_back(new player_session(boost::asio::ip::tcp::socket(g_io_service), ++m_playerIndex));
+			g_clients[i]->get_player_data()->id = m_playerIndex;
+			g_clients[i]->get_player_data()->is_ai = true;
+			g_clients[i]->get_player_data()->dir = KEYINPUT_UP;
+
+			Position pos;
+			pos.x = script.get<float>("ai_status_slime.pos.x");
+			pos.y = script.get<float>("ai_status_slime.pos.y");
+			int radius = script.get<int>("ai_status_slime.radius");
+
+			g_clients[i]->get_player_data()->pos.x = pos.x + ((rand() % radius) - (radius / 2.0f));
+			g_clients[i]->get_player_data()->pos.y = pos.y + ((rand() % radius) - (radius / 2.0f));
+
+			g_clients[i]->get_player_data()->state.maxhp = script.get<int>("ai_status_slime.status.maxHp");
+			g_clients[i]->get_player_data()->state.hp = g_clients[i]->get_player_data()->state.maxhp;
+
+			g_clients[i]->get_sub_data()->critical = script.get<int>("ai_status_slime.subStatus.crit");;	// const
+			g_clients[i]->get_sub_data()->def = script.get<int>("ai_status_slime.subStatus.def");;
+			g_clients[i]->get_sub_data()->str = script.get<int>("ai_status_slime.subStatus.str");;
+			g_clients[i]->get_sub_data()->agi = script.get<int>("ai_status_slime.subStatus.agi");;
+			g_clients[i]->get_sub_data()->intel = script.get<int>("ai_status_slime.subStatus.intel");;
+			g_clients[i]->get_sub_data()->health = script.get<int>("ai_status_slime.subStatus.health");;
+		}
+
+		//// 고블린 AI
+		for (int i = cntSlime; i < cntGoblin; ++i)
+		{
+			g_clients.emplace_back(new player_session(boost::asio::ip::tcp::socket(g_io_service), ++m_playerIndex));
+			g_clients[i]->get_player_data()->id = m_playerIndex;
+			g_clients[i]->get_player_data()->is_ai = true;
+			g_clients[i]->get_player_data()->dir = KEYINPUT_UP;
+
+			Position pos;
+			pos.x = script.get<float>("ai_status_goblin.posX");
+			pos.y = script.get<float>("ai_status_goblin.posY");
+			int radius = script.get<int>("ai_status_goblin.radius");
+
+			g_clients[i]->get_player_data()->pos.x = pos.x + ((rand() % radius) - (radius / 2.0f));
+			g_clients[i]->get_player_data()->pos.y = pos.y + ((rand() % radius) - (radius / 2.0f));
+
+			g_clients[i]->get_player_data()->state.maxhp = script.get<int>("ai_status_goblin.status.maxHp");
+			g_clients[i]->get_player_data()->state.hp = g_clients[i]->get_player_data()->state.maxhp;
+
+			g_clients[i]->get_sub_data()->critical = script.get<int>("ai_status_goblin.subStatus.crit");;	// const
+			g_clients[i]->get_sub_data()->def = script.get<int>("ai_status_goblin.subStatus.def");;
+			g_clients[i]->get_sub_data()->str = script.get<int>("ai_status_goblin.subStatus.str");;
+			g_clients[i]->get_sub_data()->agi = script.get<int>("ai_status_goblin.subStatus.agi");;
+			g_clients[i]->get_sub_data()->intel = script.get<int>("ai_status_goblin.subStatus.intel");;
+			g_clients[i]->get_sub_data()->health = script.get<int>("ai_status_goblin.subStatus.health");;
+		}
 	}
 
-	cout << "\nAI bots created number of " << MAX_AI_NUM << ", Compelete\n";
+	cout << "\nAI bots created number of " << cntAi << ", Compelete\n";
+
+	//m_scripts.initAis(m_playerIndex);
 }
 
 void boostAsioServer::acceptThread()

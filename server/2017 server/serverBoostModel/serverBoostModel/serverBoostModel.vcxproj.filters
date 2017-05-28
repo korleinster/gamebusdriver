@@ -16,9 +16,6 @@
     <Filter Include="소스 파일\00.boostAsioServer">
       <UniqueIdentifier>{6a03d804-c83c-4bad-bd30-1c85f64e8048}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\99. Default">
-      <UniqueIdentifier>{991f1ea8-056a-4e55-9344-4852b87ab2cf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\01.player_session">
       <UniqueIdentifier>{a79e27bf-7011-4e8b-b64c-efc03bcbc316}</UniqueIdentifier>
     </Filter>
@@ -27,6 +24,15 @@
     </Filter>
     <Filter Include="소스 파일\03.Timer class">
       <UniqueIdentifier>{e0b18f2e-cd24-408f-9fb2-cfdba576a237}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\04.Script">
+      <UniqueIdentifier>{c498ab3e-b6d2-45e5-8abb-a11addbfbe66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\99. Default">
+      <UniqueIdentifier>{991f1ea8-056a-4e55-9344-4852b87ab2cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\04.Script\Reading Script Class">
+      <UniqueIdentifier>{ff7932db-4a1f-4983-9557-034dc4f3087a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -48,6 +54,9 @@
     <ClInclude Include="player_session.h">
       <Filter>소스 파일\01.player_session</Filter>
     </ClInclude>
+    <ClInclude Include="readLUAScript.h">
+      <Filter>소스 파일\04.Script\Reading Script Class</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="boostAsioServer.cpp">
@@ -68,8 +77,14 @@
     <ClCompile Include="player_session.cpp">
       <Filter>소스 파일\01.player_session</Filter>
     </ClCompile>
+    <ClCompile Include="readLUAScript.cpp">
+      <Filter>소스 파일\04.Script\Reading Script Class</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="script\AI_default_status.lua">
+      <Filter>소스 파일\04.Script</Filter>
+    </None>
   </ItemGroup>
 </Project>

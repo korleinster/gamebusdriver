@@ -19,6 +19,14 @@ using namespace std;
 // boost asio 클라와 연동되는 protocol.h
 #include "protocol.h"
 
+// LUA script 관련 헤더
+extern "C" {
+#include "lualib.h"
+#include "lauxlib.h"
+#include "lua.h"
+}
+#include "readLUAScript.h"
+
 // boost asio 관련 헤더
 #include <memory>
 #include <boost\asio.hpp>

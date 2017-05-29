@@ -142,12 +142,6 @@
     <Filter Include="04.Manager\08.AniMgr">
       <UniqueIdentifier>{284f11ed-edf2-46ac-a400-8bf67915b6c3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="97.Resources\04.FontMgr">
-      <UniqueIdentifier>{01546f85-ae6b-4077-9373-01b41f813d7e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="97.Resources\04.FontMgr\Font">
-      <UniqueIdentifier>{402621a1-56cb-4f86-812c-20c135a88881}</UniqueIdentifier>
-    </Filter>
     <Filter Include="95.System\99.PasingDevice">
       <UniqueIdentifier>{5cd805a9-66fe-4a6b-865b-9c6eec25f9fe}</UniqueIdentifier>
     </Filter>
@@ -162,9 +156,6 @@
     </Filter>
     <Filter Include="04.Manager\10.TargetMgr\MultiRenderTarget\RenderTaget">
       <UniqueIdentifier>{d3a9a414-72d3-4810-92c1-68607e9a64dd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="95.System\02.Time\01.Device">
-      <UniqueIdentifier>{dd34141e-2394-445e-8a57-8cda25588b51}</UniqueIdentifier>
     </Filter>
     <Filter Include="96.Utility\03.Optimization">
       <UniqueIdentifier>{8bf12b9c-6fbc-49c9-8399-16ffcd21a722}</UniqueIdentifier>
@@ -210,6 +201,15 @@
     </Filter>
     <Filter Include="97.Resources\01.Buffer\6.LineCol">
       <UniqueIdentifier>{06dade88-9f62-417c-9172-55f30c0510e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95.System\01.Device">
+      <UniqueIdentifier>{dd34141e-2394-445e-8a57-8cda25588b51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95.System\05.FontMgr">
+      <UniqueIdentifier>{01546f85-ae6b-4077-9373-01b41f813d7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95.System\05.FontMgr\Font">
+      <UniqueIdentifier>{402621a1-56cb-4f86-812c-20c135a88881}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -286,7 +286,7 @@
       <Filter>96.Utility\01.Collision\TerrainCol</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\Device.h">
-      <Filter>95.System\02.Time\01.Device</Filter>
+      <Filter>95.System\01.Device</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\TimeMgr.h">
       <Filter>95.System\02.Time</Filter>
@@ -361,10 +361,10 @@
       <Filter>01.Scene\03.Loading</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\FontMgr.h">
-      <Filter>97.Resources\04.FontMgr</Filter>
+      <Filter>95.System\05.FontMgr</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\Font.h">
-      <Filter>97.Resources\04.FontMgr\Font</Filter>
+      <Filter>95.System\05.FontMgr\Font</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\LogoBack.h">
       <Filter>02.Object\99.LogoBack</Filter>
@@ -480,7 +480,7 @@
       <Filter>96.Utility\01.Collision\TerrainCol</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\Device.cpp">
-      <Filter>95.System\02.Time\01.Device</Filter>
+      <Filter>95.System\01.Device</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\TimeMgr.cpp">
       <Filter>95.System\02.Time</Filter>
@@ -561,10 +561,10 @@
       <Filter>01.Scene\03.Loading</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\FontMgr.cpp">
-      <Filter>97.Resources\04.FontMgr</Filter>
+      <Filter>95.System\05.FontMgr</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\Font.cpp">
-      <Filter>97.Resources\04.FontMgr\Font</Filter>
+      <Filter>95.System\05.FontMgr\Font</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\LogoBack.cpp">
       <Filter>02.Object\99.LogoBack</Filter>

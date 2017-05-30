@@ -12,6 +12,8 @@
 #include "Camera.h"
 #include "Device.h"
 #include "RenderMgr.h"
+#include "Font.h"
+#include "FontMgr.h"
 
 CBaseUI::CBaseUI()
 {
@@ -34,6 +36,15 @@ HRESULT CBaseUI::Initialize(void)
 
 	//
 	CRenderMgr::GetInstance()->AddRenderGroup(TYPE_UI, this);
+
+	m_pFont->m_eType = FONT_TYPE_OUTLINE;
+	m_pFont->m_wstrText = L"한글아 나오니?";
+	m_pFont->m_fSize = 10.f;
+	m_pFont->m_nColor = 0xFF008AFF;
+	m_pFont->m_nFlag = FW1_CENTER | FW1_VCENTER | FW1_RESTORESTATE;
+	m_pFont->m_vPos = D3DXVECTOR2(m_fX, m_fY);
+	m_pFont->m_fOutlineSize = 7.f;
+	m_pFont->m_nOutlineColor = 0xFFFFFFFF;
 
 	return S_OK;
 }
@@ -80,6 +91,7 @@ void CBaseUI::Render()
 	m_pGrapicDevice->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
 
 	m_pBuffer->Render();
+	m_pFont->Render();
 }
 
 CBaseUI * CBaseUI::Create(void)
@@ -116,6 +128,9 @@ HRESULT CBaseUI::AddComponent(void)
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"VS_Shader", pComponent));
 	pComponent = m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"PS");
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"PS_Shader", pComponent));
+
+
+	m_pFont = CFontMgr::GetInstance()->CloneFont(L"Font_Star");
 
 	return S_OK;
 }

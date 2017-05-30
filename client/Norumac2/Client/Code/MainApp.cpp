@@ -28,6 +28,7 @@
 #include "Scene.h"
 #include "Logo.h"
 #include "Stage.h"
+#include "FontMgr.h"
 
 
 CMainApp::CMainApp()
@@ -259,6 +260,8 @@ HRESULT CMainApp::Initialize(void)
 		return E_FAIL;
 	}
 
+	hr = CFontMgr::GetInstance()->AddFont(L"../Resource/Font/Ko_Star.ttf", L"Font_Star", L"KoStar");
+
 
 	CScene* pScene = NULL;
 
@@ -314,4 +317,5 @@ void CMainApp::Release(void)
 	CResourcesMgr::GetInstance()->DestroyInstance();
 	CAnimationMgr::GetInstance()->DestroyInstance();
 	CNaviMgr::GetInstance()->DestroyInstance();
+	CFontMgr::GetInstance()->DestroyInstance();
 }

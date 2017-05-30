@@ -19,7 +19,7 @@ HRESULT CFontMgr::AddFont(const LPCWSTR& strFontPath, const wstring& strFontKey,
 {
 	CFont*		pFont = FindFont(strFontKey);
 
-	if (pFont == NULL)
+	if (pFont != NULL)
 		return E_FAIL;
 
 	HRESULT hr = AddFontResourceEx(strFontPath, FR_PRIVATE, NULL);

@@ -413,7 +413,5 @@ void CDynamicMesh::ResetPlayTimer()
 
 CResources * CDynamicMesh::CloneResource() // 문제의 포인트
 {
-
-
 	return new CDynamicMesh(*this);
 }

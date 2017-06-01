@@ -30,6 +30,8 @@ HRESULT CHpBar::Initialize(void)
 
 	m_fX = 174.f;
 	m_fY = 24.f;
+	m_fOriginX = m_fX;
+	m_fOriginY = m_fY;
 	m_fSizeX = 102.5f;
 	m_fSizeY = 10.f;
 
@@ -41,11 +43,6 @@ HRESULT CHpBar::Initialize(void)
 
 int CHpBar::Update(void)
 {
-
-	auto player = CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin();
-
-	float fHp = (*player)->GetPacketData()->state.hp / 100.f;
-
 	D3DXMatrixOrthoLH(&m_matProj, WINCX, WINCY, 0.f, 1.f);
 
 	D3DXMatrixIdentity(&m_matView);
@@ -58,8 +55,8 @@ int CHpBar::Update(void)
 	m_matView._42 = -m_fY + (WINCY >> 1);
 
 
-	m_fSizeX = 102.5f * fHp;
-	m_fX = 174.f - (102.5f * (1.f - fHp));
+	UpdateBufferToHp();
+
 
 	CObj::Update();
 
@@ -91,6 +88,8 @@ void CHpBar::Render()
 	m_pBuffer->Render();
 }
 
+
+
 CHpBar * CHpBar::Create(void)
 {
 	CHpBar* pUI = new CHpBar;
@@ -111,7 +110,7 @@ HRESULT CHpBar::AddComponent(void)
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Transform", pComponent));
 
-	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Buffer_RcUI");
+	pComponent = CRcTex::Create();
 	m_pBuffer = dynamic_cast<CVIBuffer*>(pComponent);
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	//m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Buffer", pComponent));
@@ -127,5 +126,24 @@ HRESULT CHpBar::AddComponent(void)
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"PS_Shader", pComponent));
 
 	return S_OK;
+}
+
+void CHpBar::UpdateBufferToHp(void)
+{
+	auto player = CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin();
+	float fHp = 1.f - (*player)->GetPacketData()->state.hp / 100.f;
+
+	m_fX = m_fOriginX;
+	m_fX += fHp * m_fSizeY * 2;
+
+	VTXTEX vtx[] =
+	{
+		{ D3DXVECTOR3(-1.f, 1.f, 0.f),D3DXVECTOR3(0.f, 1.f, 0.f) , D3DXVECTOR2(0.f, 0.f) },
+		{ D3DXVECTOR3(1.f - (fHp * 2.f), 1.f, 0.f) , D3DXVECTOR3(0.f, 1.f, 0.f), D3DXVECTOR2(1.f - fHp, 0.f) },
+		{ D3DXVECTOR3(1.f - (fHp * 2.f), -1.f, 0.f), D3DXVECTOR3(0.f, 1.f, 0.f), D3DXVECTOR2(1.f - fHp, 1.f) },
+		{ D3DXVECTOR3(-1.f, -1.f, 0.f), D3DXVECTOR3(0.f, 1.f, 0.f), D3DXVECTOR2(0.f, 1.f) }
+	};
+
+	CDevice::GetInstance()->m_pDeviceContext->UpdateSubresource(this->m_pBuffer->m_VertexBuffer, 0, NULL, vtx, 0, 0);
 }
 

@@ -20,6 +20,7 @@ public:
 public:
 	float			m_fX, m_fY;
 	float			m_fSizeX, m_fSizeY;
+	float			m_fOriginX, m_fOriginY;
 	D3DXMATRIX		m_matView, m_matProj;
 	
 public:

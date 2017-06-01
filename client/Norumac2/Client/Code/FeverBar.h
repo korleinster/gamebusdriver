@@ -12,6 +12,7 @@ public:
 	virtual HRESULT Initialize(void);
 	virtual int Update(void);
 	virtual void Render(void);
+	void UpdateBufferToFever(void);
 
 public:
 	virtual HRESULT AddComponent(void);

@@ -181,6 +181,7 @@
     <ClInclude Include="..\Code\Collision.h" />
     <ClInclude Include="..\Code\Component.h" />
     <ClInclude Include="..\Code\CubeCol.h" />
+    <ClInclude Include="..\Code\DamageFont.h" />
     <ClInclude Include="..\Code\Device.h" />
     <ClInclude Include="..\Code\DynamicMesh.h" />
     <ClInclude Include="..\Code\FaceUI.h" />
@@ -253,6 +254,7 @@
     <ClCompile Include="..\Code\Collision.cpp" />
     <ClCompile Include="..\Code\Component.cpp" />
     <ClCompile Include="..\Code\CubeCol.cpp" />
+    <ClCompile Include="..\Code\DamageFont.cpp" />
     <ClCompile Include="..\Code\Device.cpp" />
     <ClCompile Include="..\Code\DynamicMesh.cpp" />
     <ClCompile Include="..\Code\FaceUI.cpp" />

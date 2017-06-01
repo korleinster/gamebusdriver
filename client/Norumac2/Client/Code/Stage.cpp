@@ -68,7 +68,9 @@ int CStage::Update(void)
 void CStage::Render(void)
 {
 	float fTime = CTimeMgr::GetInstance()->GetTime();
-	CRenderMgr::GetInstance()->Render(fTime);
+
+	if(CSceneMgr::GetInstance()->GetScene() == SCENE_STAGE)
+		CRenderMgr::GetInstance()->Render(fTime);
 
 	if(m_bNaviRender)
 		CNaviMgr::GetInstance()->Render();

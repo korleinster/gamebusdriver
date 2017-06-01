@@ -38,13 +38,13 @@ HRESULT CBaseUI::Initialize(void)
 	CRenderMgr::GetInstance()->AddRenderGroup(TYPE_UI, this);
 
 	m_pFont->m_eType = FONT_TYPE_OUTLINE;
-	m_pFont->m_wstrText = L"한글아 나오니?";
-	m_pFont->m_fSize = 10.f;
+	m_pFont->m_wstrText = L"와 한글이다";
+	m_pFont->m_fSize = 20.f;
 	m_pFont->m_nColor = 0xFF008AFF;
 	m_pFont->m_nFlag = FW1_CENTER | FW1_VCENTER | FW1_RESTORESTATE;
-	m_pFont->m_vPos = D3DXVECTOR2(m_fX, m_fY);
-	m_pFont->m_fOutlineSize = 7.f;
-	m_pFont->m_nOutlineColor = 0xFFFFFFFF;
+	m_pFont->m_vPos = D3DXVECTOR2(m_fX, m_fY + 150);
+	m_pFont->m_fOutlineSize = 1.f;
+	m_pFont->m_nOutlineColor = 0xFF000000 /*0xFFFFFFFF*/;
 
 	return S_OK;
 }

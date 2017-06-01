@@ -41,11 +41,6 @@ HRESULT CFeverBar::Initialize(void)
 
 int CFeverBar::Update(void)
 {
-
-	auto player = CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin();
-
-	float fFever = (*player)->GetPacketData()->state.gauge / 400.f;
-
 	D3DXMatrixOrthoLH(&m_matProj, WINCX, WINCY, 0.f, 1.f);
 
 	D3DXMatrixIdentity(&m_matView);
@@ -57,10 +52,9 @@ int CFeverBar::Update(void)
 	m_matView._41 = m_fX - (WINCX >> 1);
 	m_matView._42 = -m_fY + (WINCY >> 1);
 
-	m_fSizeX = 102.5f * fFever;
-	m_fX = 174.f - (102.5f * (1.f - fFever));
-
 	CObj::Update();
+
+	UpdateBufferToFever();
 
 
 	return 0;
@@ -110,7 +104,7 @@ HRESULT CFeverBar::AddComponent(void)
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Transform", pComponent));
 
-	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Buffer_RcUI");
+	pComponent = CRcTex::Create(); /*CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Buffer_RcUI")*/;
 	m_pBuffer = dynamic_cast<CVIBuffer*>(pComponent);
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	//m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Buffer", pComponent));
@@ -126,5 +120,24 @@ HRESULT CFeverBar::AddComponent(void)
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"PS_Shader", pComponent));
 
 	return S_OK;
+}
+
+void CFeverBar::UpdateBufferToFever(void)
+{
+	auto player = CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin();
+	float fFever = 1.f - (*player)->GetPacketData()->state.gauge / 400.f;
+
+	m_fX = m_fOriginX;
+	m_fX += fFever * m_fSizeY * 2;
+
+	VTXTEX vtx[] =
+	{
+		{ D3DXVECTOR3(-1.f, 1.f, 0.f),D3DXVECTOR3(0.f, 1.f, 0.f) , D3DXVECTOR2(0.f, 0.f) },
+		{ D3DXVECTOR3(1.f - (fFever * 2.f), 1.f, 0.f) , D3DXVECTOR3(0.f, 1.f, 0.f), D3DXVECTOR2(1.f - fFever, 0.f) },
+		{ D3DXVECTOR3(1.f - (fFever * 2.f), -1.f, 0.f), D3DXVECTOR3(0.f, 1.f, 0.f), D3DXVECTOR2(1.f - fFever, 1.f) },
+		{ D3DXVECTOR3(-1.f, -1.f, 0.f), D3DXVECTOR3(0.f, 1.f, 0.f), D3DXVECTOR2(0.f, 1.f) }
+	};
+
+	CDevice::GetInstance()->m_pDeviceContext->UpdateSubresource(this->m_pBuffer->m_VertexBuffer, 0, NULL, vtx, 0, 0);
 }
 

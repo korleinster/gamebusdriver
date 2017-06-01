@@ -15,6 +15,8 @@ CUI::CUI()
 	m_pTexture = NULL;
 	m_fX = 0.f;
 	m_fY = 0.f;
+	m_fOriginX = 0.f;
+	m_fOriginY = 0.f;
 	m_fSizeX = 0.f;
 	m_fSizeY=0.f;
 }

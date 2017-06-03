@@ -20,7 +20,12 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		
 		if (CSceneMgr::GetInstance()->GetScene() != SCENE_LOGO)
 		{
-			player_data *data = CObjMgr::GetInstance()->Get_PlayerServerData(p->id);
+			player_data *data = NULL;
+
+			if (p->id > MAX_AI_NUM)
+				data = CObjMgr::GetInstance()->Get_PlayerServerData(p->id);
+			else
+				data = CObjMgr::GetInstance()->Get_MonsterServerData(p->id);
 
 			if (nullptr != data)
 			{
@@ -63,7 +68,12 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		sc_dir *p = reinterpret_cast<sc_dir*>(buf);
 		if (CSceneMgr::GetInstance()->GetScene() != SCENE_LOGO)
 		{
-			player_data *data = CObjMgr::GetInstance()->Get_PlayerServerData(p->id);
+			player_data *data = nullptr;
+			if (p->id > MAX_AI_NUM)
+				data = CObjMgr::GetInstance()->Get_PlayerServerData(p->id);
+			else
+				data = CObjMgr::GetInstance()->Get_MonsterServerData(p->id);
+
 			if (nullptr != data) { data->dir = p->dir; }
 			else { break; }
 		}

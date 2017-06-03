@@ -2,6 +2,7 @@
 #include "ObjMgr.h"
 #include "Obj.h"
 #include "OtherPlayer.h"
+#include "Monster.h"
 
 IMPLEMENT_SINGLETON(CObjMgr)
 
@@ -100,6 +101,24 @@ player_data*  CObjMgr::Get_PlayerServerData(UINT uID)
 
 		if (uCompareId == uID)
 			return ((COtherPlayer*)ptr)->GetPacketData();
+	}
+
+	return NULL;
+}
+
+player_data*  CObjMgr::Get_MonsterServerData(UINT uID)
+{
+	map<wstring, list<CObj*>>::iterator iter = m_mapObj.find(L"Monster");
+
+	if (iter == m_mapObj.end())
+		return NULL;
+
+	for (auto ptr : iter->second)
+	{
+		UINT uCompareId = ((CMonster*)ptr)->GetPacketData()->id;
+
+		if (uCompareId == uID)
+			return ((CMonster*)ptr)->GetPacketData();
 	}
 
 	return NULL;

@@ -15,6 +15,7 @@ using namespace std;
 #include <unordered_set>
 #include <mutex>
 #include <queue>
+#include <string>
 
 // boost asio 클라와 연동되는 protocol.h
 #include "protocol.h"

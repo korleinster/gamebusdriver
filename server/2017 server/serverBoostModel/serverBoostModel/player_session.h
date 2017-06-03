@@ -2,8 +2,10 @@
 
 using boost::asio::ip::tcp;
 
-#define VIEW_RANGE 10
+#define VIEW_RANGE	10
+#define RANGE_CHECK_AI_ATT	5
 #define DISTANCE_TRIANGLE(x , y, m_x, m_y) ((((x) - (m_x)) * ((x) - (m_x))) + ((((y) - (m_y)) * ((y) - (m_y)))))
+#define SQUARED(x) ((x) * (x))
 
 enum player_state {
 	mov,
@@ -63,12 +65,19 @@ public:
 	void refresh_view_list();
 
 	bool is_in_view_range(unsigned int id);
+	bool is_in_att_range(unsigned int id);
 	inline unordered_set<unsigned int>* get_view_list() { return &m_view_list; }
 
 	void send_packet(Packet *packet);
 	bool check_login();
 
+	// ai 전용 함수
+	unsigned int ai_rand_mov();
+
+	// ai 활용 용도 변수
 	unsigned int m_target_id{ 0 };
+	bool ai_is_rand_mov{ false };
+	float ai_mov_speed{ 1 };
 private:
 	// Function
 	void m_recv_packet();

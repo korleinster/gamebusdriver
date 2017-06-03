@@ -16,7 +16,8 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 	{
 	case CHANGED_POSITION: {
 		sc_move *p = reinterpret_cast<sc_move*>(buf);
-
+		cout << "moved ID : " << p->id << ", position " << p->pos.x << ", " << p->pos.y << endl;;
+		
 		if (CSceneMgr::GetInstance()->GetScene() != SCENE_LOGO)
 		{
 			player_data *data = CObjMgr::GetInstance()->Get_PlayerServerData(p->id);
@@ -25,7 +26,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			{
 				data->pos = p->pos;
 
-				if (p->id < 50)
+				if (p->id < MAX_AI_NUM)
 				{
 					for (auto iter : *CObjMgr::GetInstance()->Get_ObjList(L"Monster"))
 					{
@@ -60,7 +61,6 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 	}
 	case CHANGED_DIRECTION: {
 		sc_dir *p = reinterpret_cast<sc_dir*>(buf);
-
 		if (CSceneMgr::GetInstance()->GetScene() != SCENE_LOGO)
 		{
 			player_data *data = CObjMgr::GetInstance()->Get_PlayerServerData(p->id);
@@ -72,7 +72,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 	case CHANGED_FEVER: {
 		sc_fever *p = reinterpret_cast<sc_fever*>(buf);
-		cout << "내 Fever Gauge 현재 양 = " << p->gauge << "\n";
+		//cout << "내 Fever Gauge 현재 양 = " << p->gauge << "\n";
 		m_player.state.gauge = p->gauge;
 		(*(CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin()))->SetPacketFever(&p->gauge);
 
@@ -112,7 +112,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			/// 만약 이 위치에 내 고유 id 가 들어있다면, 이미 키를 누른 시점에서 애니메이션을 재생했기 때문에, 그냥 if 문을 넘어간다.
 			if (m_player.id != p->attacking_id) {
 
-				if (p->attacking_id < 50)
+				if (p->attacking_id < MAX_AI_NUM)
 				{
 					for (auto iter : *CObjMgr::GetInstance()->Get_ObjList(L"Monster"))
 					{
@@ -165,7 +165,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 			if (0 >= p->hp)
 			{
-				if (p->under_attack_id < 50)
+				if (p->under_attack_id < MAX_AI_NUM)
 				{
 					list<CObj*>* ListObj = CObjMgr::GetInstance()->Get_ObjList(L"Monster");
 					list<CObj*>::iterator iter = ListObj->begin();
@@ -223,13 +223,14 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		case INIT_OTHER_CLIENT: {
 			//다른플레이어 or NPC or 몬스터 최초갱신 혹은 부활
 			sc_other_init_info *p = reinterpret_cast<sc_other_init_info *>(buf);
+			cout << "init other ID : " << p->playerData.id << endl;
 
 			player_data *data = CObjMgr::GetInstance()->Get_PlayerServerData(p->playerData.id);
 
 			if (nullptr != data) { break; }
 			else {
 
-				if(p->playerData.id < 50)
+				if(p->playerData.id < MAX_AI_NUM)
 				{ 
 					CObj* pObj = CMonster::Create();
 					pObj->SetPos(D3DXVECTOR3(m_player.pos.x, 1.f, m_player.pos.y));
@@ -250,6 +251,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		}
 		case PLAYER_DISCONNECTED: {
 			sc_disconnect *p = reinterpret_cast<sc_disconnect*>(buf);
+			cout << "disconneced ID : " << p->id << endl;
 
 			if (p->id == (*CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin())->GetPacketData()->id) {
 				// 플레이어가 죽었을시
@@ -259,7 +261,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 				break;
 			}
 
-			if (p->id < 50)
+			if (p->id < MAX_AI_NUM)
 			{
 				list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"Monster")->begin();
 				list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"Monster")->end();

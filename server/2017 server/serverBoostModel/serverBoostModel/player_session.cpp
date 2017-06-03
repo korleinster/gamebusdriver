@@ -45,6 +45,82 @@ bool player_session::check_login() {
 	return false;
 }
 
+unsigned int player_session::ai_rand_mov()
+{
+	char orgin_dir = m_player_data.dir;
+	// 무작위 방향 8 개 중 정하기
+	srand((unsigned)time(NULL));
+	m_player_data.dir = 0;
+	bool tmp = false;
+	for (int i = 0; i < 4; ++i) {
+		if (true == tmp) { tmp = false; continue; }
+		if (rand() & 1) {
+			switch (i) {
+			case 0: tmp = true; m_player_data.dir |= KEYINPUT_RIGHT; break;
+			case 1: tmp = false; m_player_data.dir |= KEYINPUT_LEFT; break;
+			case 2: tmp = true; m_player_data.dir |= KEYINPUT_UP; break;
+			case 3: tmp = false; m_player_data.dir |= KEYINPUT_DOWN; break;
+			}
+		}
+	}
+
+	// 해당 방향으로 움직이기 - 못가는 곳 충돌 처리를 해야한다면 여기서 해야한다.
+	char dir = m_player_data.dir;
+	position *pos = &m_player_data.pos;
+
+	if ((dir & KEYINPUT_RIGHT) == (KEYINPUT_RIGHT)) { pos->x -= ai_mov_speed; pos->y -= ai_mov_speed; }
+	if ((dir & KEYINPUT_LEFT) == (KEYINPUT_LEFT)) { pos->x += ai_mov_speed; pos->y += ai_mov_speed; }
+	if ((dir & KEYINPUT_UP) == (KEYINPUT_UP)) { pos->x += ai_mov_speed; pos->y -= ai_mov_speed; }
+	if ((dir & KEYINPUT_DOWN) == (KEYINPUT_DOWN)) { pos->x -= ai_mov_speed; pos->y += ai_mov_speed; }
+		
+	// 근처에 공격해야 할 적이 있다면 해당 id return
+	unsigned int target_id = 0;
+	m_view_lock.lock();
+	for (auto id : m_view_list) {
+		if (false == g_clients[id]->m_player_data.is_ai) { continue; }
+		if (true == is_in_att_range(id)) {
+			target_id = id;
+		}
+	}
+	m_view_lock.unlock();
+
+	// 내 위치와 방향이 바뀌었다고, 주변 플레이어에게 알리기
+	refresh_view_list();
+	int userCnt = 0;
+	for (auto id : m_view_list) {
+		if (false == g_clients[id]->m_player_data.is_ai) {
+			++userCnt;
+			sc_move p;
+			p.id = m_id;
+			p.pos = m_player_data.pos;
+			g_clients[id]->send_packet(reinterpret_cast<Packet *>(&p));
+
+			if (orgin_dir != dir) {
+				sc_dir pp;
+				pp.id = m_id;
+				pp.dir = m_player_data.dir;
+				g_clients[id]->send_packet(reinterpret_cast<Packet *>(&pp));
+			}
+		}
+	}
+
+	// user 가 한명이라도 있다면, 계속 움직여야 한다.
+	if (0 != userCnt) {
+		g_time_queue.add_event(m_id, 1, AI_STATE_RAND_MOV, true);
+	}
+	else {
+		// 주변에 아무도 없다면, 값을 초기화 하자 - 좌표값은 어쩔까나?
+		ai_is_rand_mov = false;
+
+		/*m_player_data.pos.x = 150 + ((rand() % 5) - (5 / 2.0f));
+		m_player_data.pos.y = 400 + ((rand() % 5) - (5 / 2.0f));*/
+
+		cout << "Resting AI ID " << m_id << endl;
+	}
+
+	return target_id;
+}
+
 void player_session::Init()
 {
 	m_connect_state = true;
@@ -147,7 +223,10 @@ void player_session::m_recv_packet()
 				g_clients[id]->vl_remove(id);
 
 				if (DISCONNECTED == g_clients[id]->m_connect_state) { continue; }
-				if (true == g_clients[id]->get_player_data()->is_ai) { continue; }
+				if (true == g_clients[id]->get_player_data()->is_ai) { 
+					g_clients[id]->vl_remove(m_id);
+					continue;
+				}
 				g_clients[id]->send_packet(reinterpret_cast<Packet*>(&p));
 			}
 
@@ -209,7 +288,17 @@ bool player_session::is_in_view_range(unsigned int id) {
 	float my_x = m_player_data.pos.x;
 	float my_y = m_player_data.pos.y;
 
-	if ((VIEW_RANGE * VIEW_RANGE) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) { return true; }
+	if (SQUARED(VIEW_RANGE) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) { return true; }
+	return false;
+}
+
+bool player_session::is_in_att_range(unsigned int id) {
+	float x = g_clients[id]->m_player_data.pos.x;
+	float y = g_clients[id]->m_player_data.pos.y;
+	float my_x = m_player_data.pos.x;
+	float my_y = m_player_data.pos.y;
+
+	if (SQUARED(RANGE_CHECK_AI_ATT) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) { return true; }
 	return false;
 }
 
@@ -264,7 +353,11 @@ void player_session::m_process_packet(Packet buf[])
 						send_to_me.id = players->get_id();
 						send_packet(reinterpret_cast<Packet*>(&send_to_me));
 
-						if (true == players->get_player_data()->is_ai) { continue; }
+						if (true == players->get_player_data()->is_ai) {
+							// player 시야에서 사라진 봇이라면, 상태 및 위치 초기화 필요 ******************************************
+
+							continue;
+						}
 						sc_disconnect send_to_other;
 						send_to_other.id = m_id;
 						players->send_packet(reinterpret_cast<Packet*>(&send_to_other));
@@ -279,7 +372,7 @@ void player_session::m_process_packet(Packet buf[])
 				players->vl_add(m_id);
 
 				sc_other_init_info other_player_info_to_me;
-				other_player_info_to_me.playerData = *(players->get_player_data());
+				other_player_info_to_me.playerData = players->m_player_data;
 				send_packet(reinterpret_cast<Packet*>(&other_player_info_to_me));
 
 				if (true == players->get_player_data()->is_ai) { continue; }
@@ -289,7 +382,18 @@ void player_session::m_process_packet(Packet buf[])
 			}
 
 			for (auto id : m_view_list) {
-				if (true == g_clients[id]->get_player_data()->is_ai) { continue; }
+				if (true == g_clients[id]->get_player_data()->is_ai) {					
+					// 시야에 있는 컴퓨터 이므로, 랜덤 무빙을 하도록 하게 하자 ******************************************
+					if (false == g_clients[id]->ai_is_rand_mov) {
+						g_clients[id]->ai_is_rand_mov = true;
+						g_time_queue.add_event(id, 0, AI_STATE_RAND_MOV, true);
+					}
+
+					if (true == is_in_att_range(id)) {
+						// 컴퓨터 어그로 범위라면 공격 명령을 하도록 하게 하자 ******************************************
+					}
+					continue;
+				}
 
 				g_clients[id]->send_packet(reinterpret_cast<Packet*>(&p));
 			}

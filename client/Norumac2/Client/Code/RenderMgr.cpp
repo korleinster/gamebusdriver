@@ -44,11 +44,11 @@ CRenderMgr::CRenderMgr()
 	m_pTargetMgr->Initialize();
 	m_pLightMgr->Initialize();
 
-	m_fDirColor[RGB_RED] = 0.8f;
-	m_fDirColor[RGB_GREEN] = 0.8f;
-	m_fDirColor[RGB_BLUE] = 0.8f;
+	m_fDirColor[RGB_RED] = 1.0f;
+	m_fDirColor[RGB_GREEN] = 1.0f;
+	m_fDirColor[RGB_BLUE] = 1.0f;
 
-	m_vDirLight = D3DXVECTOR3(-0.2f, -1.0f, -0.0f);
+	m_vDirLight = D3DXVECTOR3(-0.62f, -0.44f, -0.64f);
 
 	m_pLightMgr->SetAmbient(D3DXVECTOR3(0.4f, 0.5f, 0.4f), D3DXVECTOR3(0.4f, 0.5f, 0.4f));
 	m_pLightMgr->SetDirectional(
@@ -129,9 +129,9 @@ HRESULT CRenderMgr::InitScene(void)
 void CRenderMgr::Render(const float & fTime)
 {
 	// Å°¼¼ÆÃ
-#if defined( DEBUG ) || defined( _DEBUG )
+//#if defined( DEBUG ) || defined( _DEBUG )
 	Input(fTime);
-#endif
+//#endif
 
 	if (m_bDefferdOn)
 	{

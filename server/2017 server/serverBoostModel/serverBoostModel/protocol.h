@@ -16,6 +16,8 @@
 
 // AI index
 #define MAX_AI_NUM 20
+#define MAX_AI_SLIME 10
+#define MAX_AI_GOBLIN 20
 
 // process protocol
 enum PacketProtocolType {

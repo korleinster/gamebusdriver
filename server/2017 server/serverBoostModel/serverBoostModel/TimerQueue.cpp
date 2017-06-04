@@ -257,12 +257,23 @@ void TimerQueue::processPacket(event_type *p) {
 	case AI_STATE_RAND_MOV: {
 		// AI만 이 이벤트가 떠야 한다.
 		if (true == p->is_ai) {
+			//cout << "AI moving!! " << p->id << endl;
+
 			g_clients[p->id]->ai_is_rand_mov = true;
 			g_clients[p->id]->m_target_id = g_clients[p->id]->ai_rand_mov();
+
 			if (0 != g_clients[p->id]->m_target_id) {
 				// 그렇다면 어그로 타겟을 공격해야 한다.
 			}
+			else {
+				g_time_queue.add_event(p->id, 3, AI_STATE_RAND_MOV_STOP, true);
+			}
 		}
+		break;
+	}
+
+	case AI_STATE_RAND_MOV_STOP: {
+		if (true == p->is_ai) g_clients[p->id]->ai_is_rand_mov = false;
 		break;
 	}
 

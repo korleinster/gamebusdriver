@@ -49,19 +49,24 @@ unsigned int player_session::ai_rand_mov()
 {
 	char orgin_dir = m_player_data.dir;
 	// 무작위 방향 8 개 중 정하기
-	srand((unsigned)time(NULL));
+	/*default_random_engine e;
+	e.seed(m_id);
+	uniform_int_distribution<int> rnd{0, 7};*/
+	
+	/*m_player_data.dir = DIR_XOR(m_player_data.dir);*/
+	int a = rand() % 8;
+
 	m_player_data.dir = 0;
-	bool tmp = false;
-	for (int i = 0; i < 4; ++i) {
-		if (true == tmp) { tmp = false; continue; }
-		if (rand() & 1) {
-			switch (i) {
-			case 0: tmp = true; m_player_data.dir |= KEYINPUT_RIGHT; break;
-			case 1: tmp = false; m_player_data.dir |= KEYINPUT_LEFT; break;
-			case 2: tmp = true; m_player_data.dir |= KEYINPUT_UP; break;
-			case 3: tmp = false; m_player_data.dir |= KEYINPUT_DOWN; break;
-			}
-		}
+	switch (a)
+	{
+	case 0: m_player_data.dir = m_player_data.dir | KEYINPUT_RIGHT; break;
+	case 1: m_player_data.dir = m_player_data.dir | KEYINPUT_LEFT; break;
+	case 2: m_player_data.dir = m_player_data.dir | KEYINPUT_UP; break;
+	case 3: m_player_data.dir = m_player_data.dir | KEYINPUT_DOWN; break;
+	case 4: m_player_data.dir = m_player_data.dir | (KEYINPUT_RIGHT | KEYINPUT_DOWN); break;
+	case 5: m_player_data.dir = m_player_data.dir | (KEYINPUT_LEFT | KEYINPUT_DOWN); break;
+	case 6: m_player_data.dir = m_player_data.dir | (KEYINPUT_RIGHT | KEYINPUT_UP); break;
+	case 7: m_player_data.dir = m_player_data.dir | (KEYINPUT_LEFT | KEYINPUT_UP); break;
 	}
 
 	// 해당 방향으로 움직이기 - 못가는 곳 충돌 처리를 해야한다면 여기서 해야한다.
@@ -73,11 +78,16 @@ unsigned int player_session::ai_rand_mov()
 	if ((dir & KEYINPUT_UP) == (KEYINPUT_UP)) { pos->x += ai_mov_speed; pos->y -= ai_mov_speed; }
 	if ((dir & KEYINPUT_DOWN) == (KEYINPUT_DOWN)) { pos->x -= ai_mov_speed; pos->y += ai_mov_speed; }
 		
+
 	// 근처에 공격해야 할 적이 있다면 해당 id return
 	unsigned int target_id = 0;
+	bool is_in_user_view = false;
+
 	m_view_lock.lock();
 	for (auto id : m_view_list) {
-		if (false == g_clients[id]->m_player_data.is_ai) { continue; }
+		if (true == g_clients[id]->m_player_data.is_ai) { continue; }
+		if (false == is_in_view_range(id)) { continue; }
+		is_in_user_view = true;
 		if (true == is_in_att_range(id)) {
 			target_id = id;
 		}
@@ -85,11 +95,9 @@ unsigned int player_session::ai_rand_mov()
 	m_view_lock.unlock();
 
 	// 내 위치와 방향이 바뀌었다고, 주변 플레이어에게 알리기
-	refresh_view_list();
-	int userCnt = 0;
+	m_view_lock.lock();
 	for (auto id : m_view_list) {
 		if (false == g_clients[id]->m_player_data.is_ai) {
-			++userCnt;
 			sc_move p;
 			p.id = m_id;
 			p.pos = m_player_data.pos;
@@ -103,20 +111,33 @@ unsigned int player_session::ai_rand_mov()
 			}
 		}
 	}
+	m_view_lock.unlock();
 
 	// user 가 한명이라도 있다면, 계속 움직여야 한다.
-	if (0 != userCnt) {
-		g_time_queue.add_event(m_id, 1, AI_STATE_RAND_MOV, true);
+	if (true == is_in_user_view) {
+		g_time_queue.add_event(m_id, 3, AI_STATE_RAND_MOV, true);
 	}
 	else {
-		// 주변에 아무도 없다면, 값을 초기화 하자 - 좌표값은 어쩔까나?
-		ai_is_rand_mov = false;
+		// 주변에 아무도 없다면, 값을 초기화 하자
 
 		/*m_player_data.pos.x = 150 + ((rand() % 5) - (5 / 2.0f));
 		m_player_data.pos.y = 400 + ((rand() % 5) - (5 / 2.0f));*/
 
-		cout << "Resting AI ID " << m_id << endl;
+		//cout << "Resting AI ID " << m_id << endl;
+
+		m_view_lock.lock();
+		for (auto id : m_view_list) {
+			if (DISCONNECTED == g_clients[id]->get_current_connect_state()) { continue; }
+			if (true == g_clients[id]->get_player_data()->is_ai) { continue; }
+
+			sc_disconnect packet;
+			packet.id = m_id;
+
+			g_clients[id]->send_packet(reinterpret_cast<Packet *>(&packet));
+		}
+		m_view_lock.unlock();
 	}
+	refresh_view_list();
 
 	return target_id;
 }
@@ -181,8 +202,6 @@ void player_session::Init()
 	sc_other_init_info other_info_to_me;
 
 	my_info_to_other.playerData = m_player_data;
-
-	refresh_view_list();
 
 	for (auto id : m_view_list) {
 		// 다른 애들 정보를 복사해서 넣고, 얘한테 먼저 보내고...
@@ -273,7 +292,11 @@ void player_session::refresh_view_list()
 	{
 		if (DISCONNECTED == players->m_connect_state) { continue; }
 		if (m_id == players->get_id()) { continue; }
-		if (false == is_in_view_range(players->get_id())) { continue; }
+		if (false == is_in_view_range(players->get_id())) {
+			vl_remove(players->get_id());
+			players->vl_remove(m_id);
+			continue;
+		}
 
 		// view list 에 넣어주기
 		vl_add(players->get_id());
@@ -386,7 +409,7 @@ void player_session::m_process_packet(Packet buf[])
 					// 시야에 있는 컴퓨터 이므로, 랜덤 무빙을 하도록 하게 하자 ******************************************
 					if (false == g_clients[id]->ai_is_rand_mov) {
 						g_clients[id]->ai_is_rand_mov = true;
-						g_time_queue.add_event(id, 0, AI_STATE_RAND_MOV, true);
+						g_time_queue.add_event(id, 3, AI_STATE_RAND_MOV, true);
 					}
 
 					if (true == is_in_att_range(id)) {

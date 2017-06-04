@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <cstdio>
+#include <random>
 #include <vector>
 #include <thread>
 using namespace std;

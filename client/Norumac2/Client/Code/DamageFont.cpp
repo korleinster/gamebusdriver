@@ -11,6 +11,7 @@
 #include "Shader.h"
 #include "ResourcesMgr.h"
 #include "ShaderMgr.h"
+#include "Camera.h"
 
 CDamageFont::CDamageFont()
 	: CUI()
@@ -24,7 +25,7 @@ CDamageFont::CDamageFont()
 	, m_fRightSpeed(0.f)
 	, m_fAlpha(1.f)
 	, m_fMoveSize(0.f)
-	, m_bDead(false)
+	, m_iRendNum(0)
 {
 
 }
@@ -32,6 +33,7 @@ CDamageFont::CDamageFont()
 CDamageFont::~CDamageFont(void)
 {
 	CObj::Release();
+	CRenderMgr::GetInstance()->DelRenderGroup(TYPE_UI, this);//임시인데 어디다 빼야할까
 }
 
 HRESULT CDamageFont::Initialize(const D3DXVECTOR3* pPos, const float& fDmg)
@@ -82,26 +84,12 @@ HRESULT CDamageFont::Initialize(const D3DXVECTOR3* pPos, const float& fDmg)
 
 int CDamageFont::Update(void)
 {
-
-	D3DXMatrixOrthoLH(&m_matProj, WINCX, WINCY, 0.f, 1.f);
-
-	D3DXMatrixIdentity(&m_matView);
-	m_matView._11 = m_fSizeX;
-	m_matView._22 = m_fSizeY;
-	m_matView._33 = 1.f;
-
-	// -0.5	-> -400		,	0.5	-> 400
-	m_matView._41 = m_fX - (WINCX >> 1);
-	m_matView._42 = -m_fY + (WINCY >> 1);
-
-
-
 	m_fTime += CTimeMgr::GetInstance()->GetTime();
 
 	if (m_fTime > 1.3f)
-		m_bDead = true;
+		m_bDeath = true;
 
-	m_fAlpha = 1.f - (m_fTime / 1.3f);
+	//m_fAlpha = 1.f - (m_fTime / 1.3f);//알파의 강도 조절이 가능하면 생각해보자.
 
 	m_pInfo->m_vPos = m_vPos;
 
@@ -109,133 +97,110 @@ int CDamageFont::Update(void)
 
 	m_fScaleRatio = 1.0f;
 
+
+
+	if (!m_bDeath)
+		return 0;
+
+	else
+		return 100;
+
+
+
 	return 0;
 }
 
 void CDamageFont::Render(void)
 {
-	//m_pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 
-	//LPD3DXEFFECT		pEffect = m_pShader->Get_EffectHandle();
-	//if (NULL == pEffect)
-	//	return;
-
-	////CDamageFont::Set_ConstantTable(pEffect);
-
-	//_matrix			matProj, matView2;
-	//m_pDevice->GetTransform(D3DTS_VIEW, &matView2);
-	//m_pDevice->GetTransform(D3DTS_PROJECTION, &matProj);
+	D3DXMATRIX			matProj, matView2;
+	matView2 = CCamera::GetInstance()->m_matView;
+	matProj = CCamera::GetInstance()->m_matProj;
 
 
-	//_matrix			matWorld2;
-	//D3DXMatrixIdentity(&matWorld2);
+	D3DXMATRIX			matWorld2;
+	D3DXMatrixIdentity(&matWorld2);
 
-	//// 직교투영을 수행해주는 함수다.
-	////D3DXMatrixOrthoLH(&matProj, WINCX, WINCY, 0.f, 1.f);
+	int iDmg = m_iDmg;
+	UINT iCnt = m_iCnt / 10;
+	
+	while (1)
+	{
+		int iNum;
+		if (0 == iDmg)
+			iNum = 0;
+		else
+			iNum = iDmg / iCnt;
 
-	////pEffect->SetMatrix("g_matWorld", &matWorld);
-	////pEffect->SetMatrix("g_matProj", &matProj);
+		D3DXMATRIX matScale, matRotX, matRotY, matRotZ, matTrans, matParent;
 
-	//pEffect->SetFloat("g_fAlpha", m_fAlpha);
-	//pEffect->SetFloat("g_fPointPower", 1.f);
+		D3DXMatrixScaling(&matScale, 0.03f, 0.03f, 0.03f);
+		D3DXMatrixRotationX(&matRotX, 0.f);
+		D3DXMatrixRotationY(&matRotY, 0.f);
+		D3DXMatrixRotationZ(&matRotZ, 0.f);
 
-	//_int	iDmg = m_iDmg;
-	//_uint	iCnt = m_iCnt / 10;
-	//while (true)
-	//{
-	//	_int	iNum;
-	//	if (0 == iDmg)
-	//		iNum = 0;
-	//	else
-	//		iNum = iDmg / iCnt;
+		D3DXMatrixTranslation(&matTrans, m_fMoveSize, 0.005f, 0.f);
+		D3DXMatrixTranslation(&matParent, m_vPos.x,m_vPos.y,m_vPos.z);
 
-	//	_mymat matScale, matRotX, matRotY, matRotZ, matTrans, matParent;
+		D3DXMATRIX      matBill;
+		D3DXMatrixIdentity(&matBill);
 
-	//	matScale.Scale(D3DXVECTOR3(0.03f, 0.03f, 0.03f));
+		matBill = CCamera::GetInstance()->m_matView;
+		ZeroMemory(&matBill.m[3][0], sizeof(D3DXVECTOR3));
 
-	//	matRotX.RotX(D3DXToRadian(0.f));
-	//	matRotY.RotY(D3DXToRadian(0.f));
-	//	matRotZ.RotZ(D3DXToRadian(0.f));
+		D3DXMatrixInverse(&matBill, 0, &matBill);
 
+		matParent = matBill * matParent;
 
-	//	matTrans.Trans(D3DXVECTOR3(m_fMoveSize, 0.005f, 0.f));
+		matWorld2 = matScale * matRotX * matRotY * matRotZ * matTrans * matParent;
 
-	//	matParent.Trans(m_vPos);
+		m_fMoveSize += 0.04f;
 
 
-	//	D3DXMATRIX      matBill;
-	//	D3DXMatrixIdentity(&matBill);
 
-	//	m_pDevice->GetTransform(D3DTS_VIEW, &matBill);
-	//	ZeroMemory(&matBill.m[3][0], sizeof(D3DXVECTOR3));
+		//////////////////////////////////
+		ConstantBuffer cb;
 
-	//	D3DXMatrixInverse(&matBill, 0, &matBill);
+		D3DXMatrixTranspose(&cb.matWorld, &m_pInfo->m_matWorld);
+		D3DXMatrixTranspose(&cb.matView, &m_matView);
+		D3DXMatrixTranspose(&cb.matProjection, &m_matProj);
 
-	//	matParent = matBill * matParent;
+		m_pGrapicDevice->m_pDeviceContext->UpdateSubresource(m_pBuffer->m_ConstantBuffer, 0, NULL, &cb, 0, 0);
 
-	//	matWorld2 = matScale * matRotX * matRotY * matRotZ * matTrans * matParent;
+		m_pGrapicDevice->m_pDeviceContext->IASetInputLayout(m_pVertexShader->m_pVertexLayout);
 
-	//	m_fMoveSize += 0.04f;
+		m_pGrapicDevice->m_pDeviceContext->VSSetShader(m_pVertexShader->m_pVertexShader, NULL, 0);
+		m_pGrapicDevice->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pBuffer->m_ConstantBuffer);
 
-	//	pEffect->SetMatrix("g_matWorld", &matWorld2);
-	//	pEffect->SetMatrix("g_matView", &matView2);
-	//	pEffect->SetMatrix("g_matProj", &matProj);
+		m_pGrapicDevice->m_pDeviceContext->PSSetShader(m_pPixelShader->m_pPixelShader, NULL, 0);
 
-	//	//pEffect->SetFloat("g_fDrawRatio", m_fDrawRatio);
-	//	m_pTexture->Set_ConstantTable(pEffect, "g_BaseTexture", iNum);
-	//	_uint		iPassCnt = 0;
+		m_pGrapicDevice->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
+		m_pGrapicDevice->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
 
-	//	pEffect->Begin(&iPassCnt, 0);
-	//	pEffect->BeginPass(0);
+		m_pBuffer->Render();
 
-	//	m_pBuffer->Render(&m_pInfo->m_matWorld);
+		if (1 >= iCnt)
+			break;
 
-	//	pEffect->EndPass();
-	//	pEffect->End();
+		iDmg = iDmg - iNum * iCnt;
+		iCnt /= 10;
+		/////////////////////////////////////////
+	}
+	m_fMoveSize = 0.f;
 
-	//	if (1 >= iCnt)
-	//		break;
-
-	//	iDmg = iDmg - iNum * iCnt;
-	//	iCnt /= 10;
-
-	//}
-
-	//m_fMoveSize = 0.f;
-	//m_pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-
-	ConstantBuffer cb;
-
-	D3DXMatrixTranspose(&cb.matWorld, &m_pInfo->m_matWorld);
-	D3DXMatrixTranspose(&cb.matView, &m_matView);
-	D3DXMatrixTranspose(&cb.matProjection, &m_matProj);
-
-	m_pGrapicDevice->m_pDeviceContext->UpdateSubresource(m_pBuffer->m_ConstantBuffer, 0, NULL, &cb, 0, 0);
-
-	m_pGrapicDevice->m_pDeviceContext->IASetInputLayout(m_pVertexShader->m_pVertexLayout);
-
-	m_pGrapicDevice->m_pDeviceContext->VSSetShader(m_pVertexShader->m_pVertexShader, NULL, 0);
-	m_pGrapicDevice->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pBuffer->m_ConstantBuffer);
-
-	m_pGrapicDevice->m_pDeviceContext->PSSetShader(m_pPixelShader->m_pPixelShader, NULL, 0);
-
-	m_pGrapicDevice->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
-	m_pGrapicDevice->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
-
-	m_pBuffer->Render();
 }
 
 CDamageFont* CDamageFont::Create(const D3DXVECTOR3* pPos, const float& fDmg)
 {
-	CDamageFont*		pInstance = new CDamageFont();
+	CDamageFont*		pDmgFont = new CDamageFont();
 
-	if (FAILED(pInstance->Initialize(pPos, fDmg)))
+	if (FAILED(pDmgFont->Initialize(pPos, fDmg)))
 	{
 		//MSG_BOX("CDamageFont Created Failed");
-		//::safe_release(pInstance);
+		::Safe_Delete(pDmgFont);
 	}
 
-	return pInstance;
+	return pDmgFont;
 }
 
 HRESULT CDamageFont::Add_Component(void)
@@ -285,4 +250,3 @@ void CDamageFont::Compute_Cnt(void)
 	m_iCnt = iCnt;
 	--m_iCnt2;
 }
-

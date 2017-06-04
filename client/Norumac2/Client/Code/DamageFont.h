@@ -12,7 +12,7 @@ class CTexture;
 class CVIBuffer;
 class CDamageFont : public CUI
 {
-private:
+public:
 	CDamageFont(void);
 	virtual ~CDamageFont(void);
 public:
@@ -32,7 +32,7 @@ private:
 	float					m_fUpSpeed;
 	float					m_fRightSpeed;
 	float					m_fDrawRatio;
-	bool					m_bDead;
+	int						m_iRendNum;
 
 private:
 	float					m_fPosRandX;

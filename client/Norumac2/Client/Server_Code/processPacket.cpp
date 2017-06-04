@@ -8,6 +8,8 @@
 #include "SceneMgr.h"
 #include "Player.h"
 #include "Monster.h"
+#include "DamageFont.h"
+#include "Info.h"
 
 void AsynchronousClientClass::processPacket(Packet* buf)
 {
@@ -169,8 +171,41 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			}
 
 			// 내가 아니라면 다른애 hp 깎기
- 			if (NULL != (CObjMgr::GetInstance()->Get_PlayerServerData(p->under_attack_id))) {
-				(CObjMgr::GetInstance()->Get_PlayerServerData(p->under_attack_id))->state.hp = p->hp;
+
+			if (p->under_attack_id > MAX_AI_NUM) // 플레이어일시
+			{
+				if (NULL != (CObjMgr::GetInstance()->Get_PlayerServerData(p->under_attack_id))) {
+					(CObjMgr::GetInstance()->Get_PlayerServerData(p->under_attack_id))->state.hp = p->hp;
+
+					/*CObj* pObj = CDamageFont::Create();
+					pObj->SetPos(D3DXVECTOR3(m_player.pos.x, 1.f, m_player.pos.y));
+					pObj->SetPacketData(&p->playerData);
+					CObjMgr::GetInstance()->AddObject(L"OtherPlayer", pObj);
+					CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, pObj);*/
+				}
+			}
+			else // 몬스터일시
+			{
+				if (NULL != (CObjMgr::GetInstance()->Get_MonsterServerData(p->under_attack_id))) {
+					(CObjMgr::GetInstance()->Get_MonsterServerData(p->under_attack_id))->state.hp = p->hp;
+
+					list<CObj*>* ListObj = CObjMgr::GetInstance()->Get_ObjList(L"Monster");
+					list<CObj*>::iterator iter = ListObj->begin();
+					list<CObj*>::iterator iter_end = ListObj->end();
+					D3DXVECTOR3 vPos;
+
+					for (; iter != iter_end; ++iter)
+					{
+						if ((*iter)->GetPacketData()->id == p->under_attack_id)
+						{
+							vPos = (*iter)->GetInfo()->m_vPos;
+							break;
+						}
+					}
+
+					CObj* pObj = CDamageFont::Create(&vPos, 105.f); //샘플값 105. 나중에 데미지는 서버에서 받아와서 출력.
+					CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+				}
 			}
 
 			if (0 >= p->hp)

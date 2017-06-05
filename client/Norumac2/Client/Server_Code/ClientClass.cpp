@@ -5,7 +5,7 @@
 
 AsynchronousClientClass::AsynchronousClientClass()
 {
-
+	m_bAttackFirst = false;
 }
 
 AsynchronousClientClass::~AsynchronousClientClass()

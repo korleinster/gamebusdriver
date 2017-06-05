@@ -161,8 +161,8 @@ void CDamageFont::Render(void)
 		//////////////////////////////////
 		ConstantBuffer cb;
 
-		D3DXMatrixTranspose(&cb.matWorld, &m_pInfo->m_matWorld);
-		D3DXMatrixTranspose(&cb.matView, &m_matView);
+		D3DXMatrixTranspose(&cb.matWorld, &matWorld2);
+		D3DXMatrixTranspose(&cb.matView, &matView2);
 		D3DXMatrixTranspose(&cb.matProjection, &m_matProj);
 
 		m_pGrapicDevice->m_pDeviceContext->UpdateSubresource(m_pBuffer->m_ConstantBuffer, 0, NULL, &cb, 0, 0);

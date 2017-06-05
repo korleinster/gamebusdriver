@@ -63,4 +63,5 @@ private:
 	// 실제 ingame에 사용할 멤버 변수 데이터
 	player_data m_player;
 	unordered_map<UINT, player_data> m_other_players;
+	bool		m_bAttackFirst;
 };

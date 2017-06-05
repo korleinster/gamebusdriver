@@ -202,6 +202,7 @@
     <ClInclude Include="..\Code\LogoBack.h" />
     <ClInclude Include="..\Code\MainApp.h" />
     <ClInclude Include="..\Code\Mesh.h" />
+    <ClInclude Include="..\Code\MobHpBasic.h" />
     <ClInclude Include="..\Code\Monster.h" />
     <ClInclude Include="..\Code\MultiRenderTarget.h" />
     <ClInclude Include="..\Code\NaviCell.h" />
@@ -242,6 +243,7 @@
     <ClInclude Include="..\Headers\Value.h" />
     <ClInclude Include="..\Server_Code\ClientClass.h" />
     <ClInclude Include="Client.h" />
+    <ClInclude Include="MobHpBar.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -275,6 +277,7 @@
     <ClCompile Include="..\Code\LogoBack.cpp" />
     <ClCompile Include="..\Code\MainApp.cpp" />
     <ClCompile Include="..\Code\Mesh.cpp" />
+    <ClCompile Include="..\Code\MobHpBasic.cpp" />
     <ClCompile Include="..\Code\Monster.cpp" />
     <ClCompile Include="..\Code\MultiRenderTarget.cpp" />
     <ClCompile Include="..\Code\NaviCell.cpp" />
@@ -312,6 +315,7 @@
     <ClCompile Include="..\Server_Code\processPacket.cpp" />
     <ClCompile Include="..\Server_Code\ProcessWinMessage_clientClass.cpp" />
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="MobHpBar.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

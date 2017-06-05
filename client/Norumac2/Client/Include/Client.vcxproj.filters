@@ -214,6 +214,12 @@
     <Filter Include="02.Object\07.UI\06.DamageFont">
       <UniqueIdentifier>{f763fb1e-af7a-4a13-9e25-6fc8a51eb7b4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Object\07.UI\07.MobHpBasic">
+      <UniqueIdentifier>{2437f172-be86-4fcd-96a8-2e9b923e660c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\07.UI\08.MobHpBar">
+      <UniqueIdentifier>{fe66701f-cc77-4a93-bbfd-f6b9a0dbfd88}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -441,6 +447,12 @@
     <ClInclude Include="..\Code\DamageFont.h">
       <Filter>02.Object\07.UI\06.DamageFont</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\MobHpBasic.h">
+      <Filter>02.Object\07.UI\07.MobHpBasic</Filter>
+    </ClInclude>
+    <ClInclude Include="MobHpBar.h">
+      <Filter>02.Object\07.UI\08.MobHpBar</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\MainApp.cpp">
@@ -640,6 +652,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\DamageFont.cpp">
       <Filter>02.Object\07.UI\06.DamageFont</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\MobHpBasic.cpp">
+      <Filter>02.Object\07.UI\07.MobHpBasic</Filter>
+    </ClCompile>
+    <ClCompile Include="MobHpBar.cpp">
+      <Filter>02.Object\07.UI\08.MobHpBar</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

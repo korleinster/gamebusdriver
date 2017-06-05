@@ -45,7 +45,6 @@ int CStage::Update(void)
 {
 	if (m_bFirstLogin == false)
 	{
-		
 		m_bFirstLogin = true;
 	}
 

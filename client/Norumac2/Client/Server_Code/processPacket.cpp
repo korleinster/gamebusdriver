@@ -10,6 +10,8 @@
 #include "Monster.h"
 #include "DamageFont.h"
 #include "Info.h"
+#include "MobHpBasic.h"
+#include "../Include/MobHpBar.h"
 
 void AsynchronousClientClass::processPacket(Packet* buf)
 {
@@ -189,6 +191,8 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 				if (NULL != (CObjMgr::GetInstance()->Get_MonsterServerData(p->under_attack_id))) {
 					(CObjMgr::GetInstance()->Get_MonsterServerData(p->under_attack_id))->state.hp = p->hp;
 
+
+					//////////////데미지 폰트////////////////////////
 					list<CObj*>* ListObj = CObjMgr::GetInstance()->Get_ObjList(L"Monster");
 					list<CObj*>::iterator iter = ListObj->begin();
 					list<CObj*>::iterator iter_end = ListObj->end();
@@ -205,6 +209,43 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 					CObj* pObj = CDamageFont::Create(&vPos, 105.f); //샘플값 105. 나중에 데미지는 서버에서 받아와서 출력.
 					CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+					///////////////////////////////////////////////////
+
+					/////////////////체력바///////////////////////////
+
+					int iSize = 0;
+					//몹의 체력바가 없으면 만든다.
+					if (m_bAttackFirst == false)//최초
+					{
+						iSize = 0;
+						m_bAttackFirst = true;
+					}
+					else
+						iSize = ((CObjMgr::GetInstance()->Get_ObjList(L"MobHpBaisic")->size()));
+
+					if (iSize == 0)
+					{
+						CObj * pObj = CMobHpBar::Create();
+						dynamic_cast<CMobHpBar*>(pObj)->SetRendHp(p->hp, 100); // 최대체력이 생기면 바꿔주자.
+						CObjMgr::GetInstance()->AddObject(L"MobHpBar", pObj);
+
+						pObj = CMobHpBasic::Create();
+						dynamic_cast<CMobHpBasic*>(pObj)->SetName(L"Monster", p->under_attack_id);
+						CObjMgr::GetInstance()->AddObject(L"MobHpBaisic",pObj);			
+					}
+					//있다면 가져와서 이름과 체력을 갱신하고 랜더타임도 초기화한다.
+					else
+					{
+						CObj* pObj = (*(CObjMgr::GetInstance()->Get_ObjList(L"MobHpBar")->begin()));
+						dynamic_cast<CMobHpBar*>(pObj)->SetRendHp(p->hp, 100);
+						dynamic_cast<CMobHpBar*>(pObj)->ResetRendTime();
+
+						pObj = (*(CObjMgr::GetInstance()->Get_ObjList(L"MobHpBaisic")->begin()));
+						dynamic_cast<CMobHpBasic*>(pObj)->SetName(L"Monster", p->under_attack_id);
+						dynamic_cast<CMobHpBasic*>(pObj)->ResetRendTime();
+					}
+					//////////////////////////////////////////////////
+
 				}
 			}
 
@@ -225,6 +266,21 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 							break;
 						}
 					}
+
+
+					//몹이 죽으면 체력바도 없에자.
+					int iSize = 0;
+					iSize = ((CObjMgr::GetInstance()->Get_ObjList(L"MobHpBaisic")->size()));
+					if (iSize != 0)
+					{
+						//직접지우면 뭔일 터질지도 모르니 그냥 랜더시간을 초과시켜서 자연스럽게 없에버리자.
+						CObj* pObj = (*(CObjMgr::GetInstance()->Get_ObjList(L"MobHpBar")->begin()));
+						dynamic_cast<CMobHpBar*>(pObj)->m_fRendTime = 6.f;
+
+						pObj = (*(CObjMgr::GetInstance()->Get_ObjList(L"MobHpBaisic")->begin()));
+						dynamic_cast<CMobHpBasic*>(pObj)->m_fRendTime = 6.f;
+					}
+
 				}
 
 				else

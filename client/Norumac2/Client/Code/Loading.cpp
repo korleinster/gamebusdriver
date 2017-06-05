@@ -116,6 +116,16 @@ void CLoading::StageLoading(void)
 		, L"Texture_DamageFont"
 		, L"../Resource/ImageFont/Dam_%d.png", 10);
 
+	hr = CResourcesMgr::GetInstance()->AddTexture(
+		RESOURCE_STAGE
+		, L"Texture_MobBasicHp"
+		, L"../Resource/Uiimage/MobHpBasic.png");
+
+	hr = CResourcesMgr::GetInstance()->AddTexture(
+		RESOURCE_STAGE
+		, L"Texture_MobHp"
+		, L"../Resource/Uiimage/MobHp.png");
+
 
 	FAILED_CHECK_RETURN(hr, );
 

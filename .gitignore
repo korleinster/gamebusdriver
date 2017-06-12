@@ -54,3 +54,5 @@ bin/
 client/Norumac2/Client/Releasebin/Client.iobj
 client/Norumac2/Client/Releasebin/Client.ipdb
 client/Norumac2/Client/Releasebin/Client.iobj
+
+*.ipdb

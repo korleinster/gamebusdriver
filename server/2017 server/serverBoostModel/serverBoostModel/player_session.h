@@ -84,6 +84,9 @@ public:
 	unsigned int m_target_id{ 0 };
 	bool ai_is_rand_mov{ false };
 	float ai_mov_speed{ 1 };
+	Position origin_pos;
+	int radius;
+
 private:
 	// Function
 	void m_recv_packet();

@@ -87,10 +87,11 @@ void boostAsioServer::g_client_init() {
 		Position pos;
 		pos.x = script.get<float>("ai_status_slime.pos.x");
 		pos.y = script.get<float>("ai_status_slime.pos.y");
-		int radius = script.get<int>("ai_status_slime.radius");
+		g_clients[i]->radius = script.get<int>("ai_status_slime.radius");
+		g_clients[i]->origin_pos = pos;
 
-		g_clients[i]->get_player_data()->pos.x = pos.x + ((rand() % radius) - (radius / 2.0f));
-		g_clients[i]->get_player_data()->pos.y = pos.y + ((rand() % radius) - (radius / 2.0f));
+		g_clients[i]->get_player_data()->pos.x = pos.x + ((rand() % g_clients[i]->radius) - (g_clients[i]->radius / 2.0f));
+		g_clients[i]->get_player_data()->pos.y = pos.y + ((rand() % g_clients[i]->radius) - (g_clients[i]->radius / 2.0f));
 
 		g_clients[i]->get_player_data()->state.maxhp = script.get<int>("ai_status_slime.status.maxHp");
 		g_clients[i]->get_player_data()->state.hp = g_clients[i]->get_player_data()->state.maxhp;
@@ -120,10 +121,11 @@ void boostAsioServer::g_client_init() {
 		Position pos;
 		pos.x = script.get<float>("ai_status_goblin.pos.x");
 		pos.y = script.get<float>("ai_status_goblin.pos.y");
-		int radius = script.get<int>("ai_status_goblin.radius");
+		g_clients[i]->radius = script.get<int>("ai_status_goblin.radius");
+		g_clients[i]->origin_pos = pos;
 
-		g_clients[i]->get_player_data()->pos.x = pos.x + ((rand() % radius) - (radius / 2.0f));
-		g_clients[i]->get_player_data()->pos.y = pos.y + ((rand() % radius) - (radius / 2.0f));
+		g_clients[i]->get_player_data()->pos.x = pos.x + ((rand() % g_clients[i]->radius) - (g_clients[i]->radius / 2.0f));
+		g_clients[i]->get_player_data()->pos.y = pos.y + ((rand() % g_clients[i]->radius) - (g_clients[i]->radius / 2.0f));
 
 		g_clients[i]->get_player_data()->state.maxhp = script.get<int>("ai_status_goblin.status.maxHp");
 		g_clients[i]->get_player_data()->state.hp = g_clients[i]->get_player_data()->state.maxhp;

@@ -75,6 +75,11 @@ unsigned int player_session::ai_rand_mov()
 		send_packet_other_players_in_view_range(reinterpret_cast<Packet*>(&pp), m_id);
 	}
 
+	// 위치 이동 하기 전에, 일단 끊어주는 패킷을 보내주자. ( 승필이가 이걸 클라에서 해결해야 되는데 슈발!! )
+	/*sc_disconnect pp;
+	pp.id = m_id;
+	send_packet_other_players_in_view_range(reinterpret_cast<Packet*>(&pp), m_id);*/
+
 	// 해당 방향으로 움직이기 - 못가는 곳 충돌 처리를 해야한다면 여기서 해야한다.
 	position *pos = &m_player_data.pos;
 
@@ -93,6 +98,7 @@ unsigned int player_session::ai_rand_mov()
 	p.pos = m_player_data.pos;
 
 	send_packet_other_players_in_view_range(reinterpret_cast<Packet*>(&p), m_id);
+	//send_packet_other_players(reinterpret_cast<Packet*>(&p), m_id);
 
 	// user 가 한명이라도 있다면
 	if (none != return_nearlest_player(VIEW_RANGE)) {

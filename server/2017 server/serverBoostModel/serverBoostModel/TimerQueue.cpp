@@ -85,6 +85,7 @@ void TimerQueue::processPacket(event_type *p) {
 			g_clients[p->id]->set_connect_state(CONNECTED);
 			g_clients[p->id]->set_hp_adding(false);
 			g_clients[p->id]->set_hp(g_clients[p->id]->get_maxhp());
+			g_clients[p->id]->m_target_id = none;
 			g_clients[p->id]->set_state(mov);
 
 			for (auto players : g_clients) {
@@ -97,6 +98,9 @@ void TimerQueue::processPacket(event_type *p) {
 				players->vl_add(p->id);
 			}
 
+			g_clients[p->id]->get_player_data()->pos.x = g_clients[p->id]->origin_pos.x + ((rand() % g_clients[p->id]->radius) - (g_clients[p->id]->radius / 2.0f));
+			g_clients[p->id]->get_player_data()->pos.y = g_clients[p->id]->origin_pos.y + ((rand() % g_clients[p->id]->radius) - (g_clients[p->id]->radius / 2.0f));
+
 			sc_other_init_info packet;
 			packet.playerData = *g_clients[p->id]->get_player_data();
 			g_clients[p->id]->send_packet_other_players_in_view_range(reinterpret_cast<Packet *>(&packet), p->id);
@@ -108,6 +112,7 @@ void TimerQueue::processPacket(event_type *p) {
 		}
 		else {
 			// player 일 경우
+			g_clients[p->id]->set_connect_state(CONNECTED);
 			g_clients[p->id]->set_state(mov);
 			g_clients[p->id]->get_player_data()->pos.x = 160;
 			g_clients[p->id]->get_player_data()->pos.y = 400;
@@ -206,8 +211,11 @@ void TimerQueue::processPacket(event_type *p) {
 			g_clients[p->id]->m_target_id = g_clients[p->id]->return_nearlest_player(RANGE_CHECK_AI_ATT);
 			g_clients[p->id]->ai_is_rand_mov = true;
 			if (none == g_clients[p->id]->m_target_id) {
-				g_clients[p->id]->set_state(none);
-				g_time_queue.add_event(p->id, 3, CHANGE_AI_STATE_MOV, true);
+				if (true != g_clients[p->id]->ai_is_rand_mov) {
+					g_clients[p->id]->set_state(none);
+					g_clients[p->id]->ai_is_rand_mov = true;
+					g_time_queue.add_event(p->id, 3, CHANGE_AI_STATE_MOV, true);
+				}
 				break;
 			}
 		}
@@ -251,12 +259,17 @@ void TimerQueue::processPacket(event_type *p) {
 				sc_disconnect dis_p;
 				dis_p.id = target_id;
 				g_clients[target_id]->send_packet(reinterpret_cast<Packet*>(&dis_p));
+				g_clients[target_id]->set_connect_state(DISCONNECTED);
 
 				g_clients[target_id]->vl_lock();
 				for (auto player_view_ids : *g_clients[target_id]->get_view_list()) {
 					// dead lock 방지용 continue;
 					//if (player_view_ids == p->id) { deleting_id = target_id; continue; }
 					g_clients[player_view_ids]->get_view_list()->erase(target_id);
+					
+					sc_disconnect dis_p_to_me;
+					dis_p_to_me.id = player_view_ids;
+					g_clients[target_id]->send_packet(reinterpret_cast<Packet*>(&dis_p_to_me));
 
 					if (true == g_clients[player_view_ids]->get_player_data()->is_ai) { continue; }
 					g_clients[player_view_ids]->send_packet(reinterpret_cast<Packet*>(&dis_p));
@@ -264,7 +277,11 @@ void TimerQueue::processPacket(event_type *p) {
 				g_clients[target_id]->get_view_list()->clear();
 				g_clients[target_id]->vl_unlock();
 				g_time_queue.add_event(target_id, 5, DEAD_TO_ALIVE, false);
-				g_time_queue.add_event(p->id, 3, CHANGE_AI_STATE_MOV, true);
+
+				if (true != g_clients[p->id]->ai_is_rand_mov) {
+					g_clients[p->id]->ai_is_rand_mov = true;
+					g_time_queue.add_event(p->id, 3, CHANGE_AI_STATE_MOV, true);
+				}
 
 				break;
 			}
@@ -277,19 +294,19 @@ void TimerQueue::processPacket(event_type *p) {
 				float movSpeed = g_clients[p->id]->ai_mov_speed * 2;
 				if (x > my_x) {
 					my_x += movSpeed;
-					if (!(x > my_x)) { my_x = x; }
+					//if (!(x > my_x)) { my_x = x; }
 				}
 				if (x < my_x) {
 					my_x -= movSpeed;
-					if (!(x < my_x)) { my_x = x; }
+					//if (!(x < my_x)) { my_x = x; }
 				}
 				if (y > my_y) {
 					my_y += movSpeed;
-					if (!(y > my_y)) { my_y = y; }
+					//if (!(y > my_y)) { my_y = y; }
 				}
 				if (y < my_y) {
 					my_y -= movSpeed;
-					if (!(x < my_x)) { my_y = y; }
+					//if (!(x < my_x)) { my_y = y; }
 				}
 
 				g_clients[p->id]->get_player_data()->pos.x = my_x;
@@ -304,8 +321,11 @@ void TimerQueue::processPacket(event_type *p) {
 			}
 			else {
 				// 아예 시야 범위 밖이라면, 초기화 필요
-				g_clients[p->id]->set_state(mov);
-				g_time_queue.add_event(p->id, 3, CHANGE_AI_STATE_MOV, true);
+				if (true != g_clients[p->id]->ai_is_rand_mov) {
+					g_clients[p->id]->set_state(mov);
+					g_clients[p->id]->ai_is_rand_mov = true;
+					g_time_queue.add_event(p->id, 3, CHANGE_AI_STATE_MOV, true);
+				}
 			}			
 		}
 

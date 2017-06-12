@@ -133,7 +133,7 @@ int CPlayer::Update(void)
 		m_pTerrainCol->CollisionTerrain(&m_pInfo->m_vPos, m_pVerTex);
 
 
-	if (m_fSeverTime > 1.f)
+	if (m_fSeverTime > 0.5f)
 	{
 		g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
 		g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));

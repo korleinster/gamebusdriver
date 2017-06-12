@@ -70,7 +70,7 @@ void boostAsioServer::g_client_init() {
 	int cntSlime = script.get<int>("ai_status_slime.howMany");
 	int cntGoblin = script.get<int>("ai_status_goblin.howMany");
 
-	cntAi = cntSlime + cntGoblin;
+	//cntAi = cntSlime + cntGoblin;
 
 	g_clients.reserve(cntAi + 1000);
 	srand((unsigned)time(NULL));
@@ -103,10 +103,13 @@ void boostAsioServer::g_client_init() {
 		g_clients[i]->get_sub_data()->health = script.get<int>("ai_status_slime.subStatus.health");
 
 		g_clients[i]->ai_mov_speed = script.get<float>("ai_status_slime.aiMovSpeed");
+
+		g_clients[i]->set_state(none);
+		g_clients[i]->m_target_id = none;
 	}
 
 	// °íºí¸° AI
-	for (int i = cntSlime; i < (cntSlime + cntGoblin); ++i)
+	for (int i = cntSlime; i < cntGoblin; ++i)
 	{
 		g_clients.emplace_back(new player_session(boost::asio::ip::tcp::socket(g_io_service), ++m_playerIndex));
 		//cout << "goblin id = " << m_playerIndex << endl;
@@ -133,9 +136,11 @@ void boostAsioServer::g_client_init() {
 		g_clients[i]->get_sub_data()->health = script.get<int>("ai_status_goblin.subStatus.health");
 
 		g_clients[i]->ai_mov_speed = script.get<float>("ai_status_goblin.aiMovSpeed");
+		g_clients[i]->set_state(none);
+		g_clients[i]->m_target_id = none;
 	}
 
-	cout << "AI bots created number of " << cntAi << ", Compelete\n";
+	cout << "AI bots created number of " << cntGoblin << ", Compelete\n";
 
 	//m_scripts.initAis(m_playerIndex);
 }

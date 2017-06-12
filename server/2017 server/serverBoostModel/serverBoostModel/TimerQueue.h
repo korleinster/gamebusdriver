@@ -12,6 +12,8 @@ enum time_queue_event
 	AI_STATE_RAND_MOV_STOP,
 	AI_STATE_TRACKING_PLAYER,
 
+	CHANGE_AI_STATE_ATT,
+	CHANGE_AI_STATE_MOV,
 };
 
 using event_type = struct Event_type

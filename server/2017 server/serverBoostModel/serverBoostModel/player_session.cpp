@@ -45,15 +45,12 @@ bool player_session::check_login() {
 	return false;
 }
 
+// return 값은 공격 해야하는 target id 값이 return 된다.
 unsigned int player_session::ai_rand_mov()
 {
 	char orgin_dir = m_player_data.dir;
+
 	// 무작위 방향 8 개 중 정하기
-	/*default_random_engine e;
-	e.seed(m_id);
-	uniform_int_distribution<int> rnd{0, 7};*/
-	
-	/*m_player_data.dir = DIR_XOR(m_player_data.dir);*/
 	int a = rand() % 8;
 
 	m_player_data.dir = 0;
@@ -68,9 +65,17 @@ unsigned int player_session::ai_rand_mov()
 	case 6: m_player_data.dir = m_player_data.dir | (KEYINPUT_RIGHT | KEYINPUT_UP); break;
 	case 7: m_player_data.dir = m_player_data.dir | (KEYINPUT_LEFT | KEYINPUT_UP); break;
 	}
+	
+	char dir = m_player_data.dir;
+
+	if (orgin_dir != dir) {
+		sc_dir pp;
+		pp.id = m_id;
+		pp.dir = m_player_data.dir;
+		send_packet_other_players_in_view_range(reinterpret_cast<Packet*>(&pp), m_id);
+	}
 
 	// 해당 방향으로 움직이기 - 못가는 곳 충돌 처리를 해야한다면 여기서 해야한다.
-	char dir = m_player_data.dir;
 	position *pos = &m_player_data.pos;
 
 	if ((dir & KEYINPUT_RIGHT) == (KEYINPUT_RIGHT)) { pos->x -= ai_mov_speed; pos->y -= ai_mov_speed; }
@@ -80,66 +85,73 @@ unsigned int player_session::ai_rand_mov()
 		
 
 	// 근처에 공격해야 할 적이 있다면 해당 id return
-	unsigned int target_id = 0;
-	bool is_in_user_view = false;
-
-	m_view_lock.lock();
-	for (auto id : m_view_list) {
-		if (true == g_clients[id]->m_player_data.is_ai) { continue; }
-		if (false == is_in_view_range(id)) { continue; }
-		is_in_user_view = true;
-		if (true == is_in_att_range(id)) {
-			target_id = id;
-		}
-	}
-	m_view_lock.unlock();
+	unsigned int target_id = return_nearlest_player(RANGE_CHECK_AI_ATT);
 
 	// 내 위치와 방향이 바뀌었다고, 주변 플레이어에게 알리기
-	m_view_lock.lock();
-	for (auto id : m_view_list) {
-		if (false == g_clients[id]->m_player_data.is_ai) {
-			sc_move p;
-			p.id = m_id;
-			p.pos = m_player_data.pos;
-			g_clients[id]->send_packet(reinterpret_cast<Packet *>(&p));
+	sc_move p;
+	p.id = m_id;
+	p.pos = m_player_data.pos;
 
-			if (orgin_dir != dir) {
-				sc_dir pp;
-				pp.id = m_id;
-				pp.dir = m_player_data.dir;
-				g_clients[id]->send_packet(reinterpret_cast<Packet *>(&pp));
-			}
-		}
-	}
-	m_view_lock.unlock();
+	send_packet_other_players_in_view_range(reinterpret_cast<Packet*>(&p), m_id);
 
 	// user 가 한명이라도 있다면, 계속 움직여야 한다.
-	if (true == is_in_user_view) {
-		g_time_queue.add_event(m_id, 3, AI_STATE_RAND_MOV, true);
+	if (none != return_nearlest_player(VIEW_RANGE)) {
+		g_time_queue.add_event(m_id, 3, CHANGE_AI_STATE_MOV, true);
 	}
 	else {
 		// 주변에 아무도 없다면, 값을 초기화 하자
+		sc_disconnect packet;
+		packet.id = m_id;
+		send_packet_other_players(reinterpret_cast<Packet*>(&packet), m_id);
 
-		/*m_player_data.pos.x = 150 + ((rand() % 5) - (5 / 2.0f));
-		m_player_data.pos.y = 400 + ((rand() % 5) - (5 / 2.0f));*/
-
-		//cout << "Resting AI ID " << m_id << endl;
-
-		m_view_lock.lock();
-		for (auto id : m_view_list) {
-			if (DISCONNECTED == g_clients[id]->get_current_connect_state()) { continue; }
-			if (true == g_clients[id]->get_player_data()->is_ai) { continue; }
-
-			sc_disconnect packet;
-			packet.id = m_id;
-
-			g_clients[id]->send_packet(reinterpret_cast<Packet *>(&packet));
-		}
-		m_view_lock.unlock();
+		m_target_id = none;
+		set_state(none);
+		ai_is_rand_mov = false;
+		return none;
 	}
-	refresh_view_list();
 
 	return target_id;
+}
+
+unsigned int player_session::return_nearlest_player(float range = VIEW_RANGE)
+{
+	float dist, min = SQUARED(VIEW_RANGE);
+	unsigned int player_id = none;
+	for (auto players : g_clients) {
+		if (DISCONNECTED == players->get_current_connect_state()) { continue; }
+		if (m_id == players->m_id) { continue; }
+		if (true == players->m_player_data.is_ai) { continue; }
+		dist = DISTANCE_TRIANGLE(m_player_data.pos.x, m_player_data.pos.y, players->m_player_data.pos.x, players->m_player_data.pos.y);
+		if (SQUARED(range) >= dist) {
+			if (min > dist) {
+				player_id = players->m_id;
+			}
+		}
+	}
+
+	return player_id;
+}
+
+void player_session::send_packet_other_players(Packet * p, unsigned int except_id)
+{
+	for (auto players : g_clients) {
+		if (DISCONNECTED == players->get_current_connect_state()) { continue; }
+		if (except_id == players->m_id) { continue; }
+		if (true == players->m_player_data.is_ai) { continue; }
+		players->send_packet(p);
+	}
+}
+
+void player_session::send_packet_other_players_in_view_range(Packet* p, unsigned int mid_id)
+{
+	for (auto players : g_clients) {
+		if (DISCONNECTED == players->get_current_connect_state()) { continue; }
+		if (mid_id == players->m_id) { continue; }
+		if (true == players->m_player_data.is_ai) { continue; }
+		if (SQUARED(VIEW_RANGE) >= DISTANCE_TRIANGLE(g_clients[mid_id]->get_player_data()->pos.x, g_clients[mid_id]->get_player_data()->pos.y, players->m_player_data.pos.x, players->m_player_data.pos.y)) {
+			players->send_packet(p);
+		}
+	}
 }
 
 void player_session::Init()
@@ -243,7 +255,7 @@ void player_session::m_recv_packet()
 
 				if (DISCONNECTED == g_clients[id]->m_connect_state) { continue; }
 				if (true == g_clients[id]->get_player_data()->is_ai) { 
-					g_clients[id]->vl_remove(m_id);
+					//g_clients[id]->vl_remove(m_id);
 					continue;
 				}
 				g_clients[id]->send_packet(reinterpret_cast<Packet*>(&p));
@@ -294,13 +306,13 @@ void player_session::refresh_view_list()
 		if (m_id == players->get_id()) { continue; }
 		if (false == is_in_view_range(players->get_id())) {
 			vl_remove(players->get_id());
-			players->vl_remove(m_id);
+			if (false == players->m_player_data.is_ai) { players->vl_remove(m_id); }
 			continue;
 		}
 
 		// view list 에 넣어주기
 		vl_add(players->get_id());
-		players->vl_add(m_id);
+		if (false == players->m_player_data.is_ai) { players->vl_add(m_id); }		
 	}
 }
 
@@ -362,7 +374,7 @@ void player_session::m_process_packet(Packet buf[])
 			p.id = m_id;
 			p.pos = m_player_data.pos;
 
-			// 필요한 애들한테 이동 정보를 뿌려주자
+			// 전체 유저 검색하여 view list 갱신 작업 & 패킷 뿌리기
 			for (auto players : g_clients)
 			{
 				if (DISCONNECTED == players->m_connect_state) { continue; }
@@ -392,28 +404,29 @@ void player_session::m_process_packet(Packet buf[])
 				if (true == vl_find(players->get_id())) { continue;	}
 
 				vl_add(players->get_id());
-				players->vl_add(m_id);
 
 				sc_other_init_info other_player_info_to_me;
 				other_player_info_to_me.playerData = players->m_player_data;
 				send_packet(reinterpret_cast<Packet*>(&other_player_info_to_me));
 
+				// 상대가 컴퓨터라면 패킷 보낼 필요가 없지
 				if (true == players->get_player_data()->is_ai) { continue; }
+				players->vl_add(m_id);	// 해당 플레이어가 봇이면, 시야에 넣어줄 필요가 없지. ( 위에서 부터 위치 이동함 )
+
 				sc_other_init_info my_info_to_other_player;
 				my_info_to_other_player.playerData = m_player_data;
 				players->send_packet(reinterpret_cast<Packet*>(&my_info_to_other_player));
 			}
 
+			/// 이동 시야처리 이후...
+			// 내 view list 를 검색해서..
 			for (auto id : m_view_list) {
+				// 만약 봇이라면...
 				if (true == g_clients[id]->get_player_data()->is_ai) {					
-					// 시야에 있는 컴퓨터 이므로, 랜덤 무빙을 하도록 하게 하자 ******************************************
-					if (false == g_clients[id]->ai_is_rand_mov) {
+					// 시야에 있는 컴퓨터 이므로, 랜덤 무빙을 하도록 하게 하자
+					if (true != g_clients[id]->ai_is_rand_mov) {
 						g_clients[id]->ai_is_rand_mov = true;
-						g_time_queue.add_event(id, 3, AI_STATE_RAND_MOV, true);
-					}
-
-					if (true == is_in_att_range(id)) {
-						// 컴퓨터 어그로 범위라면 공격 명령을 하도록 하게 하자 ******************************************
+						g_time_queue.add_event(id, 0, CHANGE_AI_STATE_MOV, true);
 					}
 					continue;
 				}
@@ -481,19 +494,25 @@ void player_session::m_process_packet(Packet buf[])
 
 				float x = g_clients[id]->m_player_data.pos.x;
 				float y = g_clients[id]->m_player_data.pos.y;
+
+				// 공격을 했는데 상대가 맞았다고 판정이 된다면...================================================================
 				if((player_size * player_size) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) {
+
+					// 난 이제 공격 상태 --------------
 					set_state(att);
+
+					// 일단 상대 체력 찢기
 					g_clients[id]->m_player_data.state.hp -= ((m_sub_status.str * 2) - g_clients[id]->m_sub_status.def);
 					is_gauge_on = true; // 발열 게이지를 마지막 체크 때 올려주자
 
 					if (false == g_clients[id]->get_hp_adding()) {
-						g_clients[id]->set_hp_adding(true);
-						g_time_queue.add_event(id, 1, HP_ADD, false);	// AI 타격 일때, 따로 hp 추가해 주는 함수가 없다 !!! -> 일반 플레이어와 동일하게 처리함
+						//g_clients[id]->set_hp_adding(true);
+						//g_time_queue.add_event(id, 1, HP_ADD, false);	// AI 타격 일때, 따로 hp 추가해 주는 함수가 없다 !!! -> 일반 플레이어와 동일하게 처리함
 					}
 
 					// 맞은 놈이 ai 면, 반격을 하자.
 					if (MAX_AI_NUM > id) {
-						// 단방향 공격일 경우
+						// 공격자의 반대 방향으로 일단 맞보도록 전환
 						char ai_dir = DIR_XOR(m_player_data.dir);
 						if (g_clients[id]->get_player_data()->dir != ai_dir) {
 							g_clients[id]->get_player_data()->dir = ai_dir;
@@ -502,18 +521,23 @@ void player_session::m_process_packet(Packet buf[])
 							p.id = id;
 							p.dir = ai_dir;
 							
-							for (auto p_id : *g_clients[id]->get_view_list()) {
-								if (DISCONNECTED == g_clients[p_id]->m_connect_state) { continue; }
-								if (true == g_clients[p_id]->m_player_data.is_ai) { continue; }
-								g_clients[id]->send_packet(reinterpret_cast<Packet*>(&p));
+							// 방향 바뀐거 알려줘야 할 친구들에게 알려주자.
+							for (auto players : g_clients) {
+								if (DISCONNECTED == players->get_current_connect_state()) { continue; }
+								if (id == players->m_id) { continue; }
+								if (true == players->m_player_data.is_ai) { continue; }
+								if (SQUARED(VIEW_RANGE) >= DISTANCE_TRIANGLE(g_clients[id]->get_player_data()->pos.x, g_clients[id]->get_player_data()->pos.y, players->m_player_data.pos.x, players->m_player_data.pos.y)) {
+									players->send_packet(reinterpret_cast<Packet*>(&p));
+								}
 							}
 						}
 
+						// 맞은 AI 상태가 att 이 아니라면.. 공격 자세를 취해주어야 한다.
 						if (att != g_clients[id]->m_state) {
-							g_clients[id]->m_target_id = m_id;
-							g_time_queue.add_event(id, 1, AI_STATE_ATT, true);
+							//if (none != g_clients[id]->m_target_id) { g_clients[id]->m_target_id = m_id; }
+							g_time_queue.add_event(id, 0, CHANGE_AI_STATE_ATT, true); // 하지만 이건 주변 근접하면 자동으로 공격형으로 변하도록 셋팅하자
 						}
-						g_clients[id]->m_state = att;
+						//g_clients[id]->m_state = att;
 					}
 					
 					sc_atk p;
@@ -531,11 +555,7 @@ void player_session::m_process_packet(Packet buf[])
 							sc_disconnect dis_p;
 							dis_p.id = id;
 
-							for (auto v_id : g_clients[id]->m_view_list) {
-								if (true == g_clients[v_id]->get_player_data()->is_ai) { continue; }
-								g_clients[v_id]->send_packet(reinterpret_cast<Packet*>(&dis_p));
-							}
-							g_clients[id]->m_view_list.clear();
+							send_packet_other_players(reinterpret_cast<Packet *>(&dis_p), id);
 							g_time_queue.add_event(g_clients[id]->m_player_data.id, 10, DEAD_TO_ALIVE, true);	// bot 리젠
 							
 							// 잡은 녀석에는 경험치도 주도록 하자.

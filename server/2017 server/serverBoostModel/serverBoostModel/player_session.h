@@ -8,6 +8,7 @@ using boost::asio::ip::tcp;
 #define SQUARED(x) ((x) * (x))
 
 enum player_state {
+	none = 0,
 	mov,
 	att,
 	dead,
@@ -57,6 +58,8 @@ public:
 		m_view_list.erase(id);
 		m_view_lock.unlock();
 	}
+	void vl_lock() { m_view_lock.lock(); }
+	void vl_unlock() { m_view_lock.unlock(); }
 	bool vl_find(unsigned int id) {
 		if (m_view_list.end() != m_view_list.find(id)) { return true; }
 		return false;
@@ -73,6 +76,9 @@ public:
 
 	// ai 전용 함수
 	unsigned int ai_rand_mov();
+	unsigned int return_nearlest_player(float range);
+	void send_packet_other_players(Packet* p, unsigned int except_id);
+	void send_packet_other_players_in_view_range(Packet* p, unsigned int mid_id);
 
 	// ai 활용 용도 변수
 	unsigned int m_target_id{ 0 };

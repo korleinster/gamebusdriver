@@ -94,9 +94,13 @@ unsigned int player_session::ai_rand_mov()
 
 	send_packet_other_players_in_view_range(reinterpret_cast<Packet*>(&p), m_id);
 
-	// user 가 한명이라도 있다면, 계속 움직여야 한다.
+	// user 가 한명이라도 있다면
 	if (none != return_nearlest_player(VIEW_RANGE)) {
-		g_time_queue.add_event(m_id, 3, CHANGE_AI_STATE_MOV, true);
+		// 계속 움직이는건, 타이머 스레드에서 한다
+		/*if (true != ai_is_rand_mov) {
+			ai_is_rand_mov = true;
+			g_time_queue.add_event(m_id, 3, CHANGE_AI_STATE_MOV, true);
+		}*/
 	}
 	else {
 		// 주변에 아무도 없다면, 값을 초기화 하자
@@ -551,6 +555,8 @@ void player_session::m_process_packet(Packet buf[])
 						// 맞은 애가 ai 면 그냥 연결 끊어서 죽이기
 						if (MAX_AI_NUM > g_clients[id]->get_id()) {
 							g_clients[id]->m_connect_state = DISCONNECTED;
+							g_clients[id]->ai_is_rand_mov = false;
+							g_clients[id]->set_state(none);
 
 							sc_disconnect dis_p;
 							dis_p.id = id;

@@ -112,6 +112,8 @@ void TimerQueue::processPacket(event_type *p) {
 		}
 		else {
 			// player ÀÏ °æ¿ì
+			if (dead != g_clients[p->id]->get_state()) { break; }
+
 			g_clients[p->id]->set_connect_state(CONNECTED);
 			g_clients[p->id]->set_state(mov);
 			g_clients[p->id]->get_player_data()->pos.x = 160;

@@ -349,8 +349,6 @@ bool player_session::is_in_att_range(unsigned int id) {
 
 void player_session::send_packet(Packet *packet)
 {
-	cout << "Packet sended to id : " << m_id << "\n";
-
 	int packet_size = packet[0];
 	Packet *sendBuf = new Packet[packet_size];
 	memcpy(sendBuf, packet, packet_size);

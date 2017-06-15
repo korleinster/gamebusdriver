@@ -349,6 +349,8 @@ bool player_session::is_in_att_range(unsigned int id) {
 
 void player_session::send_packet(Packet *packet)
 {
+	cout << "Packet sended to id : " << m_id << "\n";
+
 	int packet_size = packet[0];
 	Packet *sendBuf = new Packet[packet_size];
 	memcpy(sendBuf, packet, packet_size);
@@ -411,7 +413,10 @@ void player_session::m_process_packet(Packet buf[])
 				}
 
 				// view list 에 있으면 skip
-				if (true == vl_find(players->get_id())) { continue;	}
+				if (true == vl_find(players->get_id())) {
+					players->send_packet(reinterpret_cast<Packet*>(&p));
+					continue;
+				}
 
 				vl_add(players->get_id());
 

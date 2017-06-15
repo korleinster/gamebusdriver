@@ -15,7 +15,7 @@
 #define OP_SERVER_SEND 2
 
 // AI index
-#define MAX_AI_SLIME 10
+#define MAX_AI_SLIME 3
 #define MAX_AI_GOBLIN (MAX_AI_SLIME + 10)
 #define MAX_AI_NUM MAX_AI_GOBLIN
 

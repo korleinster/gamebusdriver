@@ -134,6 +134,7 @@ void TimerQueue::processPacket(event_type *p) {
 
 			g_clients[p->id]->refresh_view_list(); ///
 
+			g_clients[p->id]->vl_lock();
 			for (auto id : *g_clients[p->id]->get_view_list()) {
 				// 다른 애들 정보를 복사해서 넣고, 얘한테 먼저 보내고...
 				other_info_to_me.playerData = *(g_clients[id]->get_player_data());
@@ -151,6 +152,7 @@ void TimerQueue::processPacket(event_type *p) {
 				// 다른 애 정보를 이제 다른 애들한테 보내면 되는데..
 				g_clients[id]->send_packet(reinterpret_cast<Packet*>(&my_info_to_other));
 			}
+			g_clients[p->id]->vl_unlock();
 		}
 
 

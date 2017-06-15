@@ -20,13 +20,13 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 	{
 	case CHANGED_POSITION: {
 		sc_move *p = reinterpret_cast<sc_move*>(buf);
-		cout << "moved ID : " << p->id << ", position " << p->pos.x << ", " << p->pos.y << endl;;
+		//cout << "moved ID : " << p->id << ", position " << p->pos.x << ", " << p->pos.y << endl;;
 		
 		if (CSceneMgr::GetInstance()->GetScene() != SCENE_LOGO)
 		{
 			player_data *data = NULL;
 
-			if (p->id > MAX_AI_NUM)
+			if (p->id >= MAX_AI_NUM)
 				data = CObjMgr::GetInstance()->Get_PlayerServerData(p->id);
 			else
 				data = CObjMgr::GetInstance()->Get_MonsterServerData(p->id);
@@ -73,7 +73,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		if (CSceneMgr::GetInstance()->GetScene() != SCENE_LOGO)
 		{
 			player_data *data = nullptr;
-			if (p->id > MAX_AI_NUM)
+			if (p->id >= MAX_AI_NUM)
 				data = CObjMgr::GetInstance()->Get_PlayerServerData(p->id);
 			else
 				data = CObjMgr::GetInstance()->Get_MonsterServerData(p->id);
@@ -174,7 +174,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 			// 내가 아니라면 다른애 hp 깎기
 
-			if (p->under_attack_id > MAX_AI_NUM) // 플레이어일시
+			if (p->under_attack_id >= MAX_AI_NUM) // 플레이어일시
 			{
 				if (NULL != (CObjMgr::GetInstance()->Get_PlayerServerData(p->under_attack_id))) {
 					(CObjMgr::GetInstance()->Get_PlayerServerData(p->under_attack_id))->state.hp = p->hp;
@@ -316,7 +316,9 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			break;
 		case INIT_CLIENT: {
 			//플레이어 최초 갱신 혹은 죽었다 부활했을시
+
 			m_player = reinterpret_cast<sc_client_init_info *>(buf)->player_info;
+			cout << "Init ID : " << m_player.id << "\n";
 			(*CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin())->SetPos(D3DXVECTOR3(m_player.pos.x, 0.f, m_player.pos.y));
 			(*CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin())->GetPacketData()->state.hp = m_player.state.hp;
 			break;
@@ -333,11 +335,15 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 				if(p->playerData.id < MAX_AI_NUM)
 				{ 
+					//cout << "몬스터 생성" << endl;
+
 					CObj* pObj = CMonster::Create();
 					pObj->SetPos(D3DXVECTOR3(m_player.pos.x, 1.f, m_player.pos.y));
 					pObj->SetPacketData(&p->playerData);
 					CObjMgr::GetInstance()->AddObject(L"Monster", pObj);
 					CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, pObj);
+
+					//cout << "현재 몬스터의 개수 :" << CObjMgr::GetInstance()->m_mapObj[L"Monster"].size() << endl;
 				}
 				else
 				{
@@ -366,6 +372,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			{
 				list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"Monster")->begin();
 				list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"Monster")->end();
+				//cout << "몬스터 삭제" << endl;
 
 				for (; iter != iter_end; ++iter)
 				{
@@ -378,6 +385,8 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 						break;
 					}
 				}
+
+				//cout << "현재 몬스터의 개수 :" << CObjMgr::GetInstance()->m_mapObj[L"Monster"].size() << endl;
 			}
 			
 			else

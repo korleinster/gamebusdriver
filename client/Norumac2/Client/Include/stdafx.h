@@ -62,6 +62,13 @@ using namespace std;
 
 // 서버와 관련된 프로토콜
 #include "../../../../server/2017 server/serverBoostModel/serverBoostModel/protocol.h"
+// LUA script 관련 헤더
+extern "C" {
+#include "lualib.h"
+#include "lauxlib.h"
+#include "lua.h"
+}
+#include "../../../../server/2017 server/serverBoostModel/serverBoostModel/readLUAScript.h"
 
 // client 통신 관련 class
 #include <fstream>

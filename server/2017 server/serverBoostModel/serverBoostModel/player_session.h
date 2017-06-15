@@ -3,7 +3,7 @@
 using boost::asio::ip::tcp;
 
 #define VIEW_RANGE	10
-#define RANGE_CHECK_AI_ATT	5
+#define RANGE_CHECK_AI_ATT	2.5
 #define DISTANCE_TRIANGLE(x , y, m_x, m_y) ((((x) - (m_x)) * ((x) - (m_x))) + ((((y) - (m_y)) * ((y) - (m_y)))))
 #define SQUARED(x) ((x) * (x))
 

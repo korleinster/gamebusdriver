@@ -91,7 +91,7 @@ unsigned int player_session::ai_rand_mov()
 
 	// 근처에 공격해야 할 적이 있다면 해당 id return
 	unsigned int target_id = return_nearlest_player(RANGE_CHECK_AI_ATT);
-
+	
 	// 내 위치와 방향이 바뀌었다고, 주변 플레이어에게 알리기
 	sc_move p;
 	p.id = m_id;
@@ -123,7 +123,7 @@ unsigned int player_session::ai_rand_mov()
 	return target_id;
 }
 
-unsigned int player_session::return_nearlest_player(float range = VIEW_RANGE)
+unsigned int player_session::return_nearlest_player(float range)
 {
 	float dist, min = SQUARED(VIEW_RANGE);
 	unsigned int player_id = none;
@@ -547,7 +547,7 @@ void player_session::m_process_packet(Packet buf[])
 
 						// 맞은 AI 상태가 att 이 아니라면.. 공격 자세를 취해주어야 한다.
 						if (att != g_clients[id]->m_state) {
-							//if (none != g_clients[id]->m_target_id) { g_clients[id]->m_target_id = m_id; }
+							if (none == g_clients[id]->m_target_id) { g_clients[id]->m_target_id = m_id; }
 							g_time_queue.add_event(id, 0, CHANGE_AI_STATE_ATT, true); // 하지만 이건 주변 근접하면 자동으로 공격형으로 변하도록 셋팅하자
 						}
 						//g_clients[id]->m_state = att;

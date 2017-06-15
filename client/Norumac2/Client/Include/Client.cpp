@@ -12,6 +12,11 @@
 // 전역 변수:
 HINSTANCE g_hInst;                                // 현재 인스턴스입니다.
 
+// ClientClass.cpp - Init 함수에서 스크립트 값을 읽어온다.
+int MAX_AI_SLIME;
+int MAX_AI_GOBLIN;
+int MAX_AI_NUM;
+
 HWND	g_hWnd;
 DWORD	g_dwLightIndex = 0;
 D3DXVECTOR3 g_vLightDir = D3DXVECTOR3(1.f, -1.f, 1.f);

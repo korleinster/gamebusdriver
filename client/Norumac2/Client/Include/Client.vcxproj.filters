@@ -220,6 +220,9 @@
     <Filter Include="02.Object\07.UI\08.MobHpBar">
       <UniqueIdentifier>{fe66701f-cc77-4a93-bbfd-f6b9a0dbfd88}</UniqueIdentifier>
     </Filter>
+    <Filter Include="99.Default\Script">
+      <UniqueIdentifier>{b291fcad-0c57-4c70-932d-5e37d542405a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -453,6 +456,9 @@
     <ClInclude Include="MobHpBar.h">
       <Filter>02.Object\07.UI\08.MobHpBar</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\server\2017 server\serverBoostModel\serverBoostModel\readLUAScript.h">
+      <Filter>99.Default\Script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\MainApp.cpp">
@@ -659,6 +665,9 @@
     <ClCompile Include="MobHpBar.cpp">
       <Filter>02.Object\07.UI\08.MobHpBar</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\server\2017 server\serverBoostModel\serverBoostModel\readLUAScript.cpp">
+      <Filter>99.Default\Script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\ShaderCode\Shader.fx">
@@ -693,5 +702,11 @@
     <ResourceCompile Include="ip_and_login.rc">
       <Filter>99.Default</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\server\2017 server\serverBoostModel\serverBoostModel\script\AI_default_status.lua">
+      <Filter>99.Default\Script</Filter>
+    </None>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

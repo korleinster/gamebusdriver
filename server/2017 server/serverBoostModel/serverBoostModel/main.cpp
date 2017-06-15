@@ -13,6 +13,11 @@ vector<player_session*> g_clients;
 DB g_database;
 TimerQueue g_time_queue;
 
+// protocol 통신 페이지 & boostAsioServer.cpp 에서 값 갱신해준다.
+int MAX_AI_SLIME;
+int MAX_AI_GOBLIN;
+int MAX_AI_NUM;
+
 int main()
 {
 	try

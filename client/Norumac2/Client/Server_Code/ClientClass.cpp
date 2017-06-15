@@ -2,6 +2,7 @@
 #include"stdafx.h"
 #include"../Server_Code/ClientClass.h"
 #include<fstream>
+#include "../../../../server/2017 server/serverBoostModel/serverBoostModel/readLUAScript.h"
 
 AsynchronousClientClass::AsynchronousClientClass()
 {
@@ -71,6 +72,12 @@ void AsynchronousClientClass::Init(const HWND& hwnd)
 	m_wsa_recvbuf.len = MAX_BUF_SIZE;
 	m_wsa_sendbuf.buf = reinterpret_cast<CHAR*>(m_sendbuf);
 	m_wsa_sendbuf.len = MAX_BUF_SIZE;
+
+	LuaScript script("../../../../server/2017 server/serverBoostModel/serverBoostModel/script/AI_default_status.lua");
+
+	MAX_AI_SLIME = script.get<int>("ai_status_slime.howMany");
+	MAX_AI_GOBLIN = (MAX_AI_SLIME + script.get<int>("ai_status_goblin.howMany"));
+	MAX_AI_NUM = MAX_AI_GOBLIN;
 
 #ifdef _DEBUG
 	//system("cls");

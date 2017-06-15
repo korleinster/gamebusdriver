@@ -14,10 +14,10 @@
 #define OP_SERVER_RECV 1
 #define OP_SERVER_SEND 2
 
-// AI index
-#define MAX_AI_SLIME 3
-#define MAX_AI_GOBLIN (MAX_AI_SLIME + 10)
-#define MAX_AI_NUM MAX_AI_GOBLIN
+// AI index - 원본 위치 main, 값 갱신 ClientClass init 함수에서 스크립트 읽어옴
+extern int MAX_AI_SLIME;
+extern int MAX_AI_GOBLIN;
+extern int MAX_AI_NUM;
 
 // process protocol
 enum PacketProtocolType {

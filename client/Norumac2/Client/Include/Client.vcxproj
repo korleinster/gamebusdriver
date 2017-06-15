@@ -174,6 +174,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\server\2017 server\serverBoostModel\serverBoostModel\protocol.h" />
+    <ClInclude Include="..\..\..\..\server\2017 server\serverBoostModel\serverBoostModel\readLUAScript.h" />
     <ClInclude Include="..\Code\AniBuffer.h" />
     <ClInclude Include="..\Code\AnimationMgr.h" />
     <ClInclude Include="..\Code\BaseUI.h" />
@@ -249,6 +250,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\server\2017 server\serverBoostModel\serverBoostModel\readLUAScript.cpp" />
     <ClCompile Include="..\Code\AniBuffer.cpp" />
     <ClCompile Include="..\Code\AnimationMgr.cpp" />
     <ClCompile Include="..\Code\BaseUI.cpp" />
@@ -342,7 +344,20 @@
   <ItemGroup>
     <ResourceCompile Include="ip_and_login.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\server\2017 server\serverBoostModel\serverBoostModel\script\AI_default_status.lua" />
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\..\packages\lua.redist.5.3.4\build\native\lua.redist.targets" Condition="Exists('..\..\packages\lua.redist.5.3.4\build\native\lua.redist.targets')" />
+    <Import Project="..\..\packages\lua.5.3.4\build\native\lua.targets" Condition="Exists('..\..\packages\lua.5.3.4\build\native\lua.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>이 프로젝트는 이 컴퓨터에 없는 NuGet 패키지를 참조합니다. 해당 패키지를 다운로드하려면 NuGet 패키지 복원을 사용하십시오. 자세한 내용은 http://go.microsoft.com/fwlink/?LinkID=322105를 참조하십시오. 누락된 파일은 {0}입니다.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\lua.redist.5.3.4\build\native\lua.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\lua.redist.5.3.4\build\native\lua.redist.targets'))" />
+    <Error Condition="!Exists('..\..\packages\lua.5.3.4\build\native\lua.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\lua.5.3.4\build\native\lua.targets'))" />
+  </Target>
 </Project>

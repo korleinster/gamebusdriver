@@ -106,6 +106,8 @@ void TimerQueue::processPacket(event_type *p) {
 			g_clients[p->id]->send_packet_other_players_in_view_range(reinterpret_cast<Packet *>(&packet), p->id);
 
 			if (true != g_clients[p->id]->ai_is_rand_mov) {
+				g_clients[p->id]->m_target_id = none;
+				g_clients[p->id]->set_state(mov);
 				g_clients[p->id]->ai_is_rand_mov = true;
 				g_time_queue.add_event(p->id, 3, CHANGE_AI_STATE_MOV, true);
 			}
@@ -216,7 +218,7 @@ void TimerQueue::processPacket(event_type *p) {
 			g_clients[p->id]->ai_is_rand_mov = true;
 			if (none == g_clients[p->id]->m_target_id) {
 				if (true != g_clients[p->id]->ai_is_rand_mov) {
-					g_clients[p->id]->set_state(none);
+					g_clients[p->id]->set_state(mov);
 					g_clients[p->id]->ai_is_rand_mov = true;
 					g_time_queue.add_event(p->id, 3, CHANGE_AI_STATE_MOV, true);
 				}
@@ -256,10 +258,7 @@ void TimerQueue::processPacket(event_type *p) {
 			// 만약 맞은 플레이어가 죽었다면..?
 			if (1 > target_hp) {
 				g_clients[target_id]->set_state(dead);
-
-				g_clients[p->id]->m_target_id = none;
-				g_clients[p->id]->set_state(none);
-
+				
 				sc_disconnect dis_p;
 				dis_p.id = target_id;
 				g_clients[target_id]->send_packet(reinterpret_cast<Packet*>(&dis_p));
@@ -284,6 +283,8 @@ void TimerQueue::processPacket(event_type *p) {
 
 				if (true != g_clients[p->id]->ai_is_rand_mov) {
 					g_clients[p->id]->ai_is_rand_mov = true;
+					g_clients[p->id]->m_target_id = none;
+					g_clients[p->id]->set_state(mov);
 					g_time_queue.add_event(p->id, 3, CHANGE_AI_STATE_MOV, true);
 				}
 
@@ -325,7 +326,8 @@ void TimerQueue::processPacket(event_type *p) {
 			}
 			else {
 				// 아예 시야 범위 밖이라면, 초기화 필요
-				if (true != g_clients[p->id]->ai_is_rand_mov) {
+				if (true == g_clients[p->id]->ai_is_rand_mov) {
+					g_clients[p->id]->m_target_id = none;
 					g_clients[p->id]->set_state(mov);
 					g_clients[p->id]->ai_is_rand_mov = true;
 					g_time_queue.add_event(p->id, 3, CHANGE_AI_STATE_MOV, true);
@@ -347,6 +349,7 @@ void TimerQueue::processPacket(event_type *p) {
 			// 본 ai가 사망했을 경우..
 			g_clients[p->id]->m_target_id = none;
 			g_clients[p->id]->set_state(none);
+			g_clients[p->id]->ai_is_rand_mov = false;
 			break;
 		}
 

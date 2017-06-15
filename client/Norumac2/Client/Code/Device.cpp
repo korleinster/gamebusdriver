@@ -90,6 +90,7 @@ bool CDevice::CreateSwapChain(void)
 
 	if (!CreateRenderTargetStanciView()) return(false);
 
+	FAILED_CHECK(Init_Blend());
 
 	return true;
 }
@@ -154,7 +155,37 @@ void CDevice::Release(void)
 	::Safe_Release(m_pDepthStencilBuffer);
 	::Safe_Release(m_pDepthStencilView);
 	::Safe_Release(m_pSwapChain);
+	::Safe_Release(m_pBlendState);
 	::Safe_Release(m_pDeviceContext);
-	::Safe_Release(m_pDevice);
+}
 
+HRESULT CDevice::Init_Blend()
+{
+	D3D11_BLEND_DESC tBlend;
+	ZeroMemory(&tBlend, sizeof(D3D11_BLEND_DESC));
+
+	tBlend.AlphaToCoverageEnable = true;
+	tBlend.IndependentBlendEnable = false;
+	tBlend.RenderTarget[0].BlendEnable = true;
+	tBlend.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	tBlend.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	tBlend.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	tBlend.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	tBlend.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+	tBlend.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	tBlend.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+	FAILED_CHECK_RETURN(m_pDevice->CreateBlendState(&tBlend, &m_pBlendState), E_FAIL);
+
+	return S_OK;
+}
+
+void CDevice::Blend_Begin()
+{
+	m_pDeviceContext->OMSetBlendState(m_pBlendState, NULL, 0xffffffff);
+}
+
+void CDevice::Blend_End()
+{
+	m_pDeviceContext->OMSetBlendState(NULL, NULL, 0xffffffff);
 }

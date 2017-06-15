@@ -19,18 +19,22 @@ public:
 
 	ID3D11Texture2D*				m_pDepthStencilBuffer;
 	ID3D11DepthStencilView*			m_pDepthStencilView;
-
+	ID3D11BlendState*				m_pBlendState;
 public:
 	HRESULT CreateDevice(void);
 	bool	CreateSwapChain(void);
 	bool	CreateRenderTargetStanciView(void);
+	ID3D11BlendState*		GetBlendState() { return m_pBlendState; }
 
-public:
+	void	Blend_Begin();
+	void	Blend_End();
 	void	BeginDevice(void);
 	void	EndDevice(void);
 	void	BeginDeferredContext(void);
 	void	EndDeferredContext(ID3D11CommandList* pCommandList);
 	void Release(void);
+private:
+	HRESULT		Init_Blend();
 };
 
 

@@ -129,9 +129,9 @@ HRESULT CRenderMgr::InitScene(void)
 void CRenderMgr::Render(const float & fTime)
 {
 	// Å°¼¼ÆÃ
-//#if defined( DEBUG ) || defined( _DEBUG )
+#if defined( DEBUG ) || defined( _DEBUG )
 	Input(fTime);
-//#endif
+#endif
 
 	if (m_bDefferdOn)
 	{
@@ -279,12 +279,8 @@ void CRenderMgr::Render_Alpha(void)
 
 void CRenderMgr::Render_UI(void)
 {
-	// 	m_pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-	// 	m_pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-	// 	m_pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	m_pDevice->Blend_Begin();
 
-	//m_pDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
-	//m_pDevice->SetRenderState(D3DRS_ZENABLE, FALSE);
 	list<CObj*>::iterator	iter = m_RenderGroup[TYPE_UI].begin();
 	list<CObj*>::iterator	iter_end = m_RenderGroup[TYPE_UI].end();
 
@@ -298,8 +294,7 @@ void CRenderMgr::Render_UI(void)
 			++iter;
 		}
 	}
-	//m_pDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-	//m_pDevice->SetRenderState(D3DRS_ZENABLE, TRUE);
+	m_pDevice->Blend_End();
 }
 
 void CRenderMgr::Render_FPS(const float & fTime)

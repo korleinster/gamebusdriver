@@ -69,7 +69,8 @@ void boostAsioServer::g_client_init() {
 
 	MAX_AI_SLIME = script.get<int>("ai_status_slime.howMany");
 	MAX_AI_GOBLIN = script.get<int>("ai_status_goblin.howMany");
-	MAX_AI_NUM = MAX_AI_GOBLIN;
+	MAX_AI_BOSS = script.get<int>("ai_status_boss.howMany");
+	MAX_AI_NUM = MAX_AI_BOSS;
 
 	//cntAi = cntSlime + cntGoblin;
 
@@ -139,6 +140,39 @@ void boostAsioServer::g_client_init() {
 		g_clients[i]->get_sub_data()->health = script.get<int>("ai_status_goblin.subStatus.health");
 
 		g_clients[i]->ai_mov_speed = script.get<float>("ai_status_goblin.aiMovSpeed");
+		g_clients[i]->set_state(none);
+		g_clients[i]->m_target_id = none;
+	}
+
+	// BOSS AI
+	for (int i = MAX_AI_GOBLIN; i < MAX_AI_BOSS; ++i)
+	{
+		g_clients.emplace_back(new player_session(boost::asio::ip::tcp::socket(g_io_service), ++m_playerIndex));
+		//cout << "goblin id = " << m_playerIndex << endl;
+		g_clients[i]->get_player_data()->id = m_playerIndex;
+		g_clients[i]->get_player_data()->is_ai = true;
+		g_clients[i]->get_player_data()->dir = KEYINPUT_UP;
+
+		Position pos;
+		pos.x = script.get<float>("ai_status_boss.pos.x");
+		pos.y = script.get<float>("ai_status_boss.pos.y");
+		g_clients[i]->radius = script.get<int>("ai_status_boss.radius");
+		g_clients[i]->origin_pos = pos;
+
+		g_clients[i]->get_player_data()->pos.x = pos.x + ((rand() % g_clients[i]->radius) - (g_clients[i]->radius / 2.0f));
+		g_clients[i]->get_player_data()->pos.y = pos.y + ((rand() % g_clients[i]->radius) - (g_clients[i]->radius / 2.0f));
+
+		g_clients[i]->get_player_data()->state.maxhp = script.get<int>("ai_status_boss.status.maxHp");
+		g_clients[i]->get_player_data()->state.hp = g_clients[i]->get_player_data()->state.maxhp;
+
+		g_clients[i]->get_sub_data()->critical = script.get<int>("ai_status_boss.subStatus.crit"); // const
+		g_clients[i]->get_sub_data()->def = script.get<int>("ai_status_boss.subStatus.def");
+		g_clients[i]->get_sub_data()->str = script.get<int>("ai_status_boss.subStatus.str");
+		g_clients[i]->get_sub_data()->agi = script.get<int>("ai_status_boss.subStatus.agi");
+		g_clients[i]->get_sub_data()->intel = script.get<int>("ai_status_boss.subStatus.intel");
+		g_clients[i]->get_sub_data()->health = script.get<int>("ai_status_boss.subStatus.health");
+
+		g_clients[i]->ai_mov_speed = script.get<float>("ai_status_boss.aiMovSpeed");
 		g_clients[i]->set_state(none);
 		g_clients[i]->m_target_id = none;
 	}

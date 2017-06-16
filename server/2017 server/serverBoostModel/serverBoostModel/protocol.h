@@ -15,9 +15,10 @@
 #define OP_SERVER_SEND 2
 
 // AI index - 원본 위치 main, 값 갱신 ClientClass init 함수에서 스크립트 읽어옴
+extern int MAX_AI_NUM;
 extern int MAX_AI_SLIME;
 extern int MAX_AI_GOBLIN;
-extern int MAX_AI_NUM;
+extern int MAX_AI_BOSS;
 
 // process protocol
 enum PacketProtocolType {

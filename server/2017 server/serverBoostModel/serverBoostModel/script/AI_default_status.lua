@@ -1,5 +1,5 @@
 
-ai_differs = 2	-- 몬스터 전체 종류
+ai_differs = 3	-- 몬스터 전체 종류
 
 ai_status_slime = {
 	pos = { x = 134.0, y = 403.0 }, -- 몬스터가 생성될 기본 중점 X Y
@@ -27,6 +27,27 @@ ai_status_goblin = {
 	radius = 10,
 	
 	howMany	= 10 + ai_status_slime.howMany,
+	aiMovSpeed = 0.5,
+	
+	status = {
+		maxHp	= 100,
+	},
+
+	subStatus = {
+		crit	= 5,
+		def		= 10,
+		str		= 20,
+		agi		= 10,
+		intel	= 10,
+		health	= 10,
+	}
+}
+
+ai_status_boss = {
+	pos = { x = 150.0, y = 398.0 },
+	radius = 1,
+	
+	howMany	= 1 + ai_status_goblin.howMany,
 	aiMovSpeed = 0.5,
 	
 	status = {

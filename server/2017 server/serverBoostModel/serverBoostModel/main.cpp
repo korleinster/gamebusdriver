@@ -17,6 +17,7 @@ TimerQueue g_time_queue;
 int MAX_AI_SLIME;
 int MAX_AI_GOBLIN;
 int MAX_AI_NUM;
+int MAX_AI_BOSS;
 
 int main()
 {

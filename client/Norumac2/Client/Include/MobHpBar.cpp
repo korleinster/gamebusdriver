@@ -30,12 +30,12 @@ HRESULT CMobHpBar::Initialize(void)
 {
 	FAILED_CHECK(AddComponent());
 
-	m_fX = 50.f;
-	m_fY = 162.f;
+	m_fX = 150.f;
+	m_fY = 150.f;
 	m_fOriginX = m_fX;
 	m_fOriginY = m_fY;
-	m_fSizeX = 45.f;
-	m_fSizeY = 9.5f;
+	m_fSizeX = 115.f;
+	m_fSizeY = 5.f;
 
 	m_fRendTime = 0.f;
 
@@ -145,7 +145,7 @@ void CMobHpBar::SetRendHp(int iHp, float fMaxHp)
 	float fHp = 1.f - iHp / fMaxHp;
 
 	m_fX = m_fOriginX;
-	m_fX -= fHp * m_fSizeY * 0.5f;
+	m_fX -= fHp * m_fSizeY * 0.075f;
 
 	VTXTEX vtx[] =
 	{

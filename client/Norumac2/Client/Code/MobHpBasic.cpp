@@ -31,10 +31,10 @@ HRESULT CMobHpBasic::Initialize(void)
 {
 	FAILED_CHECK(AddComponent());
 
-	m_fX = 50.f;
+	m_fX = 150.f;
 	m_fY = 150.f;
-	m_fSizeX = 58.f;
-	m_fSizeY = 32.f;
+	m_fSizeX = 115.f;
+	m_fSizeY = 5.f;
 	m_fRendTime = 0.f;
 
 	//
@@ -45,9 +45,9 @@ HRESULT CMobHpBasic::Initialize(void)
 	m_pFont->m_fSize = 20.f;
 	m_pFont->m_nColor = 0xFF008AFF;
 	m_pFont->m_nFlag = FW1_CENTER | FW1_VCENTER | FW1_RESTORESTATE;
-	m_pFont->m_vPos = D3DXVECTOR2(m_fX, m_fY - 10.f);
+	m_pFont->m_vPos = D3DXVECTOR2(m_fX, m_fY - 15.f);
 	m_pFont->m_fOutlineSize = 1.f;
-	m_pFont->m_nOutlineColor = 0xFF000000 /*0xFFFFFFFF*/;
+	m_pFont->m_nOutlineColor = 0x00000000 /*0xFFFFFFFF*/;
 
 	return S_OK;
 }

@@ -6,10 +6,7 @@
 #include "Include.h"
 
 
-class CResourceMgr;
-class CInfo;
-class CTexture;
-class CVIBuffer;
+class CFont;
 class CDamageFont : public CUI
 {
 public:
@@ -22,17 +19,9 @@ public:
 public:
 	static CDamageFont* Create(const D3DXVECTOR3* pPos, const float& fDmg);
 private:
-	D3DXVECTOR3				m_vPos;
-	int						m_iDmg;
-	unsigned int			m_iCnt;
-	unsigned int			m_iCnt2;
-	float					m_fAddY;
+	D3DXVECTOR3				m_vPoint;
 	float					m_fTime;
-	float					m_fScaleRatio;
-	float					m_fUpSpeed;
-	float					m_fRightSpeed;
-	float					m_fDrawRatio;
-	int						m_iRendNum;
+
 
 private:
 	float					m_fPosRandX;
@@ -41,13 +30,10 @@ private:
 	float					m_fMoveSize;
 
 protected:
-	CVIBuffer*			m_pBuffer;
-	CShader*			m_pShader;
-	CTexture*			m_pTexture;
+	CFont* m_pFont;
 
 private:
 	HRESULT Add_Component(void);
-	void Compute_Cnt(void);
 };
 
 

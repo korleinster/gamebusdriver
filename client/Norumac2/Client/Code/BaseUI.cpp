@@ -38,7 +38,7 @@ HRESULT CBaseUI::Initialize(void)
 	CRenderMgr::GetInstance()->AddRenderGroup(TYPE_UI, this);
 
 	m_pFont->m_eType = FONT_TYPE_OUTLINE;
-	m_pFont->m_wstrText = L"와 한글이다";
+	m_pFont->m_wstrText = L" ";//여기에 아이디 넣자고하면 수정.
 	m_pFont->m_fSize = 20.f;
 	m_pFont->m_nColor = 0xFF008AFF;
 	m_pFont->m_nFlag = FW1_CENTER | FW1_VCENTER | FW1_RESTORESTATE;

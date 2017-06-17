@@ -134,7 +134,7 @@ void CHpBar::UpdateBufferToHp(void)
 	float fHp = 1.f - (*player)->GetPacketData()->state.hp / 100.f;
 
 	m_fX = m_fOriginX;
-	m_fX += fHp * m_fSizeY * 2;
+	m_fX += fHp * m_fSizeY * 0.25;
 
 	VTXTEX vtx[] =
 	{

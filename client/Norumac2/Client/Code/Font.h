@@ -18,7 +18,7 @@ public:
 	FontType		m_eType;//외곽선 여부
 	wstring			m_wstrText;//텍스트 내용
 	float			m_fSize;//폰트 사이즈
-	UINT32			m_nColor;//폰트 색상 (0xAARRGGBB)
+	UINT32			m_nColor;//폰트 색상 (0xAABBGGRR)
 	UINT			m_nFlag;/*
 	폰트의 플레그 설정.
 	FW1_LEFT - 왼쪽정렬(디폴트)

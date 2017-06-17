@@ -261,6 +261,7 @@ HRESULT CMainApp::Initialize(void)
 	}
 
 	hr = CFontMgr::GetInstance()->AddFont(L"../Resource/Font/Ko_Star.ttf", L"Font_Star", L"KoStar");
+	hr = CFontMgr::GetInstance()->AddFont(L"../Resource/Font/ClearType.ttf", L"Font_Clear", L"ClearFont");
 
 
 	CScene* pScene = NULL;

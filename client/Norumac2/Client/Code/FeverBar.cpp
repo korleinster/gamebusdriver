@@ -28,8 +28,10 @@ HRESULT CFeverBar::Initialize(void)
 {
 	FAILED_CHECK(AddComponent());
 
-	m_fX = 174.f;
-	m_fY = 74.f;
+	m_fX = 173.f;
+	m_fY = 75.f;
+	m_fOriginX = m_fX;
+	m_fOriginY = m_fY;
 	m_fSizeX = 102.5f;
 	m_fSizeY = 10.f;
 
@@ -53,6 +55,7 @@ int CFeverBar::Update(void)
 	m_matView._42 = -m_fY + (WINCY >> 1);
 
 	CObj::Update();
+
 
 	UpdateBufferToFever();
 
@@ -128,7 +131,7 @@ void CFeverBar::UpdateBufferToFever(void)
 	float fFever = 1.f - (*player)->GetPacketData()->state.gauge / 400.f;
 
 	m_fX = m_fOriginX;
-	m_fX += fFever * m_fSizeY * 2;
+	m_fX += ((1.f - fFever) * m_fSizeY * 0.025f);
 
 	VTXTEX vtx[] =
 	{

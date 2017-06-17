@@ -111,10 +111,6 @@ void CLoading::StageLoading(void)
 		, L"Texture_RuneBar"
 		, L"../Resource/Uiimage/rune_active.png");
 
-	hr = CResourcesMgr::GetInstance()->AddTexture(
-		RESOURCE_STAGE
-		, L"Texture_DamageFont"
-		, L"../Resource/ImageFont/Dam_%d.png", 10);
 
 	hr = CResourcesMgr::GetInstance()->AddTexture(
 		RESOURCE_STAGE

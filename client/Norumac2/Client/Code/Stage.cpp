@@ -137,7 +137,7 @@ HRESULT CStage::CreateObj(void)
 
 	for (int i = 0; i < 10; ++i)
 	{
-		pObj = CRuneBar::Create(80.f+(22.f * i),50.f);
+		pObj = CRuneBar::Create(103.f+(18.75f * i),50.f);
 		if (pObj == NULL)
 			return E_FAIL;
 		CObjMgr::GetInstance()->AddObject(L"FeverBar", pObj);

@@ -72,8 +72,6 @@ void boostAsioServer::g_client_init() {
 	MAX_AI_BOSS = script.get<int>("ai_status_boss.howMany");
 	MAX_AI_NUM = MAX_AI_BOSS;
 
-	//cntAi = cntSlime + cntGoblin;
-
 	g_clients.reserve(cntAi + 1000);
 	srand((unsigned)time(NULL));
 
@@ -178,8 +176,6 @@ void boostAsioServer::g_client_init() {
 	}
 
 	cout << "AI bots created number of " << MAX_AI_NUM << ", Compelete\n";
-
-	//m_scripts.initAis(m_playerIndex);
 }
 
 void boostAsioServer::acceptThread()

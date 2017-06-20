@@ -88,11 +88,6 @@ unsigned int player_session::ai_rand_mov()
 	if ((dir & KEYINPUT_UP) == (KEYINPUT_UP)) { pos->x += ai_mov_speed; pos->y -= ai_mov_speed; }
 	if ((dir & KEYINPUT_DOWN) == (KEYINPUT_DOWN)) { pos->x -= ai_mov_speed; pos->y += ai_mov_speed; }
 
-	/*if ((dir & KEYINPUT_RIGHT) == (KEYINPUT_RIGHT)) { pos->x -= ai_mov_speed; pos->y += ai_mov_speed; }
-	if ((dir & KEYINPUT_LEFT) == (KEYINPUT_LEFT)) { pos->x += ai_mov_speed; pos->y -= ai_mov_speed; }
-	if ((dir & KEYINPUT_UP) == (KEYINPUT_UP)) { pos->x -= ai_mov_speed; pos->y -= ai_mov_speed; }
-	if ((dir & KEYINPUT_DOWN) == (KEYINPUT_DOWN)) { pos->x += ai_mov_speed; pos->y += ai_mov_speed; }*/
-
 	// 근처에 공격해야 할 적이 있다면 해당 id return
 	unsigned int target_id = return_nearlest_player(RANGE_CHECK_AI_ATT);
 	

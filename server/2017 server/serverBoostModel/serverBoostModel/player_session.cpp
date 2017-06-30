@@ -480,6 +480,7 @@ void player_session::m_process_packet(Packet buf[])
 
 		case KEYINPUT_ATTACK:		// 기본 공격 ( 데미지 계산, hit box 범위 조정, 전부 여기서 다 조절해야 한다. )
 		{
+			int attState = static_cast<int>(buf[2]);	// Player 공격 현재 상태, 콤보 및 스킬 구분하는 용도
 			if (dead == m_state) { break; }
 			// 왼쪽 키 = 우측 + 아래
 			// 우측 키 = 왼쪽 + 위
@@ -514,8 +515,19 @@ void player_session::m_process_packet(Packet buf[])
 					// 난 이제 공격 상태 --------------
 					set_state(att);
 
+					// 현재 공격 콤보 및 스킬에 따라서 데미지 구분해주기
+					int addingDamage = 0;
+					switch (attState)
+					{
+					case COMBO1: addingDamage = 0; break;
+					case COMBO2: addingDamage = 1; break;
+					case COMBO3: addingDamage = 2; break;
+					case SKILL1: addingDamage = 10; break;
+					default: addingDamage = 0; break;
+					}
+
 					// 일단 상대 체력 찢기
-					g_clients[id]->m_player_data.state.hp -= ((m_sub_status.str * 2) - g_clients[id]->m_sub_status.def);
+					g_clients[id]->m_player_data.state.hp -= ((m_sub_status.str * 2 + addingDamage) - g_clients[id]->m_sub_status.def);
 					is_gauge_on = true; // 발열 게이지를 마지막 체크 때 올려주자
 
 					if (false == g_clients[id]->get_hp_adding()) {
@@ -557,6 +569,7 @@ void player_session::m_process_packet(Packet buf[])
 					p.attacking_id = m_id;		// 공격자 id
 					p.under_attack_id = id;		// 맞는 놈의 id
 					p.hp = g_clients[id]->m_player_data.state.hp;	// 맞은 놈의 hp
+					p.comboState = attState;
 
 					// hp 가 0 이 되면 사망처리를 한다. -> 각각의 클라이언트에서 hp 가 0 된 녀석을 지워줌
 					if (0 >= g_clients[id]->m_player_data.state.hp) {

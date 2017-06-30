@@ -1,7 +1,8 @@
 #pragma once
 
 #define SERVERPORT 9000
-#define MAX_BUF_SIZE 256
+#define MAX_BUF_SIZE 255
+#define MAX_CHAT_SIZE (MAX_BUF_SIZE - 6)
 #define MAX_USER 500
 
 #define WM_SOCKET (WM_USER + 1)
@@ -43,6 +44,9 @@ enum PacketProtocolType {
 
 	// 패시브 효과로 인한 서버의 통보
 	SERVER_MESSAGE_HP_CHANGED,
+
+	// 채팅 관련 정보
+	CHAT,
 };
 
 using Packet = unsigned char;
@@ -82,6 +86,8 @@ using sub_status = struct Sub_status
 	unsigned short agi{ 10 };
 	unsigned short intel{ 10 };
 	unsigned short health{ 10 };
+
+	int quest{ 0 };
 };
 
 /// 플레이어 전체 정보 64 ( dir -3 ) ( nickname - 2 ) bytes
@@ -93,7 +99,7 @@ using player_data = struct Player_data {
 	char			dir{ KEYINPUT_DOWN };	// 1
 	bool			is_ai{ false };			// 1
 
-	char			nickname[42]{ 0 };	// 42
+	wchar_t			nickname[21]{ 0 };	// 42
 };
 
 #pragma pack (push, 1)
@@ -157,6 +163,14 @@ using sc_fever = struct server_to_client_changed_fever_gauge
 	unsigned char size = sizeof(short) + sizeof(unsigned char) + sizeof(unsigned char);
 	unsigned char type = CHANGED_FEVER;
 	short gauge;
+};
+
+using sc_chat = struct server_to_client_chatting
+{
+	unsigned char size = MAX_BUF_SIZE;
+	unsigned char type = CHAT;
+	unsigned int id;
+	char msg[MAX_CHAT_SIZE] = { 0 };
 };
 
 #pragma pack (pop)

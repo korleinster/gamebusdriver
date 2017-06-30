@@ -15,7 +15,6 @@
 
 void AsynchronousClientClass::processPacket(Packet* buf)
 {
-
 	switch (buf[1])
 	{
 	case CHANGED_POSITION: {
@@ -96,7 +95,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 	case SERVER_MESSAGE_HP_CHANGED: {
 		sc_hp *p = reinterpret_cast<sc_hp*>(buf);
 
-		cout << "[ " << p->id << " ] 변경된 HP = " << p->hp << "\n";
+		//cout << "[ " << p->id << " ] 변경된 HP = " << p->hp << "\n";
 
 		if (CSceneMgr::GetInstance()->GetScene() != SCENE_LOGO)
 		{
@@ -118,7 +117,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		sc_atk *p = reinterpret_cast<sc_atk*>(buf);
 
 		// 갑자기 왜 여기서 다른 플레이어 공격 패킷이 안날아 오는지 알 수가 없다 ( 한번 꼭 확인해 보자 *************************** )
-		cout << "[ " << p->attacking_id << " ] -> [ " << p->under_attack_id << " ] 를 공격함. 현재 HP = " << p->hp << "\n";
+		//cout << "[ " << p->attacking_id << " ] -> [ " << p->under_attack_id << " ] 를 공격함. 현재 HP = " << p->hp << "\n";
 
 		if (CSceneMgr::GetInstance()->GetScene() != SCENE_LOGO)
 		{
@@ -303,7 +302,13 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		}
 		break;
 	}
+	case CHAT: {
+		sc_chat *p = reinterpret_cast<sc_chat*>(buf);
 
+		cout << p->msg << endl;
+
+		break;
+	}
 	default:	// 잘 안쓰이는 패킷들
 
 		switch (buf[1])
@@ -318,7 +323,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			//플레이어 최초 갱신 혹은 죽었다 부활했을시
 
 			m_player = reinterpret_cast<sc_client_init_info *>(buf)->player_info;
-			cout << "Init ID : " << m_player.id << "\n";
+			//cout << "Init ID : " << m_player.id << "\n";
 			(*CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin())->SetPos(D3DXVECTOR3(m_player.pos.x, 0.f, m_player.pos.y));
 			(*CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin())->GetPacketData()->state.hp = m_player.state.hp;
 			break;
@@ -326,7 +331,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		case INIT_OTHER_CLIENT: {
 			//다른플레이어 or NPC or 몬스터 최초갱신 혹은 부활
 			sc_other_init_info *p = reinterpret_cast<sc_other_init_info *>(buf);
-			cout << "init other ID : " << p->playerData.id << endl;
+			//cout << "init other ID : " << p->playerData.id << endl;
 
 			player_data *data = CObjMgr::GetInstance()->Get_PlayerServerData(p->playerData.id);
 
@@ -358,7 +363,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		}
 		case PLAYER_DISCONNECTED: {
 			sc_disconnect *p = reinterpret_cast<sc_disconnect*>(buf);
-			cout << "disconneced ID : " << p->id << endl;
+			//cout << "disconneced ID : " << p->id << endl;
 
 			if (p->id == (*CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin())->GetPacketData()->id) {
 				// 플레이어가 죽었을시

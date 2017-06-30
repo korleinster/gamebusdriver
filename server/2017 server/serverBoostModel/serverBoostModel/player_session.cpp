@@ -2,6 +2,8 @@
 
 bool player_session::check_login() {
 
+	DB d;
+
 	m_connect_state = true;
 
 	int login_cnt{ 2 };
@@ -21,7 +23,7 @@ bool player_session::check_login() {
 			return true;
 		}
 
-		if (true == g_database.DB_Login(m_login_id, m_login_pw)) {
+		if (true == d.DB_Login(m_login_id, m_login_pw, this)) {
 			// 로그인 성공 시 여기서 플레이어 데이터 불러와서 입력
 
 			/// ( 성공했다고 클라한테 메세지 전송 )
@@ -75,11 +77,6 @@ unsigned int player_session::ai_rand_mov()
 		send_packet_other_players_in_view_range(reinterpret_cast<Packet*>(&pp), m_id);
 	}
 
-	// 위치 이동 하기 전에, 일단 끊어주는 패킷을 보내주자. ( 승필이가 이걸 클라에서 해결해야 되는데 슈발!! )
-	/*sc_disconnect pp;
-	pp.id = m_id;
-	send_packet_other_players_in_view_range(reinterpret_cast<Packet*>(&pp), m_id);*/
-
 	// 해당 방향으로 움직이기 - 못가는 곳 충돌 처리를 해야한다면 여기서 해야한다.
 	position *pos = &m_player_data.pos;
 
@@ -97,7 +94,6 @@ unsigned int player_session::ai_rand_mov()
 	p.pos = m_player_data.pos;
 
 	send_packet_other_players_in_view_range(reinterpret_cast<Packet*>(&p), m_id);
-	//send_packet_other_players(reinterpret_cast<Packet*>(&p), m_id);
 
 	// user 가 한명이라도 있다면
 	if (none != return_nearlest_player(VIEW_RANGE)) {
@@ -169,26 +165,6 @@ void player_session::Init()
 
 	// 기본 셋팅 초기화 정보 보내기
 
-	m_player_data.id = m_id;
-	m_player_data.pos.x = 160;
-	m_player_data.pos.y = 400;
-	m_player_data.dir = 0;
-	m_player_data.state.maxhp = 100;
-	m_player_data.state.mp = 10;
-	m_player_data.state.level = 1;
-	m_player_data.state.exp = 0;
-	m_player_data.state.maxgauge = 400;
-	m_player_data.state.gauge = 0;
-	m_player_data.state.hp = m_player_data.state.maxhp;
-	m_player_data.is_ai = false;
-
-	m_sub_status.critical = 20;	// const
-	m_sub_status.def = 1 + 10;
-	m_sub_status.str = 5 + 10;
-	m_sub_status.agi = 2 + 10;
-	m_sub_status.intel = 1 + 10;
-	m_sub_status.health = 3 + 10;
-
 	if (0 == wcscmp(L"guest", m_login_id)) {
 		// guest 입장이라면, 초기화를 여기에서 진행한다.
 		m_player_data.id = m_id;
@@ -210,6 +186,29 @@ void player_session::Init()
 		m_sub_status.agi = 2 + 10;
 		m_sub_status.intel = 1 + 10;
 		m_sub_status.health = 3 + 10;
+		m_sub_status.quest = 0;
+	}
+	else {
+		m_player_data.id = m_id;
+		/*m_player_data.pos.x = 160;
+		m_player_data.pos.y = 400;*/
+		m_player_data.dir = 0;
+		m_player_data.state.maxhp = 100;
+		m_player_data.state.mp = 10;
+		/*m_player_data.state.level = 1;*/
+		m_player_data.state.exp = 0;
+		m_player_data.state.maxgauge = 400;
+		m_player_data.state.gauge = 0;
+		m_player_data.state.hp = m_player_data.state.maxhp;
+		m_player_data.is_ai = false;
+		//
+		m_sub_status.critical = 20;	// const
+		m_sub_status.def = 1 + 10;
+		m_sub_status.str = 5 + 10;
+		m_sub_status.agi = 2 + 10;
+		m_sub_status.intel = 1 + 10;
+		m_sub_status.health = 3 + 10;
+		/*m_sub_status.quest = 0;*/
 	}
 	
 	sc_client_init_info init_player;
@@ -252,9 +251,11 @@ void player_session::m_recv_packet()
 
 			m_connect_state = false;
 
-			/*
-				DB 저장도 하장
-			*/
+			// guest 가 아니면 DB 에 데이터 저장
+			if (0 != wcscmp(L"guest", m_login_id)) {
+				DB d;
+				d.DB_Update(m_login_id, this);
+			}
 
 			sc_disconnect p;
 			p.id = m_id;
@@ -573,6 +574,16 @@ void player_session::m_process_packet(Packet buf[])
 							g_time_queue.add_event(g_clients[id]->m_player_data.id, 10, DEAD_TO_ALIVE, true);	// bot 리젠
 							
 							// 잡은 녀석에는 경험치도 주도록 하자.
+							// 만약 슬라임이고, quest 수치가 10 마리 잡는거 이하라면
+							if ((MAX_AI_SLIME > id) && (MAX_AI_SLIME > m_sub_status.quest)) {
+								m_sub_status.quest += 1;
+								sc_chat chat;
+								chat.id = m_id;
+								sprintf(chat.msg, "슬라임 %d 마리 잡음", m_sub_status.quest);
+								//sprintf(chat.msg, "Slime %d killed", m_sub_status.quest);
+								if (MAX_AI_SLIME == m_sub_status.quest) { sprintf(chat.msg, "슬라임 퀘스트 완료");	}
+ 								send_packet(reinterpret_cast<Packet*>(&chat));
+							}
 						}
 						else {
 							// 죽은 애가 player 일 경우..
@@ -622,8 +633,28 @@ void player_session::m_process_packet(Packet buf[])
 			}
 			break;
 		}
+		case CHAT: {
+
+			sc_chat chat;
+			
+			chat.id = m_id;
+			memcpy(chat.msg, reinterpret_cast<char*>(&buf[2]), MAX_BUF_SIZE - 6);
+			chat.msg[MAX_BUF_SIZE - 7] = '\0';
+
+			cout << "Message [ " << m_id << " ] : " << chat.msg << endl;
+
+			for (auto players : g_clients) {
+				if (DISCONNECTED == players->get_current_connect_state()) { continue; }
+				if (true == players->m_player_data.is_ai) { continue; }
+				if (m_id == players->m_id) { continue; }
+
+				players->send_packet(reinterpret_cast<Packet*>(&chat));
+			}
+
+			break;
+		}
 		default:
-			// 잘 안날아 오는 패킷
+			// 잘 안날아 오는 패킷 start, web
 			switch (buf[1])
 			{
 			case TEST:

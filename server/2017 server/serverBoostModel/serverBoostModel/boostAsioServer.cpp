@@ -7,7 +7,7 @@ boostAsioServer::boostAsioServer() : m_acceptor(g_io_service, tcp::endpoint(tcp:
 	CheckThisCPUcoreCount();
 
 	// DB SQL 서버에 접속
-	g_database.Init();
+	//g_database.Init();
 
 	// ai 봇 초기화
 	g_client_init();

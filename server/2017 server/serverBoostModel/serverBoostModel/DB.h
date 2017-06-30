@@ -1,4 +1,6 @@
 #pragma once
+#include "player_session.h"
+
 // DB Á¢±Ù¿ë class
 #include <windows.h>
 #include <sql.h>
@@ -23,11 +25,12 @@ void HandleDiagnosticRecord(SQLHANDLE hHandle, SQLSMALLINT hType, RETCODE RetCod
 
 class DB {
 public:
-	DB() { /*Init();*/ };
+	DB() { Init(); };
 	~DB() { Release(); };
 
 	void SQLcmd(SQLWCHAR* str);
-	bool DB_Login(wchar_t* id, wchar_t* pw);
+	bool DB_Login(wchar_t* id, wchar_t* pw, player_session *ps);
+	bool DB_Update(wchar_t* id, player_session *ps);
 
 	void Init();
 private:

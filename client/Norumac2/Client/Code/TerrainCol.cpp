@@ -22,6 +22,9 @@ void CTerrainCol::CollisionTerrain(D3DXVECTOR3 * pPos, VTXTEX * pVertex)
 {
 	int		iIndex = (int(pPos->z) / VERTEXINTERVAL) * VERTEXCOUNTX + (int(pPos->x) / VERTEXINTERVAL);
 
+	/*if (iIndex + VERTEXCOUNTX > 513 * 512)
+		return;*/
+
 	float	fRatioX = (pPos->x - pVertex[iIndex + VERTEXCOUNTX].vPos.x) / VERTEXINTERVAL;
 	float	fRatioZ = (pVertex[iIndex + VERTEXCOUNTX].vPos.z - pPos->z) / VERTEXINTERVAL;
 

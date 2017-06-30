@@ -30,6 +30,7 @@ private:
 public:
 	bool			m_bKey; // Å°°¡ ´­·Ç³ª?
 	//bool			m_bPush;
+	list<D3DXVECTOR3> m_SeverPosSaveList;
 
 
 public:
@@ -47,5 +48,6 @@ private:
 	HRESULT	AddComponent(void);
 	void ChangeDir(void);
 	void SetCurrling(void);
+	void SetSeverPosMove(void);
 };
 

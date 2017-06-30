@@ -42,6 +42,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 							if (((CMonster*)iter)->GetAniState() == MONSTER_IDLE) {
 								((CMonster*)iter)->m_bKey = true;
 								((CMonster*)iter)->SetAniState(MONSTER_MOVE);
+								((CMonster*)iter)->m_SeverPosSaveList.push_back(D3DXVECTOR3(data->pos.x, 0.f, data->pos.y));
 							}
 							break;
 						}
@@ -56,6 +57,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 							if (((COtherPlayer*)iter)->GetAniState() == PLAYER_IDLE) {
 								((COtherPlayer*)iter)->m_bKey = true;
 								((COtherPlayer*)iter)->SetAniState(PLAYER_MOVE);
+								((COtherPlayer*)iter)->m_SeverPosSaveList.push_back(D3DXVECTOR3(data->pos.x, 0.f, data->pos.y));
 							}
 							break;
 						}
@@ -343,7 +345,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 					//cout << "몬스터 생성" << endl;
 
 					CObj* pObj = CMonster::Create();
-					pObj->SetPos(D3DXVECTOR3(m_player.pos.x, 1.f, m_player.pos.y));
+					pObj->SetPos(D3DXVECTOR3(p->playerData.pos.x, 1.f, p->playerData.pos.y));
 					pObj->SetPacketData(&p->playerData);
 					CObjMgr::GetInstance()->AddObject(L"Monster", pObj);
 					CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, pObj);
@@ -353,7 +355,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 				else
 				{
 					CObj* pObj = COtherPlayer::Create();
-					pObj->SetPos(D3DXVECTOR3(m_player.pos.x, 1.f, m_player.pos.y));
+					pObj->SetPos(D3DXVECTOR3(p->playerData.pos.x, 1.f, p->playerData.pos.y));
 					pObj->SetPacketData(&p->playerData);
 					CObjMgr::GetInstance()->AddObject(L"OtherPlayer", pObj);
 					CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, pObj);

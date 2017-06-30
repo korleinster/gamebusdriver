@@ -71,6 +71,8 @@ HRESULT CMonster::Initialize(void)
 	m_pTexture = NULL;
 	m_pVerTex = NULL;
 
+	m_fSpeed = 4.7f;
+
 
 	m_pTerrainCol = NULL;
 	m_eMonsterState = MONSTER_IDLE;
@@ -111,16 +113,20 @@ int CMonster::Update(void)
 
 {
 	m_fSeverTime += CTimeMgr::GetInstance()->GetTime();
-	m_pTerrainCol->CollisionTerrain(&m_pInfo->m_vPos, m_pVerTex);
+	
 	/*if (m_pBuffer->m_bAniEnd == true)
 	m_pBuffer->m_bAniEnd = false;*/
 
 	//m_ePlayerState = PLAYER_IDLE;
 
-	m_pInfo->m_vPos.x = m_pInfo->m_ServerInfo.pos.x;
-	m_pInfo->m_vPos.z = m_pInfo->m_ServerInfo.pos.y;
+	//m_pInfo->m_vPos.x = m_pInfo->m_ServerInfo.pos.x;
+	//m_pInfo->m_vPos.z = m_pInfo->m_ServerInfo.pos.y;
+
+	SetSeverPosMove();
 	ChangeDir();
 	D3DXVec3TransformNormal(&m_pInfo->m_vDir, &g_vLook, &m_pInfo->m_matWorld);
+
+	m_pTerrainCol->CollisionTerrain(&m_pInfo->m_vPos, m_pVerTex);
 
 
 	if (m_eMonsterState != MONSTER_IDLE)
@@ -131,6 +137,8 @@ int CMonster::Update(void)
 
 	//SetCurrling();
 
+	if(m_pInfo->m_ServerInfo.id == 2)
+		cout << m_pInfo->m_vPos.x << "/" << m_pInfo->m_vPos.y << "/" << m_pInfo->m_vPos.z << endl;
 
 	CObj::Update();
 
@@ -139,6 +147,10 @@ int CMonster::Update(void)
 
 	else
 		return 100;
+
+
+
+	
 }
 
 void CMonster::Render(void)
@@ -294,5 +306,38 @@ void CMonster::SetCurrling(void)
 		m_bCurred = true;
 	else
 		m_bCurred = false;
+}
+
+void CMonster::SetSeverPosMove(void)
+{
+	/*if (m_SeverPosSaveList.size() != 0)
+	{
+		float fTime = CTimeMgr::GetInstance()->GetTime();
+		D3DXVECTOR3 vDir;
+		vDir = *(m_SeverPosSaveList.begin()) - m_pInfo->m_vPos;
+		D3DXVec3Normalize(&vDir, &vDir);
+
+		m_pInfo->m_vPos += vDir * m_fSpeed * fTime;
+
+		if ( (m_pInfo->m_vPos.x <= (m_SeverPosSaveList.begin())->x + 5.f || m_pInfo->m_vPos.x >= (m_SeverPosSaveList.begin())->x - 5.f)
+			&& (m_pInfo->m_vPos.z <= (m_SeverPosSaveList.begin())->z + 5.f || m_pInfo->m_vPos.z >= (m_SeverPosSaveList.begin())->z - 5.f))
+			m_SeverPosSaveList.pop_front();
+	}*/
+
+
+	if (m_SeverPosSaveList.size() != 0)
+	{
+		float fTime = CTimeMgr::GetInstance()->GetTime();
+		D3DXVECTOR3 vDir;
+		vDir = *(m_SeverPosSaveList.begin()) - m_pInfo->m_vPos;
+		D3DXVec3Normalize(&vDir, &vDir);
+
+		m_pInfo->m_vPos += vDir * m_fSpeed * fTime;
+
+		//cout << m_pInfo->m_vPos.x << "/" << m_pInfo->m_vPos.y << "/" << m_pInfo->m_vPos.z << endl;
+
+		if (int(m_pInfo->m_vPos.x) == int((m_SeverPosSaveList.begin())->x) && int(m_pInfo->m_vPos.z) == int((m_SeverPosSaveList.begin())->z))
+			m_SeverPosSaveList.pop_front();
+	}
 }
 

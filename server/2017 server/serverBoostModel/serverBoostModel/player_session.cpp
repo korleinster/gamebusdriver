@@ -520,9 +520,9 @@ void player_session::m_process_packet(Packet buf[])
 					switch (attState)
 					{
 					case COMBO1: addingDamage = 0; break;
-					case COMBO2: addingDamage = 1; break;
-					case COMBO3: addingDamage = 2; break;
-					case SKILL1: addingDamage = 10; break;
+					case COMBO2: addingDamage = 5; break;
+					case COMBO3: addingDamage = 10; break;
+					case SKILL1: addingDamage = 15; break;
 					default: addingDamage = 0; break;
 					}
 

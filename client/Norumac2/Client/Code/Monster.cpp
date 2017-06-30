@@ -71,7 +71,7 @@ HRESULT CMonster::Initialize(void)
 	m_pTexture = NULL;
 	m_pVerTex = NULL;
 
-	m_fSpeed = 4.7f;
+	m_fSpeed = 1.7f;
 
 
 	m_pTerrainCol = NULL;
@@ -136,9 +136,6 @@ int CMonster::Update(void)
 	}
 
 	//SetCurrling();
-
-	if(m_pInfo->m_ServerInfo.id == 2)
-		cout << m_pInfo->m_vPos.x << "/" << m_pInfo->m_vPos.y << "/" << m_pInfo->m_vPos.z << endl;
 
 	CObj::Update();
 

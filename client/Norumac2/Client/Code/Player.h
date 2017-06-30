@@ -33,6 +33,8 @@ private:
 	bool			m_bTpCool;
 	DWORD			m_dwCellNum;
 	bool			m_bStart;
+	float			m_fComboTime;
+	bool			m_bCombo[2];
 
 	// Scene meshes shader constant buffers
 	ID3D11Buffer*		m_pSceneVertexShaderCB;
@@ -46,6 +48,7 @@ public:
 	Packet*			GetPacket(void);
 	void			AniMove(void);
 	void			SetNaviIndex(DWORD dwIndex) { m_dwCellNum = dwIndex; }
+	void			TimeSetter(void);
 
 public:
 	static CPlayer* Create(void);

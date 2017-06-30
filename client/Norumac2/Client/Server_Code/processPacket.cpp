@@ -150,7 +150,14 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 							if ((reinterpret_cast<COtherPlayer*>(iter))->GetAniState() == PLAYER_IDLE)
 							{
 								(reinterpret_cast<COtherPlayer*>(iter))->m_bKey = true;
-								(reinterpret_cast<COtherPlayer*>(iter))->SetAniState(PLAYER_ATT1);
+								if(p->comboState == COMBO1)
+									(reinterpret_cast<COtherPlayer*>(iter))->SetAniState(PLAYER_ATT1);
+								else if(p->comboState == COMBO2)
+									(reinterpret_cast<COtherPlayer*>(iter))->SetAniState(PLAYER_ATT2);
+								else if (p->comboState == COMBO3)
+								{
+									(reinterpret_cast<COtherPlayer*>(iter))->SetAniState(PLAYER_ATT3);
+								}
 							}
 							break;
 						}
@@ -189,10 +196,9 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			}
 			else // 몬스터일시
 			{
-				if (NULL != (CObjMgr::GetInstance()->Get_MonsterServerData(p->under_attack_id))) {
-					(CObjMgr::GetInstance()->Get_MonsterServerData(p->under_attack_id))->state.hp = p->hp;
-
-
+				if (NULL != (CObjMgr::GetInstance()->Get_MonsterServerData(p->under_attack_id))) 
+				{
+					
 					//////////////데미지 폰트////////////////////////
 					list<CObj*>* ListObj = CObjMgr::GetInstance()->Get_ObjList(L"Monster");
 					list<CObj*>::iterator iter = ListObj->begin();
@@ -208,9 +214,11 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 						}
 					}
 
-					CObj* pObj = CDamageFont::Create(&vPos, 105.f); //샘플값 105. 나중에 데미지는 서버에서 받아와서 출력.
+					CObj* pObj = CDamageFont::Create(&vPos, (CObjMgr::GetInstance()->Get_MonsterServerData(p->under_attack_id))->state.hp - p->hp); //샘플값 105. 나중에 데미지는 서버에서 받아와서 출력.
 					CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
 					///////////////////////////////////////////////////
+
+					(CObjMgr::GetInstance()->Get_MonsterServerData(p->under_attack_id))->state.hp = p->hp;
 
 					/////////////////체력바///////////////////////////
 

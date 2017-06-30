@@ -148,6 +148,7 @@ using sc_atk = struct server_to_client_attack_states
 	unsigned int attacking_id;
 	unsigned int under_attack_id;
 	int hp;
+	short combostate;
 };
 
 using sc_hp = struct server_to_client_changed_hp

@@ -47,6 +47,12 @@ enum PacketProtocolType {
 
 	// 채팅 관련 정보
 	CHAT,
+
+	// 플레이어 공격 상태 ( 콤보 및 스킬 종류 등등 )
+	COMBO1,
+	COMBO2,
+	COMBO3,
+	SKILL1,
 };
 
 using Packet = unsigned char;
@@ -143,12 +149,12 @@ using sc_dir = struct server_to_client_player_direction
 
 using sc_atk = struct server_to_client_attack_states
 {
-	unsigned char size = sizeof(int) + sizeof(unsigned int) + sizeof(unsigned int) + sizeof(unsigned char) + sizeof(unsigned char) + sizeof(short);
+	unsigned char size = sizeof(int) + sizeof(unsigned int) + sizeof(unsigned int) + sizeof(unsigned char) + sizeof(unsigned char) + sizeof(int);
 	unsigned char type = KEYINPUT_ATTACK;
 	unsigned int attacking_id;
 	unsigned int under_attack_id;
 	int hp;
-	short combostate;
+	int comboState;
 };
 
 using sc_hp = struct server_to_client_changed_hp

@@ -223,6 +223,12 @@
     <Filter Include="99.Default\Script">
       <UniqueIdentifier>{b291fcad-0c57-4c70-932d-5e37d542405a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Object\07.UI\09.ChatUI">
+      <UniqueIdentifier>{528f9f45-fb1a-48ab-a399-b2cfbf7ec7d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\07.UI\10.QuestUI">
+      <UniqueIdentifier>{66a86b72-93a1-4505-a660-b9664fc9808f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -459,6 +465,9 @@
     <ClInclude Include="..\..\..\..\server\2017 server\serverBoostModel\serverBoostModel\readLUAScript.h">
       <Filter>99.Default\Script</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\ChatUI.h">
+      <Filter>02.Object\07.UI\09.ChatUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\MainApp.cpp">
@@ -667,6 +676,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\..\server\2017 server\serverBoostModel\serverBoostModel\readLUAScript.cpp">
       <Filter>99.Default\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ChatUI.cpp">
+      <Filter>02.Object\07.UI\09.ChatUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

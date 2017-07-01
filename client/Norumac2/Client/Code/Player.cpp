@@ -726,7 +726,7 @@ void CPlayer::TimeSetter(void)
 	if (m_bCombo[0] == true || m_bCombo[1] == true || m_bCombo[2] == true)
 	{
 		m_fComboTime += CTimeMgr::GetInstance()->GetTime();
-		cout << "콤보시간:" << m_fComboTime << endl;
+		//cout << "콤보시간:" << m_fComboTime << endl;
 	}
 
 	if (m_fSeverTime > 0.5f)
@@ -760,14 +760,14 @@ void CPlayer::TimeSetter(void)
 	{
 		m_bCombo[0] = false;
 		m_bCombo[1] = false;
-		cout << "콤보1단계 초기화" << endl;
+		//cout << "콤보1단계 초기화" << endl;
 	}
 
 	if (m_fComboTime > 1.4f && m_bCombo[1] == true)
 	{
 		m_bCombo[0] = false;
 		m_bCombo[1] = false;
-		cout << "콤보2단계 초기화" << endl;
+		//cout << "콤보2단계 초기화" << endl;
 	}
 }
 

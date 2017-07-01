@@ -12,6 +12,8 @@
 #include "Info.h"
 #include "MobHpBasic.h"
 #include "../Include/MobHpBar.h"
+#include "ChatUI.h"
+#include "Font.h"
 
 void AsynchronousClientClass::processPacket(Packet* buf)
 {
@@ -315,7 +317,37 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 	case CHAT: {
 		sc_chat *p = reinterpret_cast<sc_chat*>(buf);
 
-		cout << p->msg << endl;
+		CChatUI* pChatUI = dynamic_cast<CChatUI*>(*(CObjMgr::GetInstance()->Get_ObjList(L"ChatUI")->begin()));
+
+		string str = p->msg;
+		wchar_t *wch = new wchar_t[str.length() + 1];
+		wch[str.size()] = L'\0';
+		wstring wstr = L"";
+		MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, wch, (int)str.length());
+		wstr = wch;
+		
+
+		CFont* pFont = CFont::Create(L"Font_Clear");
+
+		pFont->m_eType = FONT_TYPE_OUTLINE;
+		pFont->m_wstrText = wstr;
+		pFont->m_fSize = 20.f;
+		pFont->m_nColor = 0xFFFFFFFF;
+		pFont->m_nFlag = FW1_CENTER | FW1_VCENTER | FW1_RESTORESTATE;
+		pFont->m_vPos = D3DXVECTOR2(105.f, 620.f);
+		pFont->m_fOutlineSize = 1.f;
+		pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
+
+		for (auto ChatList : pChatUI->m_ChatLogList)
+			ChatList->m_vPos.y -= 20.f;
+
+		if (pChatUI->m_ChatLogList.size() == 7)
+		{
+			pChatUI->m_ChatLogList.pop_front(); // 앞에 객체지우는걸 해야하는대 일단 귀찮으니깐 팝만하자. 나중에 처리해야지
+		}
+
+		pChatUI->m_ChatLogList.push_back(pFont);
+
 
 		break;
 	}

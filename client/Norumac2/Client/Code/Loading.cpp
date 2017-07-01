@@ -122,6 +122,11 @@ void CLoading::StageLoading(void)
 		, L"Texture_MobHp"
 		, L"../Resource/Uiimage/MobHp.png");
 
+	hr = CResourcesMgr::GetInstance()->AddTexture(
+		RESOURCE_STAGE
+		, L"Texture_ChatUI"
+		, L"../Resource/Uiimage/chat_background.png");
+
 
 	FAILED_CHECK_RETURN(hr, );
 

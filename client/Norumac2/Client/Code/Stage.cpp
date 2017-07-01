@@ -20,6 +20,7 @@
 #include "RuneBar.h"
 #include "Input.h"
 #include "NaviMgr.h"
+#include "ChatUI.h"
 
 CStage::CStage()
 	: m_bFirstLogin(false)
@@ -152,6 +153,11 @@ HRESULT CStage::CreateObj(void)
 	if (pObj == NULL)
 		return E_FAIL;
 	CObjMgr::GetInstance()->AddObject(L"BaseUI", pObj);
+
+	pObj = CChatUI::Create();
+	if (pObj == NULL)
+		return E_FAIL;
+	CObjMgr::GetInstance()->AddObject(L"ChatUI", pObj);
 
 	NaviLoad();
 

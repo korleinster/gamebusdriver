@@ -343,7 +343,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 		if (pChatUI->m_ChatLogList.size() == 7)
 		{
-			pChatUI->m_ChatLogList.pop_front(); // 앞에 객체지우는걸 해야하는대 일단 귀찮으니깐 팝만하자. 나중에 처리해야지
+			pChatUI->m_ChatLogList.pop_front(); // 앞에 폰트객체지우는걸 해야하는대 일단 귀찮으니깐 팝만하자. 나중에 처리해야지
 		}
 
 		pChatUI->m_ChatLogList.push_back(pFont);

@@ -126,6 +126,11 @@ void CLoading::StageLoading(void)
 		RESOURCE_STAGE
 		, L"Texture_ChatUI"
 		, L"../Resource/Uiimage/chat_background.png");
+	
+	hr = CResourcesMgr::GetInstance()->AddTexture(
+		RESOURCE_STAGE
+		, L"Texture_QuestUI"
+		, L"../Resource/Uiimage/questBackground.png");
 
 
 	FAILED_CHECK_RETURN(hr, );

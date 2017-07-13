@@ -35,6 +35,9 @@ private:
 	bool			m_bStart;
 	float			m_fComboTime;
 	bool			m_bCombo[2];
+	bool			m_bMoveSend;
+	float			m_fSkillMoveTime;
+	bool			m_bSkillUsed;
 
 	// Scene meshes shader constant buffers
 	ID3D11Buffer*		m_pSceneVertexShaderCB;

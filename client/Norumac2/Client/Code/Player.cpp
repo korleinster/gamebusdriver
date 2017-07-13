@@ -62,6 +62,9 @@ CPlayer::CPlayer()
 	m_bStart = true;
 	m_fComboTime = 0.f;
 	ZeroMemory(&m_bCombo, sizeof(bool) * 2);
+	m_bMoveSend = false;
+	m_fSkillMoveTime = 0.f;
+	m_bSkillUsed = false;
 
 
 	m_Packet = new Packet[MAX_BUF_SIZE];
@@ -150,7 +153,11 @@ int CPlayer::Update(void)
 		if (dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd != false && m_bMoving == false)
 		{
 			if (m_bPush == false && m_bMoving == false)
+			{
 				m_ePlayerState = PLAYER_IDLE;
+				m_bSkillUsed = false;
+				m_fSkillMoveTime = 0.f;
+			}
 		}
 
 		if (m_pInfo->m_ServerInfo.state.hp <=0)
@@ -314,6 +321,7 @@ void CPlayer::KeyInput()
 		if (CInput::GetInstance()->GetDIKeyState(DIK_UP) & 0x80)
 		{
 			m_bPush = true;
+			m_bMoveSend = true;
 			if (CInput::GetInstance()->GetDIKeyState(DIK_LEFT) & 0x80)
 			{
 				m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(90.f);
@@ -324,7 +332,7 @@ void CPlayer::KeyInput()
 
 				if (m_pInfo->m_ServerInfo.dir != (KEYINPUT_UP | KEYINPUT_LEFT)) {
 					m_pInfo->m_ServerInfo.dir = (KEYINPUT_UP | KEYINPUT_LEFT);
-					g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
+					//g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
 				}
 				//g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
 			}
@@ -338,7 +346,7 @@ void CPlayer::KeyInput()
 
 				if (m_pInfo->m_ServerInfo.dir != (KEYINPUT_UP | KEYINPUT_RIGHT)) {
 					m_pInfo->m_ServerInfo.dir = (KEYINPUT_UP | KEYINPUT_RIGHT);
-					g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
+					//g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
 				}
 				//g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
 			}
@@ -352,7 +360,7 @@ void CPlayer::KeyInput()
 
 				if (m_pInfo->m_ServerInfo.dir != KEYINPUT_UP) {
 					m_pInfo->m_ServerInfo.dir = KEYINPUT_UP;
-					g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
+					//g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
 				}
 				//g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
 			}
@@ -372,6 +380,12 @@ void CPlayer::KeyInput()
 		{
 			m_bPush = false;
 			m_bMoving = false;
+			if (m_bMoveSend == true)
+			{
+				g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
+				g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
+				m_bMoveSend = false;
+			}
 			if (m_dwTime + 120 < GetTickCount())
 			{
 				m_dwTime = GetTickCount();
@@ -393,6 +407,7 @@ void CPlayer::KeyInput()
 		{
 			m_bPush = true;
 			m_bMoving = true;
+			m_bMoveSend = true;
 
 			if (CInput::GetInstance()->GetDIKeyState(DIK_LEFT) & 0x80)
 			{
@@ -404,7 +419,7 @@ void CPlayer::KeyInput()
 
 				if (m_pInfo->m_ServerInfo.dir != (KEYINPUT_DOWN | KEYINPUT_LEFT)) {
 					m_pInfo->m_ServerInfo.dir = (KEYINPUT_DOWN | KEYINPUT_LEFT);
-					g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
+					//g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
 				}
 				//g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
 			}
@@ -418,7 +433,7 @@ void CPlayer::KeyInput()
 
 				if (m_pInfo->m_ServerInfo.dir != (KEYINPUT_DOWN | KEYINPUT_RIGHT)) {
 					m_pInfo->m_ServerInfo.dir = (KEYINPUT_DOWN | KEYINPUT_RIGHT);
-					g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
+					//g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
 				}
 				//g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
 			}
@@ -433,7 +448,7 @@ void CPlayer::KeyInput()
 
 				if (m_pInfo->m_ServerInfo.dir != KEYINPUT_DOWN) {
 					m_pInfo->m_ServerInfo.dir = KEYINPUT_DOWN;
-					g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
+					//g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
 				}
 				//g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
 			}
@@ -454,6 +469,12 @@ void CPlayer::KeyInput()
 		{
 			m_bPush = false;
 			m_bMoving = false;
+			if (m_bMoveSend == true)
+			{
+				g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
+				g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
+				m_bMoveSend = false;
+			}
 			if (m_dwTime + 120 < GetTickCount())
 			{
 				m_dwTime = GetTickCount();
@@ -476,6 +497,7 @@ void CPlayer::KeyInput()
 		{
 			m_bPush = true;
 			m_bMoving = true;
+			m_bMoveSend = true;
 			m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(45.f);
 			//m_pInfo->m_vPos += m_pInfo->m_vDir * m_fSpeed * fTime;
 			m_dwCellNum = CNaviMgr::GetInstance()->MoveOnNaviMesh(&m_pInfo->m_vPos, &(m_pInfo->m_vDir * m_fSpeed * fTime), m_dwCellNum);
@@ -485,7 +507,7 @@ void CPlayer::KeyInput()
 
 			if (m_pInfo->m_ServerInfo.dir != KEYINPUT_LEFT) {
 				m_pInfo->m_ServerInfo.dir = KEYINPUT_LEFT;
-				g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
+				//g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
 			}
 			//g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
 
@@ -505,6 +527,12 @@ void CPlayer::KeyInput()
 		{
 			m_bPush = false;
 			m_bMoving = false;
+			if (m_bMoveSend == true)
+			{
+				g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
+				g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
+				m_bMoveSend = false;
+			}
 			if (m_dwTime + 120 < GetTickCount())
 			{
 				m_dwTime = GetTickCount();
@@ -526,6 +554,7 @@ void CPlayer::KeyInput()
 		{
 			m_bPush = true;
 			m_bMoving = true;
+			m_bMoveSend = true;
 			m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(225.f);
 			//m_pInfo->m_vPos += m_pInfo->m_vDir * m_fSpeed * fTime;
 			CNaviMgr::GetInstance()->MoveOnNaviMesh(&m_pInfo->m_vPos, &(m_pInfo->m_vDir * m_fSpeed * fTime), m_dwCellNum);
@@ -535,7 +564,7 @@ void CPlayer::KeyInput()
 
 			if (m_pInfo->m_ServerInfo.dir != KEYINPUT_RIGHT) {
 				m_pInfo->m_ServerInfo.dir = KEYINPUT_RIGHT;
-				g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
+				//g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
 			}
 			//g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
 
@@ -554,6 +583,13 @@ void CPlayer::KeyInput()
 		{
 			m_bPush = false;
 			m_bMoving = false;
+			if (m_bMoveSend == true)
+			{
+				g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
+				g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
+				m_bMoveSend = false;
+			}
+			
 			if (m_dwTime + 120 < GetTickCount())
 			{
 				m_dwTime = GetTickCount();
@@ -652,6 +688,79 @@ void CPlayer::KeyInput()
 	}*/
 
 
+	if ( (CInput::GetInstance()->GetDIKeyState(DIK_Q) & 0x80) && m_pInfo->m_ServerInfo.state.gauge > 20)
+	{
+		m_bPush = true;
+		int iSeverAtt;
+
+		if (m_ePlayerState == PLAYER_SKILL1)
+			return;
+
+		m_ePlayerState = PLAYER_SKILL1;
+		iSeverAtt = SKILL1;
+		m_bSkillUsed = true;
+
+		//g_client.sendPacket(sizeof(int), KEYINPUT_ATTACK, reinterpret_cast<BYTE*>(&iSeverAtt));
+
+		dynamic_cast<CDynamicMesh*>(m_pBuffer)->ResetPlayTimer();
+	}
+	else
+	{
+		m_bPush = false;
+		if (m_dwTime + 120 < GetTickCount())
+		{
+			m_dwTime = GetTickCount();
+
+			if (CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer") != NULL)
+			{
+				list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->begin();
+				list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->end();
+
+				for (iter; iter != iter_end; ++iter)
+				{
+					((COtherPlayer*)(*iter))->m_bKey = false;
+				}
+			}
+		}
+	}
+
+	if ((CInput::GetInstance()->GetDIKeyState(DIK_W) & 0x80) && m_pInfo->m_ServerInfo.state.gauge > 20)
+	{
+		m_bPush = true;
+		int iSeverAtt;
+
+		if (m_ePlayerState == PLAYER_SKILL2)
+			return;
+
+		m_ePlayerState = PLAYER_SKILL2;
+		//iSeverAtt = SKILL1;
+		m_bSkillUsed = true;
+
+		//g_client.sendPacket(sizeof(int), KEYINPUT_ATTACK, reinterpret_cast<BYTE*>(&iSeverAtt));
+
+		dynamic_cast<CDynamicMesh*>(m_pBuffer)->ResetPlayTimer();
+	}
+	else
+	{
+		m_bPush = false;
+		if (m_dwTime + 120 < GetTickCount())
+		{
+			m_dwTime = GetTickCount();
+
+			if (CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer") != NULL)
+			{
+				list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->begin();
+				list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->end();
+
+				for (iter; iter != iter_end; ++iter)
+				{
+					((COtherPlayer*)(*iter))->m_bKey = false;
+				}
+			}
+		}
+	}
+
+
 	if (CInput::GetInstance()->GetDIKeyState(DIK_1) & 0x80)
 	{
 		//KEYINPUT_POTION
@@ -728,10 +837,13 @@ void CPlayer::TimeSetter(void)
 		m_fComboTime += CTimeMgr::GetInstance()->GetTime();
 		//cout << "콤보시간:" << m_fComboTime << endl;
 	}
+	if (m_bSkillUsed == true)
+		m_fSkillMoveTime += CTimeMgr::GetInstance()->GetTime();
 
-	if (m_fSeverTime > 0.5f)
+
+	if (m_fSeverTime > 0.1f && m_bMoveSend == true)
 	{
-		//g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
+		g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
 		g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
 		m_fSeverTime = 0.f;
 	}
@@ -780,4 +892,15 @@ Packet* CPlayer::GetPacket()
 void CPlayer::AniMove(void)
 {
 	//애니매이션에 따라 얼마나 이동할껀지 부분임.
+
+	float		fTime = CTimeMgr::GetInstance()->GetTime();
+
+	if(m_bSkillUsed ==true)
+		cout << m_fSkillMoveTime << endl;
+
+	if (m_ePlayerState == PLAYER_SKILL1)
+	{
+		if(m_fSkillMoveTime >0.6f && m_fSkillMoveTime < 1.2f)
+			CNaviMgr::GetInstance()->MoveOnNaviMesh(&m_pInfo->m_vPos, &(m_pInfo->m_vDir * m_fSpeed * fTime), m_dwCellNum);
+	}
 }

@@ -216,6 +216,7 @@
     <ClInclude Include="..\Code\ParsingDevice9.h" />
     <ClInclude Include="..\Code\Player.h" />
     <ClInclude Include="..\Code\QuardTree.h" />
+    <ClInclude Include="..\Code\QuestUI.h" />
     <ClInclude Include="..\Code\RcCol.h" />
     <ClInclude Include="..\Code\RcTerrain.h" />
     <ClInclude Include="..\Code\RcTex.h" />
@@ -293,6 +294,7 @@
     <ClCompile Include="..\Code\ParsingDevice9.cpp" />
     <ClCompile Include="..\Code\Player.cpp" />
     <ClCompile Include="..\Code\QuardTree.cpp" />
+    <ClCompile Include="..\Code\QuestUI.cpp" />
     <ClCompile Include="..\Code\RcCol.cpp" />
     <ClCompile Include="..\Code\RcTerrain.cpp" />
     <ClCompile Include="..\Code\RcTex.cpp" />

@@ -136,6 +136,8 @@ HRESULT CLogo::Add_Dynamic_Buffer(void)
 		vecAni.push_back("player_normalattack1");
 		vecAni.push_back("player_normalattack2");
 		vecAni.push_back("player_normalattack3");
+		vecAni.push_back("player_skill2");
+		vecAni.push_back("player_skill3");
 		vecAni.push_back("player_dead");
 
 		hr = CResourcesMgr::GetInstance()->AddMesh(

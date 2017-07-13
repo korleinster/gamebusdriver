@@ -21,6 +21,7 @@
 #include "Input.h"
 #include "NaviMgr.h"
 #include "ChatUI.h"
+#include "QuestUI.h"
 
 CStage::CStage()
 	: m_bFirstLogin(false)
@@ -158,6 +159,11 @@ HRESULT CStage::CreateObj(void)
 	if (pObj == NULL)
 		return E_FAIL;
 	CObjMgr::GetInstance()->AddObject(L"ChatUI", pObj);
+
+	pObj = CQuestUI::Create();
+	if (pObj == NULL)
+		return E_FAIL;
+	CObjMgr::GetInstance()->AddObject(L"QuestUI", pObj);
 
 	NaviLoad();
 

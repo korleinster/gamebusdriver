@@ -841,7 +841,7 @@ void CPlayer::TimeSetter(void)
 		m_fSkillMoveTime += CTimeMgr::GetInstance()->GetTime();
 
 
-	if (m_fSeverTime > 0.1f && m_bMoveSend == true)
+	if (m_fSeverTime > 0.1f )
 	{
 		g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
 		g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));

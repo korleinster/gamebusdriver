@@ -23,9 +23,11 @@ protected:
 	bool						m_bCurred;
 	float						m_fSpeed;
 	
+	
 
 public:
 	bool						m_bDeath = false;
+	bool						m_bMoveForServer;//서버에서 이동을 하는가?
 
 public:
 	virtual HRESULT Initialize(void);

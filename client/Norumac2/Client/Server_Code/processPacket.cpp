@@ -56,10 +56,17 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 					for (auto iter : *CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer"))
 					{
 						if (iter->GetPacketData()->id == p->id) {
-							if (((COtherPlayer*)iter)->GetAniState() == PLAYER_IDLE) {
-								((COtherPlayer*)iter)->m_bKey = true;
-								((COtherPlayer*)iter)->SetAniState(PLAYER_MOVE);
-								((COtherPlayer*)iter)->m_SeverPosSaveList.push_back(D3DXVECTOR3(data->pos.x, 0.f, data->pos.y));
+							if (((COtherPlayer*)iter)->GetAniState() == PLAYER_IDLE) 
+							{
+
+								if ((((COtherPlayer*)iter)->GetInfo()->m_vPos.x == p->pos.x) && (((COtherPlayer*)iter)->GetInfo()->m_vPos.z == p->pos.y))
+									break;
+								else
+								{
+									((COtherPlayer*)iter)->m_bKey = true;
+									((COtherPlayer*)iter)->SetAniState(PLAYER_MOVE);
+									((COtherPlayer*)iter)->m_bMoveForServer = true;
+								}
 							}
 							break;
 						}

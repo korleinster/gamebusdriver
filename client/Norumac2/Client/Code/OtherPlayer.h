@@ -30,7 +30,7 @@ private:
 public:
 	bool			m_bKey; // Å°°¡ ´­·Ç³ª?
 	//bool			m_bPush;
-	list<D3DXVECTOR3> m_SeverPosSaveList;
+
 
 
 public:

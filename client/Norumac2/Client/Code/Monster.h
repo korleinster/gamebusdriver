@@ -37,6 +37,7 @@ public:
 	virtual HRESULT Initialize(void);
 	virtual int		Update(void);
 	virtual void	Render(void);
+	virtual void	ShadowmapRender(void);
 
 
 public:

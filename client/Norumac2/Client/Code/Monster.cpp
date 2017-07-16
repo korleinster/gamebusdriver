@@ -206,6 +206,11 @@ void CMonster::Render(void)
 	}
 }
 
+void  CMonster::ShadowmapRender(void)
+{
+
+}
+
 CMonster * CMonster::Create(void)
 {
 	CMonster* pObj = new CMonster;

@@ -200,6 +200,11 @@ void COtherPlayer::Render(void)
 	}
 }
 
+void  COtherPlayer::ShadowmapRender(void)
+{
+
+}
+
 COtherPlayer * COtherPlayer::Create(void)
 {
 	COtherPlayer* pObj = new COtherPlayer;

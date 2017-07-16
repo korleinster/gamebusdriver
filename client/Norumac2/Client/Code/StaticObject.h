@@ -27,6 +27,7 @@ public:
 	virtual HRESULT Initialize(const TCHAR* pMeshKey);
 	virtual int		Update(void);
 	virtual void	Render(void);
+	virtual void	ShadowmapRender(void);
 	void			KeyInput(void);
 	Packet*			GetPacket(void);
 

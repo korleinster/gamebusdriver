@@ -267,6 +267,11 @@ void CPlayer::Render(void)
 		dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimationOnce(PLAYER_DEAD);
 }
 
+void  CPlayer::ShadowmapRender(void)
+{
+
+}
+
 CPlayer * CPlayer::Create(void)
 {
 	CPlayer* pObj = new CPlayer;

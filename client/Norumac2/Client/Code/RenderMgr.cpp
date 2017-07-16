@@ -129,9 +129,9 @@ HRESULT CRenderMgr::InitScene(void)
 void CRenderMgr::Render(const float & fTime)
 {
 	// Å°¼¼ÆÃ
-#if defined( DEBUG ) || defined( _DEBUG )
+//#if defined( DEBUG ) || defined( _DEBUG )
 	Input(fTime);
-#endif
+//#endif
 
 	if (m_bDefferdOn)
 	{
@@ -153,6 +153,8 @@ void CRenderMgr::Render(const float & fTime)
 		m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f + i * 5, 20.f, 0.f), 20.f, D3DXVECTOR3(i, 0.0f, 0.0f));
 		}*/
 	}
+
+	//
 
 	ID3D11DepthStencilState* pPrevDepthState;
 	UINT nPrevStencil;
@@ -391,7 +393,7 @@ void CRenderMgr::Input(float fTime)
 		}
 	}
 
-	if (CInput::GetInstance()->GetDIKeyState(DIK_Z) & 0x80)
+	/*if (CInput::GetInstance()->GetDIKeyState(DIK_Z) & 0x80)
 	{
 		m_fSobelValue += 0.0001f;
 		cout << "SobelValue : " << m_fSobelValue << endl;
@@ -401,78 +403,78 @@ void CRenderMgr::Input(float fTime)
 	{
 		m_fSobelValue -= 0.0001f;
 		cout << "SobelValue : " << m_fSobelValue << endl;
-	}
+	}*/
 
 	// For.Red
-	if (CInput::GetInstance()->GetDIKeyState(DIK_R) & 0x80)
-	{
-		if (CInput::GetInstance()->GetDIKeyState(DIK_UP) & 0x80)
-		{
-			if (1.0f <= m_fDirColor[RGB_RED])
-				m_fDirColor[RGB_RED] = 1.0f;
-			else
-				m_fDirColor[RGB_RED] += 0.1f * fTime;
+	//if (CInput::GetInstance()->GetDIKeyState(DIK_R) & 0x80)
+	//{
+	//	if (CInput::GetInstance()->GetDIKeyState(DIK_UP) & 0x80)
+	//	{
+	//		if (1.0f <= m_fDirColor[RGB_RED])
+	//			m_fDirColor[RGB_RED] = 1.0f;
+	//		else
+	//			m_fDirColor[RGB_RED] += 0.1f * fTime;
 
-			cout << "Red : " << m_fDirColor[RGB_RED] << "\t" << "Green : " << m_fDirColor[RGB_GREEN] << "\t" << "Blue : " << m_fDirColor[RGB_BLUE] << endl;
-		}
-		if (CInput::GetInstance()->GetDIKeyState(DIK_DOWN) & 0x80)
-		{
-			if (0.0f >= m_fDirColor[RGB_RED])
-				m_fDirColor[RGB_RED] = 0.0f;
-			else
-				m_fDirColor[RGB_RED] -= 0.1f * fTime;
+	//		cout << "Red : " << m_fDirColor[RGB_RED] << "\t" << "Green : " << m_fDirColor[RGB_GREEN] << "\t" << "Blue : " << m_fDirColor[RGB_BLUE] << endl;
+	//	}
+	//	if (CInput::GetInstance()->GetDIKeyState(DIK_DOWN) & 0x80)
+	//	{
+	//		if (0.0f >= m_fDirColor[RGB_RED])
+	//			m_fDirColor[RGB_RED] = 0.0f;
+	//		else
+	//			m_fDirColor[RGB_RED] -= 0.1f * fTime;
 
-			cout << "Red : " << m_fDirColor[RGB_RED] << "\t" << "Green : " << m_fDirColor[RGB_GREEN] << "\t" << "Blue : " << m_fDirColor[RGB_BLUE] << endl;
-		}
-	}
+	//		cout << "Red : " << m_fDirColor[RGB_RED] << "\t" << "Green : " << m_fDirColor[RGB_GREEN] << "\t" << "Blue : " << m_fDirColor[RGB_BLUE] << endl;
+	//	}
+	//}
 
-	// For.Green
-	if (CInput::GetInstance()->GetDIKeyState(DIK_G) & 0x80)
-	{
-		if (CInput::GetInstance()->GetDIKeyState(DIK_UP) & 0x80)
-		{
-			if (1.0f <= m_fDirColor[RGB_GREEN])
-				m_fDirColor[RGB_GREEN] = 1.0f;
-			else
-				m_fDirColor[RGB_GREEN] += 0.1f * fTime;
+	//// For.Green
+	//if (CInput::GetInstance()->GetDIKeyState(DIK_G) & 0x80)
+	//{
+	//	if (CInput::GetInstance()->GetDIKeyState(DIK_UP) & 0x80)
+	//	{
+	//		if (1.0f <= m_fDirColor[RGB_GREEN])
+	//			m_fDirColor[RGB_GREEN] = 1.0f;
+	//		else
+	//			m_fDirColor[RGB_GREEN] += 0.1f * fTime;
 
-			cout << "Red : " << m_fDirColor[RGB_RED] << "\t" << "Green : " << m_fDirColor[RGB_GREEN] << "\t" << "Blue : " << m_fDirColor[RGB_BLUE] << endl;
-		}
-		if (CInput::GetInstance()->GetDIKeyState(DIK_DOWN) & 0x80)
-		{
-			if (0.0f >= m_fDirColor[RGB_GREEN])
-				m_fDirColor[RGB_GREEN] = 0.0f;
-			else
-				m_fDirColor[RGB_GREEN] -= 0.1f * fTime;
+	//		cout << "Red : " << m_fDirColor[RGB_RED] << "\t" << "Green : " << m_fDirColor[RGB_GREEN] << "\t" << "Blue : " << m_fDirColor[RGB_BLUE] << endl;
+	//	}
+	//	if (CInput::GetInstance()->GetDIKeyState(DIK_DOWN) & 0x80)
+	//	{
+	//		if (0.0f >= m_fDirColor[RGB_GREEN])
+	//			m_fDirColor[RGB_GREEN] = 0.0f;
+	//		else
+	//			m_fDirColor[RGB_GREEN] -= 0.1f * fTime;
 
-			cout << "Red : " << m_fDirColor[RGB_RED] << "\t" << "Green : " << m_fDirColor[RGB_GREEN] << "\t" << "Blue : " << m_fDirColor[RGB_BLUE] << endl;
-		}
-	}
+	//		cout << "Red : " << m_fDirColor[RGB_RED] << "\t" << "Green : " << m_fDirColor[RGB_GREEN] << "\t" << "Blue : " << m_fDirColor[RGB_BLUE] << endl;
+	//	}
+	//}
 
-	// For.Blue
-	if (CInput::GetInstance()->GetDIKeyState(DIK_B) & 0x80)
-	{
-		if (CInput::GetInstance()->GetDIKeyState(DIK_UP) & 0x80)
-		{
-			if (1.0f <= m_fDirColor[RGB_BLUE])
-				m_fDirColor[RGB_BLUE] = 1.0f;
-			else
-				m_fDirColor[RGB_BLUE] += 0.1f * fTime;
+	//// For.Blue
+	//if (CInput::GetInstance()->GetDIKeyState(DIK_B) & 0x80)
+	//{
+	//	if (CInput::GetInstance()->GetDIKeyState(DIK_UP) & 0x80)
+	//	{
+	//		if (1.0f <= m_fDirColor[RGB_BLUE])
+	//			m_fDirColor[RGB_BLUE] = 1.0f;
+	//		else
+	//			m_fDirColor[RGB_BLUE] += 0.1f * fTime;
 
-			cout << "Red : " << m_fDirColor[RGB_RED] << "\t" << "Green : " << m_fDirColor[RGB_GREEN] << "\t" << "Blue : " << m_fDirColor[RGB_BLUE] << endl;
-		}
-		if (CInput::GetInstance()->GetDIKeyState(DIK_DOWN) & 0x80)
-		{
-			if (0.0f >= m_fDirColor[RGB_BLUE])
-				m_fDirColor[RGB_BLUE] = 0.0f;
-			else
-				m_fDirColor[RGB_BLUE] -= 0.1f * fTime;
+	//		cout << "Red : " << m_fDirColor[RGB_RED] << "\t" << "Green : " << m_fDirColor[RGB_GREEN] << "\t" << "Blue : " << m_fDirColor[RGB_BLUE] << endl;
+	//	}
+	//	if (CInput::GetInstance()->GetDIKeyState(DIK_DOWN) & 0x80)
+	//	{
+	//		if (0.0f >= m_fDirColor[RGB_BLUE])
+	//			m_fDirColor[RGB_BLUE] = 0.0f;
+	//		else
+	//			m_fDirColor[RGB_BLUE] -= 0.1f * fTime;
 
-			cout << "Red : " << m_fDirColor[RGB_RED] << "\t" << "Green : " << m_fDirColor[RGB_GREEN] << "\t" << "Blue : " << m_fDirColor[RGB_BLUE] << endl;
-		}
-	}
+	//		cout << "Red : " << m_fDirColor[RGB_RED] << "\t" << "Green : " << m_fDirColor[RGB_GREEN] << "\t" << "Blue : " << m_fDirColor[RGB_BLUE] << endl;
+	//	}
+	//}
 
-	if (CInput::GetInstance()->GetDIMouseState(CInput::DIM_RBUTTON))
+	/*if (CInput::GetInstance()->GetDIMouseState(CInput::DIM_RBUTTON))
 	{
 
 		float fDX = (float)CInput::GetInstance()->GetDIMouseMove(CInput::DIM_X);
@@ -491,5 +493,5 @@ void CRenderMgr::Input(float fTime)
 		D3DXVec3Normalize(&m_vDirLight, &m_vDirLight);
 
 		cout << "m_vDirLight.x : " << m_vDirLight.x << " " << "m_vDirLight.y : " << m_vDirLight.y << " " << "m_vDirLight.z : " << m_vDirLight.z << endl;
-	}
+	}*/
 }

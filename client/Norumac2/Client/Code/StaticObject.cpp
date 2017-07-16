@@ -133,6 +133,11 @@ void CStaticObject::Render(void)
 	}
 }
 
+void  CStaticObject::ShadowmapRender(void)
+{
+
+}
+
 CStaticObject * CStaticObject::Create(const TCHAR* pMeshKey)
 {
 	CStaticObject* pObj = new CStaticObject;

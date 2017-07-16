@@ -47,6 +47,7 @@ public:
 	virtual HRESULT Initialize(void);
 	virtual int		Update(void);
 	virtual void	Render(void);
+	virtual void	ShadowmapRender(void);
 	void			KeyInput(void);
 	Packet*			GetPacket(void);
 	void			AniMove(void);

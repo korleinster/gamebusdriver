@@ -74,6 +74,9 @@ float4 DirLightPS(VS_OUTPUT In) : SV_TARGET
 	// GBuffer ¾ðÆÐÅ·
 	SURFACE_DATA gbd = UnpackGBuffer_Loc(In.Position.xy);
 
+//if (gbd.LinearDepth > 50.f)
+//	return float4(0.8f, 0.8f, 0.8f, 1.f);
+
 if (gbd.BorderLine < 0.1f)
 {
 	return float4(0.f, 0.f, 0.f, 1.f);

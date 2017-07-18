@@ -60,12 +60,12 @@ int CQuestUI::Update(void)
 
 	if (CInput::GetInstance()->GetDIKeyState(DIK_M) & 0x80)
 	{
-		if (m_bRender == true && m_fCoolTime > 0.5f)
+		if (m_bRender == true && m_fCoolTime > 0.2f)
 		{
 			m_bRender = false;
 			m_fCoolTime = 0.f;
 		}
-		else if (m_bRender == false && m_fCoolTime > 0.5f)
+		else if (m_bRender == false && m_fCoolTime > 0.2f)
 		{
 			m_bRender = true;
 			m_fCoolTime = 0.f;

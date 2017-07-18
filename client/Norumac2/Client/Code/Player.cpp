@@ -65,7 +65,7 @@ CPlayer::CPlayer()
 	m_bMoveSend = false;
 	m_fSkillMoveTime = 0.f;
 	m_bSkillUsed = false;
-
+	m_fChatCool = 0.f;
 
 	m_Packet = new Packet[MAX_BUF_SIZE];
 }
@@ -143,7 +143,26 @@ int CPlayer::Update(void)
 
 	if (m_bDeath == false)
 	{
-		KeyInput();
+		if (CInput::GetInstance()->GetDIKeyState(DIK_RETURN) & 0x80)
+		{
+			if (g_bChatMode == false && m_fChatCool > 0.2f)
+			{
+				g_bChatMode = true;
+				m_fChatCool = 0.f;
+				m_ePlayerState = PLAYER_IDLE;
+				m_bSkillUsed = false;
+				m_fSkillMoveTime = 0.f;
+			}
+			else if (g_bChatMode == true && m_fChatCool > 0.2f)
+			{
+				g_bChatMode = false;
+				m_fChatCool = 0.f;
+			}
+		}
+
+		if(g_bChatMode == false)
+			KeyInput();
+
 		AniMove();
 		CObj::Update();
 
@@ -833,6 +852,7 @@ void CPlayer::TimeSetter(void)
 {
 
 	m_fSeverTime += CTimeMgr::GetInstance()->GetTime();
+	m_fChatCool += CTimeMgr::GetInstance()->GetTime();
 	if (m_bPotionCool == true)
 		m_fPotionTime += CTimeMgr::GetInstance()->GetTime();
 	if (m_bTpCool == true)

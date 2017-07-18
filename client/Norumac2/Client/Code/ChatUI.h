@@ -20,10 +20,13 @@ public:
 
 public:
 	list<CFont*> m_ChatLogList;
+	char m_cChat[MAX_BUF_SIZE];
+	CFont* m_pFont;
 
 
 public:
 	static CChatUI* Create();
+	void ChatInput();
 
 
 };

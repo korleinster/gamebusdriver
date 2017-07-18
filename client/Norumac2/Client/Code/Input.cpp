@@ -72,7 +72,7 @@ HRESULT CInput::InitKeyBoard(HWND hWnd)
 	hr = m_pInput->CreateDevice(GUID_SysKeyboard, &m_pKeyBoard, NULL);
 	FAILED_CHECK(hr);
 
-	m_pKeyBoard->SetCooperativeLevel(hWnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
+	m_pKeyBoard->SetCooperativeLevel(hWnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
 	FAILED_CHECK(hr);
 
 	m_pKeyBoard->SetDataFormat(&c_dfDIKeyboard);

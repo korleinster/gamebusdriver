@@ -23,6 +23,7 @@ DWORD	g_dwLightIndex = 0;
 D3DXVECTOR3 g_vLightDir = D3DXVECTOR3(1.f, -1.f, 1.f);
 AsynchronousClientClass g_client;
 bool g_bLogin = false;
+bool g_bChatMode = false; 
 
 // 이 코드 모듈에 들어 있는 함수의 정방향 선언입니다.
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -71,12 +72,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	msg.message = WM_NULL;
 
 	CMainApp*		pMainApp = CMainApp::Create();
-
-
-	// 이걸 너가 옮겨야됨, 새가 날아왔을 이후로
-	// g_hWnd 는 윈도우 창 핸들값이니까
-	// 하긴 어차피 둘다 글로벌이니 상관 없겠다
-	// 여튼 거기 서 부르면 됨 이거, 여기는 삭제하고 ㅇㅋ?
 
 	// 기본 메시지 루프입니다.
 	while (msg.message != WM_QUIT)
@@ -144,19 +139,36 @@ BOOL CALLBACK AboutDlgProc(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM lPara
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+
+	int wmId, wmEvent;
+	PAINTSTRUCT ps;
+	HDC hdc;
+
+	string test;
+
+
 	switch (message)
 	{
 	case WM_COMMAND:
-	{
+		wmId = LOWORD(wParam);
+		wmEvent = HIWORD(wParam);
+		switch (wmId)
+		{
+		default:
+			return DefWindowProc(hWnd, message, wParam, lParam);
+		}
+		break;
 
+	case WM_IME_COMPOSITION:
+	{
+		if(g_bChatMode)
+			cout << "한글 조합중" << endl;
 	}
 	break;
-	case WM_PAINT:
+	case WM_CHAR: // 
 	{
-		PAINTSTRUCT ps;
-		HDC hdc = BeginPaint(hWnd, &ps);
-		// TODO: 여기에 hdc를 사용하는 그리기 코드를 추가합니다.
-		EndPaint(hWnd, &ps);
+		if(g_bChatMode)
+			cout << "영어 출력중" << endl;
 	}
 	break;
 	case WM_KEYDOWN:
@@ -167,12 +179,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			break;
 		}
 		break;
+	case WM_PAINT:
+		hdc = BeginPaint(hWnd, &ps);
+		// TODO: 여기에 그리기 코드를 추가합니다.
+		EndPaint(hWnd, &ps);
+		break;
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
 	case WM_SOCKET:
 		g_client.ProcessWinMessage(hWnd, message, wParam, lParam);
-		return 0;
 		break;
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);

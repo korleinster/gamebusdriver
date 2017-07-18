@@ -301,7 +301,7 @@ void CRenderMgr::Render_UI(void)
 
 void CRenderMgr::Render_FPS(const float & fTime)
 {
-	m_fTime += fTime;
+	/*m_fTime += fTime;
 	++m_dwCount;
 
 	if (m_fTime >= 1.f)
@@ -310,7 +310,7 @@ void CRenderMgr::Render_FPS(const float & fTime)
 		m_fTime = 0.f;
 		m_dwCount = 0;
 	}
-	::SetWindowText(g_hWnd, m_szFps);
+	::SetWindowText(g_hWnd, m_szFps);*/
 }
 
 void CRenderMgr::Render_BorderLine(void)

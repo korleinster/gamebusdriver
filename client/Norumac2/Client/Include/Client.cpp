@@ -18,6 +18,12 @@ int MAX_AI_SLIME;
 int MAX_AI_GOBLIN;
 int MAX_AI_BOSS;
 
+char cText[MAX_BUF_SIZE];//저장할 채팅 메시지
+char cCompText[10];//조합중인 문자
+char cCanText[200];//특수문자
+int iCNum = 0;//특수문자 위치
+int iCMax = 0;//특수문자 목록 최대갯수
+
 HWND	g_hWnd;
 DWORD	g_dwLightIndex = 0;
 D3DXVECTOR3 g_vLightDir = D3DXVECTOR3(1.f, -1.f, 1.f);
@@ -27,6 +33,7 @@ bool g_bChatMode = false;
 
 // 이 코드 모듈에 들어 있는 함수의 정방향 선언입니다.
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
+int GetText(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
@@ -73,6 +80,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	CMainApp*		pMainApp = CMainApp::Create();
 
+	ZeroMemory(&cText, sizeof(char) * MAX_BUF_SIZE);
+	ZeroMemory(&cCompText, sizeof(char) * 10);
+
 	// 기본 메시지 루프입니다.
 	while (msg.message != WM_QUIT)
 	{
@@ -84,6 +94,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 		else
 		{
+			//if(g_bChatMode == true)
+				//cout << "최종출력:" << cText << endl;
 			pMainApp->Update();
 			pMainApp->Render();
 		}
@@ -144,7 +156,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	PAINTSTRUCT ps;
 	HDC hdc;
 
-	string test;
+	if (g_bChatMode == true)
+	{
+		if (GetText(hWnd, message, wParam, lParam) == 0)
+			return 0;
+	}
 
 
 	switch (message)
@@ -158,19 +174,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			return DefWindowProc(hWnd, message, wParam, lParam);
 		}
 		break;
-
-	case WM_IME_COMPOSITION:
-	{
-		if(g_bChatMode)
-			cout << "한글 조합중" << endl;
-	}
-	break;
-	case WM_CHAR: // 
-	{
-		if(g_bChatMode)
-			cout << "영어 출력중" << endl;
-	}
-	break;
 	case WM_KEYDOWN:
 		switch (wParam)
 		{
@@ -195,3 +198,90 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	}
 	return 0;
 }
+
+
+
+//채팅용
+int GetText(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+	int iLen;
+	HIMC hIMC = NULL;//ime 핸들
+
+	switch (msg)
+	{
+	case WM_IME_COMPOSITION://한글 조합
+		hIMC = ImmGetContext(hWnd);
+		if (lParam & GCS_RESULTSTR)
+		{
+			if ((iLen = ImmGetCompositionString(hIMC, GCS_RESULTSTR, NULL, 0)) > 0)// ime의 스트링 길이를 받아옴
+			{
+
+
+				ImmGetCompositionString(hIMC, GCS_RESULTSTR, cCompText, iLen);
+				//조합중인 문자열을 받아옴.
+
+				cCompText[iLen] = 0;
+				//끝에 0을 넣어 마무리.
+
+				cout <<"조합출력1:" << cCompText << endl;
+
+				strcpy(cText + strlen(cText), cCompText);
+				//전체 메시지 뒤에 붙여줌.
+
+				memset(cCompText, 0, 10);
+				//조합중인 문자열 초기화
+			}
+		}
+		else if (lParam & GCS_COMPSTR) //조합중이면
+		{  
+
+			iLen = ImmGetCompositionString(hIMC, GCS_COMPSTR, NULL, 0);
+			// 조합중인 길이를 얻는다.
+
+			ImmGetCompositionString(hIMC, GCS_COMPSTR, cCompText, iLen);
+			//조합중인 문자를 얻는다.
+
+			cout << "조합출력2:" << cCompText << endl;
+
+			cCompText[iLen] = 0;
+			//역시 마무리
+		}
+		ImmReleaseContext(hWnd, hIMC);
+		return 0;
+	case WM_CHAR://영어랑 백스페이스 등등
+		if (wParam == CHAT_BACKSPACE)
+		{
+			if (strlen(cText) > 0) // 내용이 있으면
+			{
+				if (strlen(cText) < 0)//지울게 확장코드이면
+				{
+					cText[strlen(cText) - 1] = 0; //한자를 지움
+				}
+
+				cText[strlen(cText) - 1] = 0;//한자를 지운다
+
+				memset(cCompText, 0, 10); // 조합중인 문자 초기화
+			}
+		}
+		else
+		{
+			iLen = strlen(cText);
+			cText[iLen] = wParam & 0xff; // 넘어온 문자를 넣기
+			cText[iLen] = 0;//역시 마무리
+		}
+		return 0;
+	case WM_IME_NOTIFY://한자
+		//GetCandi(hWnd, wParam, lParam, 0);
+		return 0;
+	//case WM_KEYDOWN://키다운
+		//return 0;
+	default:
+		break;
+	}
+}
+
+//void GetCandi(HWND hWnd, WPARAM wParam, LPARAM lParam, int Number)
+//{
+//	//특문과 한자는 나중에
+//}
+

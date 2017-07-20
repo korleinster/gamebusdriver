@@ -515,6 +515,21 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 		break;
 	}
+	case BOSS_ATT: {
+		// 여기서는 보스 관련 공격 애니메이션만 처리할것 !!
+		// 기본적인 데미지 계산은 KEYINPUT_ATTACK 이 패킷을 통해 처리하도록 해두었다.
+		// 변동사항이 있으면 알려줄거고, 모르는거 있으면, 나대서 추측하며 멋대로 구현말고 꼭 물어볼것
+
+		sc_boss_atk *p = reinterpret_cast<sc_boss_atk*>(buf);
+		
+		p->att_type;
+		/*
+			att_type 에 따라서, 어떤 공격 및 행동인지 확인할 수 있다.
+			따라서 저 타입에 따라서 관련 애니메이션 재생만 하면 됨.
+		*/
+
+		break;
+	}
 
 	default:	// 잘 안쓰이는 패킷들
 

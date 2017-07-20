@@ -56,6 +56,15 @@ enum PacketProtocolType {
 	COMBO2,
 	COMBO3,
 	SKILL1,
+
+	// 보스 공격
+	BOSS_ATT,
+	BOSS_ATT_01,
+	BOSS_ATT_02,
+	BOSS_ATT_03,
+	BOSS_ATT_04,
+	BOSS_ATT_05,
+	BOSS_ATT_06,
 };
 
 using Packet = unsigned char;
@@ -188,6 +197,13 @@ using sc_quest = struct server_to_client_quest_state
 	unsigned char size = sizeof(int) + sizeof(char) + sizeof(char);
 	unsigned char type = QUEST_PROGRESS;
 	int quest;
+};
+
+using sc_boss_atk = struct server_to_client_boss_attack_type
+{
+	unsigned char size = sizeof(int) + sizeof(char) + sizeof(char);
+	unsigned char type = BOSS_ATT;
+	unsigned char att_type;
 };
 
 #pragma pack (pop)

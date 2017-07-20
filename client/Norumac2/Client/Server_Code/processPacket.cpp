@@ -500,6 +500,22 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 		break;
 	}
+	case QUEST_PROGRESS: {
+		// 여기서 퀘스트 관련 텍스트 진행도 보이게 하면됨
+
+		sc_quest *p = reinterpret_cast<sc_quest*>(buf);
+
+		p->quest;
+		/*
+			한 마리 잡으면 1 부터 시작, 그리고 계속 더해짐
+
+			0					~ MAX_AI_SLIME ( 10 ) => 슬라임 잡은 갯수 그대로임
+			MAX_AI_SLIME ( 10 ) ~ MAX_AI_GOBLIN ( 20 ) => ( quest - MAX_AI_SLIME ) 해야, 고블린 잡은 갯수 나옴
+		*/
+
+		break;
+	}
+
 	default:	// 잘 안쓰이는 패킷들
 
 		switch (buf[1])

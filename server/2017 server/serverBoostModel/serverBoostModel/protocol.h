@@ -48,6 +48,9 @@ enum PacketProtocolType {
 	// 채팅 관련 정보
 	CHAT,
 
+	// 퀘스트 진행 상황
+	QUEST_PROGRESS,
+
 	// 플레이어 공격 상태 ( 콤보 및 스킬 종류 등등 )
 	COMBO1,
 	COMBO2,
@@ -178,6 +181,13 @@ using sc_chat = struct server_to_client_chatting
 	unsigned char type = CHAT;
 	unsigned int id;
 	char msg[MAX_CHAT_SIZE] = { 0 };
+};
+
+using sc_quest = struct server_to_client_quest_state
+{
+	unsigned char size = sizeof(int) + sizeof(char) + sizeof(char);
+	unsigned char type = QUEST_PROGRESS;
+	int quest;
 };
 
 #pragma pack (pop)

@@ -23,7 +23,7 @@ ai_status_slime = {
 }
 
 ai_status_goblin = {
-	pos = { x = 430.0, y = 300.0 },
+	pos = { x = 134.0, y = 403.0 },
 	radius = 10,
 	
 	howMany	= 10 + ai_status_slime.howMany,

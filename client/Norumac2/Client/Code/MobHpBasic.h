@@ -14,7 +14,7 @@ public:
 	virtual HRESULT Initialize(void);
 	virtual int Update(void);
 	virtual void Render(void);
-	void SetName(wstring wstrText, int iID);
+	void SetName(wstring wstrText);
 	void ResetRendTime(void) { m_fRendTime = 0.f; }
 
 public:

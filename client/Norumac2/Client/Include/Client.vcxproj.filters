@@ -172,24 +172,6 @@
     <Filter Include="02.Object\06.Monster">
       <UniqueIdentifier>{b34f5559-2e11-4a8e-8c44-fadb03ee4e10}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Object\07.UI">
-      <UniqueIdentifier>{dc969811-dc26-40fd-86e0-f602df08bed7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.Object\07.UI\02.FaceUI">
-      <UniqueIdentifier>{8d783b87-375a-4715-a14b-645dc65d5b96}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.Object\07.UI\01.BaseUI">
-      <UniqueIdentifier>{79724ac1-cc31-4dad-8352-e3326485d29e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.Object\07.UI\03.HpBar">
-      <UniqueIdentifier>{778a2df4-5606-49c5-a4a8-ef0395c45ccc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.Object\07.UI\04.FeverBar">
-      <UniqueIdentifier>{c20c77f6-3e50-48f7-b28c-2ae93ce4b74a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.Object\07.UI\05.RuneBar">
-      <UniqueIdentifier>{a74728bd-3afd-48e6-8fe4-b6a355d2063f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="96.Utility\04.NaviMgr">
       <UniqueIdentifier>{950a68c3-81db-4375-9c4b-f62fe21af1b1}</UniqueIdentifier>
     </Filter>
@@ -211,22 +193,43 @@
     <Filter Include="95.System\05.FontMgr\Font">
       <UniqueIdentifier>{402621a1-56cb-4f86-812c-20c135a88881}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Object\07.UI\06.DamageFont">
-      <UniqueIdentifier>{f763fb1e-af7a-4a13-9e25-6fc8a51eb7b4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.Object\07.UI\07.MobHpBasic">
-      <UniqueIdentifier>{2437f172-be86-4fcd-96a8-2e9b923e660c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.Object\07.UI\08.MobHpBar">
-      <UniqueIdentifier>{fe66701f-cc77-4a93-bbfd-f6b9a0dbfd88}</UniqueIdentifier>
-    </Filter>
     <Filter Include="99.Default\Script">
       <UniqueIdentifier>{b291fcad-0c57-4c70-932d-5e37d542405a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Object\07.UI\09.ChatUI">
+    <Filter Include="02.Object\07.Boss">
+      <UniqueIdentifier>{7404959c-592d-4a03-85db-d9e1390cb7ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\08.UI">
+      <UniqueIdentifier>{dc969811-dc26-40fd-86e0-f602df08bed7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\08.UI\02.FaceUI">
+      <UniqueIdentifier>{8d783b87-375a-4715-a14b-645dc65d5b96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\08.UI\01.BaseUI">
+      <UniqueIdentifier>{79724ac1-cc31-4dad-8352-e3326485d29e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\08.UI\03.HpBar">
+      <UniqueIdentifier>{778a2df4-5606-49c5-a4a8-ef0395c45ccc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\08.UI\04.FeverBar">
+      <UniqueIdentifier>{c20c77f6-3e50-48f7-b28c-2ae93ce4b74a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\08.UI\05.RuneBar">
+      <UniqueIdentifier>{a74728bd-3afd-48e6-8fe4-b6a355d2063f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\08.UI\06.DamageFont">
+      <UniqueIdentifier>{f763fb1e-af7a-4a13-9e25-6fc8a51eb7b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\08.UI\07.MobHpBasic">
+      <UniqueIdentifier>{2437f172-be86-4fcd-96a8-2e9b923e660c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\08.UI\08.MobHpBar">
+      <UniqueIdentifier>{fe66701f-cc77-4a93-bbfd-f6b9a0dbfd88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\08.UI\09.ChatUI">
       <UniqueIdentifier>{528f9f45-fb1a-48ab-a399-b2cfbf7ec7d0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Object\07.UI\10.QuestUI">
+    <Filter Include="02.Object\08.UI\10.QuestUI">
       <UniqueIdentifier>{66a86b72-93a1-4505-a660-b9664fc9808f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -424,22 +427,22 @@
       <Filter>02.Object\06.Monster</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\UI.h">
-      <Filter>02.Object\07.UI</Filter>
+      <Filter>02.Object\08.UI</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\FaceUI.h">
-      <Filter>02.Object\07.UI\02.FaceUI</Filter>
+      <Filter>02.Object\08.UI\02.FaceUI</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\BaseUI.h">
-      <Filter>02.Object\07.UI\01.BaseUI</Filter>
+      <Filter>02.Object\08.UI\01.BaseUI</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\HpBar.h">
-      <Filter>02.Object\07.UI\03.HpBar</Filter>
+      <Filter>02.Object\08.UI\03.HpBar</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\FeverBar.h">
-      <Filter>02.Object\07.UI\04.FeverBar</Filter>
+      <Filter>02.Object\08.UI\04.FeverBar</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\RuneBar.h">
-      <Filter>02.Object\07.UI\05.RuneBar</Filter>
+      <Filter>02.Object\08.UI\05.RuneBar</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\NaviMgr.h">
       <Filter>96.Utility\04.NaviMgr</Filter>
@@ -454,22 +457,25 @@
       <Filter>97.Resources\01.Buffer\6.LineCol</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\DamageFont.h">
-      <Filter>02.Object\07.UI\06.DamageFont</Filter>
+      <Filter>02.Object\08.UI\06.DamageFont</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\MobHpBasic.h">
-      <Filter>02.Object\07.UI\07.MobHpBasic</Filter>
+      <Filter>02.Object\08.UI\07.MobHpBasic</Filter>
     </ClInclude>
     <ClInclude Include="MobHpBar.h">
-      <Filter>02.Object\07.UI\08.MobHpBar</Filter>
+      <Filter>02.Object\08.UI\08.MobHpBar</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\server\2017 server\serverBoostModel\serverBoostModel\readLUAScript.h">
       <Filter>99.Default\Script</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\ChatUI.h">
-      <Filter>02.Object\07.UI\09.ChatUI</Filter>
+      <Filter>02.Object\08.UI\09.ChatUI</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\QuestUI.h">
-      <Filter>02.Object\07.UI\10.QuestUI</Filter>
+      <Filter>02.Object\08.UI\10.QuestUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Boss.h">
+      <Filter>02.Object\07.Boss</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -639,22 +645,22 @@
       <Filter>02.Object\06.Monster</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\UI.cpp">
-      <Filter>02.Object\07.UI</Filter>
+      <Filter>02.Object\08.UI</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\FaceUI.cpp">
-      <Filter>02.Object\07.UI\02.FaceUI</Filter>
+      <Filter>02.Object\08.UI\02.FaceUI</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\BaseUI.cpp">
-      <Filter>02.Object\07.UI\01.BaseUI</Filter>
+      <Filter>02.Object\08.UI\01.BaseUI</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\HpBar.cpp">
-      <Filter>02.Object\07.UI\03.HpBar</Filter>
+      <Filter>02.Object\08.UI\03.HpBar</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\FeverBar.cpp">
-      <Filter>02.Object\07.UI\04.FeverBar</Filter>
+      <Filter>02.Object\08.UI\04.FeverBar</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\RuneBar.cpp">
-      <Filter>02.Object\07.UI\05.RuneBar</Filter>
+      <Filter>02.Object\08.UI\05.RuneBar</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\NaviMgr.cpp">
       <Filter>96.Utility\04.NaviMgr</Filter>
@@ -669,22 +675,25 @@
       <Filter>97.Resources\01.Buffer\6.LineCol</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\DamageFont.cpp">
-      <Filter>02.Object\07.UI\06.DamageFont</Filter>
+      <Filter>02.Object\08.UI\06.DamageFont</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\MobHpBasic.cpp">
-      <Filter>02.Object\07.UI\07.MobHpBasic</Filter>
+      <Filter>02.Object\08.UI\07.MobHpBasic</Filter>
     </ClCompile>
     <ClCompile Include="MobHpBar.cpp">
-      <Filter>02.Object\07.UI\08.MobHpBar</Filter>
+      <Filter>02.Object\08.UI\08.MobHpBar</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\server\2017 server\serverBoostModel\serverBoostModel\readLUAScript.cpp">
       <Filter>99.Default\Script</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\ChatUI.cpp">
-      <Filter>02.Object\07.UI\09.ChatUI</Filter>
+      <Filter>02.Object\08.UI\09.ChatUI</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\QuestUI.cpp">
-      <Filter>02.Object\07.UI\10.QuestUI</Filter>
+      <Filter>02.Object\08.UI\10.QuestUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Boss.cpp">
+      <Filter>02.Object\07.Boss</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

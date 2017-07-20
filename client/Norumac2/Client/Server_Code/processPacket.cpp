@@ -8,6 +8,7 @@
 #include "SceneMgr.h"
 #include "Player.h"
 #include "Monster.h"
+#include "Boss.h"
 #include "DamageFont.h"
 #include "Info.h"
 #include "MobHpBasic.h"
@@ -38,15 +39,29 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 				if (p->id < MAX_AI_NUM)
 				{
-					for (auto iter : *CObjMgr::GetInstance()->Get_ObjList(L"Monster"))
+					if (p->id < MAX_AI_GOBLIN)
 					{
-						if (iter->GetPacketData()->id == p->id) {
-							if (((CMonster*)iter)->GetAniState() == MONSTER_IDLE) {
-								((CMonster*)iter)->m_bKey = true;
-								((CMonster*)iter)->SetAniState(MONSTER_MOVE);
-								((CMonster*)iter)->m_SeverPosSaveList.push_back(D3DXVECTOR3(data->pos.x, 0.f, data->pos.y));
+						for (auto iter : *CObjMgr::GetInstance()->Get_ObjList(L"Monster"))
+						{
+							if (iter->GetPacketData()->id == p->id) {
+								if (((CMonster*)iter)->GetAniState() == MONSTER_IDLE) {
+									((CMonster*)iter)->m_bKey = true;
+									((CMonster*)iter)->SetAniState(MONSTER_MOVE);
+									((CMonster*)iter)->m_SeverPosSaveList.push_back(D3DXVECTOR3(data->pos.x, 0.f, data->pos.y));
+								}
+								break;
 							}
-							break;
+						}
+					}
+					else
+					{
+						auto iter = *CObjMgr::GetInstance()->Get_ObjList(L"Boss")->begin();
+
+						if (((CBoss*)iter)->GetAniState() == BOSS_IDLE)
+						{
+							((CBoss*)iter)->m_bKey = true;
+							((CBoss*)iter)->SetAniState(BOSS_MOVE);
+							((CBoss*)iter)->m_SeverPosSaveList.push_back(D3DXVECTOR3(data->pos.x, 0.f, data->pos.y));
 						}
 					}
 				}
@@ -86,7 +101,12 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			if (p->id >= MAX_AI_NUM)
 				data = CObjMgr::GetInstance()->Get_PlayerServerData(p->id);
 			else
-				data = CObjMgr::GetInstance()->Get_MonsterServerData(p->id);
+			{
+				if(p->id < MAX_AI_GOBLIN)
+					data = CObjMgr::GetInstance()->Get_MonsterServerData(p->id);
+				else
+					data = CObjMgr::GetInstance()->Get_BossServerData(p->id);
+			}
 
 			if (nullptr != data) { data->dir = p->dir; }
 			else { break; }
@@ -138,16 +158,31 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 				if (p->attacking_id < MAX_AI_NUM)
 				{
-					for (auto iter : *CObjMgr::GetInstance()->Get_ObjList(L"Monster"))
+					if (p->attacking_id < MAX_AI_GOBLIN)
 					{
-						if (iter->GetPacketData()->id == p->attacking_id) {
-							if ((reinterpret_cast<CMonster*>(iter))->GetAniState() == MONSTER_IDLE)
-							{
-								(reinterpret_cast<CMonster*>(iter))->m_bKey = true;
-								(reinterpret_cast<CMonster*>(iter))->SetAniState(MONSTER_ATT);
+						for (auto iter : *CObjMgr::GetInstance()->Get_ObjList(L"Monster"))
+						{
+							if (iter->GetPacketData()->id == p->attacking_id) {
+								if ((reinterpret_cast<CMonster*>(iter))->GetAniState() == MONSTER_IDLE)
+								{
+									(reinterpret_cast<CMonster*>(iter))->m_bKey = true;
+									(reinterpret_cast<CMonster*>(iter))->SetAniState(MONSTER_ATT);
+								}
+								break;
 							}
-							break;
 						}
+					}
+					else
+					{
+						auto iter = *CObjMgr::GetInstance()->Get_ObjList(L"Boss")->begin();
+						if ((reinterpret_cast<CBoss*>(iter))->GetAniState() == BOSS_IDLE)
+						{
+							(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
+							(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT2);
+							//이건 일단 샘플
+							//보스 스킬에대한 패킷은 서버가 경우를 해줘야 어떻게든 할듯싶음.
+						}
+
 					}
 				}
 
@@ -207,62 +242,136 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			{
 				if (NULL != (CObjMgr::GetInstance()->Get_MonsterServerData(p->under_attack_id))) 
 				{
-					
-					//////////////데미지 폰트////////////////////////
-					list<CObj*>* ListObj = CObjMgr::GetInstance()->Get_ObjList(L"Monster");
-					list<CObj*>::iterator iter = ListObj->begin();
-					list<CObj*>::iterator iter_end = ListObj->end();
-					D3DXVECTOR3 vPos;
-
-					for (; iter != iter_end; ++iter)
+					if (p->under_attack_id < MAX_AI_GOBLIN)
 					{
-						if ((*iter)->GetPacketData()->id == p->under_attack_id)
+
+						//////////////데미지 폰트////////////////////////
+						list<CObj*>* ListObj = CObjMgr::GetInstance()->Get_ObjList(L"Monster");
+						list<CObj*>::iterator iter = ListObj->begin();
+						list<CObj*>::iterator iter_end = ListObj->end();
+						D3DXVECTOR3 vPos;
+
+						for (; iter != iter_end; ++iter)
 						{
-							vPos = (*iter)->GetInfo()->m_vPos;
-							break;
+							if ((*iter)->GetPacketData()->id == p->under_attack_id)
+							{
+								vPos = (*iter)->GetInfo()->m_vPos;
+								break;
+							}
 						}
+
+						CObj* pObj = CDamageFont::Create(&vPos, (CObjMgr::GetInstance()->Get_MonsterServerData(p->under_attack_id))->state.hp - p->hp); //샘플값 105. 나중에 데미지는 서버에서 받아와서 출력.
+						CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+						///////////////////////////////////////////////////
+
+						(CObjMgr::GetInstance()->Get_MonsterServerData(p->under_attack_id))->state.hp = p->hp;
+
+						/////////////////체력바///////////////////////////
+
+						int iSize = 0;
+						//몹의 체력바가 없으면 만든다.
+						if (m_bAttackFirst == false)//최초
+						{
+							iSize = 0;
+							m_bAttackFirst = true;
+						}
+						else
+							iSize = ((CObjMgr::GetInstance()->Get_ObjList(L"MobHpBaisic")->size()));
+
+						if (iSize == 0)
+						{
+							CObj * pObj = CMobHpBar::Create();
+							dynamic_cast<CMobHpBar*>(pObj)->SetRendHp(p->hp, 100); // 최대체력이 생기면 바꿔주자.
+							CObjMgr::GetInstance()->AddObject(L"MobHpBar", pObj);
+
+							pObj = CMobHpBasic::Create();
+
+							if (p->under_attack_id < MAX_AI_SLIME)
+								dynamic_cast<CMobHpBasic*>(pObj)->SetName(L"슬라임");
+							else
+								dynamic_cast<CMobHpBasic*>(pObj)->SetName(L"고블린");
+
+							CObjMgr::GetInstance()->AddObject(L"MobHpBaisic", pObj);
+						}
+						//있다면 가져와서 이름과 체력을 갱신하고 랜더타임도 초기화한다.
+						else
+						{
+							CObj* pObj = (*(CObjMgr::GetInstance()->Get_ObjList(L"MobHpBar")->begin()));
+							dynamic_cast<CMobHpBar*>(pObj)->SetRendHp(p->hp, 100);
+							dynamic_cast<CMobHpBar*>(pObj)->ResetRendTime();
+
+							pObj = (*(CObjMgr::GetInstance()->Get_ObjList(L"MobHpBaisic")->begin()));
+
+							if(p->under_attack_id < MAX_AI_SLIME)
+								dynamic_cast<CMobHpBasic*>(pObj)->SetName(L"슬라임");
+							else
+								dynamic_cast<CMobHpBasic*>(pObj)->SetName(L"고블린");
+
+							dynamic_cast<CMobHpBasic*>(pObj)->ResetRendTime();
+						}
+						//////////////////////////////////////////////////
 					}
 
-					CObj* pObj = CDamageFont::Create(&vPos, (CObjMgr::GetInstance()->Get_MonsterServerData(p->under_attack_id))->state.hp - p->hp); //샘플값 105. 나중에 데미지는 서버에서 받아와서 출력.
-					CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
-					///////////////////////////////////////////////////
 
-					(CObjMgr::GetInstance()->Get_MonsterServerData(p->under_attack_id))->state.hp = p->hp;
-
-					/////////////////체력바///////////////////////////
-
-					int iSize = 0;
-					//몹의 체력바가 없으면 만든다.
-					if (m_bAttackFirst == false)//최초
-					{
-						iSize = 0;
-						m_bAttackFirst = true;
-					}
 					else
-						iSize = ((CObjMgr::GetInstance()->Get_ObjList(L"MobHpBaisic")->size()));
-
-					if (iSize == 0)
 					{
-						CObj * pObj = CMobHpBar::Create();
-						dynamic_cast<CMobHpBar*>(pObj)->SetRendHp(p->hp, 100); // 최대체력이 생기면 바꿔주자.
-						CObjMgr::GetInstance()->AddObject(L"MobHpBar", pObj);
+						//////////////데미지 폰트////////////////////////
+						list<CObj*>* ListObj = CObjMgr::GetInstance()->Get_ObjList(L"Boss");
+						list<CObj*>::iterator iter = ListObj->begin();
+						list<CObj*>::iterator iter_end = ListObj->end();
+						D3DXVECTOR3 vPos;
 
-						pObj = CMobHpBasic::Create();
-						dynamic_cast<CMobHpBasic*>(pObj)->SetName(L"Monster", p->under_attack_id);
-						CObjMgr::GetInstance()->AddObject(L"MobHpBaisic",pObj);			
-					}
-					//있다면 가져와서 이름과 체력을 갱신하고 랜더타임도 초기화한다.
-					else
-					{
-						CObj* pObj = (*(CObjMgr::GetInstance()->Get_ObjList(L"MobHpBar")->begin()));
-						dynamic_cast<CMobHpBar*>(pObj)->SetRendHp(p->hp, 100);
-						dynamic_cast<CMobHpBar*>(pObj)->ResetRendTime();
+						for (; iter != iter_end; ++iter)
+						{
+							if ((*iter)->GetPacketData()->id == p->under_attack_id)
+							{
+								vPos = (*iter)->GetInfo()->m_vPos;
+								break;
+							}
+						}
 
-						pObj = (*(CObjMgr::GetInstance()->Get_ObjList(L"MobHpBaisic")->begin()));
-						dynamic_cast<CMobHpBasic*>(pObj)->SetName(L"Monster", p->under_attack_id);
-						dynamic_cast<CMobHpBasic*>(pObj)->ResetRendTime();
+						CObj* pObj = CDamageFont::Create(&vPos, (CObjMgr::GetInstance()->Get_BossServerData(p->under_attack_id))->state.hp - p->hp); //샘플값 105. 나중에 데미지는 서버에서 받아와서 출력.
+						CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+						///////////////////////////////////////////////////
+
+						(CObjMgr::GetInstance()->Get_BossServerData(p->under_attack_id))->state.hp = p->hp;
+
+						/////////////////체력바///////////////////////////
+
+						int iSize = 0;
+						//몹의 체력바가 없으면 만든다.
+						if (m_bAttackFirst == false)//최초
+						{
+							iSize = 0;
+							m_bAttackFirst = true;
+						}
+						else
+							iSize = ((CObjMgr::GetInstance()->Get_ObjList(L"MobHpBaisic")->size()));
+
+						if (iSize == 0)
+						{
+							CObj * pObj = CMobHpBar::Create();
+							dynamic_cast<CMobHpBar*>(pObj)->SetRendHp(p->hp, 100); // 최대체력이 생기면 바꿔주자.
+							CObjMgr::GetInstance()->AddObject(L"MobHpBar", pObj);
+
+							pObj = CMobHpBasic::Create();
+							dynamic_cast<CMobHpBasic*>(pObj)->SetName(L"매직 골렘");
+							CObjMgr::GetInstance()->AddObject(L"MobHpBaisic", pObj);
+						}
+						//있다면 가져와서 이름과 체력을 갱신하고 랜더타임도 초기화한다.
+						else
+						{
+							CObj* pObj = (*(CObjMgr::GetInstance()->Get_ObjList(L"MobHpBar")->begin()));
+							dynamic_cast<CMobHpBar*>(pObj)->SetRendHp(p->hp, 100);
+							dynamic_cast<CMobHpBar*>(pObj)->ResetRendTime();
+
+							pObj = (*(CObjMgr::GetInstance()->Get_ObjList(L"MobHpBaisic")->begin()));
+
+							dynamic_cast<CMobHpBasic*>(pObj)->SetName(L"매직 골렘");
+							dynamic_cast<CMobHpBasic*>(pObj)->ResetRendTime();
+						}
+						//////////////////////////////////////////////////
 					}
-					//////////////////////////////////////////////////
 
 				}
 			}
@@ -271,32 +380,65 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			{
 				if (p->under_attack_id < MAX_AI_NUM)
 				{
-					list<CObj*>* ListObj = CObjMgr::GetInstance()->Get_ObjList(L"Monster");
-					list<CObj*>::iterator iter = ListObj->begin();
-					list<CObj*>::iterator iter_end = ListObj->end();
-
-					for (; iter != iter_end; ++iter)
+					if (p->under_attack_id < MAX_AI_GOBLIN)
 					{
-						if ((*iter)->GetPacketData()->id == p->under_attack_id)
+						list<CObj*>* ListObj = CObjMgr::GetInstance()->Get_ObjList(L"Monster");
+						list<CObj*>::iterator iter = ListObj->begin();
+						list<CObj*>::iterator iter_end = ListObj->end();
+
+						for (; iter != iter_end; ++iter)
 						{
-							CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
-							(*iter)->m_bDeath = true;
-							break;
+							if ((*iter)->GetPacketData()->id == p->under_attack_id)
+							{
+								CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
+								(*iter)->m_bDeath = true;
+								break;
+							}
+						}
+
+
+						//몹이 죽으면 체력바도 없에자.
+						int iSize = 0;
+						iSize = ((CObjMgr::GetInstance()->Get_ObjList(L"MobHpBaisic")->size()));
+						if (iSize != 0)
+						{
+							//직접지우면 뭔일 터질지도 모르니 그냥 랜더시간을 초과시켜서 자연스럽게 없에버리자.
+							CObj* pObj = (*(CObjMgr::GetInstance()->Get_ObjList(L"MobHpBar")->begin()));
+							dynamic_cast<CMobHpBar*>(pObj)->m_fRendTime = 6.f;
+
+							pObj = (*(CObjMgr::GetInstance()->Get_ObjList(L"MobHpBaisic")->begin()));
+							dynamic_cast<CMobHpBasic*>(pObj)->m_fRendTime = 6.f;
 						}
 					}
-
-
-					//몹이 죽으면 체력바도 없에자.
-					int iSize = 0;
-					iSize = ((CObjMgr::GetInstance()->Get_ObjList(L"MobHpBaisic")->size()));
-					if (iSize != 0)
+					else
 					{
-						//직접지우면 뭔일 터질지도 모르니 그냥 랜더시간을 초과시켜서 자연스럽게 없에버리자.
-						CObj* pObj = (*(CObjMgr::GetInstance()->Get_ObjList(L"MobHpBar")->begin()));
-						dynamic_cast<CMobHpBar*>(pObj)->m_fRendTime = 6.f;
+						list<CObj*>* ListObj = CObjMgr::GetInstance()->Get_ObjList(L"Boss");
+						list<CObj*>::iterator iter = ListObj->begin();
+						list<CObj*>::iterator iter_end = ListObj->end();
 
-						pObj = (*(CObjMgr::GetInstance()->Get_ObjList(L"MobHpBaisic")->begin()));
-						dynamic_cast<CMobHpBasic*>(pObj)->m_fRendTime = 6.f;
+						for (; iter != iter_end; ++iter)
+						{
+							if ((*iter)->GetPacketData()->id == p->under_attack_id)
+							{
+								CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
+								(*iter)->m_bDeath = true;
+								break;
+							}
+						}
+
+
+						//몹이 죽으면 체력바도 없에자.
+						int iSize = 0;
+						iSize = ((CObjMgr::GetInstance()->Get_ObjList(L"MobHpBaisic")->size()));
+						if (iSize != 0)
+						{
+							//직접지우면 뭔일 터질지도 모르니 그냥 랜더시간을 초과시켜서 자연스럽게 없에버리자.
+							CObj* pObj = (*(CObjMgr::GetInstance()->Get_ObjList(L"MobHpBar")->begin()));
+							dynamic_cast<CMobHpBar*>(pObj)->m_fRendTime = 6.f;
+
+							pObj = (*(CObjMgr::GetInstance()->Get_ObjList(L"MobHpBaisic")->begin()));
+							dynamic_cast<CMobHpBasic*>(pObj)->m_fRendTime = 6.f;
+						}
 					}
 
 				}
@@ -387,17 +529,32 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			if (nullptr != data) { break; }
 			else {
 
-				if(p->playerData.id < MAX_AI_NUM)
+				if(p->playerData.id < MAX_AI_SLIME)
 				{ 
-					//cout << "몬스터 생성" << endl;
-
-					CObj* pObj = CMonster::Create();
+					cout << "슬라임 생성" << endl;
+					CObj* pObj = CMonster::Create(L"Slime", L"Texture_Slime");
 					pObj->SetPos(D3DXVECTOR3(p->playerData.pos.x, 1.f, p->playerData.pos.y));
 					pObj->SetPacketData(&p->playerData);
 					CObjMgr::GetInstance()->AddObject(L"Monster", pObj);
 					CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, pObj);
 
-					//cout << "현재 몬스터의 개수 :" << CObjMgr::GetInstance()->m_mapObj[L"Monster"].size() << endl;
+				}
+				else if (p->playerData.id < MAX_AI_GOBLIN && p->playerData.id >= MAX_AI_SLIME)
+				{
+					cout << "고블린 생성" << endl;
+					CObj* pObj = CMonster::Create(L"Goblin" , L"Texture_Goblin");
+					pObj->SetPos(D3DXVECTOR3(p->playerData.pos.x, 1.f, p->playerData.pos.y));
+					pObj->SetPacketData(&p->playerData);
+					CObjMgr::GetInstance()->AddObject(L"Monster", pObj);
+					CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, pObj);
+				}
+				else if (p->playerData.id < MAX_AI_BOSS && p->playerData.id >= MAX_AI_GOBLIN)
+				{
+					CObj* pObj = CBoss::Create();
+					pObj->SetPos(D3DXVECTOR3(p->playerData.pos.x, 1.f, p->playerData.pos.y));
+					pObj->SetPacketData(&p->playerData);
+					CObjMgr::GetInstance()->AddObject(L"Boss", pObj);
+					CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, pObj);
 				}
 				else
 				{
@@ -422,7 +579,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 				break;
 			}
 
-			if (p->id < MAX_AI_NUM)
+			if (p->id < MAX_AI_GOBLIN)
 			{
 				list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"Monster")->begin();
 				list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"Monster")->end();
@@ -442,7 +599,25 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 				//cout << "현재 몬스터의 개수 :" << CObjMgr::GetInstance()->m_mapObj[L"Monster"].size() << endl;
 			}
-			
+			else if (p->id >= MAX_AI_GOBLIN && p->id < MAX_AI_BOSS)
+			{
+
+				list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"Boss")->begin();
+				list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"Boss")->end();
+				//cout << "몬스터 삭제" << endl;
+
+				for (; iter != iter_end; ++iter)
+				{
+					//NPC 혹은 몬스터가 죽었을시
+					if ((*iter)->GetPacketData()->id == p->id)
+					{
+						CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
+						::Safe_Delete(*iter);
+						iter = CObjMgr::GetInstance()->Get_ObjList(L"Boss")->erase(iter);
+						break;
+					}
+				}
+			}
 			else
 			{
 				list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->begin();

@@ -178,6 +178,7 @@
     <ClInclude Include="..\Code\AniBuffer.h" />
     <ClInclude Include="..\Code\AnimationMgr.h" />
     <ClInclude Include="..\Code\BaseUI.h" />
+    <ClInclude Include="..\Code\Boss.h" />
     <ClInclude Include="..\Code\Camera.h" />
     <ClInclude Include="..\Code\ChatUI.h" />
     <ClInclude Include="..\Code\Collision.h" />
@@ -256,6 +257,7 @@
     <ClCompile Include="..\Code\AniBuffer.cpp" />
     <ClCompile Include="..\Code\AnimationMgr.cpp" />
     <ClCompile Include="..\Code\BaseUI.cpp" />
+    <ClCompile Include="..\Code\Boss.cpp" />
     <ClCompile Include="..\Code\Camera.cpp" />
     <ClCompile Include="..\Code\ChatUI.cpp" />
     <ClCompile Include="..\Code\Collision.cpp" />

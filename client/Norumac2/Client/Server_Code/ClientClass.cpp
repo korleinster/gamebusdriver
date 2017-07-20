@@ -77,7 +77,8 @@ void AsynchronousClientClass::Init(const HWND& hwnd)
 
 	MAX_AI_SLIME = script.get<int>("ai_status_slime.howMany");
 	MAX_AI_GOBLIN = script.get<int>("ai_status_goblin.howMany");
-	MAX_AI_NUM = MAX_AI_GOBLIN;
+	MAX_AI_BOSS = script.get<int>("ai_status_boss.howMany");
+	MAX_AI_NUM = MAX_AI_BOSS;
 
 #ifdef _DEBUG
 	//system("cls");

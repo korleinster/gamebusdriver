@@ -108,9 +108,9 @@ void CMobHpBasic::Render()
 	m_pFont->Render();
 }
 
-void CMobHpBasic::SetName(wstring wstrText, int iID)
+void CMobHpBasic::SetName(wstring wstrText)
 {
-	m_pFont->m_wstrText = wstrText + to_wstring(iID);
+	m_pFont->m_wstrText = wstrText;
 }
 
 CMobHpBasic * CMobHpBasic::Create(void)

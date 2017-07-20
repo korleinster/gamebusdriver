@@ -85,6 +85,18 @@ void CLoading::StageLoading(void)
 
 	hr = CResourcesMgr::GetInstance()->AddTexture(
 		RESOURCE_STAGE
+		, L"Texture_Goblin"
+		, L"../Resource/MeshImage/magicgoblin.png");
+	FAILED_CHECK_RETURN(hr, );
+
+	hr = CResourcesMgr::GetInstance()->AddTexture(
+		RESOURCE_STAGE
+		, L"Texture_Boss"
+		, L"../Resource/MeshImage/Boss.png");
+	FAILED_CHECK_RETURN(hr, );
+
+	hr = CResourcesMgr::GetInstance()->AddTexture(
+		RESOURCE_STAGE
 		, L"Texture_FaceUI"
 		, L"../Resource/Uiimage/profile.png");
 	FAILED_CHECK_RETURN(hr, );

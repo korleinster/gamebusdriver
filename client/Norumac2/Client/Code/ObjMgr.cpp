@@ -3,6 +3,7 @@
 #include "Obj.h"
 #include "OtherPlayer.h"
 #include "Monster.h"
+#include "Boss.h"
 
 IMPLEMENT_SINGLETON(CObjMgr)
 
@@ -119,6 +120,24 @@ player_data*  CObjMgr::Get_MonsterServerData(UINT uID)
 
 		if (uCompareId == uID)
 			return ((CMonster*)ptr)->GetPacketData();
+	}
+
+	return NULL;
+}
+
+player_data*  CObjMgr::Get_BossServerData(UINT uID)
+{
+	map<wstring, list<CObj*>>::iterator iter = m_mapObj.find(L"Boss");
+
+	if (iter == m_mapObj.end())
+		return NULL;
+
+	for (auto ptr : iter->second)
+	{
+		UINT uCompareId = ((CBoss*)ptr)->GetPacketData()->id;
+
+		if (uCompareId == uID)
+			return ((CBoss*)ptr)->GetPacketData();
 	}
 
 	return NULL;

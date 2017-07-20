@@ -6,12 +6,12 @@ class CVIBuffer;
 class CTexture;
 class CTerrainCol;
 class CDynamicMesh;
-class CMonster :
+class CBoss :
 	public CObj
 {
 public:
-	CMonster();
-	virtual ~CMonster();
+	CBoss();
+	virtual ~CBoss();
 
 private:
 	CVIBuffer*		m_pBuffer;
@@ -21,7 +21,7 @@ private:
 	VTXTEX*			m_pVerTex;
 	CTerrainCol*	m_pTerrainCol;
 	float			m_fSeverTime;
-	MONSTER_STATE	m_eMonsterState;
+	BOSS_STATE		m_eBossState;
 
 	// Scene meshes shader constant buffers
 	ID3D11Buffer*		m_pSceneVertexShaderCB;
@@ -34,19 +34,19 @@ public:
 
 
 public:
-	virtual HRESULT Initialize(wstring wstMeshKey,wstring wstrTextureKey);
+	virtual HRESULT Initialize(void);
 	virtual int		Update(void);
 	virtual void	Render(void);
 	virtual void	ShadowmapRender(void);
 
 
 public:
-	static CMonster* Create(wstring wstMeshKey,wstring wstrTextureKey);
-	MONSTER_STATE GetAniState(void) { return m_eMonsterState; }
-	void SetAniState(MONSTER_STATE eState) { m_eMonsterState = eState; }
+	static CBoss* Create(void);
+	BOSS_STATE GetAniState(void) { return m_eBossState; }
+	void SetAniState(BOSS_STATE eState) { m_eBossState = eState; }
 
 private:
-	HRESULT	AddComponent(wstring wstMeshKey,wstring wstrTextureKey);
+	HRESULT	AddComponent(void);
 	void ChangeDir(void);
 	void SetCurrling(void);
 	void SetSeverPosMove(void);

@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Monster.h"
+#include "Boss.h"
 #include "StaticMesh.h"
 #include "Texture.h"
 #include "Info.h"
@@ -37,7 +37,7 @@ struct CB_PS_PER_OBJECT
 };
 #pragma pack(pop)
 
-CMonster::CMonster()
+CBoss::CBoss()
 {
 	m_pBuffer = NULL;
 	m_pVertexShader = NULL;
@@ -47,14 +47,14 @@ CMonster::CMonster()
 
 
 	m_pTerrainCol = NULL;
-	m_eMonsterState = MONSTER_IDLE;
+	m_eBossState = BOSS_IDLE;
 	m_bKey = false;
 	m_pSceneVertexShaderCB = NULL;
 	m_pScenePixelShaderCB = NULL;
 }
 
 
-CMonster::~CMonster()
+CBoss::~CBoss()
 {
 	CObj::Release();
 
@@ -63,7 +63,7 @@ CMonster::~CMonster()
 	::Safe_Delete(m_pBuffer);*/
 }
 
-HRESULT CMonster::Initialize(wstring wstMeshKey, wstring wstrTextureKey)
+HRESULT CBoss::Initialize(void)
 {
 	m_pBuffer = NULL;
 	m_pVertexShader = NULL;
@@ -75,12 +75,12 @@ HRESULT CMonster::Initialize(wstring wstMeshKey, wstring wstrTextureKey)
 
 
 	m_pTerrainCol = NULL;
-	m_eMonsterState = MONSTER_IDLE;
+	m_eBossState = BOSS_IDLE;
 	m_bKey = false;
 	m_pSceneVertexShaderCB = NULL;
 	m_pScenePixelShaderCB = NULL;
 
-	if (FAILED(AddComponent(wstMeshKey, wstrTextureKey)))
+	if (FAILED(AddComponent()))
 		return E_FAIL;
 
 	m_pInfo->m_vScale = D3DXVECTOR3(1.f, 1.f, 1.f);
@@ -109,18 +109,10 @@ HRESULT CMonster::Initialize(wstring wstMeshKey, wstring wstrTextureKey)
 	return S_OK;
 }
 
-int CMonster::Update(void)
+int CBoss::Update(void)
 
 {
 	m_fSeverTime += CTimeMgr::GetInstance()->GetTime();
-	
-	/*if (m_pBuffer->m_bAniEnd == true)
-	m_pBuffer->m_bAniEnd = false;*/
-
-	//m_ePlayerState = PLAYER_IDLE;
-
-	//m_pInfo->m_vPos.x = m_pInfo->m_ServerInfo.pos.x;
-	//m_pInfo->m_vPos.z = m_pInfo->m_ServerInfo.pos.y;
 
 	SetSeverPosMove();
 	ChangeDir();
@@ -129,10 +121,10 @@ int CMonster::Update(void)
 	m_pTerrainCol->CollisionTerrain(&m_pInfo->m_vPos, m_pVerTex);
 
 
-	if (m_eMonsterState != MONSTER_IDLE)
+	if (m_eBossState != BOSS_IDLE)
 	{
 		if (dynamic_cast<CDynamicMesh*>(m_pBuffer)->m_bAniEnd == true)
-			m_eMonsterState = MONSTER_IDLE;
+			m_eBossState = BOSS_IDLE;
 	}
 
 	//SetCurrling();
@@ -147,10 +139,10 @@ int CMonster::Update(void)
 
 
 
-	
+
 }
 
-void CMonster::Render(void)
+void CBoss::Render(void)
 {
 	if (m_bCurred == false)
 	{
@@ -202,26 +194,26 @@ void CMonster::Render(void)
 		m_pGrapicDevice->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
 		m_pGrapicDevice->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
 
-		dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(m_eMonsterState);
+		dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(m_eBossState);
 	}
 }
 
-void  CMonster::ShadowmapRender(void)
+void  CBoss::ShadowmapRender(void)
 {
 
 }
 
-CMonster * CMonster::Create(wstring wstMeshKey, wstring wstrTextureKey)
+CBoss * CBoss::Create(void)
 {
-	CMonster* pObj = new CMonster;
-	if (FAILED(pObj->Initialize(wstMeshKey, wstrTextureKey)))
+	CBoss* pObj = new CBoss;
+	if (FAILED(pObj->Initialize()))
 		::Safe_Delete(pObj);
 
 	return pObj;
 }
 
 
-HRESULT CMonster::AddComponent(wstring wstMeshKey, wstring wstrTextureKey)
+HRESULT CBoss::AddComponent(void)
 {
 	CComponent* pComponent = NULL;
 
@@ -240,13 +232,13 @@ HRESULT CMonster::AddComponent(wstring wstMeshKey, wstring wstrTextureKey)
 
 
 	//DynamicMesh
-	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, wstMeshKey);
+	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Boss");
 	m_pBuffer = dynamic_cast<CDynamicMesh*>(pComponent);
 	NULL_CHECK_RETURN(m_pBuffer, E_FAIL);
 	//	m_mapComponent.insert(map<wstring, CComponent*>::value_type(L"Mesh", pComponent));
 
 	//Texture
-	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, wstrTextureKey);
+	pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Texture_Boss");
 	m_pTexture = dynamic_cast<CTexture*>(pComponent);
 	NULL_CHECK_RETURN(m_pTexture, E_FAIL);
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"Texture", pComponent));
@@ -260,7 +252,7 @@ HRESULT CMonster::AddComponent(wstring wstMeshKey, wstring wstrTextureKey)
 	return S_OK;
 }
 
-void CMonster::ChangeDir(void)
+void CBoss::ChangeDir(void)
 {
 	if (m_pInfo->m_ServerInfo.dir == KEYINPUT_UP)
 	{
@@ -298,7 +290,7 @@ void CMonster::ChangeDir(void)
 
 }
 
-void CMonster::SetCurrling(void)
+void CBoss::SetCurrling(void)
 {
 	auto player = CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin();
 
@@ -310,20 +302,20 @@ void CMonster::SetCurrling(void)
 		m_bCurred = false;
 }
 
-void CMonster::SetSeverPosMove(void)
+void CBoss::SetSeverPosMove(void)
 {
 	/*if (m_SeverPosSaveList.size() != 0)
 	{
-		float fTime = CTimeMgr::GetInstance()->GetTime();
-		D3DXVECTOR3 vDir;
-		vDir = *(m_SeverPosSaveList.begin()) - m_pInfo->m_vPos;
-		D3DXVec3Normalize(&vDir, &vDir);
+	float fTime = CTimeMgr::GetInstance()->GetTime();
+	D3DXVECTOR3 vDir;
+	vDir = *(m_SeverPosSaveList.begin()) - m_pInfo->m_vPos;
+	D3DXVec3Normalize(&vDir, &vDir);
 
-		m_pInfo->m_vPos += vDir * m_fSpeed * fTime;
+	m_pInfo->m_vPos += vDir * m_fSpeed * fTime;
 
-		if ( (m_pInfo->m_vPos.x <= (m_SeverPosSaveList.begin())->x + 5.f || m_pInfo->m_vPos.x >= (m_SeverPosSaveList.begin())->x - 5.f)
-			&& (m_pInfo->m_vPos.z <= (m_SeverPosSaveList.begin())->z + 5.f || m_pInfo->m_vPos.z >= (m_SeverPosSaveList.begin())->z - 5.f))
-			m_SeverPosSaveList.pop_front();
+	if ( (m_pInfo->m_vPos.x <= (m_SeverPosSaveList.begin())->x + 5.f || m_pInfo->m_vPos.x >= (m_SeverPosSaveList.begin())->x - 5.f)
+	&& (m_pInfo->m_vPos.z <= (m_SeverPosSaveList.begin())->z + 5.f || m_pInfo->m_vPos.z >= (m_SeverPosSaveList.begin())->z - 5.f))
+	m_SeverPosSaveList.pop_front();
 	}*/
 
 

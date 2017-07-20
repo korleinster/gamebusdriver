@@ -177,6 +177,50 @@ HRESULT CLogo::Add_Dynamic_Buffer(void)
 		//////////////////////////////////////////////////////////////
 
 
+		//////////////////////고블린//////////////////////////////////
+
+		vecAni.push_back("magicgoblin_idle");
+		vecAni.push_back("magicgoblin_run");
+		vecAni.push_back("magicgoblin_attack1");
+		vecAni.push_back("magicgoblin_dead");
+
+		hr = CResourcesMgr::GetInstance()->AddMesh(
+			RESOURCE_STAGE,
+			MESH_DYNAMIC,
+			L"Goblin",
+			"../Resource/Mesh/",
+			"", vecAni);
+		FAILED_CHECK_RETURN(hr, E_FAIL);
+
+		vecAni.clear();
+
+		//////////////////////////////////////////////////////////////
+
+
+		//////////////////////보스몹//////////////////////////////////
+
+		vecAni.push_back("boss_idle");
+		vecAni.push_back("boss_run");
+		vecAni.push_back("boss_attack1");
+		vecAni.push_back("boss_attack1_2");
+		vecAni.push_back("boss_attack1_3");
+		vecAni.push_back("boss_attack2");
+		vecAni.push_back("boss_attack3");
+		vecAni.push_back("boss_powerup");
+		vecAni.push_back("boss_rise");
+		vecAni.push_back("boss_dead");
+
+		hr = CResourcesMgr::GetInstance()->AddMesh(
+			RESOURCE_STAGE,
+			MESH_DYNAMIC,
+			L"Boss",
+			"../Resource/Mesh/",
+			"", vecAni);
+		FAILED_CHECK_RETURN(hr, E_FAIL);
+
+		vecAni.clear();
+		//////////////////////////////////////////////////////////////
+
 		cout << "SceneLoading" << endl;
 
 		CScene* pScene = NULL;

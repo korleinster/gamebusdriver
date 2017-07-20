@@ -229,12 +229,86 @@ void TimerQueue::processPacket(event_type *p) {
 
 		// 아래는 target id 만 찾아 공격하면 됨
 		unsigned int target_id = g_clients[p->id]->m_target_id;
-		float x = g_clients[target_id]->get_player_data()->pos.x;
-		float y = g_clients[target_id]->get_player_data()->pos.y;
+		float x = g_clients[target_id]->get_player_data()->pos.x, y = g_clients[target_id]->get_player_data()->pos.y;
 		float my_x = g_clients[p->id]->get_player_data()->pos.x, my_y = g_clients[p->id]->get_player_data()->pos.y;
 		float player_size = 1.5;	// 객체 충돌 크기 반지름
 
-		// 공격 범위 내라면, 공격을...
+		// [ 보스 ]
+		if (p->id == MAX_AI_BOSS - 1) {
+
+			break;
+		}
+		// [ 고블린 ]
+		else if ((p->id < MAX_AI_GOBLIN) && (p->id > MAX_AI_SLIME)) {
+
+			if (((VIEW_RANGE - 5) * (VIEW_RANGE - 5)) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) {
+				g_clients[target_id]->get_player_data()->state.hp -= (g_clients[p->id]->get_sub_data()->str - g_clients[target_id]->get_sub_data()->def);
+				int target_hp = g_clients[target_id]->get_player_data()->state.hp;
+
+				sc_atk packet;
+				packet.attacking_id = p->id;
+				packet.under_attack_id = target_id;
+				packet.hp = target_hp;
+
+				g_clients[target_id]->vl_lock();
+				for (auto player_id : *g_clients[target_id]->get_view_list()) {
+					if (DISCONNECTED == g_clients[player_id]->get_current_connect_state()) { continue; }
+					if (true == g_clients[player_id]->get_player_data()->is_ai) { continue; }
+
+					g_clients[player_id]->send_packet(reinterpret_cast<Packet*>(&packet));
+				}
+				g_clients[target_id]->vl_unlock();
+				g_clients[target_id]->send_packet(reinterpret_cast<Packet*>(&packet));
+
+				// 만약 맞은 플레이어가 죽었다면..?
+				if (1 > target_hp) {
+					g_clients[target_id]->set_state(dead);
+
+					sc_disconnect dis_p;
+					dis_p.id = target_id;
+					g_clients[target_id]->send_packet(reinterpret_cast<Packet*>(&dis_p));
+					g_clients[target_id]->set_connect_state(DISCONNECTED);
+
+					g_clients[target_id]->vl_lock();
+					for (auto player_view_ids : *g_clients[target_id]->get_view_list()) {
+						// dead lock 방지용 continue;
+						//if (player_view_ids == p->id) { deleting_id = target_id; continue; }
+						g_clients[player_view_ids]->get_view_list()->erase(target_id);
+
+						sc_disconnect dis_p_to_me;
+						dis_p_to_me.id = player_view_ids;
+						g_clients[target_id]->send_packet(reinterpret_cast<Packet*>(&dis_p_to_me));
+
+						if (true == g_clients[player_view_ids]->get_player_data()->is_ai) { continue; }
+						g_clients[player_view_ids]->send_packet(reinterpret_cast<Packet*>(&dis_p));
+					}
+					g_clients[target_id]->get_view_list()->clear();
+					g_clients[target_id]->vl_unlock();
+					g_time_queue.add_event(target_id, 5, DEAD_TO_ALIVE, false);
+
+					if (true != g_clients[p->id]->ai_is_rand_mov) {
+						g_clients[p->id]->ai_is_rand_mov = true;
+						g_clients[p->id]->m_target_id = none;
+						g_clients[p->id]->set_state(mov);
+						g_time_queue.add_event(p->id, 3, CHANGE_AI_STATE_MOV, true);
+					}
+
+					break;
+				}
+
+				g_time_queue.add_event(p->id, 1, CHANGE_AI_STATE_ATT, true);
+			}
+			// 애초에 원거리 공격이니, 시야 범위 밖이라면 원 상태로 초기화
+			else if (true == g_clients[p->id]->ai_is_rand_mov) {
+				g_clients[p->id]->m_target_id = none;
+				g_clients[p->id]->set_state(mov);
+				g_clients[p->id]->ai_is_rand_mov = true;
+				g_time_queue.add_event(p->id, 3, CHANGE_AI_STATE_MOV, true);
+			}
+			break;
+		}
+
+		// [ 슬라임 ] 공격 범위 내라면, 공격을...
 		if ((player_size * player_size) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) {
 
 			g_clients[target_id]->get_player_data()->state.hp -= (g_clients[p->id]->get_sub_data()->str - g_clients[target_id]->get_sub_data()->def);

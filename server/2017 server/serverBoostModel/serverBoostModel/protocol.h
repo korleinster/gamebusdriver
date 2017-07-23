@@ -56,6 +56,8 @@ enum PacketProtocolType {
 	COMBO2,
 	COMBO3,
 	SKILL1,
+	SKILL2,
+	SKILL3,
 
 	// 보스 공격
 	BOSS_ATT,

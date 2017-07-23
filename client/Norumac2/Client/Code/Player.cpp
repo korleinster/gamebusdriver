@@ -288,7 +288,10 @@ void CPlayer::Render(void)
 
 void  CPlayer::ShadowmapRender(void)
 {
-
+	if (m_bDeath == false)
+		dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(m_ePlayerState);
+	else if (m_bDeath == true)
+		dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimationOnce(PLAYER_DEAD);
 }
 
 CPlayer * CPlayer::Create(void)

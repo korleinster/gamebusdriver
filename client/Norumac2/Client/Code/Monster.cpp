@@ -208,7 +208,10 @@ void CMonster::Render(void)
 
 void  CMonster::ShadowmapRender(void)
 {
-
+	if (m_bCurred == false)
+	{
+		dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(m_eMonsterState);
+	}
 }
 
 CMonster * CMonster::Create(wstring wstMeshKey, wstring wstrTextureKey)

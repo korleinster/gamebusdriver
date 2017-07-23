@@ -137,6 +137,11 @@ void CTerrain::Render(void)
 	m_pTerrainBuffer->Render();
 }
 
+void CTerrain::ShadowmapRender(void)
+{
+	m_pTerrainBuffer->Render();
+}
+
 HRESULT CTerrain::AddComponent(void)
 {
 	CComponent* pComponent = NULL;

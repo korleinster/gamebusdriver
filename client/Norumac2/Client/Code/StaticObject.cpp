@@ -135,7 +135,10 @@ void CStaticObject::Render(void)
 
 void  CStaticObject::ShadowmapRender(void)
 {
-
+	if (m_bCurred == false)
+	{
+		m_pBuffer->Render();
+	}
 }
 
 CStaticObject * CStaticObject::Create(const TCHAR* pMeshKey)

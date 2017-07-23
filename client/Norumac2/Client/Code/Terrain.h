@@ -30,9 +30,10 @@ public:
 	static CTerrain* Create(void);
 
 public:
-	HRESULT Initialize(void);
-	int		Update(void);
-	void	Render(void);
+	virtual HRESULT Initialize(void);
+	virtual int		Update(void);
+	virtual void	Render(void);
+	virtual void	ShadowmapRender(void);
 
 public:
 	VTXTEX**	GetVertex(void) { return &m_pVerTex; }

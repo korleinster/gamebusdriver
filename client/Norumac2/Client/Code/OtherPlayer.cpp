@@ -202,7 +202,10 @@ void COtherPlayer::Render(void)
 
 void  COtherPlayer::ShadowmapRender(void)
 {
-
+	if (m_bCurred == false)
+	{
+		dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(m_ePlayerState);
+	}
 }
 
 COtherPlayer * COtherPlayer::Create(void)

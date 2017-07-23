@@ -242,7 +242,8 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			{
 				if (NULL != (CObjMgr::GetInstance()->Get_MonsterServerData(p->under_attack_id))) 
 				{
-					if (p->under_attack_id < MAX_AI_GOBLIN)
+
+					if (p->under_attack_id < MAX_AI_GOBLIN)//잡몹들
 					{
 
 						//////////////데미지 폰트////////////////////////
@@ -311,9 +312,10 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 						}
 						//////////////////////////////////////////////////
 					}
-
-
-					else
+				}
+				else if (NULL != (CObjMgr::GetInstance()->Get_BossServerData(p->under_attack_id))) //보스이면
+				{
+					if (p->under_attack_id >= MAX_AI_GOBLIN && p->under_attack_id < MAX_AI_BOSS)
 					{
 						//////////////데미지 폰트////////////////////////
 						list<CObj*>* ListObj = CObjMgr::GetInstance()->Get_ObjList(L"Boss");
@@ -372,7 +374,6 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 						}
 						//////////////////////////////////////////////////
 					}
-
 				}
 			}
 
@@ -482,8 +483,8 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		pFont->m_wstrText = wstr;
 		pFont->m_fSize = 20.f;
 		pFont->m_nColor = 0xFFFFFFFF;
-		pFont->m_nFlag = FW1_CENTER | FW1_VCENTER | FW1_RESTORESTATE;
-		pFont->m_vPos = D3DXVECTOR2(105.f, 620.f);
+		pFont->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
+		pFont->m_vPos = D3DXVECTOR2(15.f, 620.f);
 		pFont->m_fOutlineSize = 1.f;
 		pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
 
@@ -562,7 +563,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 				if(p->playerData.id < MAX_AI_SLIME)
 				{ 
-					cout << "슬라임 생성" << endl;
+					
 					CObj* pObj = CMonster::Create(L"Slime", L"Texture_Slime");
 					pObj->SetPos(D3DXVECTOR3(p->playerData.pos.x, 1.f, p->playerData.pos.y));
 					pObj->SetPacketData(&p->playerData);
@@ -572,7 +573,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 				}
 				else if (p->playerData.id < MAX_AI_GOBLIN && p->playerData.id >= MAX_AI_SLIME)
 				{
-					cout << "고블린 생성" << endl;
+					
 					CObj* pObj = CMonster::Create(L"Goblin" , L"Texture_Goblin");
 					pObj->SetPos(D3DXVECTOR3(p->playerData.pos.x, 1.f, p->playerData.pos.y));
 					pObj->SetPacketData(&p->playerData);

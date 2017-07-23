@@ -14,5 +14,7 @@ extern DWORD		g_dwLightIndex;
 extern D3DXVECTOR3	g_vLightDir;
 extern bool			g_bLogin;
 extern bool			g_bChatMode;
+extern bool			g_bChatEnd;
+extern float		g_fChatCool;
 
 

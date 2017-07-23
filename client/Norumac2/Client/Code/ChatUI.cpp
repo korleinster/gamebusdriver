@@ -41,8 +41,8 @@ HRESULT CChatUI::Initialize(void)
 	m_pFont->m_wstrText = L"";
 	m_pFont->m_fSize = 20.f;
 	m_pFont->m_nColor = 0xFFFFFFFF;
-	m_pFont->m_nFlag = FW1_CENTER | FW1_VCENTER | FW1_RESTORESTATE;
-	m_pFont->m_vPos = D3DXVECTOR2(105.f, 640.f);
+	m_pFont->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
+	m_pFont->m_vPos = D3DXVECTOR2(15.f, 640.f);
 	m_pFont->m_fOutlineSize = 1.f;
 	m_pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
 
@@ -63,9 +63,6 @@ int CChatUI::Update(void)
 	// -0.5	-> -400		,	0.5	-> 400
 	m_matView._41 = m_fX - (WINCX >> 1);
 	m_matView._42 = -m_fY + (WINCY >> 1);
-
-	if(g_bChatMode == true)
-		ChatInput();
 
 
 	CObj::Update();
@@ -113,36 +110,6 @@ CChatUI * CChatUI::Create(void)
 	}
 
 	return pUI;
-}
-
-void CChatUI::ChatInput()
-{
-	/*char chr;
-	int iCnt = 0;
-	while ((chr = _getch()) != CHAT_ENTER)
-	{
-
-		if (chr == CHAT_BACKSPACE)
-		{
-
-		}
-		else
-		{
-
-			m_cChat[iCnt] = chr;
-
-			string str = m_cChat;
-			wchar_t *wch = new wchar_t[str.length() + 1];
-			wch[str.size()] = L'\0';
-			wstring wstr = L"";
-			MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, wch, (int)str.length());
-			wstr = wch;
-
-			++iCnt;
-
-			m_pFont->m_wstrText = wstr;
-		}
-	}*/
 }
 
 HRESULT CChatUI::AddComponent(void)

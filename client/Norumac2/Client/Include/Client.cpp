@@ -7,6 +7,9 @@
 #include "Client.h"
 #include "MainApp.h"
 #include "Include.h"
+#include "ChatUI.h"
+#include "ObjMgr.h"
+#include "Font.h"
 //#include <vld.h>
 
 // 전역 변수:
@@ -18,9 +21,9 @@ int MAX_AI_SLIME;
 int MAX_AI_GOBLIN;
 int MAX_AI_BOSS;
 
-char cText[MAX_BUF_SIZE];//저장할 채팅 메시지
-char cCompText[10];//조합중인 문자
-char cCanText[200];//특수문자
+TCHAR cText[MAX_BUF_SIZE];//저장할 채팅 메시지
+TCHAR cCompText[10];//조합중인 문자
+TCHAR cCanText[200];//특수문자
 int iCNum = 0;//특수문자 위치
 int iCMax = 0;//특수문자 목록 최대갯수
 
@@ -30,6 +33,8 @@ D3DXVECTOR3 g_vLightDir = D3DXVECTOR3(1.f, -1.f, 1.f);
 AsynchronousClientClass g_client;
 bool g_bLogin = false;
 bool g_bChatMode = false; 
+bool g_bChatEnd = true;
+float g_fChatCool = 0.f;
 
 // 이 코드 모듈에 들어 있는 함수의 정방향 선언입니다.
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -94,8 +99,31 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 		else
 		{
-			//if(g_bChatMode == true)
-				//cout << "최종출력:" << cText << endl;
+			if (g_bChatMode == true)
+			{
+				if (_tcslen(cText) == 0)
+				{
+					g_bChatEnd = true;
+					cout << "문자열 미존재" << endl;
+				}
+				else
+				{
+					g_bChatEnd = false;
+					cout << "문자열 존재" << endl;
+				}
+				CChatUI* pChatUI = dynamic_cast<CChatUI*>(*(CObjMgr::GetInstance()->Get_ObjList(L"ChatUI")->begin()));
+
+				pChatUI->m_pFont->m_wstrText = cText;
+
+				if (GetAsyncKeyState(VK_RETURN) && g_bChatEnd == false)
+				{
+					//상대방에게 메시지를 보내는 부분
+
+					ZeroMemory(&cText, sizeof(char) * MAX_BUF_SIZE);
+					//보내고나서 문자열을 비워준다.
+					g_fChatCool = 0.f;
+				}
+			}
 			pMainApp->Update();
 			pMainApp->Render();
 		}
@@ -199,9 +227,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-
-
-//채팅용
 int GetText(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	int iLen;
@@ -223,17 +248,17 @@ int GetText(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				cCompText[iLen] = 0;
 				//끝에 0을 넣어 마무리.
 
-				cout <<"조합출력1:" << cCompText << endl;
+				wcout << L"조합출력1:" << cCompText << endl;
 
-				strcpy(cText + strlen(cText), cCompText);
+				_tcscpy(cText + _tcslen(cText), cCompText);
 				//전체 메시지 뒤에 붙여줌.
 
-				memset(cCompText, 0, 10);
+				ZeroMemory(&cCompText, sizeof(char) * 10);
 				//조합중인 문자열 초기화
 			}
 		}
 		else if (lParam & GCS_COMPSTR) //조합중이면
-		{  
+		{
 
 			iLen = ImmGetCompositionString(hIMC, GCS_COMPSTR, NULL, 0);
 			// 조합중인 길이를 얻는다.
@@ -241,39 +266,44 @@ int GetText(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			ImmGetCompositionString(hIMC, GCS_COMPSTR, cCompText, iLen);
 			//조합중인 문자를 얻는다.
 
-			cout << "조합출력2:" << cCompText << endl;
-
 			cCompText[iLen] = 0;
 			//역시 마무리
+
+			wcout << L"조합출력2:" << *cCompText << endl;
+
 		}
 		ImmReleaseContext(hWnd, hIMC);
 		return 0;
 	case WM_CHAR://영어랑 백스페이스 등등
 		if (wParam == CHAT_BACKSPACE)
 		{
-			if (strlen(cText) > 0) // 내용이 있으면
+			if (_tcslen(cText) > 0) // 내용이 있으면
 			{
-				if (strlen(cText) < 0)//지울게 확장코드이면
+				if (_tcslen(cText) < 0)//지울게 확장코드이면
 				{
-					cText[strlen(cText) - 1] = 0; //한자를 지움
+					cText[_tcslen(cText) - 1] = 0; //한자를 지움
 				}
 
-				cText[strlen(cText) - 1] = 0;//한자를 지운다
+				cText[_tcslen(cText) - 1] = 0;//한자를 지운다
 
-				memset(cCompText, 0, 10); // 조합중인 문자 초기화
+				ZeroMemory(&cCompText, sizeof(char) * 10); // 조합중인 문자 초기화
 			}
+		}
+		else if (wParam == CHAT_ENTER)
+		{
+			//엔터예외처리
 		}
 		else
 		{
-			iLen = strlen(cText);
+			iLen = _tcslen(cText);
 			cText[iLen] = wParam & 0xff; // 넘어온 문자를 넣기
-			cText[iLen] = 0;//역시 마무리
+			//cText[iLen] = 0;//역시 마무리
 		}
 		return 0;
 	case WM_IME_NOTIFY://한자
-		//GetCandi(hWnd, wParam, lParam, 0);
+					   //GetCandi(hWnd, wParam, lParam, 0);
 		return 0;
-	//case WM_KEYDOWN://키다운
+		//case WM_KEYDOWN://키다운
 		//return 0;
 	default:
 		break;

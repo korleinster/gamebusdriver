@@ -58,7 +58,7 @@ int CQuestUI::Update(void)
 
 	m_fCoolTime += CTimeMgr::GetInstance()->GetTime();
 
-	if (CInput::GetInstance()->GetDIKeyState(DIK_M) & 0x80)
+	if ((CInput::GetInstance()->GetDIKeyState(DIK_M) & 0x80) && g_bChatMode == false)
 	{
 		if (m_bRender == true && m_fCoolTime > 0.2f)
 		{

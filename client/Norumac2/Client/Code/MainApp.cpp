@@ -200,6 +200,21 @@ HRESULT CMainApp::Initialize(void)
 		return hr;
 	}
 
+	// Shadow
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"PointShadowGenVS", L"../ShaderCode/ShadowGen.fx", "PointShadowGenVS", "vs_5_0", SHADER_SHADOW_VS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"PointShadowGenVS Shader Create Failed", MB_OK);
+		return hr;
+	}
+
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"CascadedShadowMapsGenGS", L"../ShaderCode/ShadowGen.fx", "CascadedShadowMapsGenGS", "gs_5_0", SHADER_GS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"CascadedShadowMapsGenGS Shader Create Failed", MB_OK);
+		return hr;
+	}
+
 	// Á¶¸í ½¦ÀÌ´õ
 	// Directional
 	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"DirLightVS", L"../ShaderCode/DirLight.fx", "DirLightVS", "vs_5_0", SHADER_VS);
@@ -244,6 +259,7 @@ HRESULT CMainApp::Initialize(void)
 		MessageBox(NULL, L"System Message", L"PointLight Pixel Shader Create Failed", MB_OK);
 		return hr;
 	}
+
 	////////////////////////////////////////////////////////////////////////
 
 	hr = CInput::GetInstance()->InitInputDevice(g_hInst, g_hWnd);

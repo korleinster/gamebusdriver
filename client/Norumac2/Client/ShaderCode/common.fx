@@ -6,6 +6,7 @@ Texture2D<float4> SpecPowTexture      : register(t3);
 Texture2D<float4> BorderLineTexture   : register(t4);
 
 SamplerState PointSampler             : register(s0); // 샘플러(슬롯 번호 0번과 연결)
+SamplerComparisonState PCFSampler     : register(s2);
 
 													  // constants
 cbuffer cbGBufferUnpack : register(b0)

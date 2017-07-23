@@ -81,6 +81,27 @@ int CCamera::Update(void)
 	return 0;
 }
 
+D3DXVECTOR3 CCamera::GetWorldAhead()
+{
+	D3DXMATRIX matCamWorld;
+	D3DXMatrixInverse(&matCamWorld, NULL, &m_matView);
+	return D3DXVECTOR3(matCamWorld._31, matCamWorld._32, matCamWorld._33);
+}
+
+D3DXVECTOR3 CCamera::GetWorldRight()
+{
+	D3DXMATRIX matCamWorld;
+	D3DXMatrixInverse(&matCamWorld, NULL, &m_matView);
+	return D3DXVECTOR3(matCamWorld._11, matCamWorld._12, matCamWorld._13);
+}
+
+D3DXVECTOR3 CCamera::GetWorldUp()
+{
+	D3DXMATRIX matCamWorld;
+	D3DXMatrixInverse(&matCamWorld, NULL, &m_matView);
+	return D3DXVECTOR3(matCamWorld._21, matCamWorld._22, matCamWorld._23);
+}
+
 void CCamera::MakeView(void)
 {
 	D3DXMatrixLookAtLH(&m_matView, &m_vEye, &m_vAt, &m_vUp);

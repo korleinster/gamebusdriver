@@ -24,7 +24,7 @@ public:
 private:
 	CInfo* m_pInfo;
 
-private:
+public:
 	float m_fFovY;
 	float m_fAspect; 
 	float m_fNear;
@@ -47,10 +47,14 @@ public:
 public:
 	const D3DXMATRIX* GetViewMatrix() { return &m_matView; }
 	const D3DXMATRIX* GetProjMatrix() { return &m_matProj; }
+	D3DXVECTOR3 GetWorldAhead();
+	D3DXVECTOR3 GetWorldRight();
+	D3DXVECTOR3 GetWorldUp();
 
 	void MakeView(void);
 	void MakeProjection(void);
 	void SetCameraTarget(CInfo* pInfo);
+
 
 private:
 	void KeyState(void);

@@ -1,5 +1,6 @@
 #pragma once
 #include "Include.h"
+#include "CascadedMatrixSet.h"
 
 class CShader;
 class CMultiRenderTarget;
@@ -32,6 +33,7 @@ public:
 	void AddSpotLight(const D3DXVECTOR3& vSpotPosition, const D3DXVECTOR3& vSpotDirection, float fSpotRange, float fSpotOuterAngle, float fSpotInnerAngle, const D3DXVECTOR3& vSpotColor);
 	void AddCapsuleLight(const D3DXVECTOR3& vCapsulePosition, const D3DXVECTOR3& vCapsuleDirection, float fCapsuleRange, float fCapsuleLength, const D3DXVECTOR3& vCapsuleColor);
 
+	void PrepareNextShadowLight(ID3D11DeviceContext* pd3dImmediateContext);
 
 private:
 	// Do the directional light calculation
@@ -127,5 +129,29 @@ private:
 
 	// Linked list with the active lights
 	vector<LIGHT> m_arrLights;
+
+	int	m_iShadowMapSize = 1024;
+
+	// Cascaded shadow maps
+	ID3D11Texture2D* m_pCascadedDepthStencilRT;
+	ID3D11DepthStencilView* m_pCascadedDepthStencilDSV;
+	ID3D11ShaderResourceView* m_pCascadedDepthStencilSRV;
+
+	// Cascaded shadow maps matrices
+	CCascadedMatrixSet m_CascadedMatrixSet;
+
+	//ForShadowmap
+	ID3D11RasterizerState* m_pCascadedShadowGenRS;
+
+	// Near plane distance for shadow map generation
+	const float m_fShadowNear;
+
+	// Cascaded shadow maps generation assets
+	CShader* m_pCascadedShadowGenVertexShader;
+	CShader* m_pCascadedShadowGenGeometryShader;
+	ID3D11Buffer* m_pCascadedShadowGenGeometryCB;
+
+	ID3D11SamplerState* m_pPCFSamplerState;
+	ID3D11DepthStencilState* m_pShadowGenDepthState;
 };
 

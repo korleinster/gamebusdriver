@@ -2,7 +2,7 @@
 #include "LightMgr.h"
 #include "Device.h"
 #include "Camera.h"
-//#include "TargetMgr.h"
+#include "TargetMgr.h"
 #include "MultiRenderTarget.h"
 #include "RenderTarget.h"
 #include "Shader.h"
@@ -26,6 +26,8 @@ struct CB_DIRECTIONAL
 	float pad3;
 	D3DXVECTOR3 vDirectionalColor;
 	float pad4;
+	D3DXMATRIX ToShadowSpace;
+	D3DXVECTOR4 ToCascadeSpace[3];
 };
 
 struct CB_POINT_LIGHT_DOMAIN
@@ -90,7 +92,9 @@ CLightMgr::CLightMgr()
 	m_pCapsuleLightVertexShader(NULL), m_pCapsuleLightHullShader(NULL), m_pCapsuleLightDomainShader(NULL), m_pCapsuleLightPixelShader(NULL),
 	m_pCapsuleLightDomainCB(NULL), m_pCapsuleLightPixelCB(NULL),
 	m_pNoDepthWriteLessStencilMaskState(NULL), m_pNoDepthWriteGreatherStencilMaskState(NULL),
-	m_pAdditiveBlendState(NULL), m_pNoDepthClipFrontRS(NULL), m_pWireframeRS(NULL)
+	m_pAdditiveBlendState(NULL), m_pNoDepthClipFrontRS(NULL), m_pWireframeRS(NULL),
+	m_pCascadedDepthStencilDSV(NULL), m_pCascadedDepthStencilRT(NULL), m_pCascadedDepthStencilSRV(NULL), m_pCascadedShadowGenRS(NULL), m_fShadowNear(5.f), 
+	m_pCascadedShadowGenGeometryShader(NULL), m_pCascadedShadowGenVertexShader(NULL),  m_pCascadedShadowGenGeometryCB(NULL), m_pPCFSamplerState(NULL), m_pShadowGenDepthState(NULL)
 {
 }
 
@@ -128,6 +132,9 @@ HRESULT CLightMgr::Initialize()
 	cbDesc.ByteWidth = sizeof(CB_CAPSULE_LIGHT_PIXEL);
 	FAILED_CHECK(CDevice::GetInstance()->m_pDevice->CreateBuffer(&cbDesc, NULL, &m_pCapsuleLightPixelCB));
 
+	cbDesc.ByteWidth = 3 * sizeof(D3DXMATRIX);
+	FAILED_CHECK(CDevice::GetInstance()->m_pDevice->CreateBuffer(&cbDesc, NULL, &m_pCascadedShadowGenGeometryCB));
+
 	m_pDirLightVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"DirLightVS");
 	m_pDirLightPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"DirLightPS");
 
@@ -145,6 +152,9 @@ HRESULT CLightMgr::Initialize()
 	m_pCapsuleLightHullShader = CShaderMgr::GetInstance()->Clone_Shader(L"CapsuleLightHS");
 	m_pCapsuleLightDomainShader = CShaderMgr::GetInstance()->Clone_Shader(L"CapsuleLightDS");
 	m_pCapsuleLightPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"CapsuleLightPS");
+
+	m_pCascadedShadowGenVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"PointShadowGenVS");
+	m_pCascadedShadowGenGeometryShader = CShaderMgr::GetInstance()->Clone_Shader(L"CascadedShadowMapsGenGS");
 
 	D3D11_DEPTH_STENCIL_DESC descDepth;
 	descDepth.DepthEnable = TRUE;
@@ -200,6 +210,80 @@ HRESULT CLightMgr::Initialize()
 	descRast.FillMode = D3D11_FILL_WIREFRAME;
 	FAILED_CHECK(CDevice::GetInstance()->m_pDevice->CreateRasterizerState(&descRast, &m_pWireframeRS));
 
+	descRast.FillMode = D3D11_FILL_SOLID;
+	descRast.DepthBias = 6;
+	descRast.SlopeScaledDepthBias = 1.0f;
+	descRast.DepthClipEnable = FALSE;
+	FAILED_CHECK(CDevice::GetInstance()->m_pDevice->CreateRasterizerState(&descRast, &m_pCascadedShadowGenRS));
+
+	// Allocate the depth stencil target
+	D3D11_TEXTURE2D_DESC dtd = {
+		m_iShadowMapSize, //UINT Width;
+		m_iShadowMapSize, //UINT Height;
+		1, //UINT MipLevels;
+		1, //UINT ArraySize;
+		   //DXGI_FORMAT_R24G8_TYPELESS,
+		   DXGI_FORMAT_R32_TYPELESS, //DXGI_FORMAT Format;
+		   1, //DXGI_SAMPLE_DESC SampleDesc;
+		   0,
+		   D3D11_USAGE_DEFAULT,//D3D11_USAGE Usage;
+		   D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE,//UINT BindFlags;
+		   0,//UINT CPUAccessFlags;
+		   0//UINT MiscFlags;    
+	};
+
+	D3D11_DEPTH_STENCIL_VIEW_DESC descDepthView =
+	{
+		// DXGI_FORMAT_D24_UNORM_S8_UINT,
+		DXGI_FORMAT_D32_FLOAT,
+		D3D11_DSV_DIMENSION_TEXTURE2DARRAY,
+		0
+	};
+	D3D11_SHADER_RESOURCE_VIEW_DESC descShaderView =
+	{
+		//DXGI_FORMAT_R24_UNORM_X8_TYPELESS,
+		DXGI_FORMAT_R32_FLOAT,
+		D3D11_SRV_DIMENSION_TEXTURE2D,
+		0,
+		0
+	};
+	descShaderView.Texture2D.MipLevels = 1;
+
+	descDepthView.Texture2DArray.FirstArraySlice = 0;
+	descDepthView.Texture2DArray.ArraySize = 6;
+	descShaderView.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
+	descShaderView.TextureCube.MipLevels = 1;
+	descShaderView.TextureCube.MostDetailedMip = 0;
+
+	// Allocate the cascaded shadow maps targets and views
+	dtd.ArraySize = CCascadedMatrixSet::m_iTotalCascades;
+	dtd.MiscFlags = 0;
+	FAILED_CHECK(CDevice::GetInstance()->m_pDevice->CreateTexture2D(&dtd, NULL, &m_pCascadedDepthStencilRT));
+
+	descDepthView.Texture2DArray.ArraySize = CCascadedMatrixSet::m_iTotalCascades;
+	FAILED_CHECK(CDevice::GetInstance()->m_pDevice->CreateDepthStencilView(m_pCascadedDepthStencilRT, &descDepthView, &m_pCascadedDepthStencilDSV));
+
+	descShaderView.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+	descShaderView.Texture2DArray.FirstArraySlice = 0;
+	descShaderView.Texture2DArray.ArraySize = CCascadedMatrixSet::m_iTotalCascades;
+	FAILED_CHECK(CDevice::GetInstance()->m_pDevice->CreateShaderResourceView(m_pCascadedDepthStencilRT, &descShaderView, &m_pCascadedDepthStencilSRV));
+
+	m_CascadedMatrixSet.Init(m_iShadowMapSize);
+
+	D3D11_SAMPLER_DESC samDesc;
+	ZeroMemory(&samDesc, sizeof(samDesc));
+	samDesc.Filter = D3D11_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR;
+	samDesc.AddressU = samDesc.AddressV = samDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samDesc.MaxAnisotropy = 1;
+	samDesc.ComparisonFunc = D3D11_COMPARISON_LESS_EQUAL;
+	samDesc.MaxLOD = D3D11_FLOAT32_MAX;
+	FAILED_CHECK(CDevice::GetInstance()->m_pDevice->CreateSamplerState(&samDesc, &m_pPCFSamplerState));
+
+	descDepth.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	descDepth.StencilEnable = FALSE;
+	descDepth.DepthFunc = D3D11_COMPARISON_LESS;
+	FAILED_CHECK(CDevice::GetInstance()->m_pDevice->CreateDepthStencilState(&descDepth, &m_pShadowGenDepthState));
+
 	return S_OK;
 }
 
@@ -236,10 +320,24 @@ void CLightMgr::Release()
 	Safe_Release(m_pAdditiveBlendState);
 	Safe_Release(m_pNoDepthClipFrontRS);
 	Safe_Release(m_pWireframeRS);
+	
+	Safe_Release(m_pCascadedDepthStencilDSV);
+	Safe_Release(m_pCascadedDepthStencilRT);
+	Safe_Release(m_pCascadedDepthStencilSRV);
+	Safe_Release(m_pCascadedShadowGenRS);
+
+	Safe_Release(m_pCascadedShadowGenGeometryCB);
+	Safe_Release(m_pPCFSamplerState);
+	::Safe_Delete(m_pCascadedShadowGenVertexShader);
+	::Safe_Delete(m_pCascadedShadowGenGeometryShader);
+
+	Safe_Release(m_pShadowGenDepthState);
 }
 
 void CLightMgr::DoLighting(ID3D11DeviceContext * pd3dImmediateContext, CMultiRenderTarget* pGBuffer, CMultiRenderTarget* pLineMRT)
 {
+	pd3dImmediateContext->PSSetSamplers(2, 1, &m_pPCFSamplerState);
+
 	// Store the previous depth state
 	ID3D11DepthStencilState* pPrevDepthState;
 	UINT nPrevStencil;
@@ -384,6 +482,49 @@ void CLightMgr::AddCapsuleLight(const D3DXVECTOR3 & vCapsulePosition, const D3DX
 	m_arrLights.push_back(capsuleLight);
 }
 
+void CLightMgr::PrepareNextShadowLight(ID3D11DeviceContext * pd3dImmediateContext)
+{
+	pd3dImmediateContext->OMSetDepthStencilState(m_pShadowGenDepthState, 0);
+
+	pd3dImmediateContext->RSSetState(m_pCascadedShadowGenRS);
+
+	HRESULT hr;
+
+	D3D11_VIEWPORT vp[3] = { { 0, 0, m_iShadowMapSize, m_iShadowMapSize, 0.0f, 1.0f },{ 0, 0, m_iShadowMapSize, m_iShadowMapSize, 0.0f, 1.0f },{ 0, 0, m_iShadowMapSize, m_iShadowMapSize, 0.0f, 1.0f } };
+	pd3dImmediateContext->RSSetViewports(3, vp);
+	
+	// Set the depth target
+	ID3D11RenderTargetView* nullRT = NULL;
+	pd3dImmediateContext->OMSetRenderTargets(1, &nullRT, m_pCascadedDepthStencilDSV);
+
+	// Clear the depth stencil
+	pd3dImmediateContext->ClearDepthStencilView(m_pCascadedDepthStencilDSV, D3D11_CLEAR_DEPTH, 1.0, 0);
+
+	// Get the cascade matrices for the current camera configuration
+	m_CascadedMatrixSet.Update(m_vDirectionalDir);
+
+	// Fill the shadow generation matrices constant buffer23
+	D3D11_MAPPED_SUBRESOURCE MappedResource;
+	pd3dImmediateContext->Map(m_pCascadedShadowGenGeometryCB, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource);
+	D3DXMATRIX* pCascadeShadowGenMat = (D3DXMATRIX*)MappedResource.pData;
+
+	for (int i = 0; i < CCascadedMatrixSet::m_iTotalCascades; i++)
+	{
+		D3DXMatrixTranspose(&pCascadeShadowGenMat[i], m_CascadedMatrixSet.GetWorldToCascadeProj(i));
+	}
+
+	pd3dImmediateContext->Unmap(m_pCascadedShadowGenGeometryCB, 0);
+	pd3dImmediateContext->GSSetConstantBuffers(0, 1, &m_pCascadedShadowGenGeometryCB);
+
+	// Set the vertex layout
+	pd3dImmediateContext->IASetInputLayout(m_pCascadedShadowGenVertexShader->m_pVertexLayout);
+
+	// Set the shadow generation shaders
+	pd3dImmediateContext->VSSetShader(m_pCascadedShadowGenVertexShader->m_pVertexShader, NULL, 0);
+	pd3dImmediateContext->GSSetShader(m_pCascadedShadowGenGeometryShader->m_pGeometryShader, NULL, 0);
+	pd3dImmediateContext->PSSetShader(NULL, NULL, 0);
+}
+
 void CLightMgr::DirectionalLight(ID3D11DeviceContext* pd3dImmediateContext)
 {
 	// Fill the directional and ambient values constant buffer
@@ -394,8 +535,17 @@ void CLightMgr::DirectionalLight(ID3D11DeviceContext* pd3dImmediateContext)
 	pDirectionalValuesCB->vAmbientRange = GammaToLinear(m_vAmbientUpperColor) - GammaToLinear(m_vAmbientLowerColor);
 	pDirectionalValuesCB->vDirToLight = -m_vDirectionalDir;
 	pDirectionalValuesCB->vDirectionalColor = GammaToLinear(m_vDirectionalColor);
+
+	D3DXMatrixTranspose(&pDirectionalValuesCB->ToShadowSpace, m_CascadedMatrixSet.GetWorldToShadowSpace());
+
+	pDirectionalValuesCB->ToCascadeSpace[0] = m_CascadedMatrixSet.GetToCascadeOffsetX();
+	pDirectionalValuesCB->ToCascadeSpace[1] = m_CascadedMatrixSet.GetToCascadeOffsetY();
+	pDirectionalValuesCB->ToCascadeSpace[2] = m_CascadedMatrixSet.GetToCascadeScale();
+
 	pd3dImmediateContext->Unmap(m_pDirLightCB, 0);
 	pd3dImmediateContext->PSSetConstantBuffers(1, 1, &m_pDirLightCB);
+
+	pd3dImmediateContext->PSSetShaderResources(5, 1, &m_pCascadedDepthStencilSRV);
 
 	// Primitive settings
 	pd3dImmediateContext->IASetInputLayout(NULL);

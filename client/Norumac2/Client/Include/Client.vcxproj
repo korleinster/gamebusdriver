@@ -180,6 +180,7 @@
     <ClInclude Include="..\Code\BaseUI.h" />
     <ClInclude Include="..\Code\Boss.h" />
     <ClInclude Include="..\Code\Camera.h" />
+    <ClInclude Include="..\Code\CascadedMatrixSet.h" />
     <ClInclude Include="..\Code\ChatUI.h" />
     <ClInclude Include="..\Code\Collision.h" />
     <ClInclude Include="..\Code\Component.h" />
@@ -259,6 +260,7 @@
     <ClCompile Include="..\Code\BaseUI.cpp" />
     <ClCompile Include="..\Code\Boss.cpp" />
     <ClCompile Include="..\Code\Camera.cpp" />
+    <ClCompile Include="..\Code\CascadedMatrixSet.cpp" />
     <ClCompile Include="..\Code\ChatUI.cpp" />
     <ClCompile Include="..\Code\Collision.cpp" />
     <ClCompile Include="..\Code\Component.cpp" />
@@ -346,6 +348,7 @@
       <EnableDebuggingInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</EnableDebuggingInformation>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
     </FxCompile>
+    <FxCompile Include="..\ShaderCode\ShadowGen.fx" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ip_and_login.rc" />

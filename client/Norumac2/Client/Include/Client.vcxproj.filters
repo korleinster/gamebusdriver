@@ -232,6 +232,9 @@
     <Filter Include="02.Object\08.UI\10.QuestUI">
       <UniqueIdentifier>{66a86b72-93a1-4505-a660-b9664fc9808f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="100.Shadow">
+      <UniqueIdentifier>{ac475a16-5876-4853-81bc-7a8e007e75a7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -477,6 +480,9 @@
     <ClInclude Include="..\Code\Boss.h">
       <Filter>02.Object\07.Boss</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\CascadedMatrixSet.h">
+      <Filter>100.Shadow</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\MainApp.cpp">
@@ -695,6 +701,9 @@
     <ClCompile Include="..\Code\Boss.cpp">
       <Filter>02.Object\07.Boss</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CascadedMatrixSet.cpp">
+      <Filter>100.Shadow</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\ShaderCode\Shader.fx">
@@ -722,6 +731,9 @@
       <Filter>97.Resources\03.Shader\ShaderCode</Filter>
     </FxCompile>
     <FxCompile Include="..\ShaderCode\LineShader.fx">
+      <Filter>97.Resources\03.Shader\ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderCode\ShadowGen.fx">
       <Filter>97.Resources\03.Shader\ShaderCode</Filter>
     </FxCompile>
   </ItemGroup>

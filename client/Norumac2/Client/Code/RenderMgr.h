@@ -42,6 +42,8 @@ private:
 
 	void Render_BorderLine(void);
 
+	void Render_ShadowMap(void);
+
 public:
 	void Release(void);
 	void ListClear(void);

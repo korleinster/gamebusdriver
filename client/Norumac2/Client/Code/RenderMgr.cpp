@@ -154,7 +154,7 @@ void CRenderMgr::Render(const float & fTime)
 		}*/
 	}
 
-	//
+	Render_ShadowMap();
 
 	ID3D11DepthStencilState* pPrevDepthState;
 	UINT nPrevStencil;
@@ -353,6 +353,43 @@ void CRenderMgr::Render_BorderLine(void)
 	m_pTargetMgr->GetBorderMRT()->End_MRT(pd3dImmediateContext);
 }
 
+void CRenderMgr::Render_ShadowMap(void)
+{
+	//Prepare for Render Shadow Maps
+	D3D11_VIEWPORT oldvp;
+	UINT num = 1;
+	m_pDevice->m_pDeviceContext->RSGetViewports(&num, &oldvp);
+	ID3D11RasterizerState* pPrevRSState;
+	m_pDevice->m_pDeviceContext->RSGetState(&pPrevRSState);
+
+	m_pLightMgr->PrepareNextShadowLight(m_pDevice->m_pDeviceContext);
+
+	// Generate the shadow maps
+
+	list<CObj*>::iterator	iter = m_RenderGroup[TYPE_NONEALPHA].begin();
+	list<CObj*>::iterator	iter_end = m_RenderGroup[TYPE_NONEALPHA].end();
+
+	for (; iter != iter_end;)
+	{
+		if ((*iter) == NULL)
+			iter = m_RenderGroup[TYPE_NONEALPHA].erase(iter);
+		else
+		{
+			(*iter)->ShadowmapRender();
+			++iter;
+		}
+	}
+
+	// Restore the states
+	m_pDevice->m_pDeviceContext->RSSetViewports(num, &oldvp);
+	m_pDevice->m_pDeviceContext->RSSetState(pPrevRSState);
+	Safe_Release(pPrevRSState);
+
+	// Cleanup
+	m_pDevice->m_pDeviceContext->VSSetShader(NULL, NULL, 0);
+	m_pDevice->m_pDeviceContext->GSSetShader(NULL, NULL, 0);
+}
+
 void CRenderMgr::Release(void)
 {
 }
@@ -474,7 +511,7 @@ void CRenderMgr::Input(float fTime)
 	//	}
 	//}
 
-	/*if (CInput::GetInstance()->GetDIMouseState(CInput::DIM_RBUTTON))
+	if (CInput::GetInstance()->GetDIMouseState(CInput::DIM_RBUTTON))
 	{
 
 		float fDX = (float)CInput::GetInstance()->GetDIMouseMove(CInput::DIM_X);
@@ -493,5 +530,5 @@ void CRenderMgr::Input(float fTime)
 		D3DXVec3Normalize(&m_vDirLight, &m_vDirLight);
 
 		cout << "m_vDirLight.x : " << m_vDirLight.x << " " << "m_vDirLight.y : " << m_vDirLight.y << " " << "m_vDirLight.z : " << m_vDirLight.z << endl;
-	}*/
+	}
 }

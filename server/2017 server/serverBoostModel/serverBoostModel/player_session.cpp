@@ -527,7 +527,7 @@ void player_session::m_process_packet(Packet buf[])
 					case COMBO1: addingDamage = 0; break;
 					case COMBO2: addingDamage = 5; break;
 					case COMBO3: addingDamage = 10; break;
-					case SKILL1: addingDamage = 15; m_player_data.state.gauge -= 25; break;
+					case SKILL1: addingDamage = 15; m_player_data.state.gauge -= 25; break;	// 게이지 음수 관련하여 수정 & 게이지 깎이면 통보도 해주기
 					case SKILL2: addingDamage = 15; m_player_data.state.gauge -= 25; break;
 					case SKILL3: addingDamage = 15; m_player_data.state.gauge -= 25; break;
 					default: addingDamage = 0; break;

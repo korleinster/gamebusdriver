@@ -15,6 +15,7 @@ public:
 
 	ID3D11HullShader*		m_pHullShader; // DX11 에서 새로 생긴 쉐이더... VS와 PS의 사이에 작동함
 	ID3D11DomainShader*		m_pDomainShader;
+	ID3D11GeometryShader*	m_pGeometryShader;
 
 	ID3D11InputLayout*      m_pVertexLayout; // 다이렉트9의 FVF를 대신한다
 

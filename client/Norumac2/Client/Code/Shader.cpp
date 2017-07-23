@@ -10,6 +10,7 @@ CShader::CShader()
 	m_pVertexLayout = NULL;
 	m_pHullShader = NULL;
 	m_pDomainShader = NULL;
+	m_pGeometryShader = NULL;
 	m_dwRefCount = 1;
 }
 
@@ -20,6 +21,7 @@ CShader::CShader(const CShader & rhs)
 	m_pPixelShader = rhs.m_pPixelShader;
 	m_pHullShader = rhs.m_pHullShader;
 	m_pDomainShader = rhs.m_pDomainShader;
+	m_pGeometryShader = rhs.m_pGeometryShader;
 	m_dwRefCount = rhs.m_dwRefCount;
 	++m_dwRefCount;
 }
@@ -156,6 +158,35 @@ HRESULT CShader::Ready_ShaderFile(wstring wstrFilePath, LPCSTR wstrShaderName, L
 		if (FAILED(hr))
 			return hr;
 	}
+	else if (_SType == SHADER_GS)
+	{
+		hr = CDevice::GetInstance()->m_pDevice->CreateGeometryShader(pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), NULL, &m_pGeometryShader);
+
+		pShaderBlob->Release();
+
+		if (FAILED(hr))
+			return hr;
+	}
+	else if (_SType == SHADER_SHADOW_VS)
+	{
+		hr = CDevice::GetInstance()->m_pDevice->CreateVertexShader(pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), NULL, &m_pVertexShader);
+
+		if (FAILED(hr))
+			return hr;
+
+		const D3D11_INPUT_ELEMENT_DESC layout[] =
+		{
+			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,  0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		};
+
+		UINT numElements = ARRAYSIZE(layout);
+
+		hr = CDevice::GetInstance()->m_pDevice->CreateInputLayout(layout, numElements, pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), &m_pVertexLayout);
+		pShaderBlob->Release();
+
+		if (FAILED(hr))
+			return hr;
+	}
 	else if (_SType == SHADER_LINE_VS)
 	{
 		hr = CDevice::GetInstance()->m_pDevice->CreateVertexShader(pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), NULL, &m_pVertexShader);
@@ -198,6 +229,7 @@ DWORD CShader::Release(void)
 		::Safe_Release(m_pVertexLayout);
 		::Safe_Release(m_pDomainShader);
 		::Safe_Release(m_pHullShader);
+		::Safe_Release(m_pGeometryShader);
 	}
 
 	else

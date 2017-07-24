@@ -499,6 +499,22 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		pChatUI->m_ChatLogList.push_back(pFont);
 
 
+
+		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		/*
+			채팅 보낼때, 예시 코드
+		*/
+
+		// 여기다가 데이터를 담은 뒤
+		char chatting_data[MAX_CHAT_SIZE];
+		g_client.sendPacket(MAX_CHAT_SIZE, CHAT, reinterpret_cast<Packet>(chatting_data));
+
+		// wcahr_t 이면
+		wchar_t chatting_data_w[MAX_CHAT_SIZE / 2];
+		// 무조건 chat size 에서 절반 줄여야됨. short 형 처럼, 2 byte 처묵하기 때문
+
+		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 		break;
 	}
 	case QUEST_PROGRESS: {

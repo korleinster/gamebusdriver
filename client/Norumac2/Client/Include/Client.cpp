@@ -21,7 +21,7 @@ int MAX_AI_SLIME;
 int MAX_AI_GOBLIN;
 int MAX_AI_BOSS;
 
-TCHAR cText[MAX_BUF_SIZE];//저장할 채팅 메시지
+TCHAR cText[MAX_CHAT_SIZE / 2];//저장할 채팅 메시지
 TCHAR cCompText[10];//조합중인 문자
 TCHAR cCanText[200];//특수문자
 int iCNum = 0;//특수문자 위치
@@ -119,7 +119,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 				{
 					//상대방에게 메시지를 보내는 부분
 
-					ZeroMemory(&cText, sizeof(char) * MAX_BUF_SIZE);
+					// 여기다가 데이터를 담은 뒤 전송
+					g_client.sendPacket(MAX_CHAT_SIZE / 2, CHAT, reinterpret_cast<Packet>(cText));
+
+					ZeroMemory(&cText, sizeof(TCHAR) * (MAX_CHAT_SIZE / 2));
 					//보내고나서 문자열을 비워준다.
 					g_fChatCool = 0.f;
 				}

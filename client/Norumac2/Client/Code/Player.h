@@ -38,6 +38,7 @@ private:
 	bool			m_bMoveSend;// 이동최적화용 임시
 	float			m_fSkillMoveTime;//스킬을쓰고 몇초부터 이동을 걸어줄지 하는 시간값
 	bool			m_bSkillUsed;//스킬사용여부
+	float			m_fKeyCool;//공격키용 쿨
 
 	// Scene meshes shader constant buffers
 	ID3D11Buffer*		m_pSceneVertexShaderCB;

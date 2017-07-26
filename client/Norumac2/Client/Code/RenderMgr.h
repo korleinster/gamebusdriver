@@ -7,6 +7,7 @@ class CDevice;
 class CTargetMgr;
 class CLightMgr;
 class CShader;
+class CFont;
 class CRenderMgr
 {
 public:
@@ -61,6 +62,7 @@ private:
 	TCHAR				m_szFps[128];
 	DWORD				m_dwCount;
 	list<CObj*>			m_RenderGroup[TYPE_END];
+	CFont*				m_pFPSFont;
 private:
 	void Input(float fTime); // 추가
 	D3DXVECTOR3			m_vDirLight;// 추가

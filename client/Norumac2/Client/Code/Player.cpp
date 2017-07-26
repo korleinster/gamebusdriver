@@ -66,6 +66,7 @@ CPlayer::CPlayer()
 	m_fSkillMoveTime = 0.f;
 	m_bSkillUsed = false;
 	g_fChatCool = 0.f;
+	m_fKeyCool = 5.f;
 
 	m_Packet = new Packet[MAX_BUF_SIZE];
 }
@@ -636,7 +637,7 @@ void CPlayer::KeyInput()
 	}
 	
 
-	if (CInput::GetInstance()->GetDIKeyState(DIK_SPACE) & 0x80)
+	if ((CInput::GetInstance()->GetDIKeyState(DIK_SPACE) & 0x80) && (m_fKeyCool > 1.0f))
 	{
 		m_bPush = true;
 		int iSeverAtt;
@@ -646,10 +647,13 @@ void CPlayer::KeyInput()
 
 		if (m_bCombo[0] == false && m_bCombo[1] == false)
 		{
+			if (m_ePlayerState == PLAYER_ATT1)
+				return;
 			m_bCombo[0] = true;
 			m_fComboTime = 0.f;
+			m_fKeyCool = 0.f;
 			m_ePlayerState = PLAYER_ATT1;
-			//cout << "콤보1단계 활성" << endl;
+			cout << "콤보1단계 활성" << endl;
 			iSeverAtt = COMBO1;
 		}
 		else if (m_bCombo[0] == true && m_bCombo[1] == false)
@@ -657,15 +661,21 @@ void CPlayer::KeyInput()
 			m_bCombo[1] = true;
 			//m_bCombo[0] = false;
 			m_fComboTime = 0.f;
+			m_fKeyCool = 0.f;
 			m_ePlayerState = PLAYER_ATT2;
-			//cout << "콤보2단계 활성" << endl;
+			cout << "콤보2단계 활성" << endl;
 			iSeverAtt = COMBO2;
 		}
 		else if (m_bCombo[0] == true && m_bCombo[1] == true)
 		{
+			if (m_bCombo[0] == false && m_bCombo[1] == false)
+				__debugbreak();
+
 			m_bCombo[0] = false;
 			m_bCombo[1] = false;
+			cout << "콤보 해제	1:" << boolalpha << m_bCombo[0] << "	2:" << boolalpha << m_bCombo[1] << endl;
 			m_fComboTime = 0.f;
+			m_fKeyCool = 0.f;
 			m_ePlayerState = PLAYER_ATT3;
 			iSeverAtt = COMBO3;
 		}
@@ -805,7 +815,7 @@ void CPlayer::KeyInput()
 		//KEYINPUT_POTION
 		if (m_bTpCool == true)
 		{
-			cout << "텔포 쿨타임중" << endl;
+			//cout << "텔포 쿨타임중" << endl;
 			return;
 		}
 
@@ -822,7 +832,7 @@ void CPlayer::KeyInput()
 		//KEYINPUT_POTION
 		if (m_bTpCool == true)
 		{
-			cout << "텔포 쿨타임중" << endl;
+			//cout << "텔포 쿨타임중" << endl;
 			return;
 		}
 		m_pInfo->m_vPos = D3DXVECTOR3(330.f, 0.f, 408.f);
@@ -856,6 +866,7 @@ void CPlayer::TimeSetter(void)
 
 	m_fSeverTime += CTimeMgr::GetInstance()->GetTime();
 	g_fChatCool += CTimeMgr::GetInstance()->GetTime();
+	m_fKeyCool += CTimeMgr::GetInstance()->GetTime();
 	if (m_bPotionCool == true)
 		m_fPotionTime += CTimeMgr::GetInstance()->GetTime();
 	if (m_bTpCool == true)
@@ -882,7 +893,7 @@ void CPlayer::TimeSetter(void)
 		if (m_bPotionCool == true)
 		{
 			m_bPotionCool = false;
-			cout << "포션 쿨타임 끝" << endl;
+			//cout << "포션 쿨타임 끝" << endl;
 		}
 	}
 
@@ -892,22 +903,22 @@ void CPlayer::TimeSetter(void)
 		if (m_bTpCool == true)
 		{
 			m_bTpCool = false;
-			cout << "텔포 쿨타임 끝" << endl;
+			//cout << "텔포 쿨타임 끝" << endl;
 		}
 	}
 
-	if (m_fComboTime > 1.4f && m_bCombo[0] == true)
+	if (m_fComboTime > 2.8f && m_bCombo[0] == true)
 	{
 		m_bCombo[0] = false;
 		m_bCombo[1] = false;
-		//cout << "콤보1단계 초기화" << endl;
+		cout << "콤보1단계 초기화" << endl;
 	}
 
-	if (m_fComboTime > 1.4f && m_bCombo[1] == true)
+	if (m_fComboTime > 2.8f && m_bCombo[1] == true)
 	{
 		m_bCombo[0] = false;
 		m_bCombo[1] = false;
-		//cout << "콤보2단계 초기화" << endl;
+		cout << "콤보2단계 초기화" << endl;
 	}
 }
 
@@ -928,7 +939,11 @@ void CPlayer::AniMove(void)
 
 	if (m_ePlayerState == PLAYER_SKILL1)
 	{
-		if(m_fSkillMoveTime >0.6f && m_fSkillMoveTime < 1.2f)
+		if (m_fSkillMoveTime > 0.6f && m_fSkillMoveTime < 1.2f)
+		{
 			CNaviMgr::GetInstance()->MoveOnNaviMesh(&m_pInfo->m_vPos, &(m_pInfo->m_vDir * m_fSpeed * fTime), m_dwCellNum);
+			g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
+			g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
+		}
 	}
 }

@@ -13,6 +13,7 @@
 #include "ShaderMgr.h"
 #include "RcTex.h"
 #include "ResourcesMgr.h"
+#include "Font.h"
 
 #pragma pack(push,1)
 struct CB_LINEAR_DEPTH
@@ -38,6 +39,7 @@ CRenderMgr::CRenderMgr()
 	, m_pSamplerState(nullptr)
 	, m_pLinearDepthCB(nullptr)
 	, m_fSobelValue(0.0667f)
+	, m_pFPSFont(nullptr)
 {
 	ZeroMemory(m_szFps, sizeof(TCHAR) * 128);
 
@@ -79,6 +81,18 @@ CRenderMgr::CRenderMgr()
 	cbDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	cbDesc.ByteWidth = sizeof(CB_LINEAR_DEPTH);
 	CDevice::GetInstance()->m_pDevice->CreateBuffer(&cbDesc, NULL, &m_pLinearDepthCB);
+
+	m_pFPSFont = CFont::Create(L"Font_Star");
+
+
+	m_pFPSFont->m_eType = FONT_TYPE_OUTLINE;
+	m_pFPSFont->m_wstrText = L"";
+	m_pFPSFont->m_fSize = 30.f;
+	m_pFPSFont->m_nColor = 0xFF0000FF;
+	m_pFPSFont->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
+	m_pFPSFont->m_vPos = D3DXVECTOR2(750.f, 50.f);
+	m_pFPSFont->m_fOutlineSize = 1.f;
+	m_pFPSFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
 }
 
 
@@ -90,6 +104,7 @@ CRenderMgr::~CRenderMgr()
 	Safe_Delete(m_pBorderLineVS);
 	Safe_Delete(m_pBorderLinePS);
 	Safe_Delete(m_pRcTex);
+	Safe_Delete(m_pFPSFont);
 
 	Safe_Release(m_pSamplerState);
 	Safe_Release(m_pLinearDepthCB);
@@ -302,7 +317,7 @@ void CRenderMgr::Render_UI(void)
 
 void CRenderMgr::Render_FPS(const float & fTime)
 {
-	/*m_fTime += fTime;
+	m_fTime += fTime;
 	++m_dwCount;
 
 	if (m_fTime >= 1.f)
@@ -311,7 +326,11 @@ void CRenderMgr::Render_FPS(const float & fTime)
 		m_fTime = 0.f;
 		m_dwCount = 0;
 	}
-	::SetWindowText(g_hWnd, m_szFps);*/
+	m_pFPSFont->m_wstrText = m_szFps;
+
+	m_pFPSFont->Render();
+
+
 }
 
 void CRenderMgr::Render_BorderLine(void)

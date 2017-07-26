@@ -154,7 +154,8 @@ void CRenderMgr::Render(const float & fTime)
 		}*/
 	}
 
-	Render_ShadowMap();
+	// 그림자 렌더
+	//Render_ShadowMap();
 
 	ID3D11DepthStencilState* pPrevDepthState;
 	UINT nPrevStencil;

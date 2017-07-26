@@ -530,7 +530,7 @@ void player_session::m_process_packet(Packet buf[])
 						// 게이지 음수 관련하여 수정 & 게이지 깎이면 통보도 해주기
 					case SKILL1: {
 						addingDamage = 15;
-						m_player_data.state.gauge -= 25;
+						m_player_data.state.gauge -= 50;
 						if (1 > m_player_data.state.gauge) { m_player_data.state.gauge = 0; }
 						sc_fever p;
 						p.gauge = m_player_data.state.gauge;
@@ -539,7 +539,7 @@ void player_session::m_process_packet(Packet buf[])
 					}
 					case SKILL2: {
 						addingDamage = 15;
-						m_player_data.state.gauge -= 25;
+						m_player_data.state.gauge -= 50;
 						if (1 > m_player_data.state.gauge) { m_player_data.state.gauge = 0; }
 						sc_fever p;
 						p.gauge = m_player_data.state.gauge;
@@ -548,7 +548,7 @@ void player_session::m_process_packet(Packet buf[])
 					}
 					case SKILL3: {
 						addingDamage = 15;
-						m_player_data.state.gauge -= 25;
+						m_player_data.state.gauge -= 50;
 						if (1 > m_player_data.state.gauge) { m_player_data.state.gauge = 0; }
 						sc_fever p;
 						p.gauge = m_player_data.state.gauge;

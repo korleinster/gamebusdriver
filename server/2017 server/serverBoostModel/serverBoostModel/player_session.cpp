@@ -181,7 +181,7 @@ void player_session::Init()
 		m_player_data.is_ai = false;
 
 		m_sub_status.critical = 20;	// const
-		m_sub_status.def = 1 + 10;
+		m_sub_status.def = 1 + 5;
 		m_sub_status.str = 5 + 10;
 		m_sub_status.agi = 2 + 10;
 		m_sub_status.intel = 1 + 10;
@@ -203,7 +203,7 @@ void player_session::Init()
 		m_player_data.is_ai = false;
 		//
 		m_sub_status.critical = 20;	// const
-		m_sub_status.def = 1 + 10;
+		m_sub_status.def = 1 + 5;
 		m_sub_status.str = 5 + 10;
 		m_sub_status.agi = 2 + 10;
 		m_sub_status.intel = 1 + 10;
@@ -633,13 +633,13 @@ void player_session::m_process_packet(Packet buf[])
 								q.quest = m_sub_status.quest;
 								send_packet(reinterpret_cast<Packet*>(&q));
 							}
-							else if ((MAX_AI_GOBLIN > id) && (MAX_AI_GOBLIN > m_sub_status.quest) && (MAX_AI_SLIME <= m_sub_status.quest)) {
+							else if ((MAX_AI_GOBLIN > id) && (MAX_AI_SLIME <= id) && (MAX_AI_GOBLIN > m_sub_status.quest) && (MAX_AI_SLIME <= m_sub_status.quest)) {
 								m_sub_status.quest += 1;
 								sc_chat chat;
 								chat.id = m_id;
 								sprintf(chat.msg, "고블린 %d 마리 잡음", m_sub_status.quest - MAX_AI_SLIME);
 								//sprintf(chat.msg, "Slime %d killed", m_sub_status.quest);
-								if (MAX_AI_SLIME == m_sub_status.quest) { sprintf(chat.msg, "고블린 퀘스트 완료"); }
+								if (MAX_AI_GOBLIN == m_sub_status.quest) { sprintf(chat.msg, "고블린 퀘스트 완료"); }
 								send_packet(reinterpret_cast<Packet*>(&chat));
 
 								sc_quest q;
@@ -703,7 +703,9 @@ void player_session::m_process_packet(Packet buf[])
 			memcpy(chat.msg, reinterpret_cast<char*>(&buf[2]), MAX_BUF_SIZE - 6);
 			chat.msg[MAX_BUF_SIZE - 7] = '\0';
 
-			cout << "Message [ " << m_id << " ] : " << chat.msg << endl;
+			wchar_t *chatTXT = reinterpret_cast<wchar_t*>(chat.msg);
+
+			wcout << "Message [ " << m_id << " ] : " << chatTXT << endl;
 
 			for (auto players : g_clients) {
 				if (DISCONNECTED == players->get_current_connect_state()) { continue; }

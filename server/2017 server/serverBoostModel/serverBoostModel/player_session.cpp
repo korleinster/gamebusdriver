@@ -181,7 +181,7 @@ void player_session::Init()
 		m_player_data.is_ai = false;
 
 		m_sub_status.critical = 20;	// const
-		m_sub_status.def = 1 + 10;
+		m_sub_status.def = 1 + 5;
 		m_sub_status.str = 5 + 10;
 		m_sub_status.agi = 2 + 10;
 		m_sub_status.intel = 1 + 10;
@@ -203,7 +203,7 @@ void player_session::Init()
 		m_player_data.is_ai = false;
 		//
 		m_sub_status.critical = 20;	// const
-		m_sub_status.def = 1 + 10;
+		m_sub_status.def = 1 + 5;
 		m_sub_status.str = 5 + 10;
 		m_sub_status.agi = 2 + 10;
 		m_sub_status.intel = 1 + 10;
@@ -493,7 +493,7 @@ void player_session::m_process_packet(Packet buf[])
 			// 아래 키 = 왼쪽 + 아래
 
 			// 충돌체크 검사하고 난 뒤에..
-			float att_x = 0.5, att_y = 0.5;		// 테스트용 클라 공격 리치가 요정도
+			float att_x = 0.3, att_y = 0.3;		// 테스트용 클라 공격 리치가 요정도
 			float my_x = m_player_data.pos.x, my_y = m_player_data.pos.y;
 			float player_size = 1.35;	// 객체 충돌 크기 반지름
 			char *dir = &m_player_data.dir;
@@ -527,9 +527,34 @@ void player_session::m_process_packet(Packet buf[])
 					case COMBO1: addingDamage = 0; break;
 					case COMBO2: addingDamage = 5; break;
 					case COMBO3: addingDamage = 10; break;
-					case SKILL1: addingDamage = 15; m_player_data.state.gauge -= 25; break;	// 게이지 음수 관련하여 수정 & 게이지 깎이면 통보도 해주기
-					case SKILL2: addingDamage = 15; m_player_data.state.gauge -= 25; break;
-					case SKILL3: addingDamage = 15; m_player_data.state.gauge -= 25; break;
+						// 게이지 음수 관련하여 수정 & 게이지 깎이면 통보도 해주기
+					case SKILL1: {
+						addingDamage = 15;
+						m_player_data.state.gauge -= 50;
+						if (1 > m_player_data.state.gauge) { m_player_data.state.gauge = 0; }
+						sc_fever p;
+						p.gauge = m_player_data.state.gauge;
+						send_packet(reinterpret_cast<Packet*>(&p));
+						break;
+					}
+					case SKILL2: {
+						addingDamage = 15;
+						m_player_data.state.gauge -= 50;
+						if (1 > m_player_data.state.gauge) { m_player_data.state.gauge = 0; }
+						sc_fever p;
+						p.gauge = m_player_data.state.gauge;
+						send_packet(reinterpret_cast<Packet*>(&p));
+						break;
+					}
+					case SKILL3: {
+						addingDamage = 15;
+						m_player_data.state.gauge -= 50;
+						if (1 > m_player_data.state.gauge) { m_player_data.state.gauge = 0; }
+						sc_fever p;
+						p.gauge = m_player_data.state.gauge;
+						send_packet(reinterpret_cast<Packet*>(&p));
+						break;
+					}
 					default: addingDamage = 0; break;
 					}
 
@@ -608,13 +633,13 @@ void player_session::m_process_packet(Packet buf[])
 								q.quest = m_sub_status.quest;
 								send_packet(reinterpret_cast<Packet*>(&q));
 							}
-							else if ((MAX_AI_GOBLIN > id) && (MAX_AI_GOBLIN > m_sub_status.quest) && (MAX_AI_SLIME <= m_sub_status.quest)) {
+							else if ((MAX_AI_GOBLIN > id) && (MAX_AI_SLIME <= id) && (MAX_AI_GOBLIN > m_sub_status.quest) && (MAX_AI_SLIME <= m_sub_status.quest)) {
 								m_sub_status.quest += 1;
 								sc_chat chat;
 								chat.id = m_id;
 								sprintf(chat.msg, "고블린 %d 마리 잡음", m_sub_status.quest - MAX_AI_SLIME);
 								//sprintf(chat.msg, "Slime %d killed", m_sub_status.quest);
-								if (MAX_AI_SLIME == m_sub_status.quest) { sprintf(chat.msg, "고블린 퀘스트 완료"); }
+								if (MAX_AI_GOBLIN == m_sub_status.quest) { sprintf(chat.msg, "고블린 퀘스트 완료"); }
 								send_packet(reinterpret_cast<Packet*>(&chat));
 
 								sc_quest q;
@@ -678,7 +703,28 @@ void player_session::m_process_packet(Packet buf[])
 			memcpy(chat.msg, reinterpret_cast<char*>(&buf[2]), MAX_BUF_SIZE - 6);
 			chat.msg[MAX_BUF_SIZE - 7] = '\0';
 
-			cout << "Message [ " << m_id << " ] : " << chat.msg << endl;
+			wchar_t *chatTXT = reinterpret_cast<wchar_t*>(chat.msg);
+
+			wcout << "Message [ " << m_id << " ] : " << chatTXT << endl;
+
+			if (0 == wcscmp(chatTXT, L"show me the hp")) {
+				m_player_data.state.hp += 10000;
+				sc_chat cheat;
+				memcpy(cheat.msg, reinterpret_cast<wchar_t*>(L"체력 추가 치트 적용 완료"), MAX_BUF_SIZE - 6);
+				send_packet(reinterpret_cast<Packet*>(&cheat));
+
+				sc_hp hp_p;
+				hp_p.hp = m_player_data.state.hp;
+				hp_p.id = m_id;
+				send_packet(reinterpret_cast<Packet*>(&hp_p));
+			}
+			if (0 == wcscmp(chatTXT, L"power overwhelming")) {
+				m_sub_status.str += 50;
+				m_player_data.state.hp += 10000;
+				sc_chat cheat;
+				memcpy(cheat.msg, reinterpret_cast<wchar_t*>(L"공격력 강화 치트 적용 완료"), MAX_BUF_SIZE - 6);
+				send_packet(reinterpret_cast<Packet*>(&cheat));
+			}
 
 			for (auto players : g_clients) {
 				if (DISCONNECTED == players->get_current_connect_state()) { continue; }

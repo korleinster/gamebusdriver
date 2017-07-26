@@ -59,7 +59,7 @@ enum PacketProtocolType {
 	SKILL2,
 	SKILL3,
 
-	// 보스 공격
+	// 보스 공격, 뒤에 숫자 붙은건 att_type 용 ( 하위 스킬들 구분용 )
 	BOSS_ATT,
 	BOSS_ATT_01,
 	BOSS_ATT_02,

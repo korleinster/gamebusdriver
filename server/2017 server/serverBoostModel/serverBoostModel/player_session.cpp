@@ -493,7 +493,7 @@ void player_session::m_process_packet(Packet buf[])
 			// 아래 키 = 왼쪽 + 아래
 
 			// 충돌체크 검사하고 난 뒤에..
-			float att_x = 0.5, att_y = 0.5;		// 테스트용 클라 공격 리치가 요정도
+			float att_x = 0.3, att_y = 0.3;		// 테스트용 클라 공격 리치가 요정도
 			float my_x = m_player_data.pos.x, my_y = m_player_data.pos.y;
 			float player_size = 1.35;	// 객체 충돌 크기 반지름
 			char *dir = &m_player_data.dir;
@@ -707,8 +707,24 @@ void player_session::m_process_packet(Packet buf[])
 
 			wcout << "Message [ " << m_id << " ] : " << chatTXT << endl;
 
-			if (0 == wcscmp(chatTXT, L"show me the hp")) { m_player_data.state.hp += 10000;	}
-			if (0 == wcscmp(chatTXT, L"power overwhelming")) { m_sub_status.str += 50; }
+			if (0 == wcscmp(chatTXT, L"show me the hp")) {
+				m_player_data.state.hp += 10000;
+				sc_chat cheat;
+				memcpy(cheat.msg, reinterpret_cast<wchar_t*>(L"체력 추가 치트 적용 완료"), MAX_BUF_SIZE - 6);
+				send_packet(reinterpret_cast<Packet*>(&cheat));
+
+				sc_hp hp_p;
+				hp_p.hp = m_player_data.state.hp;
+				hp_p.id = m_id;
+				send_packet(reinterpret_cast<Packet*>(&hp_p));
+			}
+			if (0 == wcscmp(chatTXT, L"power overwhelming")) {
+				m_sub_status.str += 50;
+				m_player_data.state.hp += 10000;
+				sc_chat cheat;
+				memcpy(cheat.msg, reinterpret_cast<wchar_t*>(L"공격력 강화 치트 적용 완료"), MAX_BUF_SIZE - 6);
+				send_packet(reinterpret_cast<Packet*>(&cheat));
+			}
 
 			for (auto players : g_clients) {
 				if (DISCONNECTED == players->get_current_connect_state()) { continue; }

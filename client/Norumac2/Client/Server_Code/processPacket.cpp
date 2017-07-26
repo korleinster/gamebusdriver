@@ -400,15 +400,17 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 						//몹이 죽으면 체력바도 없에자.
 						int iSize = 0;
-						iSize = ((CObjMgr::GetInstance()->Get_ObjList(L"MobHpBaisic")->size()));
-						if (iSize != 0)
-						{
-							//직접지우면 뭔일 터질지도 모르니 그냥 랜더시간을 초과시켜서 자연스럽게 없에버리자.
-							CObj* pObj = (*(CObjMgr::GetInstance()->Get_ObjList(L"MobHpBar")->begin()));
-							dynamic_cast<CMobHpBar*>(pObj)->m_fRendTime = 6.f;
+						if (nullptr != CObjMgr::GetInstance()->Get_ObjList(L"MobHpBaisic")) {
+							iSize = ((CObjMgr::GetInstance()->Get_ObjList(L"MobHpBaisic")->size()));
+							if (iSize != 0)
+							{
+								//직접지우면 뭔일 터질지도 모르니 그냥 랜더시간을 초과시켜서 자연스럽게 없에버리자.
+								CObj* pObj = (*(CObjMgr::GetInstance()->Get_ObjList(L"MobHpBar")->begin()));
+								dynamic_cast<CMobHpBar*>(pObj)->m_fRendTime = 6.f;
 
-							pObj = (*(CObjMgr::GetInstance()->Get_ObjList(L"MobHpBaisic")->begin()));
-							dynamic_cast<CMobHpBasic*>(pObj)->m_fRendTime = 6.f;
+								pObj = (*(CObjMgr::GetInstance()->Get_ObjList(L"MobHpBaisic")->begin()));
+								dynamic_cast<CMobHpBasic*>(pObj)->m_fRendTime = 6.f;
+							}
 						}
 					}
 					else

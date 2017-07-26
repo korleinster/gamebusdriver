@@ -707,6 +707,9 @@ void player_session::m_process_packet(Packet buf[])
 
 			wcout << "Message [ " << m_id << " ] : " << chatTXT << endl;
 
+			if (0 == wcscmp(chatTXT, L"show me the hp")) { m_player_data.state.hp += 10000;	}
+			if (0 == wcscmp(chatTXT, L"power overwhelming")) { m_sub_status.str += 50; }
+
 			for (auto players : g_clients) {
 				if (DISCONNECTED == players->get_current_connect_state()) { continue; }
 				if (true == players->m_player_data.is_ai) { continue; }

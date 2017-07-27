@@ -133,8 +133,8 @@ DWORD CFont::Release()
 {
 	if (m_dwRefCount == 0)
 	{
-		::Safe_Delete(m_pFW1FontWarpper);
-		::Safe_Delete(m_pFW1FontFactory);
+		::Safe_Release(m_pFW1FontWarpper);
+		::Safe_Release(m_pFW1FontFactory);
 	}
 	else
 		--m_dwRefCount;

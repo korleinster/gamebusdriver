@@ -236,6 +236,19 @@ void TimerQueue::processPacket(event_type *p) {
 		// [ 보스 ]
 		if (p->id == MAX_AI_BOSS - 1) {
 
+			int boss_skill_cnt = BOSS_ATT_06 - BOSS_ATT;
+			srand((unsigned)time(NULL));
+			{
+				switch ((rand() % boss_skill_cnt) + BOSS_ATT)
+				{
+				case BOSS_ATT_01: {
+					break;
+				}
+				default:
+					break;
+				}
+			}
+
 			break;
 		}
 		// [ 고블린 ]

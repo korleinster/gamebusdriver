@@ -178,9 +178,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 						if ((reinterpret_cast<CBoss*>(iter))->GetAniState() == BOSS_IDLE)
 						{
 							(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
-							(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT2);
-							//이건 일단 샘플
-							//보스 스킬에대한 패킷은 서버가 경우를 해줘야 어떻게든 할듯싶음.
+							(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_NORMALATT);
 						}
 
 					}
@@ -540,8 +538,70 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		// 변동사항이 있으면 알려줄거고, 모르는거 있으면, 나대서 추측하며 멋대로 구현말고 꼭 물어볼것
 
 		sc_boss_atk *p = reinterpret_cast<sc_boss_atk*>(buf);
-		
-		p->att_type;
+		auto iter = *CObjMgr::GetInstance()->Get_ObjList(L"Boss")->begin();
+
+		/*BOSS_ATT,
+			BOSS_ATT_01,
+			BOSS_ATT_02,
+			BOSS_ATT_03,
+			BOSS_ATT_04,
+			BOSS_ATT_05,
+			BOSS_ATT_06*/
+
+
+		if (p->att_type == BOSS_ATT_01)
+		{
+			if ((reinterpret_cast<CBoss*>(iter))->GetAniState() == BOSS_IDLE)
+			{
+				(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
+				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT1_1);
+			}
+		}
+
+		if (p->att_type == BOSS_ATT_02)
+		{
+			if ((reinterpret_cast<CBoss*>(iter))->GetAniState() == BOSS_IDLE)
+			{
+				(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
+				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT1_2);
+			}
+		}
+
+		if (p->att_type == BOSS_ATT_03)
+		{
+			if ((reinterpret_cast<CBoss*>(iter))->GetAniState() == BOSS_IDLE)
+			{
+				(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
+				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT1_3);
+			}
+		}
+
+		if (p->att_type == BOSS_ATT_04)
+		{
+			if ((reinterpret_cast<CBoss*>(iter))->GetAniState() == BOSS_IDLE)
+			{
+				(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
+				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT2);
+			}
+		}
+
+		if (p->att_type == BOSS_ATT_05)
+		{
+			if ((reinterpret_cast<CBoss*>(iter))->GetAniState() == BOSS_IDLE)
+			{
+				(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
+				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT3);
+			}
+		}
+
+		if (p->att_type == BOSS_ATT_06)
+		{
+			if ((reinterpret_cast<CBoss*>(iter))->GetAniState() == BOSS_IDLE)
+			{
+				(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
+				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_BUFF);
+			}
+		}
 		/*
 			att_type 에 따라서, 어떤 공격 및 행동인지 확인할 수 있다.
 			따라서 저 타입에 따라서 관련 애니메이션 재생만 하면 됨.

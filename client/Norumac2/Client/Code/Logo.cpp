@@ -201,6 +201,7 @@ HRESULT CLogo::Add_Dynamic_Buffer(void)
 
 		vecAni.push_back("boss_idle");
 		vecAni.push_back("boss_run");
+		vecAni.push_back("boss_checkAttack");
 		vecAni.push_back("boss_attack1");
 		vecAni.push_back("boss_attack1_2");
 		vecAni.push_back("boss_attack1_3");

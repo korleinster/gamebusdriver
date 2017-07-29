@@ -708,15 +708,28 @@ void player_session::m_process_packet(Packet buf[])
 			wcout << "Message [ " << m_id << " ] : " << chatTXT << endl;
 
 			if (0 == wcscmp(chatTXT, L"show me the hp")) {
-				m_player_data.state.hp += 10000;
-				sc_chat cheat;
-				memcpy(cheat.msg, reinterpret_cast<wchar_t*>(L"체력 추가 치트 적용 완료"), MAX_BUF_SIZE - 6);
-				send_packet(reinterpret_cast<Packet*>(&cheat));
+				if (101 > m_player_data.state.hp) {
+					m_player_data.state.hp += 10000;
+					sc_chat cheat;
+					memcpy(cheat.msg, reinterpret_cast<wchar_t*>(L"체력 추가 치트 적용 완료"), MAX_BUF_SIZE - 6);
+					send_packet(reinterpret_cast<Packet*>(&cheat));
 
-				sc_hp hp_p;
-				hp_p.hp = m_player_data.state.hp;
-				hp_p.id = m_id;
-				send_packet(reinterpret_cast<Packet*>(&hp_p));
+					sc_hp hp_p;
+					hp_p.hp = m_player_data.state.hp;
+					hp_p.id = m_id;
+					send_packet(reinterpret_cast<Packet*>(&hp_p));
+				}
+				else {
+					m_player_data.state.hp = 100;
+					sc_chat cheat;
+					memcpy(cheat.msg, reinterpret_cast<wchar_t*>(L"체력 치트 해제"), MAX_BUF_SIZE - 6);
+					send_packet(reinterpret_cast<Packet*>(&cheat));
+
+					sc_hp hp_p;
+					hp_p.hp = m_player_data.state.hp;
+					hp_p.id = m_id;
+					send_packet(reinterpret_cast<Packet*>(&hp_p));
+				}
 			}
 			if (0 == wcscmp(chatTXT, L"power overwhelming")) {
 				m_sub_status.str += 50;

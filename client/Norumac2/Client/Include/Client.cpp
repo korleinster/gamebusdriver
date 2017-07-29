@@ -120,7 +120,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 					//상대방에게 메시지를 보내는 부분
 
 					// 여기다가 데이터를 담은 뒤 전송
-					//g_client.sendPacket(MAX_CHAT_SIZE / 2, CHAT, reinterpret_cast<Packet>(cText));
+					g_client.sendPacket(MAX_CHAT_SIZE / 2, CHAT, reinterpret_cast<Packet>(cText));
 
 					ZeroMemory(&cText, sizeof(TCHAR) * (MAX_CHAT_SIZE / 2));
 					//보내고나서 문자열을 비워준다.

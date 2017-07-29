@@ -554,7 +554,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			if ((reinterpret_cast<CBoss*>(iter))->GetAniState() == BOSS_IDLE)
 			{
 				(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
-				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT1_1);
+				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT1);
 			}
 		}
 
@@ -563,7 +563,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			if ((reinterpret_cast<CBoss*>(iter))->GetAniState() == BOSS_IDLE)
 			{
 				(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
-				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT1_2);
+				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT2);
 			}
 		}
 
@@ -572,7 +572,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			if ((reinterpret_cast<CBoss*>(iter))->GetAniState() == BOSS_IDLE)
 			{
 				(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
-				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT1_3);
+				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT3);
 			}
 		}
 
@@ -581,7 +581,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			if ((reinterpret_cast<CBoss*>(iter))->GetAniState() == BOSS_IDLE)
 			{
 				(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
-				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT2);
+				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT4);
 			}
 		}
 
@@ -590,7 +590,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			if ((reinterpret_cast<CBoss*>(iter))->GetAniState() == BOSS_IDLE)
 			{
 				(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
-				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT3);
+				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT5);
 			}
 		}
 

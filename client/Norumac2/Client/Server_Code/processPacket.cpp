@@ -28,10 +28,15 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		{
 			player_data *data = NULL;
 
-			if (p->id >= MAX_AI_NUM)
+ 			if (p->id >= MAX_AI_NUM)
 				data = CObjMgr::GetInstance()->Get_PlayerServerData(p->id);
 			else
-				data = CObjMgr::GetInstance()->Get_MonsterServerData(p->id);
+			{
+				if (p->id < MAX_AI_GOBLIN)
+					data = CObjMgr::GetInstance()->Get_MonsterServerData(p->id);
+				else
+					data = CObjMgr::GetInstance()->Get_BossServerData(p->id);
+			}
 
 			if (nullptr != data)
 			{

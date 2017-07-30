@@ -34,6 +34,8 @@ public:
 	void AddCapsuleLight(const D3DXVECTOR3& vCapsulePosition, const D3DXVECTOR3& vCapsuleDirection, float fCapsuleRange, float fCapsuleLength, const D3DXVECTOR3& vCapsuleColor);
 
 	void PrepareNextShadowLight(ID3D11DeviceContext* pd3dImmediateContext);
+	void DoDebugCascadedShadows(ID3D11DeviceContext* pd3dImmediateContext, CMultiRenderTarget* pGbuffer);
+	ID3D11ShaderResourceView* GetShadowSRV() { return m_pCascadedDepthStencilSRV; }
 
 private:
 	// Do the directional light calculation
@@ -47,7 +49,6 @@ private:
 
 	// Based on the value of bWireframe, either do the lighting or render the volume
 	void CapsuleLight(ID3D11DeviceContext* pd3dImmediateContext, const D3DXVECTOR3& vPos, const D3DXVECTOR3& vDir, float fRange, float fLen, const D3DXVECTOR3& vColor);
-
 
 private:
 
@@ -130,7 +131,7 @@ private:
 	// Linked list with the active lights
 	vector<LIGHT> m_arrLights;
 
-	int	m_iShadowMapSize = 1024;
+	int	m_iShadowMapSize = 2048;
 
 	// Cascaded shadow maps
 	ID3D11Texture2D* m_pCascadedDepthStencilRT;
@@ -149,7 +150,8 @@ private:
 	// Cascaded shadow maps generation assets
 	CShader* m_pCascadedShadowGenVertexShader;
 	CShader* m_pCascadedShadowGenGeometryShader;
-	ID3D11Buffer* m_pCascadedShadowGenGeometryCB;
+	CShader* m_pDebugCascadesPixelShader;
+	ID3D11Buffer* m_pCascadedShadowGenVertexCB;
 
 	ID3D11SamplerState* m_pPCFSamplerState;
 	ID3D11DepthStencilState* m_pShadowGenDepthState;

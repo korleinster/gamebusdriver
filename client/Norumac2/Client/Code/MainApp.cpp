@@ -215,6 +215,13 @@ HRESULT CMainApp::Initialize(void)
 		return hr;
 	}
 
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"CascadeShadowDebugPS", L"../ShaderCode/DirLight.fx", "CascadeShadowDebugPS", "ps_5_0", SHADER_PS);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"CascadeShadowDebugPS Shader Create Failed", MB_OK);
+		return hr;
+	}
+
 	// Á¶¸í ½¦ÀÌ´õ
 	// Directional
 	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"DirLightVS", L"../ShaderCode/DirLight.fx", "DirLightVS", "vs_5_0", SHADER_VS);

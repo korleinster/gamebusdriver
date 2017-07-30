@@ -41,8 +41,8 @@ HRESULT CCamera::Initialize(void)
 	
 	m_fFovY = D3DXToRadian(45.f);
 	m_fAspect = float(WINCX) / static_cast<float>(WINCY);
-	m_fNear = 1.f;
-	m_fFar = 1000.f;
+	m_fNear = 0.1f;
+	m_fFar = 500.f;
 	MakeView();
 	MakeProjection();
 

@@ -17,11 +17,13 @@ public:
 
 	CMultiRenderTarget* GetGBuffer() { return m_pMRT_GBuffer; }
 	CMultiRenderTarget* GetBorderMRT() { return m_pMRT_Border; }
+	CMultiRenderTarget* GetShadowMapMRT() { return m_pMRT_ShadowMap; }
 	void RenderGBuffer(ID3D11DeviceContext* pd3dImmediateContext);
 
 private:
 	CMultiRenderTarget*		m_pMRT_GBuffer;
 	CMultiRenderTarget*		m_pMRT_Border;
+	CMultiRenderTarget*		m_pMRT_ShadowMap;
 
 	//CShader*				m_pGBufferVisVertexShader;
 	//CShader*				m_pGBufferVisPixelShader;

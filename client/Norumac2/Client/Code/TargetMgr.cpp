@@ -2,12 +2,14 @@
 #include "TargetMgr.h"
 #include "MultiRenderTarget.h"
 #include "RenderTarget.h"
+#include "LightMgr.h"
 
 IMPLEMENT_SINGLETON(CTargetMgr)
 
 CTargetMgr::CTargetMgr()
 	: m_pMRT_GBuffer(NULL)
 	, m_pMRT_Border(NULL)
+	, m_pMRT_ShadowMap(NULL)
 	//, m_pGBufferVisVertexShader(NULL)
 	//, m_pGBufferVisPixelShader(NULL)
 {
@@ -45,6 +47,14 @@ HRESULT CTargetMgr::Initialize()
 	pRT_Border->Ready_DebugBuffer(-0.8f, 0.5f, 0.1f, 0.1f, 0);
 	m_pMRT_Border->SetRT(pRT_Border);
 
+	//ShadowMap
+	m_pMRT_ShadowMap = new CMultiRenderTarget;
+	m_pMRT_ShadowMap->Initialize(WINCX, WINCY);
+
+	CRenderTarget* pRT_ShadowMap = CRenderTarget::Create(WINCX, WINCY, basicColorTextureFormat);
+	pRT_ShadowMap->Ready_DebugBuffer(-0.5f, 0.5f, 0.1f, 0.1f, 0);
+	m_pMRT_ShadowMap->SetRT(pRT_ShadowMap);
+
 	return S_OK;
 }
 
@@ -52,6 +62,7 @@ void CTargetMgr::Release()
 {
 	delete m_pMRT_GBuffer;
 	delete m_pMRT_Border;
+	delete m_pMRT_ShadowMap;
 }
 
 void CTargetMgr::RenderGBuffer(ID3D11DeviceContext* pd3dImmediateContext)
@@ -59,4 +70,5 @@ void CTargetMgr::RenderGBuffer(ID3D11DeviceContext* pd3dImmediateContext)
 	m_pMRT_GBuffer->RenderDepth(pd3dImmediateContext);
 	m_pMRT_GBuffer->RenderMRT(pd3dImmediateContext);
 	m_pMRT_Border->RenderMRT(pd3dImmediateContext);
+	m_pMRT_ShadowMap->RenderMRT(pd3dImmediateContext, CLightMgr::GetInstance()->GetShadowSRV());
 }

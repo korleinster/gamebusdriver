@@ -32,7 +32,7 @@ public:
 		return m_vecRT[index];
 	}
 
-	void RenderMRT(ID3D11DeviceContext* pd3dImmediateContext);
+	void RenderMRT(ID3D11DeviceContext* pd3dImmediateContext, ID3D11ShaderResourceView* pSRV = NULL);
 	void RenderDepth(ID3D11DeviceContext* pd3dImmediateContext);
 
 public:

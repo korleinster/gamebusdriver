@@ -151,14 +151,17 @@ void CMultiRenderTarget::SetRT(CRenderTarget* pRT)
 	m_vecRT.push_back(pRT);
 }
 
-void CMultiRenderTarget::RenderMRT(ID3D11DeviceContext* pd3dImmediateContext)
+void CMultiRenderTarget::RenderMRT(ID3D11DeviceContext* pd3dImmediateContext, ID3D11ShaderResourceView* pSRV/* = NULL*/)
 {
 	pd3dImmediateContext->RSSetState(NULL);
 
 	int rtSize = m_vecRT.size();
 	for (UINT i = 0; i < rtSize; ++i)
 	{
-		m_vecRT[i]->RenderRT(pd3dImmediateContext);
+		if(pSRV == NULL)
+			m_vecRT[i]->RenderRT(pd3dImmediateContext);
+		else
+			m_vecRT[i]->RenderRT(pd3dImmediateContext, pSRV);
 	}
 }
 

@@ -22,6 +22,7 @@ protected:
 	TCHAR						m_tcMeshKey[256];
 	bool						m_bCurred;
 	float						m_fSpeed;
+	ID3D11Buffer*				m_pCascadedShadowGenVertexCB;
 	
 	
 

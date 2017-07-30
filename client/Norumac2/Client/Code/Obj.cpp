@@ -7,6 +7,7 @@
 
 CObj::CObj()
 	:m_pInfo(NULL), m_bZSort(false), m_pGrapicDevice(CDevice::GetInstance()), m_eReleaseType(Release_End), m_bCurred(false), m_fSpeed(1.f), m_bMoveForServer(false)
+	, m_pCascadedShadowGenVertexCB(NULL)
 {
 }
 

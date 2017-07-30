@@ -78,6 +78,9 @@ HRESULT CStaticObject::Initialize(const TCHAR* pMeshKey)
 	cbDesc.ByteWidth = sizeof(CB_PS_PER_OBJECT);
 	FAILED_CHECK(m_pGrapicDevice->m_pDevice->CreateBuffer(&cbDesc, NULL, &m_pScenePixelShaderCB));	
 
+	cbDesc.ByteWidth = sizeof(D3DXMATRIX);
+	FAILED_CHECK(m_pGrapicDevice->m_pDevice->CreateBuffer(&cbDesc, NULL, &m_pCascadedShadowGenVertexCB));
+
 	return S_OK;
 }
 
@@ -137,6 +140,13 @@ void  CStaticObject::ShadowmapRender(void)
 {
 	if (m_bCurred == false)
 	{
+		D3D11_MAPPED_SUBRESOURCE MappedResource;
+		FAILED_CHECK_RETURN(m_pGrapicDevice->m_pDeviceContext->Map(m_pCascadedShadowGenVertexCB, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource), );
+		D3DXMATRIX* pVSPerObject = (D3DXMATRIX*)MappedResource.pData;
+		D3DXMatrixTranspose(pVSPerObject, &m_pInfo->m_matWorld);
+		m_pGrapicDevice->m_pDeviceContext->Unmap(m_pCascadedShadowGenVertexCB, 0);
+		m_pGrapicDevice->m_pDeviceContext->VSSetConstantBuffers(1, 1, &m_pCascadedShadowGenVertexCB);
+
 		m_pBuffer->Render();
 	}
 }

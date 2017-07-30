@@ -103,11 +103,15 @@ HRESULT CPlayer::Initialize(void)
 	cbDesc.Usage = D3D11_USAGE_DYNAMIC;
 	cbDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	cbDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
 	cbDesc.ByteWidth = sizeof(CB_VS_PER_OBJECT);
 	FAILED_CHECK(m_pGrapicDevice->m_pDevice->CreateBuffer(&cbDesc, NULL, &m_pSceneVertexShaderCB));
 
 	cbDesc.ByteWidth = sizeof(CB_PS_PER_OBJECT);
 	FAILED_CHECK(m_pGrapicDevice->m_pDevice->CreateBuffer(&cbDesc, NULL, &m_pScenePixelShaderCB));
+
+	cbDesc.ByteWidth = sizeof(D3DXMATRIX);
+	FAILED_CHECK(m_pGrapicDevice->m_pDevice->CreateBuffer(&cbDesc, NULL, &m_pCascadedShadowGenVertexCB));
 	
 	return S_OK;
 }
@@ -289,6 +293,13 @@ void CPlayer::Render(void)
 
 void  CPlayer::ShadowmapRender(void)
 {
+	D3D11_MAPPED_SUBRESOURCE MappedResource;
+	FAILED_CHECK_RETURN(m_pGrapicDevice->m_pDeviceContext->Map(m_pCascadedShadowGenVertexCB, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource), );
+	D3DXMATRIX* pVSPerObject = (D3DXMATRIX*)MappedResource.pData;
+	D3DXMatrixTranspose(pVSPerObject, &m_pInfo->m_matWorld);
+	m_pGrapicDevice->m_pDeviceContext->Unmap(m_pCascadedShadowGenVertexCB, 0);
+	m_pGrapicDevice->m_pDeviceContext->VSSetConstantBuffers(1, 1, &m_pCascadedShadowGenVertexCB);
+
 	if (m_bDeath == false)
 		dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(m_ePlayerState);
 	else if (m_bDeath == true)
@@ -819,7 +830,8 @@ void CPlayer::KeyInput()
 			return;
 		}
 
-		m_pInfo->m_vPos = D3DXVECTOR3(155.f, 0.f, 400.f);
+		//m_pInfo->m_vPos = D3DXVECTOR3(155.f, 0.f, 400.f);
+		m_pInfo->m_vPos = D3DXVECTOR3(0.f, 0.f, 0.f);
 		m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 		m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 		SetNaviIndex(CNaviMgr::GetInstance()->GetCellIndex(&m_pInfo->m_vPos));

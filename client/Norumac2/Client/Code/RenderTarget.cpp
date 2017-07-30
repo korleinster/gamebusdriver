@@ -119,7 +119,7 @@ void CRenderTarget::Ready_DebugBuffer(const float& posX, const float& posY, cons
 
 }
 
-void CRenderTarget::RenderRT(ID3D11DeviceContext* pd3dImmediateContext)
+void CRenderTarget::RenderRT(ID3D11DeviceContext* pd3dImmediateContext, ID3D11ShaderResourceView* pSRV/*= NULL*/)
 {
 
 	D3D11_MAPPED_SUBRESOURCE MappedResource;
@@ -134,7 +134,11 @@ void CRenderTarget::RenderRT(ID3D11DeviceContext* pd3dImmediateContext)
 	pd3dImmediateContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
 
 	pd3dImmediateContext->PSSetShader(m_pDebugBufferPS->m_pPixelShader, NULL, 0);
-	pd3dImmediateContext->PSSetShaderResources(0, 1, &m_pTagetSRV);
+	if(pSRV == NULL)
+		pd3dImmediateContext->PSSetShaderResources(0, 1, &m_pTagetSRV);
+	else
+		pd3dImmediateContext->PSSetShaderResources(0, 1, &pSRV);
+
 	pd3dImmediateContext->PSSetSamplers(0, 1, &m_pSamplerState);
 
 	m_pDebugBuffer->Render();

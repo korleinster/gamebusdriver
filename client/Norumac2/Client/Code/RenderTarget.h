@@ -13,7 +13,7 @@ public:
 public:
 	HRESULT Ready_RenderTarget(const  UINT&, const  UINT&, DXGI_FORMAT);
 	void Ready_DebugBuffer(const float& posX, const float& posY, const float& sizeX, const float& sizeY, const  UINT& type);
-	void RenderRT(ID3D11DeviceContext* pd3dImmediateContext);
+	void RenderRT(ID3D11DeviceContext* pd3dImmediateContext, ID3D11ShaderResourceView* pSRV = NULL);
 
 	ID3D11Texture2D* GetTexture() { return m_pTargetRT; }
 	ID3D11ShaderResourceView* GetSRV() { return m_pTagetSRV; }

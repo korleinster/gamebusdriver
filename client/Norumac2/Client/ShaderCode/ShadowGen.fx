@@ -6,6 +6,16 @@ cbuffer cbSpotShadowGenVS : register( b0 )
 	float4x4 ShadowMat : packoffset( c0 );
 }
 
+cbuffer cbPointShadowGenWorldVS : register(b1)
+{
+	float4x4 World : packoffset(c0);
+}
+
+cbuffer cbPointShadowGenViewProjVS : register(b2)
+{
+	float4x4 ShadowViewProj : packoffset(c0);
+}
+
 float4 SpotShadowGenVS(float4 Pos : POSITION) : SV_Position
 {
     return mul(Pos, ShadowMat); 
@@ -17,7 +27,7 @@ float4 SpotShadowGenVS(float4 Pos : POSITION) : SV_Position
 
 float4 PointShadowGenVS(float4 Pos : POSITION) : SV_Position
 {
-    return Pos; 
+	return mul(mul(Pos, World), ShadowViewProj);
 }
 
 cbuffer cbuffercbShadowMapCubeGS : register( b0 )

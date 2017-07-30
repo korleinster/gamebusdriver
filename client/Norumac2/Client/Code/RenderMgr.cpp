@@ -170,7 +170,7 @@ void CRenderMgr::Render(const float & fTime)
 	}
 
 	// ±×¸²ÀÚ ·»´õ
-	//Render_ShadowMap();
+	Render_ShadowMap();
 
 	ID3D11DepthStencilState* pPrevDepthState;
 	UINT nPrevStencil;
@@ -204,7 +204,11 @@ void CRenderMgr::Render(const float & fTime)
 		m_pTargetMgr->RenderGBuffer(m_pDevice->m_pDeviceContext);
 	}
 
+	
+
 	m_pDevice->m_pDeviceContext->OMSetRenderTargets(1, &m_pDevice->m_pRenderTargetView, m_pTargetMgr->GetGBuffer()->GetDepthDSV());
+
+	//m_pLightMgr->DoDebugCascadedShadows(m_pDevice->m_pDeviceContext, m_pTargetMgr->GetGBuffer());
 
 	m_pDevice->m_pDeviceContext->OMSetDepthStencilState(pPrevDepthState, nPrevStencil);
 	Safe_Release(pPrevDepthState);
@@ -375,6 +379,10 @@ void CRenderMgr::Render_BorderLine(void)
 
 void CRenderMgr::Render_ShadowMap(void)
 {
+	ID3D11DepthStencilState* pPrevDepthState;
+	UINT nPrevStencil;
+	m_pDevice->m_pDeviceContext->OMGetDepthStencilState(&pPrevDepthState, &nPrevStencil);
+
 	//Prepare for Render Shadow Maps
 	D3D11_VIEWPORT oldvp;
 	UINT num = 1;
@@ -408,6 +416,9 @@ void CRenderMgr::Render_ShadowMap(void)
 	// Cleanup
 	m_pDevice->m_pDeviceContext->VSSetShader(NULL, NULL, 0);
 	m_pDevice->m_pDeviceContext->GSSetShader(NULL, NULL, 0);
+
+	m_pDevice->m_pDeviceContext->OMSetDepthStencilState(pPrevDepthState, nPrevStencil);
+	Safe_Release(pPrevDepthState);
 }
 
 void CRenderMgr::Release(void)

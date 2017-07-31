@@ -733,7 +733,7 @@ void player_session::m_process_packet(Packet buf[])
 			}
 			if (0 == wcscmp(chatTXT, L"power overwhelming")) {
 				m_sub_status.str += 50;
-				m_player_data.state.hp += 10000;
+				m_player_data.state.hp += 500;
 				sc_chat cheat;
 				memcpy(cheat.msg, reinterpret_cast<wchar_t*>(L"공격력 강화 치트 적용 완료"), MAX_BUF_SIZE - 6);
 				send_packet(reinterpret_cast<Packet*>(&cheat));
@@ -742,7 +742,7 @@ void player_session::m_process_packet(Packet buf[])
 			for (auto players : g_clients) {
 				if (DISCONNECTED == players->get_current_connect_state()) { continue; }
 				if (true == players->m_player_data.is_ai) { continue; }
-				if (m_id == players->m_id) { continue; }
+				//if (m_id == players->m_id) { continue; }
 
 				players->send_packet(reinterpret_cast<Packet*>(&chat));
 			}

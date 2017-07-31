@@ -235,14 +235,15 @@ void TimerQueue::processPacket(event_type *p) {
 
 		// [ 보스 ]
 		if (p->id == MAX_AI_BOSS - 1) {
+			cout << "BOSS ATTCKED\n";
 
 			int boss_skill_cnt = BOSS_ATT_06 - BOSS_ATT;
 			srand((unsigned)time(NULL));
+			player_size = 2.3;
 			{
-				switch (BOSS_ATT_01/*(rand() % boss_skill_cnt) + BOSS_ATT*/)
+				switch (BOSS_ATT_03/*(rand() % boss_skill_cnt) + BOSS_ATT*/)
 				{
 				case BOSS_ATT_01: {
-					player_size = 2.3;
 					if ((player_size * player_size) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) {
 						g_clients[target_id]->get_player_data()->state.hp -= (g_clients[p->id]->get_sub_data()->str - g_clients[target_id]->get_sub_data()->def);
 						int target_hp = g_clients[target_id]->get_player_data()->state.hp;
@@ -334,7 +335,7 @@ void TimerQueue::processPacket(event_type *p) {
 							pac.pos = g_clients[p->id]->get_player_data()->pos;
 							g_clients[p->id]->send_packet_other_players_in_view_range(reinterpret_cast<Packet*>(&pac), p->id);
 
-							g_time_queue.add_event(p->id, 1, CHANGE_AI_STATE_ATT, true);
+							g_time_queue.add_event(p->id, 3, CHANGE_AI_STATE_ATT, true);
 						}
 						else {
 							// 아예 시야 범위 밖이라면, 초기화 필요
@@ -349,14 +350,14 @@ void TimerQueue::processPacket(event_type *p) {
 
 					break;
 				}
-				case BOSS_ATT_02: {
+				case BOSS_ATT_03: {
 					player_size = 2.3;
 					if ((player_size * player_size) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) {
 						g_clients[target_id]->get_player_data()->state.hp -= (g_clients[p->id]->get_sub_data()->str - g_clients[target_id]->get_sub_data()->def);
 						int target_hp = g_clients[target_id]->get_player_data()->state.hp;
 
 						sc_boss_atk b_atk;
-						b_atk.att_type = BOSS_ATT_01;
+						b_atk.att_type = BOSS_ATT_03;
 
 						sc_atk packet;
 						packet.attacking_id = p->id;

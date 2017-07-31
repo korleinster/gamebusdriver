@@ -251,7 +251,7 @@ int GetText(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				cCompText[iLen] = 0;
 				//끝에 0을 넣어 마무리.
 
-				wcout << L"조합출력1:" << cCompText << endl;
+				//wcout << L"조합출력1:" << cCompText << endl;
 
 				_tcscpy(cText + _tcslen(cText), cCompText);
 				//전체 메시지 뒤에 붙여줌.
@@ -272,7 +272,7 @@ int GetText(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			cCompText[iLen] = 0;
 			//역시 마무리
 
-			wcout << L"조합출력2:" << *cCompText << endl;
+			//wcout << L"조합출력2:" << *cCompText << endl;
 
 		}
 		ImmReleaseContext(hWnd, hIMC);

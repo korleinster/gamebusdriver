@@ -179,11 +179,14 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 					}
 					else
 					{
-						auto iter = *CObjMgr::GetInstance()->Get_ObjList(L"Boss")->begin();
-						if ((reinterpret_cast<CBoss*>(iter))->GetAniState() == BOSS_IDLE)
+						if (CObjMgr::GetInstance()->Get_ObjList(L"Boss")->size() != 0)
 						{
-							(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
-							(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_NORMALATT);
+							auto iter = *CObjMgr::GetInstance()->Get_ObjList(L"Boss")->begin();
+							if ((reinterpret_cast<CBoss*>(iter))->GetAniState() == BOSS_IDLE)
+							{
+								(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
+								(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_NORMALATT);
+							}
 						}
 
 					}
@@ -554,6 +557,8 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			BOSS_ATT_06*/
 
 
+		cout << "보스패킷:" << (int)p->att_type << endl;
+
 		if (p->att_type == BOSS_ATT_01)
 		{
 			if ((reinterpret_cast<CBoss*>(iter))->GetAniState() == BOSS_IDLE)
@@ -563,7 +568,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			}
 		}
 
-		if (p->att_type == BOSS_ATT_02)
+		else if (p->att_type == BOSS_ATT_02)
 		{
 			if ((reinterpret_cast<CBoss*>(iter))->GetAniState() == BOSS_IDLE)
 			{
@@ -572,7 +577,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			}
 		}
 
-		if (p->att_type == BOSS_ATT_03)
+		else if (p->att_type == BOSS_ATT_03)
 		{
 			if ((reinterpret_cast<CBoss*>(iter))->GetAniState() == BOSS_IDLE)
 			{
@@ -581,7 +586,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			}
 		}
 
-		if (p->att_type == BOSS_ATT_04)
+		else if (p->att_type == BOSS_ATT_04)
 		{
 			if ((reinterpret_cast<CBoss*>(iter))->GetAniState() == BOSS_IDLE)
 			{
@@ -590,7 +595,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			}
 		}
 
-		if (p->att_type == BOSS_ATT_05)
+		else if (p->att_type == BOSS_ATT_05)
 		{
 			if ((reinterpret_cast<CBoss*>(iter))->GetAniState() == BOSS_IDLE)
 			{
@@ -599,7 +604,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			}
 		}
 
-		if (p->att_type == BOSS_ATT_06)
+		else if (p->att_type == BOSS_ATT_06)
 		{
 			if ((reinterpret_cast<CBoss*>(iter))->GetAniState() == BOSS_IDLE)
 			{

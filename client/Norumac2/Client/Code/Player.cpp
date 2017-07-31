@@ -830,8 +830,8 @@ void CPlayer::KeyInput()
 			return;
 		}
 
-		//m_pInfo->m_vPos = D3DXVECTOR3(155.f, 0.f, 400.f);
-		m_pInfo->m_vPos = D3DXVECTOR3(0.f, 0.f, 0.f);
+		m_pInfo->m_vPos = D3DXVECTOR3(155.f, 0.f, 400.f);
+		//m_pInfo->m_vPos = D3DXVECTOR3(0.f, 0.f, 0.f);
 		m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 		m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 		SetNaviIndex(CNaviMgr::GetInstance()->GetCellIndex(&m_pInfo->m_vPos));

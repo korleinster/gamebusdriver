@@ -89,7 +89,7 @@ int CStaticObject::Update(void)
 
 	D3DXVec3TransformNormal(&m_pInfo->m_vDir, &g_vLook, &m_pInfo->m_matWorld);
 
-	//SetCurrling();
+	SetCurrling();
 
 	CObj::Update();
 
@@ -194,10 +194,16 @@ void CStaticObject::SetCurrling(void)
 
 	D3DXVECTOR3 vPlayerPos = (*player)->GetInfo()->m_vPos;
 
-	if (abs(m_pInfo->m_vPos.x - vPlayerPos.x) > 30.f && abs(m_pInfo->m_vPos.z - vPlayerPos.z) > 30.f)
+	if (abs(m_pInfo->m_vPos.x - vPlayerPos.x) > 20.f || abs(m_pInfo->m_vPos.z - vPlayerPos.z) > 20.f)
+	{
 		m_bCurred = true;
+		//cout << "컬링됨" << endl;
+	}
 	else
+	{
 		m_bCurred = false;
+		//cout << "컬링해제" << endl;
+	}
 
 
 

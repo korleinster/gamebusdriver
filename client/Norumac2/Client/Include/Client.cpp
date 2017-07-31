@@ -104,12 +104,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 				if (_tcslen(cText) == 0)
 				{
 					g_bChatEnd = true;
-					cout << "문자열 미존재" << endl;
+
 				}
 				else
 				{
 					g_bChatEnd = false;
-					cout << "문자열 존재" << endl;
+
 				}
 				CChatUI* pChatUI = dynamic_cast<CChatUI*>(*(CObjMgr::GetInstance()->Get_ObjList(L"ChatUI")->begin()));
 

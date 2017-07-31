@@ -477,18 +477,35 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 		CChatUI* pChatUI = dynamic_cast<CChatUI*>(*(CObjMgr::GetInstance()->Get_ObjList(L"ChatUI")->begin()));
 
-		string str = p->msg;
-		wchar_t *wch = new wchar_t[str.length() + 1];
+		
+		wchar_t* str = (wchar_t*)p->msg;
+		/*wchar_t *wch = new wchar_t[str.length() + 1];
 		wch[str.size()] = L'\0';
 		wstring wstr = L"";
 		MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, wch, (int)str.length());
-		wstr = wch;
+		wstr = wch;*/
 		
+		/*cout << p->msg << endl;
+
+		cout << str << endl;
+
+		wcout << wstr << endl;*/
 
 		CFont* pFont = CFont::Create(L"Font_Clear");
 
+
+		wchar_t wcNick[20]; 
+
+		wsprintf(wcNick, L"플레이어%d : ", p->id);
+
+		wchar_t TotalChat[MAX_CHAT_SIZE];
+		ZeroMemory(&TotalChat, sizeof(wchar_t) * MAX_CHAT_SIZE);
+		_tcscat(TotalChat, wcNick);
+		_tcscat(TotalChat, str);
+
+		
 		pFont->m_eType = FONT_TYPE_OUTLINE;
-		pFont->m_wstrText = wstr;
+		pFont->m_wstrText = TotalChat;
 		pFont->m_fSize = 20.f;
 		pFont->m_nColor = 0xFFFFFFFF;
 		pFont->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;

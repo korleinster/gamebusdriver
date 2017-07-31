@@ -524,6 +524,8 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		pChatUI->m_ChatLogList.push_back(pFont);
 
 
+		ZeroMemory(&TotalChat, sizeof(wchar_t) * MAX_CHAT_SIZE);
+
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		///*

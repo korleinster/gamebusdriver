@@ -946,8 +946,8 @@ void CPlayer::AniMove(void)
 
 	float		fTime = CTimeMgr::GetInstance()->GetTime();
 
-	if(m_bSkillUsed ==true)
-		cout << m_fSkillMoveTime << endl;
+	/*if(m_bSkillUsed ==true)
+		cout << m_fSkillMoveTime << endl;*/
 
 	if (m_ePlayerState == PLAYER_SKILL1)
 	{

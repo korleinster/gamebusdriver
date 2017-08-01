@@ -79,13 +79,12 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 							if (((COtherPlayer*)iter)->GetAniState() == PLAYER_IDLE) 
 							{
 
-								if ((((COtherPlayer*)iter)->GetInfo()->m_vPos.x == p->pos.x) && (((COtherPlayer*)iter)->GetInfo()->m_vPos.z == p->pos.y))
+								if ((fabs(((COtherPlayer*)iter)->GetInfo()->m_vPos.x - p->pos.x) < 0.1) && (fabs(((COtherPlayer*)iter)->GetInfo()->m_vPos.z - p->pos.y) < 0.1))
 									break;
 								else
 								{
 									((COtherPlayer*)iter)->m_bKey = true;
 									((COtherPlayer*)iter)->SetAniState(PLAYER_MOVE);
-									((COtherPlayer*)iter)->m_bMoveForServer = true;
 								}
 							}
 							break;
@@ -741,19 +740,22 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			else if (p->id >= MAX_AI_GOBLIN && p->id < MAX_AI_BOSS)
 			{
 
-				list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"Boss")->begin();
-				list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"Boss")->end();
-				//cout << "몬스터 삭제" << endl;
-
-				for (; iter != iter_end; ++iter)
+				if (CObjMgr::GetInstance()->Get_ObjList(L"Boss") != NULL)
 				{
-					//NPC 혹은 몬스터가 죽었을시
-					if ((*iter)->GetPacketData()->id == p->id)
+					list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"Boss")->begin();
+					list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"Boss")->end();
+					//cout << "몬스터 삭제" << endl;
+
+					for (; iter != iter_end; ++iter)
 					{
-						CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
-						::Safe_Delete(*iter);
-						iter = CObjMgr::GetInstance()->Get_ObjList(L"Boss")->erase(iter);
-						break;
+						//NPC 혹은 몬스터가 죽었을시
+						if ((*iter)->GetPacketData()->id == p->id)
+						{
+							CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
+							::Safe_Delete(*iter);
+							iter = CObjMgr::GetInstance()->Get_ObjList(L"Boss")->erase(iter);
+							break;
+						}
 					}
 				}
 			}

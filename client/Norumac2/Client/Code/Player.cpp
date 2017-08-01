@@ -364,7 +364,6 @@ void CPlayer::KeyInput()
 			if (CInput::GetInstance()->GetDIKeyState(DIK_LEFT) & 0x80)
 			{
 				m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(90.f);
-				//m_pInfo->m_vPos += m_pInfo->m_vDir * m_fSpeed * fTime;
 				m_dwCellNum = CNaviMgr::GetInstance()->MoveOnNaviMesh(&m_pInfo->m_vPos, &(m_pInfo->m_vDir * m_fSpeed * fTime), m_dwCellNum);
 				m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 				m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
@@ -378,7 +377,6 @@ void CPlayer::KeyInput()
 			else if (CInput::GetInstance()->GetDIKeyState(DIK_RIGHT) & 0x80)
 			{
 				m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(180.f);
-				//m_pInfo->m_vPos += m_pInfo->m_vDir * m_fSpeed* fTime;
 				m_dwCellNum = CNaviMgr::GetInstance()->MoveOnNaviMesh(&m_pInfo->m_vPos, &(m_pInfo->m_vDir * m_fSpeed * fTime), m_dwCellNum);
 				m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 				m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
@@ -392,7 +390,6 @@ void CPlayer::KeyInput()
 			else
 			{
 				m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(135.f);
-				//m_pInfo->m_vPos += m_pInfo->m_vDir * m_fSpeed * fTime;
 				m_dwCellNum = CNaviMgr::GetInstance()->MoveOnNaviMesh(&m_pInfo->m_vPos, &(m_pInfo->m_vDir * m_fSpeed * fTime), m_dwCellNum);
 				m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 				m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
@@ -451,7 +448,6 @@ void CPlayer::KeyInput()
 			if (CInput::GetInstance()->GetDIKeyState(DIK_LEFT) & 0x80)
 			{
 				m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(0.f);
-				//m_pInfo->m_vPos += m_pInfo->m_vDir * m_fSpeed * fTime;
 				m_dwCellNum = CNaviMgr::GetInstance()->MoveOnNaviMesh(&m_pInfo->m_vPos, &(m_pInfo->m_vDir * m_fSpeed * fTime), m_dwCellNum);
 				m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 				m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
@@ -465,7 +461,6 @@ void CPlayer::KeyInput()
 			else if (CInput::GetInstance()->GetDIKeyState(DIK_RIGHT) & 0x80)
 			{
 				m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(270.f);
-				//m_pInfo->m_vPos += m_pInfo->m_vDir * m_fSpeed * fTime;
 				m_dwCellNum = CNaviMgr::GetInstance()->MoveOnNaviMesh(&m_pInfo->m_vPos, &(m_pInfo->m_vDir * m_fSpeed * fTime), m_dwCellNum);
 				m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 				m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
@@ -479,7 +474,6 @@ void CPlayer::KeyInput()
 			else
 			{
 				m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(315.f);
-				//m_pInfo->m_vPos += m_pInfo->m_vDir * m_fSpeed * fTime;
 				m_dwCellNum = CNaviMgr::GetInstance()->MoveOnNaviMesh(&m_pInfo->m_vPos, &(m_pInfo->m_vDir * m_fSpeed * fTime), m_dwCellNum);
 				m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 				m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
@@ -538,7 +532,6 @@ void CPlayer::KeyInput()
 			m_bMoving = true;
 			m_bMoveSend = true;
 			m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(45.f);
-			//m_pInfo->m_vPos += m_pInfo->m_vDir * m_fSpeed * fTime;
 			m_dwCellNum = CNaviMgr::GetInstance()->MoveOnNaviMesh(&m_pInfo->m_vPos, &(m_pInfo->m_vDir * m_fSpeed * fTime), m_dwCellNum);
 			m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 			m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
@@ -595,7 +588,6 @@ void CPlayer::KeyInput()
 			m_bMoving = true;
 			m_bMoveSend = true;
 			m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(225.f);
-			//m_pInfo->m_vPos += m_pInfo->m_vDir * m_fSpeed * fTime;
 			CNaviMgr::GetInstance()->MoveOnNaviMesh(&m_pInfo->m_vPos, &(m_pInfo->m_vDir * m_fSpeed * fTime), m_dwCellNum);
 			m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 			m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
@@ -892,7 +884,7 @@ void CPlayer::TimeSetter(void)
 		m_fSkillMoveTime += CTimeMgr::GetInstance()->GetTime();
 
 
-	if (m_fSeverTime > 0.1f )
+	if (m_fSeverTime > 0.1f && m_bMoveSend)
 	{
 		g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
 		g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));

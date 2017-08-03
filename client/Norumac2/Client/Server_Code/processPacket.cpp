@@ -49,10 +49,16 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 						for (auto iter : *CObjMgr::GetInstance()->Get_ObjList(L"Monster"))
 						{
 							if (iter->GetPacketData()->id == p->id) {
-								if (((CMonster*)iter)->GetAniState() == MONSTER_IDLE) {
-									((CMonster*)iter)->m_bKey = true;
-									((CMonster*)iter)->SetAniState(MONSTER_MOVE);
-									((CMonster*)iter)->m_SeverPosSaveList.push_back(D3DXVECTOR3(data->pos.x, 0.f, data->pos.y));
+								if (((CMonster*)iter)->GetAniState() == MONSTER_IDLE)
+								{
+
+									if ((fabs(((CMonster*)iter)->GetInfo()->m_vPos.x - p->pos.x) < 0.1) && (fabs(((CMonster*)iter)->GetInfo()->m_vPos.z - p->pos.y) < 0.1))
+										break;
+									else
+									{
+										((CMonster*)iter)->m_bKey = true;
+										((CMonster*)iter)->SetAniState(MONSTER_IDLE);
+									}
 								}
 								break;
 							}
@@ -64,9 +70,14 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 						if (((CBoss*)iter)->GetAniState() == BOSS_IDLE)
 						{
-							((CBoss*)iter)->m_bKey = true;
-							((CBoss*)iter)->SetAniState(BOSS_MOVE);
-							((CBoss*)iter)->m_SeverPosSaveList.push_back(D3DXVECTOR3(data->pos.x, 0.f, data->pos.y));
+
+							if ((fabs(((CBoss*)iter)->GetInfo()->m_vPos.x - p->pos.x) < 0.1) && (fabs(((CBoss*)iter)->GetInfo()->m_vPos.z - p->pos.y) < 0.1))
+								break;
+							else
+							{
+								((CBoss*)iter)->m_bKey = true;
+								((CBoss*)iter)->SetAniState(BOSS_MOVE);
+							}
 						}
 					}
 				}

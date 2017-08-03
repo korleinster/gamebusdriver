@@ -325,34 +325,17 @@ void CMonster::SetCurrling(void)
 
 void CMonster::SetSeverPosMove(void)
 {
-	/*if (m_SeverPosSaveList.size() != 0)
-	{
-		float fTime = CTimeMgr::GetInstance()->GetTime();
-		D3DXVECTOR3 vDir;
-		vDir = *(m_SeverPosSaveList.begin()) - m_pInfo->m_vPos;
-		D3DXVec3Normalize(&vDir, &vDir);
+	float fTime = CTimeMgr::GetInstance()->GetTime();
 
+	if (((fabs(m_pInfo->m_vPos.x - m_pInfo->m_ServerInfo.pos.x) < 0.1) && (fabs(m_pInfo->m_vPos.z - m_pInfo->m_ServerInfo.pos.y) < 0.1)) == false)
+	{
+		D3DXVECTOR3 vDir;
+		vDir = D3DXVECTOR3(m_pInfo->m_ServerInfo.pos.x, 0.f, m_pInfo->m_ServerInfo.pos.y) - m_pInfo->m_vPos;
 		m_pInfo->m_vPos += vDir * m_fSpeed * fTime;
 
-		if ( (m_pInfo->m_vPos.x <= (m_SeverPosSaveList.begin())->x + 5.f || m_pInfo->m_vPos.x >= (m_SeverPosSaveList.begin())->x - 5.f)
-			&& (m_pInfo->m_vPos.z <= (m_SeverPosSaveList.begin())->z + 5.f || m_pInfo->m_vPos.z >= (m_SeverPosSaveList.begin())->z - 5.f))
-			m_SeverPosSaveList.pop_front();
-	}*/
+		cout << " x: " << fabs(m_pInfo->m_vPos.x - m_pInfo->m_ServerInfo.pos.x) << " < 0.1" << endl;
+		cout << " z: " << fabs(m_pInfo->m_vPos.z - m_pInfo->m_ServerInfo.pos.y) << " < 0.1" << endl;
 
-
-	if (m_SeverPosSaveList.size() != 0)
-	{
-		float fTime = CTimeMgr::GetInstance()->GetTime();
-		D3DXVECTOR3 vDir;
-		vDir = *(m_SeverPosSaveList.begin()) - m_pInfo->m_vPos;
-		D3DXVec3Normalize(&vDir, &vDir);
-
-		m_pInfo->m_vPos += vDir * m_fSpeed * fTime;
-
-		//cout << m_pInfo->m_vPos.x << "/" << m_pInfo->m_vPos.y << "/" << m_pInfo->m_vPos.z << endl;
-
-		if (int(m_pInfo->m_vPos.x) == int((m_SeverPosSaveList.begin())->x) && int(m_pInfo->m_vPos.z) == int((m_SeverPosSaveList.begin())->z))
-			m_SeverPosSaveList.pop_front();
 	}
 }
 

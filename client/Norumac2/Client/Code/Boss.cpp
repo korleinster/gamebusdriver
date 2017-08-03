@@ -325,8 +325,7 @@ void CBoss::SetSeverPosMove(void)
 		vDir = D3DXVECTOR3(m_pInfo->m_ServerInfo.pos.x, 0.f, m_pInfo->m_ServerInfo.pos.y) - m_pInfo->m_vPos;
 		m_pInfo->m_vPos += vDir * m_fSpeed * fTime;
 
-		cout << " x: " << fabs(m_pInfo->m_vPos.x - m_pInfo->m_ServerInfo.pos.x) << " < 0.1" << endl;
-		cout << " z: " << fabs(m_pInfo->m_vPos.z - m_pInfo->m_ServerInfo.pos.y) << " < 0.1" << endl;
+	
 
 	}
 }

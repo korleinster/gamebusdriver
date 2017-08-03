@@ -259,7 +259,7 @@ void CDynamicMesh::PlayAnimation(int _iIdx)
 	m_pGrapicDevice->m_pDeviceContext->RSSetState(m_pRasterizerState);
 
 	//m_vecAni[_iIdx]->fAniPlayTimer
-	m_fAniPlayTimer	+= m_vecAni[_iIdx]->fAniPlaySpeed * CTimeMgr::GetInstance()->GetTime();
+	m_fAniPlayTimer	+= /*m_vecAni[_iIdx]->fAniPlaySpeed*/ 40 * CTimeMgr::GetInstance()->GetTime();
 
 	//if (m_vecAni[_iIdx]->fAniPlayTimer > m_vecAni[_iIdx]->llAniMaxTime / 10)
 		//m_vecAni[_iIdx]->fAniPlayTimer = 0;
@@ -381,7 +381,7 @@ void CDynamicMesh::PlayAnimationOnce(int _iIdx)
 
 	m_pGrapicDevice->m_pDeviceContext->RSSetState(m_pRasterizerState);
 
-	m_fAniPlayTimer += m_vecAni[_iIdx]->fAniPlaySpeed * CTimeMgr::GetInstance()->GetTime();
+	m_fAniPlayTimer += /*m_vecAni[_iIdx]->fAniPlaySpeed*/ 40 * CTimeMgr::GetInstance()->GetTime();
 
 	if (m_fAniPlayTimer > m_vecAni[_iIdx]->llAniMaxTime / 10)
 	{

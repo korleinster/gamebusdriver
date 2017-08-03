@@ -624,7 +624,8 @@ void player_session::m_process_packet(Packet buf[])
 								m_sub_status.quest += 1;
 								sc_chat chat;
 								chat.id = m_id;
-								sprintf(chat.msg, "슬라임 %d 마리 잡음", m_sub_status.quest);
+								//sprintf(chat.msg, "슬라임 %d 마리 잡음", m_sub_status.quest);
+								wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"슬라임 %d 마리 잡음", m_sub_status.quest);
 								//sprintf(chat.msg, "Slime %d killed", m_sub_status.quest);
 								if (MAX_AI_SLIME == m_sub_status.quest) { sprintf(chat.msg, "슬라임 퀘스트 완료");	}
  								send_packet(reinterpret_cast<Packet*>(&chat));
@@ -637,7 +638,8 @@ void player_session::m_process_packet(Packet buf[])
 								m_sub_status.quest += 1;
 								sc_chat chat;
 								chat.id = m_id;
-								sprintf(chat.msg, "고블린 %d 마리 잡음", m_sub_status.quest - MAX_AI_SLIME);
+								//sprintf(chat.msg, "고블린 %d 마리 잡음", m_sub_status.quest - MAX_AI_SLIME);
+								wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"고블린 %d 마리 잡음", m_sub_status.quest);
 								//sprintf(chat.msg, "Slime %d killed", m_sub_status.quest);
 								if (MAX_AI_GOBLIN == m_sub_status.quest) { sprintf(chat.msg, "고블린 퀘스트 완료"); }
 								send_packet(reinterpret_cast<Packet*>(&chat));

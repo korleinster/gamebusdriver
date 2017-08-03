@@ -241,7 +241,7 @@ void TimerQueue::processPacket(event_type *p) {
 			srand((unsigned)time(NULL));
 			player_size = 2.3;
 			{
-				switch (BOSS_ATT_03/*(rand() % boss_skill_cnt) + BOSS_ATT*/)
+				switch (BOSS_ATT_02/*(rand() % boss_skill_cnt) + BOSS_ATT*/)
 				{
 				case BOSS_ATT_01: {
 					if ((player_size * player_size) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) {
@@ -350,14 +350,14 @@ void TimerQueue::processPacket(event_type *p) {
 
 					break;
 				}
-				case BOSS_ATT_03: {
+				case BOSS_ATT_02: {
 					player_size = 2.3;
 					if ((player_size * player_size) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) {
 						g_clients[target_id]->get_player_data()->state.hp -= (g_clients[p->id]->get_sub_data()->str - g_clients[target_id]->get_sub_data()->def);
 						int target_hp = g_clients[target_id]->get_player_data()->state.hp;
 
 						sc_boss_atk b_atk;
-						b_atk.att_type = BOSS_ATT_03;
+						b_atk.att_type = BOSS_ATT_02;
 
 						sc_atk packet;
 						packet.attacking_id = p->id;

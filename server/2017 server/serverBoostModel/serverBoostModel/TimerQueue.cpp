@@ -233,15 +233,34 @@ void TimerQueue::processPacket(event_type *p) {
 		float my_x = g_clients[p->id]->get_player_data()->pos.x, my_y = g_clients[p->id]->get_player_data()->pos.y;
 		float player_size = 1.5;	// 객체 충돌 크기 반지름
 
+		// 방향체크 함수
+		auto dir_refresh = [&]() {
+			char direction_ai = 0;
+			float iSize = 0.5f;
+			if (((my_x + iSize) < x) && ((my_y + iSize) < y)) { direction_ai = KEYINPUT_LEFT; }
+			else if (((my_x - iSize) > x) && ((my_y - iSize) > y)) { direction_ai = KEYINPUT_RIGHT; }
+			else if (((my_x + iSize) < x) && ((my_y - iSize) > y)) { direction_ai = KEYINPUT_UP; }
+			else if (((my_x - iSize) > x) && ((my_y + iSize) < y)) { direction_ai = KEYINPUT_DOWN; }
+			else if ((my_x > x) && ((my_y - iSize) < y) && ((my_y + iSize) > y)) { direction_ai = (KEYINPUT_RIGHT | KEYINPUT_DOWN); }
+			else if ((my_x < x) && ((my_y - iSize) < y) && ((my_y + iSize) > y)) { direction_ai = (KEYINPUT_LEFT | KEYINPUT_UP); }
+			else if ((my_y > y) && ((my_x - iSize) < x) && ((my_x + iSize) > x)) { direction_ai = (KEYINPUT_RIGHT | KEYINPUT_UP); }
+			else if ((my_y < y) && ((my_x - iSize) < x) && ((my_x + iSize) > x)) { direction_ai = (KEYINPUT_LEFT | KEYINPUT_DOWN); }
+			else { cout << "AI Direction ERROR\n"; }
+			
+			return direction_ai;
+		};
+
 		// [ 보스 ]
 		if (p->id == MAX_AI_BOSS - 1) {
 			cout << "BOSS ATTCKED\n";
+
+			g_clients[p->id]->get_player_data()->dir = dir_refresh();
 
 			int boss_skill_cnt = BOSS_ATT_06 - BOSS_ATT;
 			srand((unsigned)time(NULL));
 			player_size = 2.3;
 			{
-				switch (BOSS_ATT_02/*(rand() % boss_skill_cnt) + BOSS_ATT*/)
+				switch (BOSS_ATT_01/*(rand() % boss_skill_cnt) + BOSS_ATT*/)
 				{
 				case BOSS_ATT_01: {
 					if ((player_size * player_size) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) {
@@ -251,22 +270,27 @@ void TimerQueue::processPacket(event_type *p) {
 						sc_boss_atk b_atk;
 						b_atk.att_type = BOSS_ATT_01;
 
-						sc_atk packet;
-						packet.attacking_id = p->id;
-						packet.under_attack_id = target_id;
-						packet.hp = target_hp;
+						sc_atk damage_packet;
+						damage_packet.attacking_id = p->id;
+						damage_packet.under_attack_id = target_id;
+						damage_packet.hp = target_hp;
+
+						sc_dir dir_packet_refresh;
+						dir_packet_refresh.dir = g_clients[p->id]->get_player_data()->dir;
+						dir_packet_refresh.id = p->id;
+						
+						g_clients[p->id]->send_packet_other_players_in_view_range(reinterpret_cast<Packet*>(&b_atk), p->id);
+						g_clients[p->id]->send_packet_other_players_in_view_range(reinterpret_cast<Packet*>(&dir_packet_refresh), p->id);
 
 						g_clients[target_id]->vl_lock();
 						for (auto player_id : *g_clients[target_id]->get_view_list()) {
 							if (DISCONNECTED == g_clients[player_id]->get_current_connect_state()) { continue; }
 							if (true == g_clients[player_id]->get_player_data()->is_ai) { continue; }
 
-							g_clients[player_id]->send_packet(reinterpret_cast<Packet*>(&packet));
-							g_clients[player_id]->send_packet(reinterpret_cast<Packet*>(&b_atk));
+							g_clients[player_id]->send_packet(reinterpret_cast<Packet*>(&damage_packet));
 						}
 						g_clients[target_id]->vl_unlock();
-						g_clients[target_id]->send_packet(reinterpret_cast<Packet*>(&packet));
-						g_clients[target_id]->send_packet(reinterpret_cast<Packet*>(&b_atk));
+						g_clients[target_id]->send_packet(reinterpret_cast<Packet*>(&damage_packet));
 						
 						// 만약 맞은 플레이어가 죽었다면..?
 						if (1 > target_hp) {
@@ -310,25 +334,18 @@ void TimerQueue::processPacket(event_type *p) {
 						// 공격 범위 밖이라면, 따라가야 함... 재공격 요청
 						if ((VIEW_RANGE * VIEW_RANGE) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) {
 							float movSpeed = g_clients[p->id]->ai_mov_speed * 2;
-							if (x > my_x) {
-								my_x += movSpeed;
-								//if (!(x > my_x)) { my_x = x; }
-							}
-							if (x < my_x) {
-								my_x -= movSpeed;
-								//if (!(x < my_x)) { my_x = x; }
-							}
-							if (y > my_y) {
-								my_y += movSpeed;
-								//if (!(y > my_y)) { my_y = y; }
-							}
-							if (y < my_y) {
-								my_y -= movSpeed;
-								//if (!(x < my_x)) { my_y = y; }
-							}
+							if (x > my_x) { my_x += movSpeed; }
+							if (x < my_x) { my_x -= movSpeed; }
+							if (y > my_y) { my_y += movSpeed; }
+							if (y < my_y) { my_y -= movSpeed; }
 
 							g_clients[p->id]->get_player_data()->pos.x = my_x;
 							g_clients[p->id]->get_player_data()->pos.y = my_y;
+
+							sc_dir dir_packet;
+							dir_packet.dir = g_clients[p->id]->get_player_data()->dir = dir_refresh();
+							dir_packet.id = p->id;
+							g_clients[p->id]->send_packet_other_players_in_view_range(reinterpret_cast<Packet*>(&dir_packet), p->id);
 
 							sc_move pac;
 							pac.id = p->id;
@@ -351,110 +368,6 @@ void TimerQueue::processPacket(event_type *p) {
 					break;
 				}
 				case BOSS_ATT_02: {
-					player_size = 2.3;
-					if ((player_size * player_size) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) {
-						g_clients[target_id]->get_player_data()->state.hp -= (g_clients[p->id]->get_sub_data()->str - g_clients[target_id]->get_sub_data()->def);
-						int target_hp = g_clients[target_id]->get_player_data()->state.hp;
-
-						sc_boss_atk b_atk;
-						b_atk.att_type = BOSS_ATT_02;
-
-						sc_atk packet;
-						packet.attacking_id = p->id;
-						packet.under_attack_id = target_id;
-						packet.hp = target_hp;
-
-						g_clients[target_id]->vl_lock();
-						for (auto player_id : *g_clients[target_id]->get_view_list()) {
-							if (DISCONNECTED == g_clients[player_id]->get_current_connect_state()) { continue; }
-							if (true == g_clients[player_id]->get_player_data()->is_ai) { continue; }
-
-							g_clients[player_id]->send_packet(reinterpret_cast<Packet*>(&packet));
-							g_clients[player_id]->send_packet(reinterpret_cast<Packet*>(&b_atk));
-						}
-						g_clients[target_id]->vl_unlock();
-						g_clients[target_id]->send_packet(reinterpret_cast<Packet*>(&packet));
-						g_clients[target_id]->send_packet(reinterpret_cast<Packet*>(&b_atk));
-
-						// 만약 맞은 플레이어가 죽었다면..?
-						if (1 > target_hp) {
-							g_clients[target_id]->set_state(dead);
-
-							sc_disconnect dis_p;
-							dis_p.id = target_id;
-							g_clients[target_id]->send_packet(reinterpret_cast<Packet*>(&dis_p));
-							g_clients[target_id]->set_connect_state(DISCONNECTED);
-
-							g_clients[target_id]->vl_lock();
-							for (auto player_view_ids : *g_clients[target_id]->get_view_list()) {
-								// dead lock 방지용 continue;
-								//if (player_view_ids == p->id) { deleting_id = target_id; continue; }
-								g_clients[player_view_ids]->get_view_list()->erase(target_id);
-
-								sc_disconnect dis_p_to_me;
-								dis_p_to_me.id = player_view_ids;
-								g_clients[target_id]->send_packet(reinterpret_cast<Packet*>(&dis_p_to_me));
-
-								if (true == g_clients[player_view_ids]->get_player_data()->is_ai) { continue; }
-								g_clients[player_view_ids]->send_packet(reinterpret_cast<Packet*>(&dis_p));
-							}
-							g_clients[target_id]->get_view_list()->clear();
-							g_clients[target_id]->vl_unlock();
-							g_time_queue.add_event(target_id, 5, DEAD_TO_ALIVE, false);
-
-							if (true != g_clients[p->id]->ai_is_rand_mov) {
-								g_clients[p->id]->ai_is_rand_mov = true;
-								g_clients[p->id]->m_target_id = none;
-								g_clients[p->id]->set_state(mov);
-								g_time_queue.add_event(p->id, 3, CHANGE_AI_STATE_MOV, true);
-							}
-
-							break;
-						}
-
-						g_time_queue.add_event(p->id, 3, CHANGE_AI_STATE_ATT, true);
-					}
-					else {
-						// 공격 범위 밖이라면, 따라가야 함... 재공격 요청
-						if ((VIEW_RANGE * VIEW_RANGE) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) {
-							float movSpeed = g_clients[p->id]->ai_mov_speed * 2;
-							if (x > my_x) {
-								my_x += movSpeed;
-								//if (!(x > my_x)) { my_x = x; }
-							}
-							if (x < my_x) {
-								my_x -= movSpeed;
-								//if (!(x < my_x)) { my_x = x; }
-							}
-							if (y > my_y) {
-								my_y += movSpeed;
-								//if (!(y > my_y)) { my_y = y; }
-							}
-							if (y < my_y) {
-								my_y -= movSpeed;
-								//if (!(x < my_x)) { my_y = y; }
-							}
-
-							g_clients[p->id]->get_player_data()->pos.x = my_x;
-							g_clients[p->id]->get_player_data()->pos.y = my_y;
-
-							sc_move pac;
-							pac.id = p->id;
-							pac.pos = g_clients[p->id]->get_player_data()->pos;
-							g_clients[p->id]->send_packet_other_players_in_view_range(reinterpret_cast<Packet*>(&pac), p->id);
-
-							g_time_queue.add_event(p->id, 1, CHANGE_AI_STATE_ATT, true);
-						}
-						else {
-							// 아예 시야 범위 밖이라면, 초기화 필요
-							if (true == g_clients[p->id]->ai_is_rand_mov) {
-								g_clients[p->id]->m_target_id = none;
-								g_clients[p->id]->set_state(mov);
-								g_clients[p->id]->ai_is_rand_mov = true;
-								g_time_queue.add_event(p->id, 3, CHANGE_AI_STATE_MOV, true);
-							}
-						}
-					}
 
 					break;
 				}
@@ -469,6 +382,11 @@ void TimerQueue::processPacket(event_type *p) {
 		else if ((p->id < MAX_AI_GOBLIN) && (p->id > MAX_AI_SLIME)) {
 
 			if (((VIEW_RANGE - 5) * (VIEW_RANGE - 5)) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) {
+				sc_dir dir_packet;
+				dir_packet.dir = g_clients[p->id]->get_player_data()->dir = dir_refresh();
+				dir_packet.id = p->id;
+				g_clients[p->id]->send_packet_other_players_in_view_range(reinterpret_cast<Packet*>(&dir_packet), p->id);
+
 				g_clients[target_id]->get_player_data()->state.hp -= (g_clients[p->id]->get_sub_data()->str - g_clients[target_id]->get_sub_data()->def);
 				int target_hp = g_clients[target_id]->get_player_data()->state.hp;
 
@@ -538,6 +456,11 @@ void TimerQueue::processPacket(event_type *p) {
 		// [ 슬라임 ] 공격 범위 내라면, 공격을...
 		if ((player_size * player_size) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) {
 
+			sc_dir dir_packet;
+			dir_packet.dir = g_clients[p->id]->get_player_data()->dir = dir_refresh();
+			dir_packet.id = p->id;
+			g_clients[p->id]->send_packet_other_players_in_view_range(reinterpret_cast<Packet*>(&dir_packet), p->id);
+
 			g_clients[target_id]->get_player_data()->state.hp -= (g_clients[p->id]->get_sub_data()->str - g_clients[target_id]->get_sub_data()->def);
 			int target_hp = g_clients[target_id]->get_player_data()->state.hp;
 
@@ -598,25 +521,18 @@ void TimerQueue::processPacket(event_type *p) {
 			// 공격 범위 밖이라면, 따라가야 함... 재공격 요청
 			if ((VIEW_RANGE * VIEW_RANGE) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) {
 				float movSpeed = g_clients[p->id]->ai_mov_speed * 2;
-				if (x > my_x) {
-					my_x += movSpeed;
-					//if (!(x > my_x)) { my_x = x; }
-				}
-				if (x < my_x) {
-					my_x -= movSpeed;
-					//if (!(x < my_x)) { my_x = x; }
-				}
-				if (y > my_y) {
-					my_y += movSpeed;
-					//if (!(y > my_y)) { my_y = y; }
-				}
-				if (y < my_y) {
-					my_y -= movSpeed;
-					//if (!(x < my_x)) { my_y = y; }
-				}
+				if (x > my_x) { my_x += movSpeed; }
+				if (x < my_x) { my_x -= movSpeed; }
+				if (y > my_y) { my_y += movSpeed; }
+				if (y < my_y) { my_y -= movSpeed; }
 
 				g_clients[p->id]->get_player_data()->pos.x = my_x;
 				g_clients[p->id]->get_player_data()->pos.y = my_y;
+
+				sc_dir dir_packet;
+				dir_packet.dir = g_clients[p->id]->get_player_data()->dir = dir_refresh();
+				dir_packet.id = p->id;
+				g_clients[p->id]->send_packet_other_players_in_view_range(reinterpret_cast<Packet*>(&dir_packet), p->id);
 
 				sc_move pac;
 				pac.id = p->id;

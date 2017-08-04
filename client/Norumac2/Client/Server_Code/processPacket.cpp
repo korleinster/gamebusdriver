@@ -608,13 +608,13 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		if (p->quest < MAX_AI_SLIME)
 		{
 			pQuestUI->m_QuestScript->m_wstrText = L"슬라임을 잡아라!";
-			wsprintf(wcQuestState, L"슬라임 남은 마리수 : %d / %d", p->quest, 10);
+			wsprintf(wcQuestState, L"슬라임 남은 마리수 : %d / %d", p->quest, MAX_AI_SLIME);
 			pQuestUI->m_QuestState->m_wstrText = wcQuestState;
 		}
 		else if (p->quest >= MAX_AI_SLIME && p->quest < MAX_AI_GOBLIN)
 		{
 			pQuestUI->m_QuestScript->m_wstrText = L"고블린을 잡아라!";
-			wsprintf(wcQuestState, L"고블린 남은 마리수 : %d / %d", p->quest - MAX_AI_SLIME, 10);
+			wsprintf(wcQuestState, L"고블린 남은 마리수 : %d / %d", p->quest - MAX_AI_SLIME, MAX_AI_GOBLIN - MAX_AI_SLIME);
 			pQuestUI->m_QuestState->m_wstrText = wcQuestState;
 		}
 

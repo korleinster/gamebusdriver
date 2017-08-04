@@ -352,7 +352,7 @@ void TimerQueue::processPacket(event_type *p) {
 							pac.pos = g_clients[p->id]->get_player_data()->pos;
 							g_clients[p->id]->send_packet_other_players_in_view_range(reinterpret_cast<Packet*>(&pac), p->id);
 
-							g_time_queue.add_event(p->id, 3, CHANGE_AI_STATE_ATT, true);
+							g_time_queue.add_event(p->id, 1, CHANGE_AI_STATE_ATT, true);
 						}
 						else {
 							// 아예 시야 범위 밖이라면, 초기화 필요
@@ -575,6 +575,7 @@ void TimerQueue::processPacket(event_type *p) {
 			g_clients[p->id]->m_target_id = g_clients[p->id]->ai_rand_mov();
 
 			if (none != g_clients[p->id]->m_target_id) {
+				if (att == g_clients[p->id]->get_state()) { break; }
 				g_time_queue.add_event(p->id, 0, CHANGE_AI_STATE_ATT, true);
 				break;
 			}

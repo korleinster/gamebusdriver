@@ -529,7 +529,8 @@ void player_session::m_process_packet(Packet buf[])
 					case COMBO3: addingDamage = 10; break;
 						// 게이지 음수 관련하여 수정 & 게이지 깎이면 통보도 해주기
 					case SKILL1: {
-						addingDamage = 15;
+						if (50 > m_player_data.state.gauge) { break; }
+						addingDamage = 30;
 						m_player_data.state.gauge -= 50;
 						if (1 > m_player_data.state.gauge) { m_player_data.state.gauge = 0; }
 						sc_fever p;
@@ -538,7 +539,8 @@ void player_session::m_process_packet(Packet buf[])
 						break;
 					}
 					case SKILL2: {
-						addingDamage = 15;
+						if (50 > m_player_data.state.gauge) { break; }
+						addingDamage = 20;
 						m_player_data.state.gauge -= 50;
 						if (1 > m_player_data.state.gauge) { m_player_data.state.gauge = 0; }
 						sc_fever p;
@@ -547,6 +549,7 @@ void player_session::m_process_packet(Packet buf[])
 						break;
 					}
 					case SKILL3: {
+						if (50 > m_player_data.state.gauge) { break; }
 						addingDamage = 15;
 						m_player_data.state.gauge -= 50;
 						if (1 > m_player_data.state.gauge) { m_player_data.state.gauge = 0; }
@@ -559,7 +562,10 @@ void player_session::m_process_packet(Packet buf[])
 					}
 
 					// 일단 상대 체력 찢기
-					g_clients[id]->m_player_data.state.hp -= ((m_sub_status.str * 2 + addingDamage) - g_clients[id]->m_sub_status.def);
+					std::random_device rd;
+					std::mt19937_64 mt(rd());
+					std::uniform_int_distribution<int> dist(0, m_sub_status.critical);
+					g_clients[id]->m_player_data.state.hp -= ((m_sub_status.str + addingDamage + dist(mt)) - g_clients[id]->m_sub_status.def);
 					is_gauge_on = true; // 발열 게이지를 마지막 체크 때 올려주자
 
 					if (false == g_clients[id]->get_hp_adding()) {
@@ -622,11 +628,10 @@ void player_session::m_process_packet(Packet buf[])
 							// 만약 슬라임이고, quest 수치가 10 마리 잡는거 이하라면
 							if ((MAX_AI_SLIME > id) && (MAX_AI_SLIME > m_sub_status.quest)) {
 								m_sub_status.quest += 1;
+
 								sc_chat chat;
 								chat.id = m_id;
-								//sprintf(chat.msg, "슬라임 %d 마리 잡음", m_sub_status.quest);
 								wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"슬라임 %d 마리 잡음", m_sub_status.quest);
-								//sprintf(chat.msg, "Slime %d killed", m_sub_status.quest);
 								if (MAX_AI_SLIME == m_sub_status.quest) { wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"슬라임 퀘스트 완료"); }
  								send_packet(reinterpret_cast<Packet*>(&chat));
 
@@ -636,11 +641,10 @@ void player_session::m_process_packet(Packet buf[])
 							}
 							else if ((MAX_AI_GOBLIN > id) && (MAX_AI_SLIME <= id) && (MAX_AI_GOBLIN > m_sub_status.quest) && (MAX_AI_SLIME <= m_sub_status.quest)) {
 								m_sub_status.quest += 1;
+
 								sc_chat chat;
 								chat.id = m_id;
-								//sprintf(chat.msg, "고블린 %d 마리 잡음", m_sub_status.quest - MAX_AI_SLIME);
 								wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"고블린 %d 마리 잡음", m_sub_status.quest - MAX_AI_SLIME);
-								//sprintf(chat.msg, "Slime %d killed", m_sub_status.quest);
 								if (MAX_AI_GOBLIN == m_sub_status.quest) { wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"고블린 퀘스트 완료");; }
 								send_packet(reinterpret_cast<Packet*>(&chat));
 

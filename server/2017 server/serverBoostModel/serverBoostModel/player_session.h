@@ -31,8 +31,8 @@ public:
 	void set_gauge_reducing(bool b) { is_gauge_reducing = b; }
 	bool get_gauge_reducing() { return is_gauge_reducing; }
 
-	void set_state(player_state s) { m_state = s; }
-	player_state get_state() { return m_state; }
+	void set_state(int s) { m_state = s; }
+	int get_state() { return m_state; }
 
 	bool set_hp(int hp) { m_player_data.state.hp = hp; return true; }
 	int get_maxhp() { return m_player_data.state.maxhp; }
@@ -114,7 +114,7 @@ private:
 	// 플레이어 캐릭터 관련 정보
 	player_data m_player_data;
 	sub_status m_sub_status;
-	player_state m_state;
+	atomic_int m_state;
 	mutex state_lock;
 
 	// 현재 플레이어의 view list

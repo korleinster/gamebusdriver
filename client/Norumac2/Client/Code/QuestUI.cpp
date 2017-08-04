@@ -32,10 +32,33 @@ HRESULT CQuestUI::Initialize(void)
 {
 	FAILED_CHECK(AddComponent());
 
-	m_fX = 650.f;
-	m_fY = 550.f;
+	m_fX = 900.f;
+	m_fY = 350.f;
 	m_fSizeX = 140.f;
 	m_fSizeY = 210.f;
+
+
+	m_QuestScript->m_eType = FONT_TYPE_OUTLINE;
+
+	m_QuestScript->m_wstrText = L" ";
+	m_QuestScript->m_fSize = 20.f;
+	m_QuestScript->m_nColor = 0xFFFFFFFF;
+	m_QuestScript->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
+	m_QuestScript->m_vPos = D3DXVECTOR2(m_fX - 100.f, m_fY - 100.f);
+	m_QuestScript->m_fOutlineSize = 1.f;
+	m_QuestScript->m_nOutlineColor = 0xFF000000 /*0xFFFFFFFF*/;
+
+
+
+	m_QuestState->m_eType = FONT_TYPE_OUTLINE;
+
+	m_QuestState->m_wstrText = L" ";
+	m_QuestState->m_fSize = 18.f;
+	m_QuestState->m_nColor = 0xFFFFFFFF;
+	m_QuestState->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
+	m_QuestState->m_vPos = D3DXVECTOR2(m_fX - 100.f, m_fY+ 100.f);
+	m_QuestState->m_fOutlineSize = 1.f;
+	m_QuestState->m_nOutlineColor = 0xFF000000 /*0xFFFFFFFF*/;	
 
 	//
 	CRenderMgr::GetInstance()->AddRenderGroup(TYPE_UI, this);
@@ -104,8 +127,8 @@ void CQuestUI::Render()
 
 		m_pBuffer->Render();
 
-		for (auto FontList : m_QuestLogList)
-			FontList->Render();
+		m_QuestScript->Render();
+		m_QuestState->Render();
 	}
 }
 
@@ -145,7 +168,8 @@ HRESULT CQuestUI::AddComponent(void)
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"PS_Shader", pComponent));
 
 
-	//m_pFont = CFont::Create(L"Font_Star");
+	m_QuestScript = CFont::Create(L"Font_Star");
+	m_QuestState = CFont::Create(L"Font_Star");
 
 	return S_OK;
 }

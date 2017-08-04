@@ -15,6 +15,7 @@
 #include "../Include/MobHpBar.h"
 #include "ChatUI.h"
 #include "Font.h"
+#include "QuestUI.h"
 
 void AsynchronousClientClass::processPacket(Packet* buf)
 {
@@ -277,8 +278,28 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 							}
 						}
 
-						CObj* pObj = CDamageFont::Create(&vPos, (CObjMgr::GetInstance()->Get_MonsterServerData(p->under_attack_id))->state.hp - p->hp); //샘플값 105. 나중에 데미지는 서버에서 받아와서 출력.
-						CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+						if (p->comboState == COMBO1)
+						{
+							CObj* pObj = CDamageFont::Create(&vPos, (CObjMgr::GetInstance()->Get_MonsterServerData(p->under_attack_id))->state.hp - p->hp, 20, 0xFF00FFFF);
+							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+						}
+						else if (p->comboState == COMBO2)
+						{
+							CObj* pObj = CDamageFont::Create(&vPos, (CObjMgr::GetInstance()->Get_MonsterServerData(p->under_attack_id))->state.hp - p->hp,30, 0xFF008DFF);
+							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+						}
+						else if (p->comboState == COMBO3)
+						{
+							CObj* pObj = CDamageFont::Create(&vPos, (CObjMgr::GetInstance()->Get_MonsterServerData(p->under_attack_id))->state.hp - p->hp,40, 0xFF0000FF);
+							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+						}
+						else
+						{
+							CObj* pObj = CDamageFont::Create(&vPos, (CObjMgr::GetInstance()->Get_MonsterServerData(p->under_attack_id))->state.hp - p->hp,40, 0xFF0000FF);
+							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+						}
+
+
 						///////////////////////////////////////////////////
 
 						(CObjMgr::GetInstance()->Get_MonsterServerData(p->under_attack_id))->state.hp = p->hp;
@@ -348,8 +369,27 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 							}
 						}
 
-						CObj* pObj = CDamageFont::Create(&vPos, (CObjMgr::GetInstance()->Get_BossServerData(p->under_attack_id))->state.hp - p->hp); //샘플값 105. 나중에 데미지는 서버에서 받아와서 출력.
-						CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+
+						if (p->comboState == COMBO1)
+						{
+							CObj* pObj = CDamageFont::Create(&vPos, (CObjMgr::GetInstance()->Get_BossServerData(p->under_attack_id))->state.hp - p->hp, 20, 0xFF00FFFF);
+							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+						}
+						else if (p->comboState == COMBO2)
+						{
+							CObj* pObj = CDamageFont::Create(&vPos, (CObjMgr::GetInstance()->Get_BossServerData(p->under_attack_id))->state.hp - p->hp, 30, 0xFF008DFF);
+							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+						}
+						else if (p->comboState == COMBO3)
+						{
+							CObj* pObj = CDamageFont::Create(&vPos, (CObjMgr::GetInstance()->Get_BossServerData(p->under_attack_id))->state.hp - p->hp, 40, 0xFF0000FF);
+							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+						}
+						else
+						{
+							CObj* pObj = CDamageFont::Create(&vPos, (CObjMgr::GetInstance()->Get_BossServerData(p->under_attack_id))->state.hp - p->hp, 40, 0xFF0000FF);
+							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+						}
 						///////////////////////////////////////////////////
 
 						(CObjMgr::GetInstance()->Get_BossServerData(p->under_attack_id))->state.hp = p->hp;
@@ -559,7 +599,27 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 		sc_quest *p = reinterpret_cast<sc_quest*>(buf);
 
-		p->quest;
+		CQuestUI* pQuestUI = dynamic_cast<CQuestUI*>(*(CObjMgr::GetInstance()->Get_ObjList(L"QuestUI")->begin()));
+
+		wchar_t wcQuestState[MAX_BUF_SIZE];
+
+		
+
+		if (p->quest < MAX_AI_SLIME)
+		{
+			pQuestUI->m_QuestScript->m_wstrText = L"슬라임을 잡아라!";
+			wsprintf(wcQuestState, L"슬라임 남은 마리수 : %d / %d", p->quest, 10);
+			pQuestUI->m_QuestState->m_wstrText = wcQuestState;
+		}
+		else if (p->quest >= MAX_AI_SLIME && p->quest < MAX_AI_GOBLIN)
+		{
+			pQuestUI->m_QuestScript->m_wstrText = L"고블린을 잡아라!";
+			wsprintf(wcQuestState, L"고블린 남은 마리수 : %d / %d", p->quest - MAX_AI_SLIME, 10);
+			pQuestUI->m_QuestState->m_wstrText = wcQuestState;
+		}
+
+
+
 		/*
 			한 마리 잡으면 1 부터 시작, 그리고 계속 더해짐
 

@@ -738,7 +738,7 @@ void CPlayer::KeyInput()
 		iSeverAtt = SKILL1;
 		m_bSkillUsed = true;
 
-		//g_client.sendPacket(sizeof(int), KEYINPUT_ATTACK, reinterpret_cast<BYTE*>(&iSeverAtt));
+		g_client.sendPacket(sizeof(int), KEYINPUT_ATTACK, reinterpret_cast<BYTE*>(&iSeverAtt));
 
 		dynamic_cast<CDynamicMesh*>(m_pBuffer)->ResetPlayTimer();
 	}
@@ -771,10 +771,10 @@ void CPlayer::KeyInput()
 			return;
 
 		m_ePlayerState = PLAYER_SKILL2;
-		//iSeverAtt = SKILL1;
+		iSeverAtt = SKILL2;
 		m_bSkillUsed = true;
 
-		//g_client.sendPacket(sizeof(int), KEYINPUT_ATTACK, reinterpret_cast<BYTE*>(&iSeverAtt));
+		g_client.sendPacket(sizeof(int), KEYINPUT_ATTACK, reinterpret_cast<BYTE*>(&iSeverAtt));
 
 		dynamic_cast<CDynamicMesh*>(m_pBuffer)->ResetPlayTimer();
 	}
@@ -939,13 +939,13 @@ void CPlayer::AniMove(void)
 	/*if(m_bSkillUsed ==true)
 		cout << m_fSkillMoveTime << endl;*/
 
-	if (m_ePlayerState == PLAYER_SKILL1)
-	{
-		if (m_fSkillMoveTime > 0.6f && m_fSkillMoveTime < 1.2f)
+		/*if (m_ePlayerState == PLAYER_SKILL1)
 		{
-			CNaviMgr::GetInstance()->MoveOnNaviMesh(&m_pInfo->m_vPos, &(m_pInfo->m_vDir * m_fSpeed * fTime), m_dwCellNum);
-			g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
-			g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
-		}
-	}
+			if (m_fSkillMoveTime > 0.6f && m_fSkillMoveTime < 1.2f)
+			{
+				CNaviMgr::GetInstance()->MoveOnNaviMesh(&m_pInfo->m_vPos, &(m_pInfo->m_vDir * m_fSpeed * fTime), m_dwCellNum);
+				g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
+				g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
+			}
+		}*/
 }

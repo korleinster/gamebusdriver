@@ -24,7 +24,7 @@ CDamageFont::~CDamageFont(void)
 	CRenderMgr::GetInstance()->DelRenderGroup(TYPE_UI, this);//임시인데 어디다 빼야할까
 }
 
-HRESULT CDamageFont::Initialize(const D3DXVECTOR3* pPos, const float& fDmg)
+HRESULT CDamageFont::Initialize(const D3DXVECTOR3* pPos, const float& fDmg, const float& fFontSize, const UINT32& nColor)
 {
 	if (FAILED(Add_Component()))
 		return E_FAIL;
@@ -44,8 +44,8 @@ HRESULT CDamageFont::Initialize(const D3DXVECTOR3* pPos, const float& fDmg)
 	m_pFont->m_eType = FONT_TYPE_OUTLINE;
 
 	m_pFont->m_wstrText = to_wstring((int)fDmg);
-	m_pFont->m_fSize = 20.f;
-	m_pFont->m_nColor = 0xFF06018B;
+	m_pFont->m_fSize = fFontSize;
+	m_pFont->m_nColor = nColor;
 	m_pFont->m_nFlag = FW1_CENTER | FW1_VCENTER | FW1_RESTORESTATE;
 	m_pFont->m_vPos = D3DXVECTOR2(m_vPoint.x, m_vPoint.y - 30.f);
 	m_pFont->m_fOutlineSize = 1.f;
@@ -82,11 +82,11 @@ void CDamageFont::Render(void)
 	m_pFont->Render();
 }
 
-CDamageFont* CDamageFont::Create(const D3DXVECTOR3* pPos, const float& fDmg)
+CDamageFont* CDamageFont::Create(const D3DXVECTOR3* pPos, const float& fDmg, const float& fFontSize, const UINT32& nColor)
 {
 	CDamageFont*		pDmgFont = new CDamageFont();
 
-	if (FAILED(pDmgFont->Initialize(pPos, fDmg)))
+	if (FAILED(pDmgFont->Initialize(pPos, fDmg,fFontSize,nColor)))
 	{
 		//MSG_BOX("CDamageFont Created Failed");
 		::Safe_Delete(pDmgFont);

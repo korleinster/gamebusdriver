@@ -13,11 +13,11 @@ public:
 	CDamageFont(void);
 	virtual ~CDamageFont(void);
 public:
-	virtual HRESULT Initialize(const D3DXVECTOR3* pPos, const float& fDmg);
+	virtual HRESULT Initialize(const D3DXVECTOR3* pPos, const float& fDmg, const float& fFontSize, const UINT32& nColor);
 	virtual int Update(void);
 	virtual void Render(void);
 public:
-	static CDamageFont* Create(const D3DXVECTOR3* pPos, const float& fDmg);
+	static CDamageFont* Create(const D3DXVECTOR3* pPos, const float& fDmg, const float& fFontSize, const UINT32& nColor);
 private:
 	D3DXVECTOR3				m_vPoint;
 	float					m_fTime;

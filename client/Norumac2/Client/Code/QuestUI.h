@@ -19,7 +19,8 @@ public:
 	virtual HRESULT AddComponent(void);
 
 public:
-	list<CFont*> m_QuestLogList;
+	CFont*		m_QuestScript;
+	CFont*		m_QuestState;
 	bool		m_bRender;
 	float		m_fCoolTime;
 

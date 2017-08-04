@@ -590,56 +590,49 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 		if (p->att_type == BOSS_ATT_01)
 		{
-			if ((reinterpret_cast<CBoss*>(iter))->GetAniState() == BOSS_IDLE)
-			{
+		
 				(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
 				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT1);
-			}
+
 		}
 
 		else if (p->att_type == BOSS_ATT_02)
 		{
-			if ((reinterpret_cast<CBoss*>(iter))->GetAniState() == BOSS_IDLE)
-			{
+	
 				(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
 				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT2);
-			}
+
 		}
 
 		else if (p->att_type == BOSS_ATT_03)
 		{
-			if ((reinterpret_cast<CBoss*>(iter))->GetAniState() == BOSS_IDLE)
-			{
+		
 				(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
 				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT3);
-			}
+
 		}
 
 		else if (p->att_type == BOSS_ATT_04)
 		{
-			if ((reinterpret_cast<CBoss*>(iter))->GetAniState() == BOSS_IDLE)
-			{
+			
 				(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
 				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT4);
-			}
 		}
 
 		else if (p->att_type == BOSS_ATT_05)
 		{
-			if ((reinterpret_cast<CBoss*>(iter))->GetAniState() == BOSS_IDLE)
-			{
+
 				(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
 				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT5);
-			}
+
 		}
 
 		else if (p->att_type == BOSS_ATT_06)
 		{
-			if ((reinterpret_cast<CBoss*>(iter))->GetAniState() == BOSS_IDLE)
-			{
+		
 				(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
 				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_BUFF);
-			}
+
 		}
 		/*
 			att_type 에 따라서, 어떤 공격 및 행동인지 확인할 수 있다.

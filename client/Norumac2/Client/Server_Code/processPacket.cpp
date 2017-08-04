@@ -219,6 +219,9 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 								{
 									(reinterpret_cast<COtherPlayer*>(iter))->SetAniState(PLAYER_ATT3);
 								}
+								else if (p->comboState == ATK_COMBO_ETC) {
+									// 그냥 기존 애니메이션 재생되게 놔두면 된다.
+								}
 							}
 							break;
 						}
@@ -278,24 +281,30 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 							}
 						}
 
-						if (p->comboState == COMBO1)
+						int damage_Value = (CObjMgr::GetInstance()->Get_MonsterServerData(p->under_attack_id))->state.hp - p->hp;
+						if (10 > damage_Value)
 						{
-							CObj* pObj = CDamageFont::Create(&vPos, (CObjMgr::GetInstance()->Get_MonsterServerData(p->under_attack_id))->state.hp - p->hp, 20, 0xFF00FFFF);
+							CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 20, 0xFFFFD200);
 							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
 						}
-						else if (p->comboState == COMBO2)
+						else if (20 > damage_Value)
 						{
-							CObj* pObj = CDamageFont::Create(&vPos, (CObjMgr::GetInstance()->Get_MonsterServerData(p->under_attack_id))->state.hp - p->hp,30, 0xFF008DFF);
+							CObj* pObj = CDamageFont::Create(&vPos, damage_Value,25, 0xFF00FFFF);
 							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
 						}
-						else if (p->comboState == COMBO3)
+						else if (30 > damage_Value)
 						{
-							CObj* pObj = CDamageFont::Create(&vPos, (CObjMgr::GetInstance()->Get_MonsterServerData(p->under_attack_id))->state.hp - p->hp,40, 0xFF0000FF);
+							CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 30, 0xFF00E4FF);
+							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+						}
+						else if (40 > damage_Value)
+						{
+							CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 45, 0xFF00A2FF);
 							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
 						}
 						else
 						{
-							CObj* pObj = CDamageFont::Create(&vPos, (CObjMgr::GetInstance()->Get_MonsterServerData(p->under_attack_id))->state.hp - p->hp,40, 0xFF0000FF);
+							CObj* pObj = CDamageFont::Create(&vPos, damage_Value,60, 0xFF0000FF);
 							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
 						}
 
@@ -370,24 +379,30 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 						}
 
 
-						if (p->comboState == COMBO1)
+						int damage_Value = (CObjMgr::GetInstance()->Get_MonsterServerData(p->under_attack_id))->state.hp - p->hp;
+						if (10 > damage_Value)
 						{
-							CObj* pObj = CDamageFont::Create(&vPos, (CObjMgr::GetInstance()->Get_BossServerData(p->under_attack_id))->state.hp - p->hp, 20, 0xFF00FFFF);
+							CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 20, 0xFFFFD200);
 							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
 						}
-						else if (p->comboState == COMBO2)
+						else if (20 > damage_Value)
 						{
-							CObj* pObj = CDamageFont::Create(&vPos, (CObjMgr::GetInstance()->Get_BossServerData(p->under_attack_id))->state.hp - p->hp, 30, 0xFF008DFF);
+							CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 25, 0xFF00FFFF);
 							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
 						}
-						else if (p->comboState == COMBO3)
+						else if (30 > damage_Value)
 						{
-							CObj* pObj = CDamageFont::Create(&vPos, (CObjMgr::GetInstance()->Get_BossServerData(p->under_attack_id))->state.hp - p->hp, 40, 0xFF0000FF);
+							CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 30, 0xFF00E4FF);
+							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+						}
+						else if (40 > damage_Value)
+						{
+							CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 45, 0xFF00A2FF);
 							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
 						}
 						else
 						{
-							CObj* pObj = CDamageFont::Create(&vPos, (CObjMgr::GetInstance()->Get_BossServerData(p->under_attack_id))->state.hp - p->hp, 40, 0xFF0000FF);
+							CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 60, 0xFF0000FF);
 							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
 						}
 						///////////////////////////////////////////////////

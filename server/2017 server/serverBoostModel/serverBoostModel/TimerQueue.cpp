@@ -598,6 +598,137 @@ void TimerQueue::processPacket(event_type *p) {
 
 		break;
 	}
+
+	case TIMER_ATT: {
+
+		if (true == p->is_ai) {
+
+			break;
+		}
+		else {
+			// 플레이어 시간공격
+			// 충돌체크 검사하고 난 뒤에..
+			float att_x = 0.3, att_y = 0.3;		// 테스트용 클라 공격 리치가 요정도
+			float my_x = g_clients[p->id]->get_player_data()->pos.x, my_y = g_clients[p->id]->get_player_data()->pos.y;
+			float player_size = 1.35;	// 객체 충돌 크기 반지름
+			char *dir = &g_clients[p->id]->get_player_data()->dir;
+			bool is_gauge_on = false;
+			unsigned int deleting_id = 0;
+
+			if ((*dir & KEYINPUT_RIGHT) == (KEYINPUT_RIGHT)) { my_x -= att_x; my_y -= att_y; }
+			if ((*dir & KEYINPUT_LEFT) == (KEYINPUT_LEFT)) { my_x += att_x; my_y += att_y; }
+			if ((*dir & KEYINPUT_UP) == (KEYINPUT_UP)) { my_x += att_x; my_y -= att_y; }
+			if ((*dir & KEYINPUT_DOWN) == (KEYINPUT_DOWN)) { my_x -= att_x; my_y += att_y; }
+
+			g_clients[p->id]->vl_lock();
+			for (auto id : *g_clients[p->id]->get_view_list()) {
+				if (DISCONNECTED == g_clients[id]->get_current_connect_state()) { continue; }
+				//if (m_id == g_clients[id]->m_id) { continue; }
+				//if (true == players->get_player_data()->is_ai) { continue; }
+
+				float x = g_clients[id]->get_player_data()->pos.x;
+				float y = g_clients[id]->get_player_data()->pos.y;
+
+				// 공격을 했는데 상대가 맞았다고 판정이 된다면...================================================================
+				if ((player_size * player_size) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) {
+
+					// 난 이제 공격 상태 --------------
+					g_clients[p->id]->set_state(att);
+
+					// 현재 공격 콤보 및 스킬에 따라서 데미지 구분해주기
+					int addingDamage = 0;
+
+					// 일단 상대 체력 찢기
+					std::random_device rd;
+					std::mt19937_64 mt(rd());
+					std::uniform_int_distribution<int> dist(30, g_clients[p->id]->get_sub_data()->critical + 30);
+					g_clients[id]->get_player_data()->state.hp -= ((g_clients[p->id]->get_sub_data()->str + addingDamage + dist(mt)) - g_clients[id]->get_sub_data()->def);
+					is_gauge_on = true; // 발열 게이지를 마지막 체크 때 올려주자
+
+					sc_atk p_atk;
+					p_atk.attacking_id = p->id;		// 공격자 id
+					p_atk.under_attack_id = id;		// 맞는 놈의 id
+					p_atk.hp = g_clients[id]->get_player_data()->state.hp;	// 맞은 놈의 hp
+					p_atk.comboState = ATK_COMBO_ETC;
+
+					// hp 가 0 이 되면 사망처리를 한다. -> 각각의 클라이언트에서 hp 가 0 된 녀석을 지워줌
+					if (0 >= g_clients[id]->get_player_data()->state.hp) {
+
+						// 맞은 애가 ai 면 그냥 연결 끊어서 죽이기
+						if (MAX_AI_NUM > g_clients[id]->get_id()) {
+							g_clients[id]->set_connect_state(DISCONNECTED);
+							g_clients[id]->ai_is_rand_mov = false;
+							g_clients[id]->set_state(none);
+
+							sc_disconnect dis_p;
+							dis_p.id = id;
+
+							g_clients[p->id]->send_packet_other_players(reinterpret_cast<Packet *>(&dis_p), id);
+							g_time_queue.add_event(g_clients[id]->get_player_data()->id, 10, DEAD_TO_ALIVE, true);	// bot 리젠
+
+																												// 잡은 녀석에는 경험치도 주도록 하자.
+																												// 만약 슬라임이고, quest 수치가 10 마리 잡는거 이하라면
+							if ((MAX_AI_SLIME > id) && (MAX_AI_SLIME > g_clients[p->id]->get_sub_data()->quest)) {
+								g_clients[p->id]->get_sub_data()->quest += 1;
+
+								sc_chat chat;
+								chat.id = p->id;
+								wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"슬라임 %d 마리 잡음", g_clients[p->id]->get_sub_data()->quest);
+								if (MAX_AI_SLIME == g_clients[p->id]->get_sub_data()->quest) { wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"슬라임 퀘스트 완료"); }
+								g_clients[p->id]->send_packet(reinterpret_cast<Packet*>(&chat));
+
+								sc_quest q;
+								q.quest = g_clients[p->id]->get_sub_data()->quest;
+								g_clients[p->id]->send_packet(reinterpret_cast<Packet*>(&q));
+							}
+							else if ((MAX_AI_GOBLIN > id) && (MAX_AI_SLIME <= id) && (MAX_AI_GOBLIN > g_clients[p->id]->get_sub_data()->quest) && (MAX_AI_SLIME <= g_clients[p->id]->get_sub_data()->quest)) {
+								g_clients[p->id]->get_sub_data()->quest += 1;
+
+								sc_chat chat;
+								chat.id = p->id;
+								wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"고블린 %d 마리 잡음", g_clients[p->id]->get_sub_data()->quest - MAX_AI_SLIME);
+								if (MAX_AI_GOBLIN == g_clients[p->id]->get_sub_data()->quest) { wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"고블린 퀘스트 완료");; }
+								g_clients[p->id]->send_packet(reinterpret_cast<Packet*>(&chat));
+
+								sc_quest q;
+								q.quest = g_clients[p->id]->get_sub_data()->quest;
+								g_clients[p->id]->send_packet(reinterpret_cast<Packet*>(&q));
+							}
+						}
+						else {
+							// 죽은 애가 player 일 경우..
+
+							sc_disconnect dis_p;
+							dis_p.id = id;
+
+							g_clients[id]->send_packet(reinterpret_cast<Packet*>(&dis_p));
+							g_clients[id]->set_state(dead);
+
+							for (auto player_view_ids : *g_clients[id]->get_view_list()) {
+								// dead lock 방지용 continue;
+								if (player_view_ids == p->id) { deleting_id = id; continue; }
+								g_clients[player_view_ids]->vl_remove(id);
+
+								if (true == g_clients[player_view_ids]->get_player_data()->is_ai) { continue; }
+								g_clients[player_view_ids]->send_packet(reinterpret_cast<Packet*>(&dis_p));
+							}
+
+							g_clients[id]->vl_clear();
+							g_time_queue.add_event(g_clients[id]->get_player_data()->id, 5, DEAD_TO_ALIVE, false);
+						}
+					}
+
+					g_clients[p->id]->send_packet(reinterpret_cast<Packet*>(&p_atk));
+					if (true == g_clients[id]->get_player_data()->is_ai) { continue; }
+					g_clients[id]->send_packet(reinterpret_cast<Packet*>(&p_atk));
+				}
+			}
+			g_clients[p->id]->vl_unlock();
+			if (0 < deleting_id) { g_clients[p->id]->vl_remove(deleting_id); }
+		}
+
+		break;
+	}
 	default:
 		break;
 	}

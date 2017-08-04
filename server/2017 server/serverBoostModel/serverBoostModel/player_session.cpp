@@ -536,19 +536,28 @@ void player_session::m_process_packet(Packet buf[])
 						sc_fever p;
 						p.gauge = m_player_data.state.gauge;
 						send_packet(reinterpret_cast<Packet*>(&p));
+
+						// 2 초후 딜
+						g_time_queue.add_event(m_id, 1.5f, TIMER_ATT, false);
+
 						break;
 					}
 					case SKILL2: {
 						if (50 > m_player_data.state.gauge) { break; }
-						addingDamage = 20;
+						addingDamage = 10;
 						m_player_data.state.gauge -= 50;
 						if (1 > m_player_data.state.gauge) { m_player_data.state.gauge = 0; }
 						sc_fever p;
 						p.gauge = m_player_data.state.gauge;
 						send_packet(reinterpret_cast<Packet*>(&p));
+
+						// 1 초후 딜
+						g_time_queue.add_event(m_id, 0.7f, TIMER_ATT, false);
+
 						break;
 					}
 					case SKILL3: {
+						// 여긴 구현 안되어있는듯
 						if (50 > m_player_data.state.gauge) { break; }
 						addingDamage = 15;
 						m_player_data.state.gauge -= 50;

@@ -123,6 +123,25 @@ void CLoading::StageLoading(void)
 		, L"Texture_RuneBar"
 		, L"../Resource/Uiimage/rune_active.png");
 
+	hr = CResourcesMgr::GetInstance()->AddTexture(
+		RESOURCE_STAGE
+		, L"Texture_BottomUI"
+		, L"../Resource/Uiimage/bottomUi.png");
+
+	hr = CResourcesMgr::GetInstance()->AddTexture(
+		RESOURCE_STAGE
+		, L"Texture_BottomFever"
+		, L"../Resource/Uiimage/bottomUi_fever.png");
+
+	hr = CResourcesMgr::GetInstance()->AddTexture(
+		RESOURCE_STAGE
+		, L"Texture_PotionUI"
+		, L"../Resource/Uiimage/hpPotion.png");
+
+	hr = CResourcesMgr::GetInstance()->AddTexture(
+		RESOURCE_STAGE
+		, L"Texture_TpRock"
+		, L"../Resource/Uiimage/teleportStone.png");
 
 	hr = CResourcesMgr::GetInstance()->AddTexture(
 		RESOURCE_STAGE

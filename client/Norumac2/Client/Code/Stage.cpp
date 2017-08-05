@@ -22,6 +22,10 @@
 #include "NaviMgr.h"
 #include "ChatUI.h"
 #include "QuestUI.h"
+#include "BottomUI.h"
+#include "BottomFever.h"
+#include "SkillUI.h"
+#include "Effect.h"
 
 CStage::CStage()
 	: m_bFirstLogin(false)
@@ -60,8 +64,8 @@ int CStage::Update(void)
 		m_bNaviRender = false;
 	}
 
-
-	CObjMgr::GetInstance()->Update();
+	if (CSceneMgr::GetInstance()->GetScene() == SCENE_STAGE)
+		CObjMgr::GetInstance()->Update();
 
 	return 0;
 }
@@ -155,6 +159,26 @@ HRESULT CStage::CreateObj(void)
 		return E_FAIL;
 	CObjMgr::GetInstance()->AddObject(L"BaseUI", pObj);
 
+	pObj = CBottomFever::Create();
+	if (pObj == NULL)
+		return E_FAIL;
+	CObjMgr::GetInstance()->AddObject(L"BottomFever", pObj);
+
+	pObj = CSkillUI::Create(UI_POTION, L"Texture_PotionUI",D3DXVECTOR2(290.f,718.f));
+	if (pObj == NULL)
+		return E_FAIL;
+	CObjMgr::GetInstance()->AddObject(L"PotionUI", pObj);
+
+	pObj = CSkillUI::Create(UI_TPROCK, L"Texture_TpRock", D3DXVECTOR2(335.f, 718.f));
+	if (pObj == NULL)
+		return E_FAIL;
+	CObjMgr::GetInstance()->AddObject(L"TpRockUI", pObj);
+
+	pObj = CBottomUI::Create();
+	if (pObj == NULL)
+		return E_FAIL;
+	CObjMgr::GetInstance()->AddObject(L"BottomUI", pObj);
+
 	pObj = CChatUI::Create();
 	if (pObj == NULL)
 		return E_FAIL;
@@ -166,6 +190,7 @@ HRESULT CStage::CreateObj(void)
 	CObjMgr::GetInstance()->AddObject(L"QuestUI", pObj);
 
 	NaviLoad();
+
 
 	
 

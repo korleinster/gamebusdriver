@@ -27,10 +27,7 @@ private:
 	bool			m_bPush;
 	DWORD			m_dwTime;
 	bool			m_bMoving;
-	bool			m_bPotionCool;//포션 쿨
-	float			m_fPotionTime;//포션 쿨
-	float			m_fTpTime;//텔레포트 쿨
-	bool			m_bTpCool;//텔레포트 쿨
+	
 	DWORD			m_dwCellNum;//네비메쉬용
 	bool			m_bStart;
 	float			m_fComboTime;//콤보 유지시간
@@ -43,6 +40,12 @@ private:
 	// Scene meshes shader constant buffers
 	ID3D11Buffer*		m_pSceneVertexShaderCB;
 	ID3D11Buffer*		m_pScenePixelShaderCB;
+
+public:
+	float			m_fPotionTime;//포션 쿨
+	float			m_fTpTime;//텔레포트 쿨
+	bool			m_bPotionCool;//포션 쿨
+	bool			m_bTpCool;//텔레포트 쿨
 
 public:
 	virtual HRESULT Initialize(void);

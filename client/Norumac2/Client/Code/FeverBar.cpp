@@ -13,6 +13,7 @@
 #include "Device.h"
 #include "RenderMgr.h"
 #include "ObjMgr.h"
+#include "Font.h"
 
 CFeverBar::CFeverBar()
 {
@@ -34,6 +35,15 @@ HRESULT CFeverBar::Initialize(void)
 	m_fOriginY = m_fY;
 	m_fSizeX = 102.5f;
 	m_fSizeY = 10.f;
+
+	m_pFont->m_eType = FONT_TYPE_OUTLINE;
+	m_pFont->m_wstrText = L" ";
+	m_pFont->m_fSize = 20.f;
+	m_pFont->m_nColor = 0xFF00FFFF;
+	m_pFont->m_nFlag = FW1_CENTER | FW1_VCENTER | FW1_RESTORESTATE;
+	m_pFont->m_vPos = D3DXVECTOR2(m_fOriginX + 150, m_fOriginY);
+	m_pFont->m_fOutlineSize = 1.f;
+	m_pFont->m_nOutlineColor = 0xFF000000 /*0xFFFFFFFF*/;
 
 	//
 	CRenderMgr::GetInstance()->AddRenderGroup(TYPE_UI, this);
@@ -85,6 +95,7 @@ void CFeverBar::Render()
 	m_pGrapicDevice->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
 	
 	m_pBuffer->Render();
+	m_pFont->Render();
 }
 
 CFeverBar * CFeverBar::Create(void)
@@ -122,6 +133,8 @@ HRESULT CFeverBar::AddComponent(void)
 	pComponent = m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"PS");
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"PS_Shader", pComponent));
 
+	m_pFont = CFont::Create(L"Font_Star");
+
 	return S_OK;
 }
 
@@ -129,6 +142,12 @@ void CFeverBar::UpdateBufferToFever(void)
 {
 	auto player = CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin();
 	float fFever = 1.f - (*player)->GetPacketData()->state.gauge / 400.f;
+
+	wchar_t wcFever[MAX_BUF_SIZE];
+
+	wsprintf(wcFever, L"%d / %d", (*player)->GetPacketData()->state.gauge, (*player)->GetPacketData()->state.maxgauge);
+
+	m_pFont->m_wstrText = wcFever;
 
 	m_fX = m_fOriginX;
 	m_fX += ((1.f - fFever) * m_fSizeY * 0.025f);

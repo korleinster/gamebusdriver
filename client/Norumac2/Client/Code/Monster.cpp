@@ -238,7 +238,7 @@ HRESULT CMonster::AddComponent(wstring wstMeshKey, wstring wstrTextureKey)
 {
 	CComponent* pComponent = NULL;
 
-	vecAniName = *(CAnimationMgr::GetInstance()->GetAnimaiton(L"Slime"));
+	vecAniName = *(CAnimationMgr::GetInstance()->GetAnimaiton(wstMeshKey));
 	//vecName.push_back("Fall");
 	//vecName.push_back("Dead");
 	//vecName.push_back("Damage");

@@ -235,6 +235,18 @@
     <Filter Include="100.Shadow">
       <UniqueIdentifier>{ac475a16-5876-4853-81bc-7a8e007e75a7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Object\08.UI\12.SkillUI">
+      <UniqueIdentifier>{de434b06-878c-47e9-9924-d41e246085c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\08.UI\11.BottomUI">
+      <UniqueIdentifier>{69c16de8-cc78-4e87-904b-6ab62c256624}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\08.UI\13.BottomFever">
+      <UniqueIdentifier>{93206e82-389a-42f2-82bd-ee4fb6c48ad1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\09.Effect">
+      <UniqueIdentifier>{cf8a2238-ddb0-4f86-a738-dae9945a004e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -483,6 +495,18 @@
     <ClInclude Include="..\Code\CascadedMatrixSet.h">
       <Filter>100.Shadow</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\BottomUI.h">
+      <Filter>02.Object\08.UI\11.BottomUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\BottomFever.h">
+      <Filter>02.Object\08.UI\13.BottomFever</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\SkillUI.h">
+      <Filter>02.Object\08.UI\12.SkillUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Effect.h">
+      <Filter>02.Object\09.Effect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\MainApp.cpp">
@@ -703,6 +727,18 @@
     </ClCompile>
     <ClCompile Include="..\Code\CascadedMatrixSet.cpp">
       <Filter>100.Shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\BottomUI.cpp">
+      <Filter>02.Object\08.UI\11.BottomUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\BottomFever.cpp">
+      <Filter>02.Object\08.UI\13.BottomFever</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\SkillUI.cpp">
+      <Filter>02.Object\08.UI\12.SkillUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Effect.cpp">
+      <Filter>02.Object\09.Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

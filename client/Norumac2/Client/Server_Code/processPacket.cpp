@@ -16,6 +16,7 @@
 #include "ChatUI.h"
 #include "Font.h"
 #include "QuestUI.h"
+#include "Effect.h"
 
 void AsynchronousClientClass::processPacket(Packet* buf)
 {
@@ -379,31 +380,46 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 						}
 
 
-						int damage_Value = (CObjMgr::GetInstance()->Get_MonsterServerData(p->under_attack_id))->state.hp - p->hp;
+						int damage_Value = (CObjMgr::GetInstance()->Get_BossServerData(p->under_attack_id))->state.hp - p->hp;
 						if (10 > damage_Value)
 						{
 							CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 20, 0xFFFFD200);
 							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+
+							pObj = CEffect::Create(L"Effect", L"Texture_Slime", D3DXVECTOR3(vPos.x,vPos.y + 2.f, vPos.z));
+							CObjMgr::GetInstance()->AddObject(L"Effect", pObj);
 						}
 						else if (20 > damage_Value)
 						{
 							CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 25, 0xFF00FFFF);
 							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+
+							pObj = CEffect::Create(L"Effect", L"Texture_Slime", D3DXVECTOR3(vPos.x, vPos.y + 2.f, vPos.z));
+							CObjMgr::GetInstance()->AddObject(L"Effect", pObj);
 						}
 						else if (30 > damage_Value)
 						{
 							CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 30, 0xFF00E4FF);
 							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+
+							pObj = CEffect::Create(L"Effect", L"Texture_Slime", D3DXVECTOR3(vPos.x, vPos.y + 2.f, vPos.z));
+							CObjMgr::GetInstance()->AddObject(L"Effect", pObj);
 						}
 						else if (40 > damage_Value)
 						{
 							CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 45, 0xFF00A2FF);
 							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+
+							pObj = CEffect::Create(L"Effect", L"Texture_Slime", D3DXVECTOR3(vPos.x, vPos.y + 2.f, vPos.z));
+							CObjMgr::GetInstance()->AddObject(L"Effect", pObj);
 						}
 						else
 						{
 							CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 60, 0xFF0000FF);
 							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+
+							pObj = CEffect::Create(L"Effect", L"Texture_Slime", D3DXVECTOR3(vPos.x, vPos.y + 2.f, vPos.z));
+							CObjMgr::GetInstance()->AddObject(L"Effect", pObj);
 						}
 						///////////////////////////////////////////////////
 

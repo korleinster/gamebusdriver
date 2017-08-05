@@ -13,6 +13,7 @@
 #include "Device.h"
 #include "RenderMgr.h"
 #include "ObjMgr.h"
+#include "Font.h"
 
 CHpBar::CHpBar()
 {
@@ -34,6 +35,15 @@ HRESULT CHpBar::Initialize(void)
 	m_fOriginY = m_fY;
 	m_fSizeX = 102.5f;
 	m_fSizeY = 10.f;
+
+	m_pFont->m_eType = FONT_TYPE_OUTLINE;
+	m_pFont->m_wstrText = L" ";
+	m_pFont->m_fSize = 20.f;
+	m_pFont->m_nColor = 0xFF0000FF;
+	m_pFont->m_nFlag = FW1_CENTER | FW1_VCENTER | FW1_RESTORESTATE;
+	m_pFont->m_vPos = D3DXVECTOR2(m_fOriginX + 150, m_fOriginY);
+	m_pFont->m_fOutlineSize = 1.f;
+	m_pFont->m_nOutlineColor = 0xFF000000 /*0xFFFFFFFF*/;
 
 	//
 	CRenderMgr::GetInstance()->AddRenderGroup(TYPE_UI, this);
@@ -86,6 +96,7 @@ void CHpBar::Render()
 	m_pGrapicDevice->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
 	
 	m_pBuffer->Render();
+	m_pFont->Render();
 }
 
 
@@ -125,6 +136,8 @@ HRESULT CHpBar::AddComponent(void)
 	pComponent = m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"PS");
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"PS_Shader", pComponent));
 
+	m_pFont = CFont::Create(L"Font_Star");
+
 	return S_OK;
 }
 
@@ -132,6 +145,12 @@ void CHpBar::UpdateBufferToHp(void)
 {
 	auto player = CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin();
 	float fHp = 1.f - (*player)->GetPacketData()->state.hp / 100.f;
+
+	wchar_t wcHP[MAX_BUF_SIZE];
+
+	wsprintf(wcHP, L"%d / %d", (*player)->GetPacketData()->state.hp, (*player)->GetPacketData()->state.maxhp);
+
+	m_pFont->m_wstrText = wcHP;
 
 	m_fX = m_fOriginX;
 	m_fX += fHp * m_fSizeY * 0.25;

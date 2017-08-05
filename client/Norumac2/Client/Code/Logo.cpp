@@ -192,6 +192,8 @@ HRESULT CLogo::Add_Dynamic_Buffer(void)
 			"", vecAni);
 		FAILED_CHECK_RETURN(hr, E_FAIL);
 
+		CAnimationMgr::GetInstance()->AddAnimation(L"Goblin", &vecAni);
+
 		vecAni.clear();
 
 		//////////////////////////////////////////////////////////////
@@ -218,6 +220,26 @@ HRESULT CLogo::Add_Dynamic_Buffer(void)
 			"../Resource/Mesh/",
 			"", vecAni);
 		FAILED_CHECK_RETURN(hr, E_FAIL);
+
+		CAnimationMgr::GetInstance()->AddAnimation(L"Boss", &vecAni);
+
+		vecAni.clear();
+		//////////////////////////////////////////////////////////////
+
+		//////////////////////ÀÌÆåÆ®//////////////////////////////////
+
+		vecAni.push_back("Test_Effect");
+		
+
+		hr = CResourcesMgr::GetInstance()->AddMesh(
+			RESOURCE_STAGE,
+			MESH_DYNAMIC,
+			L"Effect",
+			"../Resource/Mesh/",
+			"", vecAni);
+		FAILED_CHECK_RETURN(hr, E_FAIL);
+
+		CAnimationMgr::GetInstance()->AddAnimation(L"Effect", &vecAni);
 
 		vecAni.clear();
 		//////////////////////////////////////////////////////////////

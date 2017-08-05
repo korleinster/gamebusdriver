@@ -1,6 +1,7 @@
 #pragma once
 #include "UI.h"
 
+class CFont;
 class CHpBar : public CUI
 {
 public:
@@ -17,6 +18,8 @@ public:
 public:
 	virtual HRESULT AddComponent(void);
 
+public:
+	CFont* m_pFont;
 public:
 	static CHpBar* Create();
 

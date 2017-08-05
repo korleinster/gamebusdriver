@@ -726,7 +726,7 @@ void CPlayer::KeyInput()
 	}*/
 
 
-	if ((CInput::GetInstance()->GetDIKeyState(DIK_Q) & 0x80) && m_pInfo->m_ServerInfo.state.gauge > 20)
+	if ((CInput::GetInstance()->GetDIKeyState(DIK_Q) & 0x80) && m_pInfo->m_ServerInfo.state.gauge > 50)
 	{
 		m_bPush = true;
 		int iSeverAtt;
@@ -762,7 +762,7 @@ void CPlayer::KeyInput()
 		}
 	}
 
-	if ((CInput::GetInstance()->GetDIKeyState(DIK_W) & 0x80) && m_pInfo->m_ServerInfo.state.gauge > 20)
+	if ((CInput::GetInstance()->GetDIKeyState(DIK_W) & 0x80) && m_pInfo->m_ServerInfo.state.gauge > 50)
 	{
 		m_bPush = true;
 		int iSeverAtt;
@@ -801,10 +801,9 @@ void CPlayer::KeyInput()
 
 	if (CInput::GetInstance()->GetDIKeyState(DIK_1) & 0x80)
 	{
-		//KEYINPUT_POTION
 		if (m_bPotionCool == true)
 		{
-			cout << "포션 쿨타임중" << endl;
+			//cout << "포션 쿨타임중" << endl;
 			return;
 		}
 		g_client.sendPacket(sizeof(nullptr), KEYINPUT_POTION, 0);
@@ -813,10 +812,8 @@ void CPlayer::KeyInput()
 
 	if (CInput::GetInstance()->GetDIKeyState(DIK_2) & 0x80)
 	{
-		//KEYINPUT_POTION
 		if (m_bTpCool == true)
 		{
-			//cout << "텔포 쿨타임중" << endl;
 			return;
 		}
 
@@ -831,10 +828,8 @@ void CPlayer::KeyInput()
 
 	if (CInput::GetInstance()->GetDIKeyState(DIK_3) & 0x80)
 	{
-		//KEYINPUT_POTION
 		if (m_bTpCool == true)
 		{
-			//cout << "텔포 쿨타임중" << endl;
 			return;
 		}
 		m_pInfo->m_vPos = D3DXVECTOR3(330.f, 0.f, 408.f);
@@ -847,10 +842,8 @@ void CPlayer::KeyInput()
 
 	if (CInput::GetInstance()->GetDIKeyState(DIK_4) & 0x80)
 	{
-		//KEYINPUT_POTION
 		if (m_bTpCool == true)
 		{
-			cout << "텔포 쿨타임중" << endl;
 			return;
 		}
 		m_pInfo->m_vPos = D3DXVECTOR3(260.f, 0.f, 300.f);
@@ -876,7 +869,6 @@ void CPlayer::TimeSetter(void)
 	if (m_bCombo[0] == true || m_bCombo[1] == true || m_bCombo[2] == true)
 	{
 		m_fComboTime += CTimeMgr::GetInstance()->GetTime();
-		//cout << "콤보시간:" << m_fComboTime << endl;
 	}
 	if (m_bSkillUsed == true)
 		m_fSkillMoveTime += CTimeMgr::GetInstance()->GetTime();
@@ -889,13 +881,12 @@ void CPlayer::TimeSetter(void)
 		m_fSeverTime = 0.f;
 	}
 
-	if (m_fPotionTime > 1.f)
+	if (m_fPotionTime > 5.f)
 	{
 		m_fPotionTime = 0.f;
 		if (m_bPotionCool == true)
 		{
 			m_bPotionCool = false;
-			//cout << "포션 쿨타임 끝" << endl;
 		}
 	}
 
@@ -905,7 +896,6 @@ void CPlayer::TimeSetter(void)
 		if (m_bTpCool == true)
 		{
 			m_bTpCool = false;
-			//cout << "텔포 쿨타임 끝" << endl;
 		}
 	}
 

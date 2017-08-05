@@ -147,7 +147,7 @@ void CTerrain::ShadowmapRender(void)
 	D3DXMATRIX* pVSPerObject = (D3DXMATRIX*)MappedResource.pData;
 	D3DXMatrixTranspose(pVSPerObject, &m_pInfo->m_matWorld);
 	m_pGrapicDevice->m_pDeviceContext->Unmap(m_pCascadedShadowGenVertexCB, 0);
-	m_pGrapicDevice->m_pDeviceContext->VSSetConstantBuffers(1, 1, &m_pCascadedShadowGenVertexCB);
+	m_pGrapicDevice->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pCascadedShadowGenVertexCB);
 
 	m_pTerrainBuffer->Render();
 }

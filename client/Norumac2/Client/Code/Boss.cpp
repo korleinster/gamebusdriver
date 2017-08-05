@@ -42,6 +42,8 @@ CBoss::CBoss()
 	m_pBuffer = NULL;
 	m_pVertexShader = NULL;
 	m_pPixelShader = NULL;
+	m_pShadowAniVertexShader = NULL;
+	m_pShadowNonAniVertexShader = NULL;
 	m_pTexture = NULL;
 	m_pVerTex = NULL;
 
@@ -57,7 +59,8 @@ CBoss::CBoss()
 CBoss::~CBoss()
 {
 	CObj::Release();
-
+	::Safe_Delete(m_pShadowAniVertexShader);
+	::Safe_Delete(m_pShadowNonAniVertexShader);
 	/*DWORD ReleasePoint = m_pBuffer->Release();
 	if (ReleasePoint  == 1)
 	::Safe_Delete(m_pBuffer);*/
@@ -210,9 +213,15 @@ void  CBoss::ShadowmapRender(void)
 		D3DXMATRIX* pVSPerObject = (D3DXMATRIX*)MappedResource.pData;
 		D3DXMatrixTranspose(pVSPerObject, &m_pInfo->m_matWorld);
 		m_pGrapicDevice->m_pDeviceContext->Unmap(m_pCascadedShadowGenVertexCB, 0);
-		m_pGrapicDevice->m_pDeviceContext->VSSetConstantBuffers(1, 1, &m_pCascadedShadowGenVertexCB);
+		m_pGrapicDevice->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pCascadedShadowGenVertexCB);
+
+		m_pGrapicDevice->m_pDeviceContext->IASetInputLayout(m_pShadowAniVertexShader->m_pVertexLayout);
+		m_pGrapicDevice->m_pDeviceContext->VSSetShader(m_pShadowAniVertexShader->m_pVertexShader, NULL, 0);
 
 		dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(m_eBossState);
+
+		m_pGrapicDevice->m_pDeviceContext->IASetInputLayout(m_pShadowNonAniVertexShader->m_pVertexLayout);
+		m_pGrapicDevice->m_pDeviceContext->VSSetShader(m_pShadowNonAniVertexShader->m_pVertexShader, NULL, 0);
 	}
 }
 
@@ -260,6 +269,11 @@ HRESULT CBoss::AddComponent(void)
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"VS_Shader", pComponent));
 	pComponent = m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"RenderScenePS");
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"PS_Shader", pComponent));
+
+	pComponent = m_pShadowAniVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"PointShandowGenVS_ANI");
+	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"VS_Shader_ShadowAni", pComponent));
+	pComponent = m_pShadowNonAniVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"PointShadowGenVS");
+	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"VS_Shader_Shadow", pComponent));
 
 
 	return S_OK;

@@ -17,6 +17,8 @@ private:
 	CVIBuffer*		m_pBuffer;
 	CShader*		m_pVertexShader;
 	CShader*		m_pPixelShader;
+	CShader*		m_pShadowAniVertexShader;
+	CShader*		m_pShadowNonAniVertexShader;
 	CTexture*		m_pTexture;
 	VTXTEX*			m_pVerTex;
 	CTerrainCol*	m_pTerrainCol;

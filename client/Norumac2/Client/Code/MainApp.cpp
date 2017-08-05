@@ -208,6 +208,13 @@ HRESULT CMainApp::Initialize(void)
 		return hr;
 	}
 
+	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"PointShandowGenVS_ANI", L"../ShaderCode/ShadowGen.fx", "PointShandowGenVS_ANI", "vs_5_0", SHADER_ANI);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"System Message", L"PointShadowGenVS_ANI Shader Create Failed", MB_OK);
+		return hr;
+	}
+
 	hr = CShaderMgr::GetInstance()->AddShaderFiles(L"CascadedShadowMapsGenGS", L"../ShaderCode/ShadowGen.fx", "CascadedShadowMapsGenGS", "gs_5_0", SHADER_GS);
 	if (FAILED(hr))
 	{

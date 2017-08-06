@@ -49,7 +49,7 @@ void TimerQueue::processPacket(event_type *p) {
 		if (DISCONNECTED == g_clients[p->id]->get_current_connect_state()) { break; }
 
 		int adding_hp_size = 5;
-		if (true == g_clients[p->id]->is_hp_postion) { adding_hp_size *= 2; }
+		if (true == g_clients[p->id]->is_hp_postion) { adding_hp_size *= 1; }
 
 		// hp가 maxhp 이상이 아니면, 아래 실행
 		if (false == (g_clients[p->id]->get_player_data()->state.hp > (g_clients[p->id]->get_player_data()->state.maxhp - 1))) {

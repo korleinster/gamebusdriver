@@ -51,7 +51,7 @@ ai_status_boss = {
 	aiMovSpeed = 0.7,
 	
 	status = {
-		maxHp	= 1000,
+		maxHp	= 2000,
 	},
 
 	subStatus = {

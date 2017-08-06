@@ -635,11 +635,11 @@ void player_session::m_process_packet(Packet buf[])
 							
 							// 잡은 녀석에는 경험치도 주도록 하자.
 							// 만약 슬라임이고, quest 수치가 10 마리 잡는거 이하라면
-							if ((MAX_AI_SLIME > id) && (MAX_AI_SLIME > m_sub_status.quest)) {
+							if ((MAX_AI_SLIME > id) && (MAX_AI_SLIME > m_sub_status.quest) && (true == quest_start)) {
 								m_sub_status.quest += 1;
 
 								sc_chat chat;
-								chat.id = m_id;
+								chat.id = -1;
 								wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"슬라임 %d 마리 잡음", m_sub_status.quest);
 								if (MAX_AI_SLIME == m_sub_status.quest) { wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"슬라임 퀘스트 완료"); }
  								send_packet(reinterpret_cast<Packet*>(&chat));
@@ -648,11 +648,11 @@ void player_session::m_process_packet(Packet buf[])
 								q.quest = m_sub_status.quest;
 								send_packet(reinterpret_cast<Packet*>(&q));
 							}
-							else if ((MAX_AI_GOBLIN > id) && (MAX_AI_SLIME <= id) && (MAX_AI_GOBLIN > m_sub_status.quest) && (MAX_AI_SLIME <= m_sub_status.quest)) {
+							else if ((MAX_AI_GOBLIN > id) && (MAX_AI_SLIME <= id) && (MAX_AI_GOBLIN > m_sub_status.quest) && (MAX_AI_SLIME <= m_sub_status.quest) && (false == quest_start)) {
 								m_sub_status.quest += 1;
 
 								sc_chat chat;
-								chat.id = m_id;
+								chat.id = -1;
 								wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"고블린 %d 마리 잡음", m_sub_status.quest - MAX_AI_SLIME);
 								if (MAX_AI_GOBLIN == m_sub_status.quest) { wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"고블린 퀘스트 완료");; }
 								send_packet(reinterpret_cast<Packet*>(&chat));
@@ -761,6 +761,13 @@ void player_session::m_process_packet(Packet buf[])
 
 				players->send_packet(reinterpret_cast<Packet*>(&chat));
 			}
+
+			break;
+		}
+		case QUEST_START: {
+
+			if (false == quest_start) { quest_start = true; }
+			if (true == quest_start) { quest_start = false; }
 
 			break;
 		}

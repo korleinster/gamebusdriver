@@ -580,7 +580,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 		wchar_t wcNick[20]; 
 
-		wsprintf(wcNick, L"플레이어%d : ", p->id);
+		if (-1 != p->id) { wsprintf(wcNick, L"플레이어 [ %d ] : ", p->id); }		
 
 		wchar_t TotalChat[MAX_CHAT_SIZE];
 		ZeroMemory(&TotalChat, sizeof(wchar_t) * MAX_CHAT_SIZE);

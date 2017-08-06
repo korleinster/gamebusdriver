@@ -370,7 +370,7 @@ void TimerQueue::processPacket(event_type *p) {
 				case BOSS_ATT_02: {
 					if (SQUARED(player_size) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) {
 
-						vector<unsigned long long> attcked_id;
+						vector<unsigned int> attcked_id;
 
 						// 방향에 따른 공격 위치 지정
 						char my_dir = g_clients[p->id]->get_player_data()->dir;

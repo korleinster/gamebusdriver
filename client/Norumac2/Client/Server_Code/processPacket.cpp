@@ -389,40 +389,40 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 							CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 20, 0xFFFFD200);
 							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
 
-							pObj = CEffect::Create(L"Effect", L"Texture_Slime", D3DXVECTOR3(vPos.x,vPos.y + 2.f, vPos.z));
-							CObjMgr::GetInstance()->AddObject(L"Effect", pObj);
+							//pObj = CEffect::Create(L"Effect", L"Texture_Slime", D3DXVECTOR3(vPos.x,vPos.y + 2.f, vPos.z));
+							//CObjMgr::GetInstance()->AddObject(L"Effect", pObj);
 						}
 						else if (20 > damage_Value)
 						{
 							CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 25, 0xFF00FFFF);
 							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
 
-							pObj = CEffect::Create(L"Effect", L"Texture_Slime", D3DXVECTOR3(vPos.x, vPos.y + 2.f, vPos.z));
-							CObjMgr::GetInstance()->AddObject(L"Effect", pObj);
+							//pObj = CEffect::Create(L"Effect", L"Texture_Slime", D3DXVECTOR3(vPos.x, vPos.y + 2.f, vPos.z));
+							//CObjMgr::GetInstance()->AddObject(L"Effect", pObj);
 						}
 						else if (30 > damage_Value)
 						{
 							CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 30, 0xFF00E4FF);
 							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
 
-							pObj = CEffect::Create(L"Effect", L"Texture_Slime", D3DXVECTOR3(vPos.x, vPos.y + 2.f, vPos.z));
-							CObjMgr::GetInstance()->AddObject(L"Effect", pObj);
+							//pObj = CEffect::Create(L"Effect", L"Texture_Slime", D3DXVECTOR3(vPos.x, vPos.y + 2.f, vPos.z));
+							//CObjMgr::GetInstance()->AddObject(L"Effect", pObj);
 						}
 						else if (40 > damage_Value)
 						{
 							CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 45, 0xFF00A2FF);
 							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
 
-							pObj = CEffect::Create(L"Effect", L"Texture_Slime", D3DXVECTOR3(vPos.x, vPos.y + 2.f, vPos.z));
-							CObjMgr::GetInstance()->AddObject(L"Effect", pObj);
+							//pObj = CEffect::Create(L"Effect", L"Texture_Slime", D3DXVECTOR3(vPos.x, vPos.y + 2.f, vPos.z));
+							//CObjMgr::GetInstance()->AddObject(L"Effect", pObj);
 						}
 						else
 						{
 							CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 60, 0xFF0000FF);
 							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
 
-							pObj = CEffect::Create(L"Effect", L"Texture_Slime", D3DXVECTOR3(vPos.x, vPos.y + 2.f, vPos.z));
-							CObjMgr::GetInstance()->AddObject(L"Effect", pObj);
+							//pObj = CEffect::Create(L"Effect", L"Texture_Slime", D3DXVECTOR3(vPos.x, vPos.y + 2.f, vPos.z));
+							//CObjMgr::GetInstance()->AddObject(L"Effect", pObj);
 						}
 						///////////////////////////////////////////////////
 
@@ -634,6 +634,9 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		sc_quest *p = reinterpret_cast<sc_quest*>(buf);
 
 		CQuestUI* pQuestUI = dynamic_cast<CQuestUI*>(*(CObjMgr::GetInstance()->Get_ObjList(L"QuestUI")->begin()));
+		auto player = CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin();
+		dynamic_cast<CPlayer*>(*player)->m_iQuestStateMount = p->quest;
+
 
 		wchar_t wcQuestState[MAX_BUF_SIZE];
 

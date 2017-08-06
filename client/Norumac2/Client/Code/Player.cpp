@@ -21,6 +21,7 @@
 #include "ResourcesMgr.h"
 #include "OtherPlayer.h"
 #include "NaviMgr.h"
+#include "NPC.h"
 
 #pragma pack(push,1)
 struct CB_VS_PER_OBJECT
@@ -69,6 +70,8 @@ CPlayer::CPlayer()
 	m_bSkillUsed = false;
 	g_fChatCool = 0.f;
 	m_fKeyCool = 5.f;
+	m_eQuestState = QUEST_NOT;
+	m_iQuestStateMount = 0;
 
 	m_Packet = new Packet[MAX_BUF_SIZE];
 }
@@ -865,6 +868,69 @@ void CPlayer::KeyInput()
 		SetNaviIndex(CNaviMgr::GetInstance()->GetCellIndex(&m_pInfo->m_vPos));
 		g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
 		m_bTpCool = true;
+	}
+
+	if (CInput::GetInstance()->GetDIKeyState(DIK_T) & 0x80)
+	{
+		
+		if (m_eQuestState == QUEST_NOT)
+		{
+			list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"NPC")->begin();
+			list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"NPC")->end();
+
+			for (iter; iter != iter_end; ++iter)
+			{
+				if (dynamic_cast<CNpc*>(*iter)->m_eNpcType == NPC_SLIME)
+				{
+					if (abs(m_pInfo->m_vPos.x - (*iter)->GetInfo()->m_vPos.x) < 5.f && abs(m_pInfo->m_vPos.z - (*iter)->GetInfo()->m_vPos.z) < 5.f)
+					{
+						m_eQuestState = QUEST_SLIME;
+						g_client.sendPacket(0, QUEST_START, nullptr);
+						cout << "½½¶óÀÓ Äù½ºÆ® ¹Þ¾ÆÁü" << endl;
+					}
+				}
+			}
+
+		}
+
+		if (m_eQuestState == QUEST_SLIME && m_iQuestStateMount == MAX_AI_SLIME)
+		{
+			list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"NPC")->begin();
+			list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"NPC")->end();
+
+			for (iter; iter != iter_end; ++iter)
+			{
+				if (dynamic_cast<CNpc*>(*iter)->m_eNpcType == NPC_GOBLIN)
+				{
+					if (abs(m_pInfo->m_vPos.x - (*iter)->GetInfo()->m_vPos.x)  < 5.f && abs(m_pInfo->m_vPos.z - (*iter)->GetInfo()->m_vPos.z) < 5.f)
+					{
+						m_eQuestState = QUEST_GOBLIN;
+						g_client.sendPacket(0, QUEST_START, nullptr);
+						cout << "°íºí¸° Äù½ºÆ® ¹Þ¾ÆÁü" << endl;
+					}
+				}
+			}
+
+		}
+
+		if (m_eQuestState == QUEST_SLIME && m_iQuestStateMount == MAX_AI_GOBLIN)
+		{
+			list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"NPC")->begin();
+			list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"NPC")->end();
+
+			for (iter; iter != iter_end; ++iter)
+			{
+				if (dynamic_cast<CNpc*>(*iter)->m_eNpcType == NPC_BOSS)
+				{
+					if (abs(m_pInfo->m_vPos.x - (*iter)->GetInfo()->m_vPos.x) < 5.f && abs(m_pInfo->m_vPos.z - (*iter)->GetInfo()->m_vPos.z) < 5.f)
+					{
+						m_eQuestState = QUEST_BOSS;
+						g_client.sendPacket(0, QUEST_START, nullptr);
+						cout << "º¸½º Äù½ºÆ® ¹Þ¾ÆÁü" << endl;
+					}
+				}
+			}
+		}
 	}
 
 }

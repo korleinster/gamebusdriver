@@ -49,6 +49,8 @@ CNpc::CNpc()
 	m_pSceneVertexShaderCB = NULL;
 	m_pScenePixelShaderCB = NULL;
 
+	m_eNpcType = NPC_SLIME;
+
 }
 
 
@@ -61,7 +63,7 @@ CNpc::~CNpc()
 	::Safe_Delete(m_pBuffer);*/
 }
 
-HRESULT CNpc::Initialize(wstring wstMeshKey, wstring wstrTextureKey, D3DXVECTOR3 vPos)
+HRESULT CNpc::Initialize(wstring wstMeshKey, wstring wstrTextureKey, D3DXVECTOR3 vPos, QUESTNPCTYPE eNpcType)
 {
 	m_pBuffer = NULL;
 	m_pVertexShader = NULL;
@@ -71,6 +73,8 @@ HRESULT CNpc::Initialize(wstring wstMeshKey, wstring wstrTextureKey, D3DXVECTOR3
 
 	m_pSceneVertexShaderCB = NULL;
 	m_pScenePixelShaderCB = NULL;
+
+	m_eNpcType = eNpcType;
 
 	if (FAILED(AddComponent(wstMeshKey, wstrTextureKey)))
 		return E_FAIL;
@@ -190,10 +194,10 @@ void  CNpc::ShadowmapRender(void)
 	}
 }
 
-CNpc * CNpc::Create(wstring wstMeshKey, wstring wstrTextureKey, D3DXVECTOR3 vPos)
+CNpc * CNpc::Create(wstring wstMeshKey, wstring wstrTextureKey, D3DXVECTOR3 vPos, QUESTNPCTYPE eNpcType)
 {
 	CNpc* pObj = new CNpc;
-	if (FAILED(pObj->Initialize(wstMeshKey, wstrTextureKey, vPos)))
+	if (FAILED(pObj->Initialize(wstMeshKey, wstrTextureKey, vPos, eNpcType)))
 		::Safe_Delete(pObj);
 
 	return pObj;

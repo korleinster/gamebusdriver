@@ -18,11 +18,12 @@ AsynchronousClientClass::~AsynchronousClientClass()
 void AsynchronousClientClass::Init(const HWND& hwnd)
 {
 	// Server IP 입력과 DB Login 을 하는 팝업 Dialog
-	DialogBox(g_hInst, MAKEINTRESOURCE(101), hwnd, AboutDlgProc);
+	DialogBox(g_hInst, MAKEINTRESOURCE(IDD_DIALOG1), hwnd, AboutDlgProc);
 	//inputServerIP();
 
 	// init Winsock
-	if (WSAStartup(MAKEWORD(2, 2), &m_wsadata) != 0) {
+	int number_error = WSAStartup(MAKEWORD(2, 2), &m_wsadata);
+	if (number_error != 0) {
 		int err_no = WSAGetLastError();
 		error_quit(L"WSAStartup ERROR", err_no);
 	}

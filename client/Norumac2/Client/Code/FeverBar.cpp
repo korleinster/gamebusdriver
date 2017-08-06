@@ -141,7 +141,7 @@ HRESULT CFeverBar::AddComponent(void)
 void CFeverBar::UpdateBufferToFever(void)
 {
 	auto player = CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin();
-	float fFever = 1.f - (*player)->GetPacketData()->state.gauge / 400.f;
+	float fFever = 1.f - (*player)->GetPacketData()->state.gauge / (*player)->GetPacketData()->state.maxgauge;
 
 	wchar_t wcFever[MAX_BUF_SIZE];
 

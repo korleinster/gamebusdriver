@@ -93,8 +93,8 @@ HRESULT CEffect::Initialize(wstring wstMeshKey, wstring wstrTextureKey , D3DXVEC
 	cbDesc.ByteWidth = sizeof(CB_PS_PER_OBJECT);
 	FAILED_CHECK(m_pGrapicDevice->m_pDevice->CreateBuffer(&cbDesc, NULL, &m_pScenePixelShaderCB));
 
-	cbDesc.ByteWidth = sizeof(D3DXMATRIX);
-	FAILED_CHECK(m_pGrapicDevice->m_pDevice->CreateBuffer(&cbDesc, NULL, &m_pCascadedShadowGenVertexCB));
+	//cbDesc.ByteWidth = sizeof(D3DXMATRIX);
+	//FAILED_CHECK(m_pGrapicDevice->m_pDevice->CreateBuffer(&cbDesc, NULL, &m_pCascadedShadowGenVertexCB));
 
 	return S_OK;
 }
@@ -129,22 +129,6 @@ void CEffect::Render(void)
 {
 	if (m_bCurred == false)
 	{
-		//ConstantBuffer cb;
-		//D3DXMatrixTranspose(&cb.matWorld, &m_pInfo->m_matWorld);
-		//D3DXMatrixTranspose(&cb.matView, &CCamera::GetInstance()->m_matView);
-		//D3DXMatrixTranspose(&cb.matProjection, &CCamera::GetInstance()->m_matProj);
-		//m_pGrapicDevice->m_pDeviceContext->UpdateSubresource(m_pBuffer->m_ConstantBuffer, 0, NULL, &cb, 0, 0);
-
-		//m_pGrapicDevice->m_pDeviceContext->VSSetShader(m_pVertexShader->m_pVertexShader, NULL, 0);
-		//m_pGrapicDevice->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pBuffer->m_ConstantBuffer);
-		////////////////////
-		//m_pGrapicDevice->m_pDeviceContext->PSSetShader(m_pPixelShader->m_pPixelShader, NULL, 0);
-		//m_pGrapicDevice->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
-		//m_pGrapicDevice->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
-
-		////m_pBuffer->Render();
-		//dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(m_ePlayerState);
-
 		// Get the projection & view matrix from the camera class
 		D3DXMATRIX mView = *(CCamera::GetInstance()->GetViewMatrix());
 		D3DXMATRIX mProj = *(CCamera::GetInstance()->GetProjMatrix());
@@ -183,17 +167,6 @@ void CEffect::Render(void)
 
 void  CEffect::ShadowmapRender(void)
 {
-	if (m_bCurred == false)
-	{
-		D3D11_MAPPED_SUBRESOURCE MappedResource;
-		FAILED_CHECK_RETURN(m_pGrapicDevice->m_pDeviceContext->Map(m_pCascadedShadowGenVertexCB, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource), );
-		D3DXMATRIX* pVSPerObject = (D3DXMATRIX*)MappedResource.pData;
-		D3DXMatrixTranspose(pVSPerObject, &m_pInfo->m_matWorld);
-		m_pGrapicDevice->m_pDeviceContext->Unmap(m_pCascadedShadowGenVertexCB, 0);
-		m_pGrapicDevice->m_pDeviceContext->VSSetConstantBuffers(1, 1, &m_pCascadedShadowGenVertexCB);
-
-		dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(0);
-	}
 }
 
 CEffect * CEffect::Create(wstring wstMeshKey, wstring wstrTextureKey, D3DXVECTOR3 vPos)

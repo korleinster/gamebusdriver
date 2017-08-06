@@ -844,7 +844,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 					{
 						list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"Boss")->begin();
 						list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"Boss")->end();
-						//cout << "몬스터 삭제" << endl;
+					//cout << p->id << " 보스 몬스터 삭제" << endl;
 
 						for (; iter != iter_end; ++iter)
 						{

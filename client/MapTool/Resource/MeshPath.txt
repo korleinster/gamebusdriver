@@ -1,4 +1,5 @@
 battlegroundcenter|..\Resource\Mesh\|battlegroundcenter.FBX
+bunsu|..\Resource\Mesh\|bunsu.FBX
 grass|..\Resource\Mesh\|grass.FBX
 grass2|..\Resource\Mesh\|grass2.FBX
 house1|..\Resource\Mesh\|house1.FBX

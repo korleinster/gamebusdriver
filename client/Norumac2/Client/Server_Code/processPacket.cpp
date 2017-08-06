@@ -580,8 +580,10 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 		wchar_t wcNick[20] = L""; 
 
+
 		if ((unsigned int)(-1) != p->id) { wsprintf(wcNick, L"플레이어 [ %d ] : ", p->id); }
 		else { wsprintf(wcNick, L"System : "); }
+
 
 		wchar_t TotalChat[MAX_CHAT_SIZE];
 		ZeroMemory(&TotalChat, sizeof(wchar_t) * MAX_CHAT_SIZE);
@@ -689,7 +691,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			BOSS_ATT_06*/
 
 
-		cout << "보스패킷:" << (int)p->att_type << endl;
+		//cout << "보스패킷:" << (int)p->att_type << endl;
 
 		if (p->att_type == BOSS_ATT_01)
 		{

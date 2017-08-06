@@ -769,7 +769,7 @@ void player_session::m_process_packet(Packet buf[])
 		case QUEST_START: {
 
 			if (false == quest_start) { quest_start = true; }
-			if (true == quest_start) { quest_start = false; }
+			else if (true == quest_start) { quest_start = false; }
 
 			break;
 		}

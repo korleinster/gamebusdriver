@@ -61,8 +61,7 @@ COtherPlayer::COtherPlayer()
 COtherPlayer::~COtherPlayer()
 {
 	CObj::Release();
-	::Safe_Delete(m_pShadowAniVertexShader);
-	::Safe_Delete(m_pShadowNonAniVertexShader);
+
 	/*DWORD ReleasePoint = m_pBuffer->Release();
 	if (ReleasePoint  == 1)
 		::Safe_Delete(m_pBuffer);*/

@@ -59,8 +59,7 @@ CBoss::CBoss()
 CBoss::~CBoss()
 {
 	CObj::Release();
-	::Safe_Delete(m_pShadowAniVertexShader);
-	::Safe_Delete(m_pShadowNonAniVertexShader);
+
 	/*DWORD ReleasePoint = m_pBuffer->Release();
 	if (ReleasePoint  == 1)
 	::Safe_Delete(m_pBuffer);*/
@@ -152,22 +151,6 @@ void CBoss::Render(void)
 {
 	if (m_bCurred == false)
 	{
-		//ConstantBuffer cb;
-		//D3DXMatrixTranspose(&cb.matWorld, &m_pInfo->m_matWorld);
-		//D3DXMatrixTranspose(&cb.matView, &CCamera::GetInstance()->m_matView);
-		//D3DXMatrixTranspose(&cb.matProjection, &CCamera::GetInstance()->m_matProj);
-		//m_pGrapicDevice->m_pDeviceContext->UpdateSubresource(m_pBuffer->m_ConstantBuffer, 0, NULL, &cb, 0, 0);
-
-		//m_pGrapicDevice->m_pDeviceContext->VSSetShader(m_pVertexShader->m_pVertexShader, NULL, 0);
-		//m_pGrapicDevice->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pBuffer->m_ConstantBuffer);
-		////////////////////
-		//m_pGrapicDevice->m_pDeviceContext->PSSetShader(m_pPixelShader->m_pPixelShader, NULL, 0);
-		//m_pGrapicDevice->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
-		//m_pGrapicDevice->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
-
-		////m_pBuffer->Render();
-		//dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(m_ePlayerState);
-
 		// Get the projection & view matrix from the camera class
 		D3DXMATRIX mView = *(CCamera::GetInstance()->GetViewMatrix());
 		D3DXMATRIX mProj = *(CCamera::GetInstance()->GetProjMatrix());

@@ -77,9 +77,7 @@ CPlayer::CPlayer()
 CPlayer::~CPlayer()
 {
 	CObj::Release();
-	::Safe_Delete_Array(m_Packet);
-	::Safe_Delete(m_pShadowAniVertexShader);
-	::Safe_Delete(m_pShadowNonAniVertexShader);
+	::Safe_Delete_Array(m_Packet);	
 }
 
 HRESULT CPlayer::Initialize(void)

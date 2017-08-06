@@ -654,7 +654,19 @@ void player_session::m_process_packet(Packet buf[])
 								sc_chat chat;
 								chat.id = -1;
 								wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"고블린 %d 마리 잡음", m_sub_status.quest - MAX_AI_SLIME);
-								if (MAX_AI_GOBLIN == m_sub_status.quest) { wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"고블린 퀘스트 완료");; }
+								if (MAX_AI_GOBLIN == m_sub_status.quest) { wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"고블린 퀘스트 완료"); }
+								send_packet(reinterpret_cast<Packet*>(&chat));
+
+								sc_quest q;
+								q.quest = m_sub_status.quest;
+								send_packet(reinterpret_cast<Packet*>(&q));
+							}
+							else if (((MAX_AI_BOSS - 1) == id) && (true == quest_start)) {
+								m_sub_status.quest += 1;
+
+								sc_chat chat;
+								chat.id = -1;
+								wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"보스 퀘스트 완료");
 								send_packet(reinterpret_cast<Packet*>(&chat));
 
 								sc_quest q;

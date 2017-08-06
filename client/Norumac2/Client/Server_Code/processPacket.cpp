@@ -578,9 +578,10 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		CFont* pFont = CFont::Create(L"Font_Clear");
 
 
-		wchar_t wcNick[20]; 
+		wchar_t wcNick[20] = L""; 
 
-		if (-1 != p->id) { wsprintf(wcNick, L"플레이어 [ %d ] : ", p->id); }		
+		if ((unsigned int)(-1) != p->id) { wsprintf(wcNick, L"플레이어 [ %d ] : ", p->id); }
+		else { wsprintf(wcNick, L"System : "); }
 
 		wchar_t TotalChat[MAX_CHAT_SIZE];
 		ZeroMemory(&TotalChat, sizeof(wchar_t) * MAX_CHAT_SIZE);

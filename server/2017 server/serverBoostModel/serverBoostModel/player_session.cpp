@@ -724,8 +724,9 @@ void player_session::m_process_packet(Packet buf[])
 
 			if (0 == wcscmp(chatTXT, L"show me the hp")) {
 				if (101 > m_player_data.state.hp) {
-					m_player_data.state.hp += 10000;
+					m_player_data.state.hp += 100;
 					sc_chat cheat;
+					cheat.id = -1;
 					memcpy(cheat.msg, reinterpret_cast<wchar_t*>(L"체력 추가 치트 적용 완료"), MAX_BUF_SIZE - 6);
 					send_packet(reinterpret_cast<Packet*>(&cheat));
 
@@ -737,6 +738,7 @@ void player_session::m_process_packet(Packet buf[])
 				else {
 					m_player_data.state.hp = 100;
 					sc_chat cheat;
+					cheat.id = -1;
 					memcpy(cheat.msg, reinterpret_cast<wchar_t*>(L"체력 치트 해제"), MAX_BUF_SIZE - 6);
 					send_packet(reinterpret_cast<Packet*>(&cheat));
 

@@ -457,7 +457,7 @@ void TimerQueue::processPacket(event_type *p) {
 					}
 					else {
 						// 공격 범위 밖이라면, 따라가야 함... 재공격 요청
-						if ((VIEW_RANGE * VIEW_RANGE) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) {
+						if (SQUARED(VIEW_RANGE) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) {
 							float movSpeed = g_clients[p->id]->ai_mov_speed * 2;
 							if (x > my_x) { my_x += movSpeed; }
 							if (x < my_x) { my_x -= movSpeed; }

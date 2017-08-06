@@ -59,8 +59,6 @@ CNpc::~CNpc()
 	/*DWORD ReleasePoint = m_pBuffer->Release();
 	if (ReleasePoint  == 1)
 	::Safe_Delete(m_pBuffer);*/
-
-	CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, this);
 }
 
 HRESULT CNpc::Initialize(wstring wstMeshKey, wstring wstrTextureKey, D3DXVECTOR3 vPos)
@@ -135,22 +133,6 @@ void CNpc::Render(void)
 {
 	if (m_bCurred == false)
 	{
-		//ConstantBuffer cb;
-		//D3DXMatrixTranspose(&cb.matWorld, &m_pInfo->m_matWorld);
-		//D3DXMatrixTranspose(&cb.matView, &CCamera::GetInstance()->m_matView);
-		//D3DXMatrixTranspose(&cb.matProjection, &CCamera::GetInstance()->m_matProj);
-		//m_pGrapicDevice->m_pDeviceContext->UpdateSubresource(m_pBuffer->m_ConstantBuffer, 0, NULL, &cb, 0, 0);
-
-		//m_pGrapicDevice->m_pDeviceContext->VSSetShader(m_pVertexShader->m_pVertexShader, NULL, 0);
-		//m_pGrapicDevice->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pBuffer->m_ConstantBuffer);
-		////////////////////
-		//m_pGrapicDevice->m_pDeviceContext->PSSetShader(m_pPixelShader->m_pPixelShader, NULL, 0);
-		//m_pGrapicDevice->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
-		//m_pGrapicDevice->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
-
-		////m_pBuffer->Render();
-		//dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(m_ePlayerState);
-
 		// Get the projection & view matrix from the camera class
 		D3DXMATRIX mView = *(CCamera::GetInstance()->GetViewMatrix());
 		D3DXMATRIX mProj = *(CCamera::GetInstance()->GetProjMatrix());
@@ -191,14 +173,28 @@ void  CNpc::ShadowmapRender(void)
 {
 	if (m_bCurred == false)
 	{
-		D3D11_MAPPED_SUBRESOURCE MappedResource;
+		/*D3D11_MAPPED_SUBRESOURCE MappedResource;
 		FAILED_CHECK_RETURN(m_pGrapicDevice->m_pDeviceContext->Map(m_pCascadedShadowGenVertexCB, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource), );
 		D3DXMATRIX* pVSPerObject = (D3DXMATRIX*)MappedResource.pData;
 		D3DXMatrixTranspose(pVSPerObject, &m_pInfo->m_matWorld);
 		m_pGrapicDevice->m_pDeviceContext->Unmap(m_pCascadedShadowGenVertexCB, 0);
 		m_pGrapicDevice->m_pDeviceContext->VSSetConstantBuffers(1, 1, &m_pCascadedShadowGenVertexCB);
 
+		dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(0);*/
+		D3D11_MAPPED_SUBRESOURCE MappedResource;
+		FAILED_CHECK_RETURN(m_pGrapicDevice->m_pDeviceContext->Map(m_pCascadedShadowGenVertexCB, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource), );
+		D3DXMATRIX* pVSPerObject = (D3DXMATRIX*)MappedResource.pData;
+		D3DXMatrixTranspose(pVSPerObject, &m_pInfo->m_matWorld);
+		m_pGrapicDevice->m_pDeviceContext->Unmap(m_pCascadedShadowGenVertexCB, 0);
+		m_pGrapicDevice->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pCascadedShadowGenVertexCB);
+
+		m_pGrapicDevice->m_pDeviceContext->IASetInputLayout(m_pShadowAniVertexShader->m_pVertexLayout);
+		m_pGrapicDevice->m_pDeviceContext->VSSetShader(m_pShadowAniVertexShader->m_pVertexShader, NULL, 0);
+
 		dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(0);
+
+		m_pGrapicDevice->m_pDeviceContext->IASetInputLayout(m_pShadowNonAniVertexShader->m_pVertexLayout);
+		m_pGrapicDevice->m_pDeviceContext->VSSetShader(m_pShadowNonAniVertexShader->m_pVertexShader, NULL, 0);
 	}
 }
 
@@ -243,6 +239,10 @@ HRESULT CNpc::AddComponent(wstring wstMeshKey, wstring wstrTextureKey)
 	pComponent = m_pPixelShader = CShaderMgr::GetInstance()->Clone_Shader(L"RenderScenePS");
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"PS_Shader", pComponent));
 
+	pComponent = m_pShadowAniVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"PointShandowGenVS_ANI");
+	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"VS_Shader_ShadowAni", pComponent));
+	pComponent = m_pShadowNonAniVertexShader = CShaderMgr::GetInstance()->Clone_Shader(L"PointShadowGenVS");
+	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"VS_Shader_Shadow", pComponent));
 
 	return S_OK;
 }

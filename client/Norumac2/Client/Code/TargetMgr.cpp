@@ -60,9 +60,12 @@ HRESULT CTargetMgr::Initialize()
 
 void CTargetMgr::Release()
 {
-	delete m_pMRT_GBuffer;
-	delete m_pMRT_Border;
-	delete m_pMRT_ShadowMap;
+	Safe_Delete(m_pMRT_GBuffer);
+	Safe_Delete(m_pMRT_Border);
+	Safe_Delete(m_pMRT_ShadowMap);
+	//delete m_pMRT_GBuffer;
+	//delete m_pMRT_Border;
+	//delete m_pMRT_ShadowMap;
 }
 
 void CTargetMgr::RenderGBuffer(ID3D11DeviceContext* pd3dImmediateContext)

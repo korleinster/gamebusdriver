@@ -144,7 +144,7 @@ HRESULT CHpBar::AddComponent(void)
 void CHpBar::UpdateBufferToHp(void)
 {
 	auto player = CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin();
-	float fHp = 1.f - (*player)->GetPacketData()->state.hp / (*player)->GetPacketData()->state.maxhp;
+	float fHp = 1.f - (*player)->GetPacketData()->state.hp / float((*player)->GetPacketData()->state.maxhp);
 
 	wchar_t wcHP[MAX_BUF_SIZE];
 

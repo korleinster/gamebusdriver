@@ -254,13 +254,12 @@ void TimerQueue::processPacket(event_type *p) {
 		if (p->id == MAX_AI_BOSS - 1) {
 
 			g_clients[p->id]->get_player_data()->dir = dir_refresh();
-			cout << "BOSS ATTCKED\n";
 
-			int boss_skill_cnt = BOSS_ATT_06 - BOSS_ATT;
+			int boss_skill_cnt = BOSS_ATT_06 - BOSS_ATT_01;
 			srand((unsigned)time(NULL));
 			player_size = 2.3;
 			{
-				switch ((rand() % boss_skill_cnt) + BOSS_ATT)
+				switch ((rand() % boss_skill_cnt) + BOSS_ATT_01)
 				{
 				case BOSS_ATT_06:
 				case BOSS_ATT_02:
@@ -330,7 +329,7 @@ void TimerQueue::processPacket(event_type *p) {
 							break;
 						}
 
-						g_time_queue.add_event(p->id, 3, CHANGE_AI_STATE_ATT, true);
+						g_time_queue.add_event(p->id, 1, CHANGE_AI_STATE_ATT, true);
 					}
 					else {
 						// 공격 범위 밖이라면, 따라가야 함... 재공격 요청
@@ -516,7 +515,7 @@ void TimerQueue::processPacket(event_type *p) {
 				}
 				case BOSS_ATT_05: {
 					if ((player_size * player_size) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) {
-						g_clients[target_id]->get_player_data()->state.hp -= (g_clients[p->id]->get_sub_data()->str - g_clients[target_id]->get_sub_data()->def);
+						g_clients[target_id]->get_player_data()->state.hp -= (g_clients[p->id]->get_sub_data()->str + 20 - g_clients[target_id]->get_sub_data()->def);
 						int target_hp = g_clients[target_id]->get_player_data()->state.hp;
 
 						sc_boss_atk b_atk;
@@ -580,7 +579,7 @@ void TimerQueue::processPacket(event_type *p) {
 							break;
 						}
 
-						g_time_queue.add_event(p->id, 3, CHANGE_AI_STATE_ATT, true);
+						g_time_queue.add_event(p->id, 1, CHANGE_AI_STATE_ATT, true);
 					}
 					else {
 						// 공격 범위 밖이라면, 따라가야 함... 재공격 요청
@@ -620,6 +619,7 @@ void TimerQueue::processPacket(event_type *p) {
 					break;
 				}
 				default:
+					cout << "BOSS NONE OF ERROR\n";
 					break;
 				}
 			}
@@ -925,7 +925,7 @@ void TimerQueue::processPacket(event_type *p) {
 					dir_packet_refresh.id = p->id;
 					g_clients[p->id]->send_packet_other_players_in_view_range(reinterpret_cast<Packet*>(&dir_packet_refresh), p->id);
 
-					g_time_queue.add_event(p->id, 3, CHANGE_AI_STATE_ATT, true);
+					g_time_queue.add_event(p->id, 1, CHANGE_AI_STATE_ATT, true);
 				}
 				else {
 					// 공격 범위 밖이라면, 따라가야 함... 재공격 요청
@@ -1112,7 +1112,7 @@ void TimerQueue::processPacket(event_type *p) {
 
 						float atked_x = players->get_player_data()->pos.x, atked_y = players->get_player_data()->pos.y;
 						if (true == is_in_boss_skill_range(players->get_player_data()->pos)) {
-							players->get_player_data()->state.hp -= (g_clients[p->id]->get_sub_data()->str - players->get_sub_data()->def);
+							players->get_player_data()->state.hp -= (g_clients[p->id]->get_sub_data()->str + 10 - players->get_sub_data()->def);
 							int target_hp = players->get_player_data()->state.hp;
 
 							sc_atk damage_packet;
@@ -1171,7 +1171,7 @@ void TimerQueue::processPacket(event_type *p) {
 					dir_packet_refresh.id = p->id;
 					g_clients[p->id]->send_packet_other_players_in_view_range(reinterpret_cast<Packet*>(&dir_packet_refresh), p->id);
 
-					g_time_queue.add_event(p->id, 3, CHANGE_AI_STATE_ATT, true);
+					g_time_queue.add_event(p->id, 1, CHANGE_AI_STATE_ATT, true);
 				}
 				else {
 					// 공격 범위 밖이라면, 따라가야 함... 재공격 요청

@@ -15,6 +15,7 @@
 #include "AnimationMgr.h"
 #include "Frustum.h"
 #include "NaviMgr.h"
+#include "SoundMgr.h"
 
 //ÀÏ¹Ý°´Ã¼
 #include "Shader.h"
@@ -293,6 +294,9 @@ HRESULT CMainApp::Initialize(void)
 	hr = CFontMgr::GetInstance()->AddFont(L"../Resource/Font/Ko_Star.ttf", L"Font_Star", L"KoStar");
 	hr = CFontMgr::GetInstance()->AddFont(L"../Resource/Font/ClearType.ttf", L"Font_Clear", L"ClearFont");
 
+	CSoundMgr::GetInstance()->Initialize();
+	CSoundMgr::GetInstance()->LoadSoundFile();
+
 
 	CScene* pScene = NULL;
 
@@ -349,4 +353,5 @@ void CMainApp::Release(void)
 	CAnimationMgr::GetInstance()->DestroyInstance();
 	CNaviMgr::GetInstance()->DestroyInstance();
 	CFontMgr::GetInstance()->DestroyInstance();
+	CSoundMgr::GetInstance()->DestroyInstance();
 }

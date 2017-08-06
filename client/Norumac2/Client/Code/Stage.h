@@ -18,6 +18,7 @@ public:
 	
 public:
 	bool m_bNaviRender;
+	bool m_bBGMStart;
 
 public:
 	HRESULT	CreateObj(void);

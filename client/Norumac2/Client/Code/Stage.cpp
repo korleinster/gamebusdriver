@@ -26,10 +26,13 @@
 #include "BottomFever.h"
 #include "SkillUI.h"
 #include "Effect.h"
+#include "SoundMgr.h"
+#include "NPC.h"
 
 CStage::CStage()
 	: m_bFirstLogin(false)
 	, m_bNaviRender(true)
+	, m_bBGMStart(false)
 {
 }
 
@@ -49,6 +52,12 @@ HRESULT CStage::Initialize(void)
 
 int CStage::Update(void)
 {
+	if (!m_bBGMStart)
+	{
+		CSoundMgr::GetInstance()->PlayBgm(L"Stage1BGM.wav");
+		m_bBGMStart = true;
+	}
+
 	if (m_bFirstLogin == false)
 	{
 		m_bFirstLogin = true;
@@ -192,6 +201,8 @@ HRESULT CStage::CreateObj(void)
 	NaviLoad();
 
 
+	pObj = CNpc::Create(L"Player",L"Texture_Player", D3DXVECTOR3(170.f, 4.f, 400.f));
+	CObjMgr::GetInstance()->AddObject(L"NPC", pObj);
 	
 
 	pObj = CPlayer::Create();

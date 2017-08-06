@@ -191,13 +191,16 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 					}
 					else
 					{
-						if (CObjMgr::GetInstance()->Get_ObjList(L"Boss")->size() != 0)
+						if (CObjMgr::GetInstance()->Get_ObjList(L"Boss") != NULL)
 						{
-							auto iter = *CObjMgr::GetInstance()->Get_ObjList(L"Boss")->begin();
-							if ((reinterpret_cast<CBoss*>(iter))->GetAniState() == BOSS_IDLE)
+							if (CObjMgr::GetInstance()->Get_ObjList(L"Boss")->size() != 0)
 							{
-								(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
-								(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_NORMALATT);
+								auto iter = *CObjMgr::GetInstance()->Get_ObjList(L"Boss")->begin();
+								if ((reinterpret_cast<CBoss*>(iter))->GetAniState() == BOSS_IDLE)
+								{
+									(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
+									(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_NORMALATT);
+								}
 							}
 						}
 
@@ -577,7 +580,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 		wchar_t wcNick[20]; 
 
-		wsprintf(wcNick, L"플레이어%d : ", p->id);
+		if (-1 != p->id) { wsprintf(wcNick, L"플레이어 [ %d ] : ", p->id); }		
 
 		wchar_t TotalChat[MAX_CHAT_SIZE];
 		ZeroMemory(&TotalChat, sizeof(wchar_t) * MAX_CHAT_SIZE);
@@ -837,19 +840,22 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 				if (CObjMgr::GetInstance()->Get_ObjList(L"Boss") != NULL)
 				{
-					list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"Boss")->begin();
-					list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"Boss")->end();
+					if (CObjMgr::GetInstance()->Get_ObjList(L"Boss")->size() != 0)
+					{
+						list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"Boss")->begin();
+						list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"Boss")->end();
 					//cout << p->id << " 보스 몬스터 삭제" << endl;
 
-					for (; iter != iter_end; ++iter)
-					{
-						//NPC 혹은 몬스터가 죽었을시
-						if ((*iter)->GetPacketData()->id == p->id)
+						for (; iter != iter_end; ++iter)
 						{
-							CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
-							::Safe_Delete(*iter);
-							iter = CObjMgr::GetInstance()->Get_ObjList(L"Boss")->erase(iter);
-							break;
+							//NPC 혹은 몬스터가 죽었을시
+							if ((*iter)->GetPacketData()->id == p->id)
+							{
+								CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
+								::Safe_Delete(*iter);
+								iter = CObjMgr::GetInstance()->Get_ObjList(L"Boss")->erase(iter);
+								break;
+							}
 						}
 					}
 				}

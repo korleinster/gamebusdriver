@@ -247,6 +247,12 @@
     <Filter Include="02.Object\09.Effect">
       <UniqueIdentifier>{cf8a2238-ddb0-4f86-a738-dae9945a004e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="95.System\06.SoundMgr">
+      <UniqueIdentifier>{c573cdcb-c505-41b6-bc79-c30ece44b6b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\10.NPC">
+      <UniqueIdentifier>{e1ad7a92-5a49-4801-945e-42df1ae4a7d4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -507,6 +513,12 @@
     <ClInclude Include="..\Code\Effect.h">
       <Filter>02.Object\09.Effect</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\SoundMgr.h">
+      <Filter>95.System\06.SoundMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\NPC.h">
+      <Filter>02.Object\10.NPC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\MainApp.cpp">
@@ -739,6 +751,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\Effect.cpp">
       <Filter>02.Object\09.Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\SoundMgr.cpp">
+      <Filter>95.System\06.SoundMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\NPC.cpp">
+      <Filter>02.Object\10.NPC</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

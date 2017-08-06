@@ -87,6 +87,7 @@ public:
 	Position origin_pos;
 	int radius;
 
+	bool quest_start{ false };
 private:
 	// Function
 	void m_recv_packet();

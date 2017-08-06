@@ -319,12 +319,17 @@ void TimerQueue::processPacket(event_type *p) {
 							g_clients[target_id]->vl_unlock();
 							g_time_queue.add_event(target_id, 5, DEAD_TO_ALIVE, false);
 
-							if (true != g_clients[p->id]->ai_is_rand_mov) {
-								g_clients[p->id]->ai_is_rand_mov = true;
-								g_clients[p->id]->m_target_id = none;
-								g_clients[p->id]->set_state(mov);
-								g_time_queue.add_event(p->id, 3, CHANGE_AI_STATE_MOV, true);
-							}
+							/*if (true != g_clients[p->id]->ai_is_rand_mov) {
+							g_clients[p->id]->ai_is_rand_mov = true;
+							g_clients[p->id]->m_target_id = none;
+							g_clients[p->id]->set_state(mov);
+							g_time_queue.add_event(p->id, 3, CHANGE_AI_STATE_MOV, true);
+							}*/
+
+							g_clients[p->id]->ai_is_rand_mov = true;
+							g_clients[p->id]->m_target_id = none;
+							g_clients[p->id]->set_state(mov);
+							g_time_queue.add_event(p->id, 3, CHANGE_AI_STATE_MOV, true);
 
 							break;
 						}
@@ -445,12 +450,17 @@ void TimerQueue::processPacket(event_type *p) {
 							g_clients[target_id]->vl_unlock();
 							g_time_queue.add_event(target_id, 5, DEAD_TO_ALIVE, false);
 
-							if (true != g_clients[p->id]->ai_is_rand_mov) {
+							/*if (true != g_clients[p->id]->ai_is_rand_mov) {
 								g_clients[p->id]->ai_is_rand_mov = true;
 								g_clients[p->id]->m_target_id = none;
 								g_clients[p->id]->set_state(mov);
 								g_time_queue.add_event(p->id, 3, CHANGE_AI_STATE_MOV, true);
-							}
+							}*/
+
+							g_clients[p->id]->ai_is_rand_mov = true;
+							g_clients[p->id]->m_target_id = none;
+							g_clients[p->id]->set_state(mov);
+							g_time_queue.add_event(p->id, 3, CHANGE_AI_STATE_MOV, true);
 
 							break;
 						}
@@ -784,12 +794,17 @@ void TimerQueue::processPacket(event_type *p) {
 								players->vl_unlock();
 								g_time_queue.add_event(players->get_id(), 5, DEAD_TO_ALIVE, false);
 
-								if (true != g_clients[p->id]->ai_is_rand_mov) {
-									g_clients[p->id]->ai_is_rand_mov = true;
-									g_clients[p->id]->m_target_id = none;
-									g_clients[p->id]->set_state(mov);
-									g_time_queue.add_event(p->id, 3, CHANGE_AI_STATE_MOV, true);
-								}
+								/*if (true != g_clients[p->id]->ai_is_rand_mov) {
+								g_clients[p->id]->ai_is_rand_mov = true;
+								g_clients[p->id]->m_target_id = none;
+								g_clients[p->id]->set_state(mov);
+								g_time_queue.add_event(p->id, 3, CHANGE_AI_STATE_MOV, true);
+								}*/
+
+								g_clients[p->id]->ai_is_rand_mov = true;
+								g_clients[p->id]->m_target_id = none;
+								g_clients[p->id]->set_state(mov);
+								g_time_queue.add_event(p->id, 3, CHANGE_AI_STATE_MOV, true);
 
 								break;
 							}
@@ -1030,12 +1045,17 @@ void TimerQueue::processPacket(event_type *p) {
 								players->vl_unlock();
 								g_time_queue.add_event(players->get_id(), 5, DEAD_TO_ALIVE, false);
 
-								if (true != g_clients[p->id]->ai_is_rand_mov) {
-									g_clients[p->id]->ai_is_rand_mov = true;
-									g_clients[p->id]->m_target_id = none;
-									g_clients[p->id]->set_state(mov);
-									g_time_queue.add_event(p->id, 3, CHANGE_AI_STATE_MOV, true);
-								}
+								/*if (true != g_clients[p->id]->ai_is_rand_mov) {
+								g_clients[p->id]->ai_is_rand_mov = true;
+								g_clients[p->id]->m_target_id = none;
+								g_clients[p->id]->set_state(mov);
+								g_time_queue.add_event(p->id, 3, CHANGE_AI_STATE_MOV, true);
+								}*/
+
+								g_clients[p->id]->ai_is_rand_mov = true;
+								g_clients[p->id]->m_target_id = none;
+								g_clients[p->id]->set_state(mov);
+								g_time_queue.add_event(p->id, 3, CHANGE_AI_STATE_MOV, true);
 
 								break;
 							}

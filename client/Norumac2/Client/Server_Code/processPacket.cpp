@@ -443,7 +443,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 						if (iSize == 0)
 						{
 							CObj * pObj = CMobHpBar::Create();
-							dynamic_cast<CMobHpBar*>(pObj)->SetRendHp(p->hp, 100); // 최대체력이 생기면 바꿔주자.
+							dynamic_cast<CMobHpBar*>(pObj)->SetRendHp(p->hp, 2000); // 최대체력이 생기면 바꿔주자.
 							CObjMgr::GetInstance()->AddObject(L"MobHpBar", pObj);
 
 							pObj = CMobHpBasic::Create();
@@ -454,7 +454,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 						else
 						{
 							CObj* pObj = (*(CObjMgr::GetInstance()->Get_ObjList(L"MobHpBar")->begin()));
-							dynamic_cast<CMobHpBar*>(pObj)->SetRendHp(p->hp, 100);
+							dynamic_cast<CMobHpBar*>(pObj)->SetRendHp(p->hp, 2000);
 							dynamic_cast<CMobHpBar*>(pObj)->ResetRendTime();
 
 							pObj = (*(CObjMgr::GetInstance()->Get_ObjList(L"MobHpBaisic")->begin()));

@@ -654,7 +654,12 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			wsprintf(wcQuestState, L"고블린 남은 마리수 : %d / %d", p->quest - MAX_AI_SLIME, MAX_AI_GOBLIN - MAX_AI_SLIME);
 			pQuestUI->m_QuestState->m_wstrText = wcQuestState;
 		}
-
+		else 
+		{
+			pQuestUI->m_QuestScript->m_wstrText = L"매직 골램을 잡아라!";
+			wsprintf(wcQuestState, L"매직골램 퇴치 : %d / %d", p->quest - MAX_AI_SLIME - MAX_AI_GOBLIN, MAX_AI_BOSS);
+			pQuestUI->m_QuestState->m_wstrText = wcQuestState;
+		}
 
 
 		/*

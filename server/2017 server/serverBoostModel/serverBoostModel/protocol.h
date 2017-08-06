@@ -50,6 +50,7 @@ enum PacketProtocolType {
 
 	// 퀘스트 진행 상황
 	QUEST_PROGRESS,
+	QUEST_START, // client to server
 
 	// 플레이어 공격 상태 ( 콤보 및 스킬 종류 등등 )
 	COMBO1,
@@ -68,6 +69,7 @@ enum PacketProtocolType {
 	BOSS_ATT_04,
 	BOSS_ATT_05,
 	BOSS_ATT_06,
+
 };
 
 using Packet = unsigned char;

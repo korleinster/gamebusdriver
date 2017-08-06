@@ -48,7 +48,7 @@ ai_status_boss = {
 	radius = 1,
 	
 	howMany	= 1 + ai_status_goblin.howMany,
-	aiMovSpeed = 0.5,
+	aiMovSpeed = 1,
 	
 	status = {
 		maxHp	= 100,

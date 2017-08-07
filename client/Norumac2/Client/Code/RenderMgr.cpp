@@ -200,15 +200,11 @@ void CRenderMgr::Render(const float & fTime)
 
 	if (m_bRenderGBuffer)
 	{
-		//m_pLightMgr->DoDebugLightVolume(m_pDevice->m_pDeviceContext);
+		m_pLightMgr->DoDebugLightVolume(m_pDevice->m_pDeviceContext);
 		m_pTargetMgr->RenderGBuffer(m_pDevice->m_pDeviceContext);
 	}
 
-	
-
 	m_pDevice->m_pDeviceContext->OMSetRenderTargets(1, &m_pDevice->m_pRenderTargetView, m_pTargetMgr->GetGBuffer()->GetDepthDSV());
-
-	//m_pLightMgr->DoDebugCascadedShadows(m_pDevice->m_pDeviceContext, m_pTargetMgr->GetGBuffer());
 
 	m_pDevice->m_pDeviceContext->OMSetDepthStencilState(pPrevDepthState, nPrevStencil);
 	Safe_Release(pPrevDepthState);
@@ -229,9 +225,6 @@ void CRenderMgr::Render(const float & fTime)
 
 void CRenderMgr::Render_Priority(void)
 {
-	//m_pDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
-	//m_pDevice->SetRenderState(D3DRS_ZENABLE, FALSE);
-
 	list<CObj*>::iterator	iter = m_RenderGroup[TYPE_PRIORITY].begin();
 	list<CObj*>::iterator	iter_end = m_RenderGroup[TYPE_PRIORITY].end();
 
@@ -245,9 +238,6 @@ void CRenderMgr::Render_Priority(void)
 			++iter;
 		}
 	}
-
-	//m_pDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-	//m_pDevice->SetRenderState(D3DRS_ZENABLE, TRUE);
 }
 
 void CRenderMgr::Render_NoneAlpha(void)
@@ -542,7 +532,7 @@ void CRenderMgr::Input(float fTime)
 	//	}
 	//}
 
-	if (CInput::GetInstance()->GetDIMouseState(CInput::DIM_RBUTTON))
+	/*if (CInput::GetInstance()->GetDIMouseState(CInput::DIM_RBUTTON))
 	{
 
 		float fDX = (float)CInput::GetInstance()->GetDIMouseMove(CInput::DIM_X);
@@ -561,5 +551,5 @@ void CRenderMgr::Input(float fTime)
 		D3DXVec3Normalize(&m_vDirLight, &m_vDirLight);
 
 		cout << "m_vDirLight.x : " << m_vDirLight.x << " " << "m_vDirLight.y : " << m_vDirLight.y << " " << "m_vDirLight.z : " << m_vDirLight.z << endl;
-	}
+	}*/
 }

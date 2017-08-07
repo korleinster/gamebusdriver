@@ -61,6 +61,7 @@ HRESULT CMultiRenderTarget::Initialize(UINT width, UINT height)
 
 	// 텍스쳐 생성
 	dtd.Format = depthStencilTextureFormat;
+
 	FAILED_CHECK(CDevice::GetInstance()->m_pDevice->CreateTexture2D(&dtd, NULL, &m_DepthStencilRT));
 
 	// Create the render target views

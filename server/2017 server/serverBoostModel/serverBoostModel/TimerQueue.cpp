@@ -329,12 +329,12 @@ void TimerQueue::processPacket(event_type *p) {
 							g_clients[p->id]->ai_is_rand_mov = true;
 							g_clients[p->id]->m_target_id = none;
 							g_clients[p->id]->set_state(mov);
-							g_time_queue.add_event(p->id, 3, CHANGE_AI_STATE_MOV, true);
+							g_time_queue.add_event(p->id, 6, CHANGE_AI_STATE_MOV, true);
 
 							break;
 						}
 
-						g_time_queue.add_event(p->id, 1, CHANGE_AI_STATE_ATT, true);
+						g_time_queue.add_event(p->id, 2, CHANGE_AI_STATE_ATT, true);
 					}
 					else {
 						// 공격 범위 밖이라면, 따라가야 함... 재공격 요청
@@ -358,7 +358,7 @@ void TimerQueue::processPacket(event_type *p) {
 							pac.pos = g_clients[p->id]->get_player_data()->pos;
 							g_clients[p->id]->send_packet_other_players_in_view_range(reinterpret_cast<Packet*>(&pac), p->id);
 
-							g_time_queue.add_event(p->id, 1, CHANGE_AI_STATE_ATT, true);
+							g_time_queue.add_event(p->id, 2, CHANGE_AI_STATE_ATT, true);
 						}
 						else {
 							// 아예 시야 범위 밖이라면, 초기화 필요
@@ -465,7 +465,7 @@ void TimerQueue::processPacket(event_type *p) {
 							break;
 						}
 
-						g_time_queue.add_event(p->id, 1, CHANGE_AI_STATE_ATT, true);
+						g_time_queue.add_event(p->id, 2, CHANGE_AI_STATE_ATT, true);
 					}
 					else {
 						// 공격 범위 밖이라면, 따라가야 함... 재공격 요청
@@ -489,7 +489,7 @@ void TimerQueue::processPacket(event_type *p) {
 							pac.pos = g_clients[p->id]->get_player_data()->pos;
 							g_clients[p->id]->send_packet_other_players_in_view_range(reinterpret_cast<Packet*>(&pac), p->id);
 
-							g_time_queue.add_event(p->id, 1, CHANGE_AI_STATE_ATT, true);
+							g_time_queue.add_event(p->id, 2, CHANGE_AI_STATE_ATT, true);
 						}
 						else {
 							// 아예 시야 범위 밖이라면, 초기화 필요
@@ -580,7 +580,7 @@ void TimerQueue::processPacket(event_type *p) {
 					break;
 				}
 
-				g_time_queue.add_event(p->id, 1, CHANGE_AI_STATE_ATT, true);
+				g_time_queue.add_event(p->id, 2, CHANGE_AI_STATE_ATT, true);
 			}
 			// 애초에 원거리 공격이니, 시야 범위 밖이라면 원 상태로 초기화
 			else if (true == g_clients[p->id]->ai_is_rand_mov) {
@@ -659,7 +659,7 @@ void TimerQueue::processPacket(event_type *p) {
 				break;
 			}
 
-			g_time_queue.add_event(p->id, 1, CHANGE_AI_STATE_ATT, true);
+			g_time_queue.add_event(p->id, 2, CHANGE_AI_STATE_ATT, true);
 		}
 		else {
 			// 공격 범위 밖이라면, 따라가야 함... 재공격 요청
@@ -683,7 +683,7 @@ void TimerQueue::processPacket(event_type *p) {
 				pac.pos = g_clients[p->id]->get_player_data()->pos;
 				g_clients[p->id]->send_packet_other_players_in_view_range(reinterpret_cast<Packet*>(&pac), p->id);
 
-				g_time_queue.add_event(p->id, 1, CHANGE_AI_STATE_ATT, true);
+				g_time_queue.add_event(p->id, 2, CHANGE_AI_STATE_ATT, true);
 			}
 			else {
 				// 아예 시야 범위 밖이라면, 초기화 필요
@@ -826,7 +826,7 @@ void TimerQueue::processPacket(event_type *p) {
 					dir_packet_refresh.id = p->id;
 					g_clients[p->id]->send_packet_other_players_in_view_range(reinterpret_cast<Packet*>(&dir_packet_refresh), p->id);
 
-					g_time_queue.add_event(p->id, 1, CHANGE_AI_STATE_ATT, true);
+					g_time_queue.add_event(p->id, 2, CHANGE_AI_STATE_ATT, true);
 				}
 				else {
 					// 공격 범위 밖이라면, 따라가야 함... 재공격 요청
@@ -867,7 +867,7 @@ void TimerQueue::processPacket(event_type *p) {
 						pac.pos = g_clients[p->id]->get_player_data()->pos;
 						g_clients[p->id]->send_packet_other_players_in_view_range(reinterpret_cast<Packet*>(&pac), p->id);
 
-						g_time_queue.add_event(p->id, 1, CHANGE_AI_STATE_ATT, true);
+						g_time_queue.add_event(p->id, 2, CHANGE_AI_STATE_ATT, true);
 					}
 					else {
 						// 아예 시야 범위 밖이라면, 초기화 필요
@@ -1077,7 +1077,7 @@ void TimerQueue::processPacket(event_type *p) {
 					dir_packet_refresh.id = p->id;
 					g_clients[p->id]->send_packet_other_players_in_view_range(reinterpret_cast<Packet*>(&dir_packet_refresh), p->id);
 
-					g_time_queue.add_event(p->id, 1, CHANGE_AI_STATE_ATT, true);
+					g_time_queue.add_event(p->id, 2, CHANGE_AI_STATE_ATT, true);
 				}
 				else {
 					// 공격 범위 밖이라면, 따라가야 함... 재공격 요청
@@ -1118,7 +1118,7 @@ void TimerQueue::processPacket(event_type *p) {
 						pac.pos = g_clients[p->id]->get_player_data()->pos;
 						g_clients[p->id]->send_packet_other_players_in_view_range(reinterpret_cast<Packet*>(&pac), p->id);
 
-						g_time_queue.add_event(p->id, 1, CHANGE_AI_STATE_ATT, true);
+						g_time_queue.add_event(p->id, 2, CHANGE_AI_STATE_ATT, true);
 					}
 					else {
 						// 아예 시야 범위 밖이라면, 초기화 필요

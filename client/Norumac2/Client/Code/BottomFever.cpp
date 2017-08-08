@@ -141,7 +141,7 @@ HRESULT CBottomFever::AddComponent(void)
 void CBottomFever::UpdateBufferToFever(void)
 {
 	auto player = CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin();
-	float fFever = 1.f - (*player)->GetPacketData()->state.gauge / (*player)->GetPacketData()->state.maxgauge;
+	float fFever = 1.f - (*player)->GetPacketData()->state.gauge / float((*player)->GetPacketData()->state.maxgauge);
 
 	wchar_t wcFever[MAX_BUF_SIZE];
 

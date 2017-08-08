@@ -39,6 +39,8 @@ private:
 	bool			m_bSkillUsed;//스킬사용여부
 	float			m_fKeyCool;//공격키용 쿨
 
+	QUESTSTATE		m_eQuestState;
+
 	// Scene meshes shader constant buffers
 	ID3D11Buffer*		m_pSceneVertexShaderCB;
 	ID3D11Buffer*		m_pScenePixelShaderCB;
@@ -48,6 +50,7 @@ public:
 	float			m_fTpTime;//텔레포트 쿨
 	bool			m_bPotionCool;//포션 쿨
 	bool			m_bTpCool;//텔레포트 쿨
+	int				m_iQuestStateMount;
 
 public:
 	virtual HRESULT Initialize(void);

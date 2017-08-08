@@ -17,6 +17,8 @@ private:
 	CVIBuffer*		m_pBuffer;
 	CShader*		m_pVertexShader;
 	CShader*		m_pPixelShader;
+	CShader*		m_pShadowAniVertexShader;
+	CShader*		m_pShadowNonAniVertexShader;
 	CTexture*		m_pTexture;
 	VTXTEX*			m_pVerTex;
 	CTerrainCol*	m_pTerrainCol;
@@ -24,9 +26,11 @@ private:
 	// Scene meshes shader constant buffers
 	ID3D11Buffer*		m_pSceneVertexShaderCB;
 	ID3D11Buffer*		m_pScenePixelShaderCB;
+public:
+	QUESTNPCTYPE	m_eNpcType;
 
 public:
-	virtual HRESULT Initialize(wstring wstMeshKey, wstring wstrTextureKey, D3DXVECTOR3 vPos);
+	virtual HRESULT Initialize(wstring wstMeshKey, wstring wstrTextureKey, D3DXVECTOR3 vPos, QUESTNPCTYPE eNpcType);
 	virtual int		Update(void);
 	virtual void	Render(void);
 	virtual void	ShadowmapRender(void);
@@ -34,7 +38,7 @@ public:
 
 
 public:
-	static CNpc* Create(wstring wstMeshKey, wstring wstrTextureKey, D3DXVECTOR3 vPos);
+	static CNpc* Create(wstring wstMeshKey, wstring wstrTextureKey, D3DXVECTOR3 vPos, QUESTNPCTYPE eNpcType);
 
 private:
 	HRESULT	AddComponent(wstring wstMeshKey, wstring wstrTextureKey);

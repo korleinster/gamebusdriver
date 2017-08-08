@@ -177,15 +177,21 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 				{
 					if (p->attacking_id < MAX_AI_GOBLIN)
 					{
-						for (auto iter : *CObjMgr::GetInstance()->Get_ObjList(L"Monster"))
+						if (CObjMgr::GetInstance()->Get_ObjList(L"Monster") != NULL)
 						{
-							if (iter->GetPacketData()->id == p->attacking_id) {
-								if ((reinterpret_cast<CMonster*>(iter))->GetAniState() == MONSTER_IDLE)
+							if (CObjMgr::GetInstance()->Get_ObjList(L"Monster")->size() != 0)
+							{
+								for (auto iter : *CObjMgr::GetInstance()->Get_ObjList(L"Monster"))
 								{
-									(reinterpret_cast<CMonster*>(iter))->m_bKey = true;
-									(reinterpret_cast<CMonster*>(iter))->SetAniState(MONSTER_ATT);
+									if (iter->GetPacketData()->id == p->attacking_id) {
+										if ((reinterpret_cast<CMonster*>(iter))->GetAniState() == MONSTER_IDLE)
+										{
+											(reinterpret_cast<CMonster*>(iter))->m_bKey = true;
+											(reinterpret_cast<CMonster*>(iter))->SetAniState(MONSTER_ATT);
+										}
+										break;
+									}
 								}
-								break;
 							}
 						}
 					}
@@ -212,21 +218,30 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 					for (auto iter : *CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer"))
 					{
 						if (iter->GetPacketData()->id == p->attacking_id) {
-							if ((reinterpret_cast<COtherPlayer*>(iter))->GetAniState() == PLAYER_IDLE)
-							{
+							
 								(reinterpret_cast<COtherPlayer*>(iter))->m_bKey = true;
-								if(p->comboState == COMBO1)
+								if (p->comboState == COMBO1)
+								{
 									(reinterpret_cast<COtherPlayer*>(iter))->SetAniState(PLAYER_ATT1);
-								else if(p->comboState == COMBO2)
+								}
+								else if (p->comboState == COMBO2)
+								{
 									(reinterpret_cast<COtherPlayer*>(iter))->SetAniState(PLAYER_ATT2);
+								}
 								else if (p->comboState == COMBO3)
 								{
 									(reinterpret_cast<COtherPlayer*>(iter))->SetAniState(PLAYER_ATT3);
 								}
-								else if (p->comboState == ATK_COMBO_ETC) {
-									// 그냥 기존 애니메이션 재생되게 놔두면 된다.
+								else if (p->comboState == SKILL1) 
+								{
+									(reinterpret_cast<COtherPlayer*>(iter))->SetAniState(PLAYER_SKILL1);
 								}
-							}
+								else if (p->comboState == SKILL2)
+								{
+									(reinterpret_cast<COtherPlayer*>(iter))->SetAniState(PLAYER_SKILL2);
+								}
+
+							
 							break;
 						}
 					}
@@ -389,40 +404,40 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 							CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 20, 0xFFFFD200);
 							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
 
-							pObj = CEffect::Create(L"Effect", L"Texture_Slime", D3DXVECTOR3(vPos.x,vPos.y + 2.f, vPos.z));
-							CObjMgr::GetInstance()->AddObject(L"Effect", pObj);
+							//pObj = CEffect::Create(L"Effect", L"Texture_Slime", D3DXVECTOR3(vPos.x,vPos.y + 2.f, vPos.z));
+							//CObjMgr::GetInstance()->AddObject(L"Effect", pObj);
 						}
 						else if (20 > damage_Value)
 						{
 							CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 25, 0xFF00FFFF);
 							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
 
-							pObj = CEffect::Create(L"Effect", L"Texture_Slime", D3DXVECTOR3(vPos.x, vPos.y + 2.f, vPos.z));
-							CObjMgr::GetInstance()->AddObject(L"Effect", pObj);
+							//pObj = CEffect::Create(L"Effect", L"Texture_Slime", D3DXVECTOR3(vPos.x, vPos.y + 2.f, vPos.z));
+							//CObjMgr::GetInstance()->AddObject(L"Effect", pObj);
 						}
 						else if (30 > damage_Value)
 						{
 							CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 30, 0xFF00E4FF);
 							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
 
-							pObj = CEffect::Create(L"Effect", L"Texture_Slime", D3DXVECTOR3(vPos.x, vPos.y + 2.f, vPos.z));
-							CObjMgr::GetInstance()->AddObject(L"Effect", pObj);
+							//pObj = CEffect::Create(L"Effect", L"Texture_Slime", D3DXVECTOR3(vPos.x, vPos.y + 2.f, vPos.z));
+							//CObjMgr::GetInstance()->AddObject(L"Effect", pObj);
 						}
 						else if (40 > damage_Value)
 						{
 							CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 45, 0xFF00A2FF);
 							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
 
-							pObj = CEffect::Create(L"Effect", L"Texture_Slime", D3DXVECTOR3(vPos.x, vPos.y + 2.f, vPos.z));
-							CObjMgr::GetInstance()->AddObject(L"Effect", pObj);
+							//pObj = CEffect::Create(L"Effect", L"Texture_Slime", D3DXVECTOR3(vPos.x, vPos.y + 2.f, vPos.z));
+							//CObjMgr::GetInstance()->AddObject(L"Effect", pObj);
 						}
 						else
 						{
 							CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 60, 0xFF0000FF);
 							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
 
-							pObj = CEffect::Create(L"Effect", L"Texture_Slime", D3DXVECTOR3(vPos.x, vPos.y + 2.f, vPos.z));
-							CObjMgr::GetInstance()->AddObject(L"Effect", pObj);
+							//pObj = CEffect::Create(L"Effect", L"Texture_Slime", D3DXVECTOR3(vPos.x, vPos.y + 2.f, vPos.z));
+							//CObjMgr::GetInstance()->AddObject(L"Effect", pObj);
 						}
 						///////////////////////////////////////////////////
 
@@ -443,7 +458,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 						if (iSize == 0)
 						{
 							CObj * pObj = CMobHpBar::Create();
-							dynamic_cast<CMobHpBar*>(pObj)->SetRendHp(p->hp, 100); // 최대체력이 생기면 바꿔주자.
+							dynamic_cast<CMobHpBar*>(pObj)->SetRendHp(p->hp, 2000); // 최대체력이 생기면 바꿔주자.
 							CObjMgr::GetInstance()->AddObject(L"MobHpBar", pObj);
 
 							pObj = CMobHpBasic::Create();
@@ -454,7 +469,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 						else
 						{
 							CObj* pObj = (*(CObjMgr::GetInstance()->Get_ObjList(L"MobHpBar")->begin()));
-							dynamic_cast<CMobHpBar*>(pObj)->SetRendHp(p->hp, 100);
+							dynamic_cast<CMobHpBar*>(pObj)->SetRendHp(p->hp, 2000);
 							dynamic_cast<CMobHpBar*>(pObj)->ResetRendTime();
 
 							pObj = (*(CObjMgr::GetInstance()->Get_ObjList(L"MobHpBaisic")->begin()));
@@ -578,9 +593,12 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		CFont* pFont = CFont::Create(L"Font_Clear");
 
 
-		wchar_t wcNick[20]; 
+		wchar_t wcNick[20] = L""; 
 
-		if (-1 != p->id) { wsprintf(wcNick, L"플레이어 [ %d ] : ", p->id); }		
+
+		if ((unsigned int)(-1) != p->id) { wsprintf(wcNick, L"플레이어 [ %d ] : ", p->id); }
+		else { wsprintf(wcNick, L"System : "); }
+
 
 		wchar_t TotalChat[MAX_CHAT_SIZE];
 		ZeroMemory(&TotalChat, sizeof(wchar_t) * MAX_CHAT_SIZE);
@@ -634,6 +652,9 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		sc_quest *p = reinterpret_cast<sc_quest*>(buf);
 
 		CQuestUI* pQuestUI = dynamic_cast<CQuestUI*>(*(CObjMgr::GetInstance()->Get_ObjList(L"QuestUI")->begin()));
+		auto player = CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin();
+		dynamic_cast<CPlayer*>(*player)->m_iQuestStateMount = p->quest;
+
 
 		wchar_t wcQuestState[MAX_BUF_SIZE];
 
@@ -651,7 +672,12 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			wsprintf(wcQuestState, L"고블린 남은 마리수 : %d / %d", p->quest - MAX_AI_SLIME, MAX_AI_GOBLIN - MAX_AI_SLIME);
 			pQuestUI->m_QuestState->m_wstrText = wcQuestState;
 		}
-
+		else 
+		{
+			pQuestUI->m_QuestScript->m_wstrText = L"매직 골램을 잡아라!";
+			wsprintf(wcQuestState, L"매직골램 퇴치 : %d / %d", p->quest - MAX_AI_SLIME - MAX_AI_GOBLIN, MAX_AI_BOSS);
+			pQuestUI->m_QuestState->m_wstrText = wcQuestState;
+		}
 
 
 		/*
@@ -680,7 +706,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			BOSS_ATT_06*/
 
 
-		cout << "보스패킷:" << (int)p->att_type << endl;
+		//cout << "보스패킷:" << (int)p->att_type << endl;
 
 		if (p->att_type == BOSS_ATT_01)
 		{
@@ -817,19 +843,26 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 			if (p->id < MAX_AI_GOBLIN)
 			{
-				list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"Monster")->begin();
-				list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"Monster")->end();
-				//cout << "몬스터 삭제" << endl;
 
-				for (; iter != iter_end; ++iter)
+				if (CObjMgr::GetInstance()->Get_ObjList(L"Monster") != NULL)
 				{
-					//NPC 혹은 몬스터가 죽었을시
-					if ((*iter)->GetPacketData()->id == p->id)
+					if (CObjMgr::GetInstance()->Get_ObjList(L"Monster")->size() != 0)
 					{
-						CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
-						::Safe_Delete(*iter);
-						iter = CObjMgr::GetInstance()->Get_ObjList(L"Monster")->erase(iter);
-						break;
+						list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"Monster")->begin();
+						list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"Monster")->end();
+						//cout << "몬스터 삭제" << endl;
+
+						for (; iter != iter_end; ++iter)
+						{
+							//NPC 혹은 몬스터가 죽었을시
+							if ((*iter)->GetPacketData()->id == p->id)
+							{
+								CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
+								::Safe_Delete(*iter);
+								iter = CObjMgr::GetInstance()->Get_ObjList(L"Monster")->erase(iter);
+								break;
+							}
+						}
 					}
 				}
 

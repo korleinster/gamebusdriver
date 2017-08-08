@@ -48,15 +48,15 @@ ai_status_boss = {
 	radius = 1,
 	
 	howMany	= 1 + ai_status_goblin.howMany,
-	aiMovSpeed = 1,
+	aiMovSpeed = 0.7,
 	
 	status = {
-		maxHp	= 100,
+		maxHp	= 2000,
 	},
 
 	subStatus = {
 		crit	= 5,
-		def		= 10,
+		def		= 15,
 		str		= 20,
 		agi		= 10,
 		intel	= 10,

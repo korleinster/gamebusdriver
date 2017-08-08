@@ -135,204 +135,204 @@ DWORD CNaviMgr::MoveOnNaviMesh(D3DXVECTOR3* pPos, const D3DXVECTOR3* pDir, const
 		if (pNeighbor == NULL)
 		{
 			// 슬라이딩 벡터
-			if (iCnt == 1)
-			{
-				/*D3DXVECTOR3 vDir = *(const_cast<D3DXVECTOR3*>(pDir));
+			//if (iCnt == 1)
+			//{
+			//	/*D3DXVECTOR3 vDir = *(const_cast<D3DXVECTOR3*>(pDir));
 
-				vDir = m_vecNaviMesh[dwCurrentIdx]->SlidingVector(vDir, Neighbor);
-				*pPos += vDir;*/
+			//	vDir = m_vecNaviMesh[dwCurrentIdx]->SlidingVector(vDir, Neighbor);
+			//	*pPos += vDir;*/
 
-				D3DXVECTOR3 vDir = *(const_cast<D3DXVECTOR3*>(pDir));
+			//	D3DXVECTOR3 vDir = *(const_cast<D3DXVECTOR3*>(pDir));
 
-				D3DXVECTOR3 vPoint[3];
-				D3DXVECTOR3 vLine[2];
-				D3DXVECTOR3 vCrossLine, vPlane;
-				float fY;
+			//	D3DXVECTOR3 vPoint[3];
+			//	D3DXVECTOR3 vLine[2];
+			//	D3DXVECTOR3 vCrossLine, vPlane;
+			//	float fY;
 
-				D3DXVec3Normalize(&vCrossLine, &vCrossLine);
-				D3DXVec3Normalize(&vPlane, &vPlane);
-				vPoint[0] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_A);
-				vPoint[1] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_B);
-				vPoint[2] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_C);
+			//	D3DXVec3Normalize(&vCrossLine, &vCrossLine);
+			//	D3DXVec3Normalize(&vPlane, &vPlane);
+			//	vPoint[0] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_A);
+			//	vPoint[1] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_B);
+			//	vPoint[2] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_C);
 
-				vLine[0] = vPoint[0] - vPoint[1];
-				vLine[1] = vPoint[0] - vPoint[2];
+			//	vLine[0] = vPoint[0] - vPoint[1];
+			//	vLine[1] = vPoint[0] - vPoint[2];
 
-				D3DXVec3Cross(&vCrossLine, &vLine[0], &vLine[1]);
+			//	D3DXVec3Cross(&vCrossLine, &vLine[0], &vLine[1]);
 
-				fY = ((-(pPos->x * vCrossLine.x)) + (vPoint[0].x * vCrossLine.x) + (vPoint[0].y * vCrossLine.y) - (pPos->z * vCrossLine.z) + (vPoint[0].z * vCrossLine.z)) / vCrossLine.y;
+			//	fY = ((-(pPos->x * vCrossLine.x)) + (vPoint[0].x * vCrossLine.x) + (vPoint[0].y * vCrossLine.y) - (pPos->z * vCrossLine.z) + (vPoint[0].z * vCrossLine.z)) / vCrossLine.y;
 
-				vDir = m_vecNaviMesh[dwCurrentIdx]->SlidingVector(vDir, Neighbor);
-				*pPos += vDir;
-				pPos->y = fY;
+			//	vDir = m_vecNaviMesh[dwCurrentIdx]->SlidingVector(vDir, Neighbor);
+			//	*pPos += vDir;
+			//	pPos->y = fY;
 
-			}
-			else if (iCnt == 2)
-			{
-				D3DXVECTOR2 vPos = D3DXVECTOR2((*pPos).x, (*pPos).z);
-				D3DXVECTOR3 vDir = *(const_cast<D3DXVECTOR3*>(pDir));
-				vDir = m_vecNaviMesh[dwCurrentIdx]->SlidingVector(vDir, Neighbor);
+			//}
+			//else if (iCnt == 2)
+			//{
+			//	D3DXVECTOR2 vPos = D3DXVECTOR2((*pPos).x, (*pPos).z);
+			//	D3DXVECTOR3 vDir = *(const_cast<D3DXVECTOR3*>(pDir));
+			//	vDir = m_vecNaviMesh[dwCurrentIdx]->SlidingVector(vDir, Neighbor);
 
-				if (Neighbor == CNaviCell::NEIGHBOR_AB)
-				{
-					D3DXVECTOR2 vA = m_vecNaviMesh[dwCurrentIdx]->GetLine(CNaviCell::LINE_AB)->m_vStartPoint - vPos;
-					D3DXVECTOR2 vB = m_vecNaviMesh[dwCurrentIdx]->GetLine(CNaviCell::LINE_AB)->m_vEndPoint - vPos;
-					float fLengthA = D3DXVec2Length(&vA);
-					float fLengthB = D3DXVec2Length(&vB);
-					bool bCompare = true;
-					if (fLengthA > fLengthB)
-						bCompare = false;
+			//	if (Neighbor == CNaviCell::NEIGHBOR_AB)
+			//	{
+			//		D3DXVECTOR2 vA = m_vecNaviMesh[dwCurrentIdx]->GetLine(CNaviCell::LINE_AB)->m_vStartPoint - vPos;
+			//		D3DXVECTOR2 vB = m_vecNaviMesh[dwCurrentIdx]->GetLine(CNaviCell::LINE_AB)->m_vEndPoint - vPos;
+			//		float fLengthA = D3DXVec2Length(&vA);
+			//		float fLengthB = D3DXVec2Length(&vB);
+			//		bool bCompare = true;
+			//		if (fLengthA > fLengthB)
+			//			bCompare = false;
 
-					if (NULL != m_vecNaviMesh[dwCurrentIdx]->GetNeighbor(CNaviCell::NEIGHBOR_BC) && bCompare == false)
-					{
-						D3DXVECTOR3 vPoint[3];
-						D3DXVECTOR3 vLine[2];
-						D3DXVECTOR3 vCrossLine;
-						float fY;
+			//		if (NULL != m_vecNaviMesh[dwCurrentIdx]->GetNeighbor(CNaviCell::NEIGHBOR_BC) && bCompare == false)
+			//		{
+			//			D3DXVECTOR3 vPoint[3];
+			//			D3DXVECTOR3 vLine[2];
+			//			D3DXVECTOR3 vCrossLine;
+			//			float fY;
 
-						D3DXVec3Normalize(&vCrossLine, &vCrossLine);
-						vPoint[0] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_A);
-						vPoint[1] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_B);
-						vPoint[2] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_C);
+			//			D3DXVec3Normalize(&vCrossLine, &vCrossLine);
+			//			vPoint[0] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_A);
+			//			vPoint[1] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_B);
+			//			vPoint[2] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_C);
 
-						vLine[0] = vPoint[0] - vPoint[1];
-						vLine[1] = vPoint[0] - vPoint[2];
+			//			vLine[0] = vPoint[0] - vPoint[1];
+			//			vLine[1] = vPoint[0] - vPoint[2];
 
-						D3DXVec3Cross(&vCrossLine, &vLine[0], &vLine[1]);
+			//			D3DXVec3Cross(&vCrossLine, &vLine[0], &vLine[1]);
 
-						fY = ((-(pPos->x * vCrossLine.x)) + (vPoint[0].x * vCrossLine.x) + (vPoint[0].y * vCrossLine.y) - (pPos->z * vCrossLine.z) + (vPoint[0].z * vCrossLine.z)) / vCrossLine.y;
-						pPos->y = fY;
-						*pPos += vDir;
-					}
-					else if (NULL != m_vecNaviMesh[dwCurrentIdx]->GetNeighbor(CNaviCell::NEIGHBOR_CA) && bCompare == true)
-					{
-						D3DXVECTOR3 vPoint[3];
-						D3DXVECTOR3 vLine[2];
-						D3DXVECTOR3 vCrossLine;
-						float fY;
+			//			fY = ((-(pPos->x * vCrossLine.x)) + (vPoint[0].x * vCrossLine.x) + (vPoint[0].y * vCrossLine.y) - (pPos->z * vCrossLine.z) + (vPoint[0].z * vCrossLine.z)) / vCrossLine.y;
+			//			pPos->y = fY;
+			//			*pPos += vDir;
+			//		}
+			//		else if (NULL != m_vecNaviMesh[dwCurrentIdx]->GetNeighbor(CNaviCell::NEIGHBOR_CA) && bCompare == true)
+			//		{
+			//			D3DXVECTOR3 vPoint[3];
+			//			D3DXVECTOR3 vLine[2];
+			//			D3DXVECTOR3 vCrossLine;
+			//			float fY;
 
-						D3DXVec3Normalize(&vCrossLine, &vCrossLine);
-						vPoint[0] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_A);
-						vPoint[1] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_B);
-						vPoint[2] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_C);
+			//			D3DXVec3Normalize(&vCrossLine, &vCrossLine);
+			//			vPoint[0] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_A);
+			//			vPoint[1] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_B);
+			//			vPoint[2] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_C);
 
-						vLine[0] = vPoint[0] - vPoint[1];
-						vLine[1] = vPoint[0] - vPoint[2];
+			//			vLine[0] = vPoint[0] - vPoint[1];
+			//			vLine[1] = vPoint[0] - vPoint[2];
 
-						D3DXVec3Cross(&vCrossLine, &vLine[0], &vLine[1]);
+			//			D3DXVec3Cross(&vCrossLine, &vLine[0], &vLine[1]);
 
-						fY = ((-(pPos->x * vCrossLine.x)) + (vPoint[0].x * vCrossLine.x) + (vPoint[0].y * vCrossLine.y) - (pPos->z * vCrossLine.z) + (vPoint[0].z * vCrossLine.z)) / vCrossLine.y;
-						pPos->y = fY;
-						*pPos += vDir;
-					}
-				}
-				else if (Neighbor == CNaviCell::NEIGHBOR_BC)
-				{
-					D3DXVECTOR2 vB = m_vecNaviMesh[dwCurrentIdx]->GetLine(CNaviCell::LINE_BC)->m_vStartPoint - vPos;
-					D3DXVECTOR2 vC = m_vecNaviMesh[dwCurrentIdx]->GetLine(CNaviCell::LINE_BC)->m_vEndPoint - vPos;
-					float fLengthB = D3DXVec2Length(&vB);
-					float fLengthC = D3DXVec2Length(&vC);
-					bool bCompare = true;
-					if (fLengthB > fLengthC)
-						bCompare = false;
+			//			fY = ((-(pPos->x * vCrossLine.x)) + (vPoint[0].x * vCrossLine.x) + (vPoint[0].y * vCrossLine.y) - (pPos->z * vCrossLine.z) + (vPoint[0].z * vCrossLine.z)) / vCrossLine.y;
+			//			pPos->y = fY;
+			//			*pPos += vDir;
+			//		}
+			//	}
+			//	else if (Neighbor == CNaviCell::NEIGHBOR_BC)
+			//	{
+			//		D3DXVECTOR2 vB = m_vecNaviMesh[dwCurrentIdx]->GetLine(CNaviCell::LINE_BC)->m_vStartPoint - vPos;
+			//		D3DXVECTOR2 vC = m_vecNaviMesh[dwCurrentIdx]->GetLine(CNaviCell::LINE_BC)->m_vEndPoint - vPos;
+			//		float fLengthB = D3DXVec2Length(&vB);
+			//		float fLengthC = D3DXVec2Length(&vC);
+			//		bool bCompare = true;
+			//		if (fLengthB > fLengthC)
+			//			bCompare = false;
 
-					if (NULL != m_vecNaviMesh[dwCurrentIdx]->GetNeighbor(CNaviCell::NEIGHBOR_CA) && bCompare == false)
-					{
-						D3DXVECTOR3 vPoint[3];
-						D3DXVECTOR3 vLine[2];
-						D3DXVECTOR3 vCrossLine;
-						float fY;
+			//		if (NULL != m_vecNaviMesh[dwCurrentIdx]->GetNeighbor(CNaviCell::NEIGHBOR_CA) && bCompare == false)
+			//		{
+			//			D3DXVECTOR3 vPoint[3];
+			//			D3DXVECTOR3 vLine[2];
+			//			D3DXVECTOR3 vCrossLine;
+			//			float fY;
 
-						D3DXVec3Normalize(&vCrossLine, &vCrossLine);
-						vPoint[0] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_A);
-						vPoint[1] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_B);
-						vPoint[2] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_C);
+			//			D3DXVec3Normalize(&vCrossLine, &vCrossLine);
+			//			vPoint[0] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_A);
+			//			vPoint[1] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_B);
+			//			vPoint[2] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_C);
 
-						vLine[0] = vPoint[0] - vPoint[1];
-						vLine[1] = vPoint[0] - vPoint[2];
+			//			vLine[0] = vPoint[0] - vPoint[1];
+			//			vLine[1] = vPoint[0] - vPoint[2];
 
-						D3DXVec3Cross(&vCrossLine, &vLine[0], &vLine[1]);
+			//			D3DXVec3Cross(&vCrossLine, &vLine[0], &vLine[1]);
 
-						fY = ((-(pPos->x * vCrossLine.x)) + (vPoint[0].x * vCrossLine.x) + (vPoint[0].y * vCrossLine.y) - (pPos->z * vCrossLine.z) + (vPoint[0].z * vCrossLine.z)) / vCrossLine.y;
-						pPos->y = fY;
-						*pPos += vDir;
-					}
-					else if (NULL != m_vecNaviMesh[dwCurrentIdx]->GetNeighbor(CNaviCell::NEIGHBOR_AB) && bCompare == true)
-					{
-						D3DXVECTOR3 vPoint[3];
-						D3DXVECTOR3 vLine[2];
-						D3DXVECTOR3 vCrossLine;
-						float fY;
+			//			fY = ((-(pPos->x * vCrossLine.x)) + (vPoint[0].x * vCrossLine.x) + (vPoint[0].y * vCrossLine.y) - (pPos->z * vCrossLine.z) + (vPoint[0].z * vCrossLine.z)) / vCrossLine.y;
+			//			pPos->y = fY;
+			//			*pPos += vDir;
+			//		}
+			//		else if (NULL != m_vecNaviMesh[dwCurrentIdx]->GetNeighbor(CNaviCell::NEIGHBOR_AB) && bCompare == true)
+			//		{
+			//			D3DXVECTOR3 vPoint[3];
+			//			D3DXVECTOR3 vLine[2];
+			//			D3DXVECTOR3 vCrossLine;
+			//			float fY;
 
-						D3DXVec3Normalize(&vCrossLine, &vCrossLine);
-						vPoint[0] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_A);
-						vPoint[1] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_B);
-						vPoint[2] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_C);
+			//			D3DXVec3Normalize(&vCrossLine, &vCrossLine);
+			//			vPoint[0] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_A);
+			//			vPoint[1] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_B);
+			//			vPoint[2] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_C);
 
-						vLine[0] = vPoint[0] - vPoint[1];
-						vLine[1] = vPoint[0] - vPoint[2];
+			//			vLine[0] = vPoint[0] - vPoint[1];
+			//			vLine[1] = vPoint[0] - vPoint[2];
 
-						D3DXVec3Cross(&vCrossLine, &vLine[0], &vLine[1]);
+			//			D3DXVec3Cross(&vCrossLine, &vLine[0], &vLine[1]);
 
-						fY = ((-(pPos->x * vCrossLine.x)) + (vPoint[0].x * vCrossLine.x) + (vPoint[0].y * vCrossLine.y) - (pPos->z * vCrossLine.z) + (vPoint[0].z * vCrossLine.z)) / vCrossLine.y;
-						pPos->y = fY;
-						*pPos += vDir;
-					}
-				}
-				else if (Neighbor == CNaviCell::NEIGHBOR_CA)
-				{
-					D3DXVECTOR2 vC = m_vecNaviMesh[dwCurrentIdx]->GetLine(CNaviCell::LINE_CA)->m_vStartPoint - vPos;
-					D3DXVECTOR2 vA = m_vecNaviMesh[dwCurrentIdx]->GetLine(CNaviCell::LINE_CA)->m_vEndPoint - vPos;
-					float fLengthC = D3DXVec2Length(&vC);
-					float fLengthA = D3DXVec2Length(&vA);
-					bool bCompare = true;
-					if (fLengthC > fLengthA)
-						bCompare = false;
+			//			fY = ((-(pPos->x * vCrossLine.x)) + (vPoint[0].x * vCrossLine.x) + (vPoint[0].y * vCrossLine.y) - (pPos->z * vCrossLine.z) + (vPoint[0].z * vCrossLine.z)) / vCrossLine.y;
+			//			pPos->y = fY;
+			//			*pPos += vDir;
+			//		}
+			//	}
+			//	else if (Neighbor == CNaviCell::NEIGHBOR_CA)
+			//	{
+			//		D3DXVECTOR2 vC = m_vecNaviMesh[dwCurrentIdx]->GetLine(CNaviCell::LINE_CA)->m_vStartPoint - vPos;
+			//		D3DXVECTOR2 vA = m_vecNaviMesh[dwCurrentIdx]->GetLine(CNaviCell::LINE_CA)->m_vEndPoint - vPos;
+			//		float fLengthC = D3DXVec2Length(&vC);
+			//		float fLengthA = D3DXVec2Length(&vA);
+			//		bool bCompare = true;
+			//		if (fLengthC > fLengthA)
+			//			bCompare = false;
 
-					if (NULL != m_vecNaviMesh[dwCurrentIdx]->GetNeighbor(CNaviCell::NEIGHBOR_AB) && bCompare == false)
-					{
-						D3DXVECTOR3 vPoint[3];
-						D3DXVECTOR3 vLine[2];
-						D3DXVECTOR3 vCrossLine;
-						float fY;
+			//		if (NULL != m_vecNaviMesh[dwCurrentIdx]->GetNeighbor(CNaviCell::NEIGHBOR_AB) && bCompare == false)
+			//		{
+			//			D3DXVECTOR3 vPoint[3];
+			//			D3DXVECTOR3 vLine[2];
+			//			D3DXVECTOR3 vCrossLine;
+			//			float fY;
 
-						D3DXVec3Normalize(&vCrossLine, &vCrossLine);
-						vPoint[0] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_A);
-						vPoint[1] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_B);
-						vPoint[2] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_C);
+			//			D3DXVec3Normalize(&vCrossLine, &vCrossLine);
+			//			vPoint[0] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_A);
+			//			vPoint[1] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_B);
+			//			vPoint[2] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_C);
 
-						vLine[0] = vPoint[0] - vPoint[1];
-						vLine[1] = vPoint[0] - vPoint[2];
+			//			vLine[0] = vPoint[0] - vPoint[1];
+			//			vLine[1] = vPoint[0] - vPoint[2];
 
-						D3DXVec3Cross(&vCrossLine, &vLine[0], &vLine[1]);
+			//			D3DXVec3Cross(&vCrossLine, &vLine[0], &vLine[1]);
 
-						fY = ((-(pPos->x * vCrossLine.x)) + (vPoint[0].x * vCrossLine.x) + (vPoint[0].y * vCrossLine.y) - (pPos->z * vCrossLine.z) + (vPoint[0].z * vCrossLine.z)) / vCrossLine.y;
-						pPos->y = fY;
-						*pPos += vDir;
-					}
-					else if (NULL != m_vecNaviMesh[dwCurrentIdx]->GetNeighbor(CNaviCell::NEIGHBOR_BC) && bCompare == true)
-					{
-						D3DXVECTOR3 vPoint[3];
-						D3DXVECTOR3 vLine[2];
-						D3DXVECTOR3 vCrossLine;
-						float fY;
+			//			fY = ((-(pPos->x * vCrossLine.x)) + (vPoint[0].x * vCrossLine.x) + (vPoint[0].y * vCrossLine.y) - (pPos->z * vCrossLine.z) + (vPoint[0].z * vCrossLine.z)) / vCrossLine.y;
+			//			pPos->y = fY;
+			//			*pPos += vDir;
+			//		}
+			//		else if (NULL != m_vecNaviMesh[dwCurrentIdx]->GetNeighbor(CNaviCell::NEIGHBOR_BC) && bCompare == true)
+			//		{
+			//			D3DXVECTOR3 vPoint[3];
+			//			D3DXVECTOR3 vLine[2];
+			//			D3DXVECTOR3 vCrossLine;
+			//			float fY;
 
-						D3DXVec3Normalize(&vCrossLine, &vCrossLine);
-						vPoint[0] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_A);
-						vPoint[1] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_B);
-						vPoint[2] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_C);
+			//			D3DXVec3Normalize(&vCrossLine, &vCrossLine);
+			//			vPoint[0] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_A);
+			//			vPoint[1] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_B);
+			//			vPoint[2] = *m_vecNaviMesh[dwCurrentIdx]->GetPoint(CNaviCell::POINT_C);
 
-						vLine[0] = vPoint[0] - vPoint[1];
-						vLine[1] = vPoint[0] - vPoint[2];
+			//			vLine[0] = vPoint[0] - vPoint[1];
+			//			vLine[1] = vPoint[0] - vPoint[2];
 
-						D3DXVec3Cross(&vCrossLine, &vLine[0], &vLine[1]);
+			//			D3DXVec3Cross(&vCrossLine, &vLine[0], &vLine[1]);
 
-						fY = ((-(pPos->x * vCrossLine.x)) + (vPoint[0].x * vCrossLine.x) + (vPoint[0].y * vCrossLine.y) - (pPos->z * vCrossLine.z) + (vPoint[0].z * vCrossLine.z)) / vCrossLine.y;
-						pPos->y = fY;
-						*pPos += vDir;
-					}
-				}
-			}
+			//			fY = ((-(pPos->x * vCrossLine.x)) + (vPoint[0].x * vCrossLine.x) + (vPoint[0].y * vCrossLine.y) - (pPos->z * vCrossLine.z) + (vPoint[0].z * vCrossLine.z)) / vCrossLine.y;
+			//			pPos->y = fY;
+			//			*pPos += vDir;
+			//		}
+			//	}
+			//}
 			return dwCurrentIdx;
 		}
 		else

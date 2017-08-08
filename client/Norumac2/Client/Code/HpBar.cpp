@@ -40,8 +40,8 @@ HRESULT CHpBar::Initialize(void)
 	m_pFont->m_wstrText = L" ";
 	m_pFont->m_fSize = 20.f;
 	m_pFont->m_nColor = 0xFF0000FF;
-	m_pFont->m_nFlag = FW1_CENTER | FW1_VCENTER | FW1_RESTORESTATE;
-	m_pFont->m_vPos = D3DXVECTOR2(m_fOriginX + 150, m_fOriginY);
+	m_pFont->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
+	m_pFont->m_vPos = D3DXVECTOR2(m_fOriginX + 120, m_fOriginY);
 	m_pFont->m_fOutlineSize = 1.f;
 	m_pFont->m_nOutlineColor = 0xFF000000 /*0xFFFFFFFF*/;
 
@@ -144,11 +144,22 @@ HRESULT CHpBar::AddComponent(void)
 void CHpBar::UpdateBufferToHp(void)
 {
 	auto player = CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin();
-	float fHp = 1.f - (*player)->GetPacketData()->state.hp / 100.f;
-
+	float fHp;
 	wchar_t wcHP[MAX_BUF_SIZE];
+	if ((*player)->GetPacketData()->state.hp > 100)
+	{
+		fHp = 1.f - (*player)->GetPacketData()->state.hp / float((*player)->GetPacketData()->state.hp);
+		wsprintf(wcHP, L"%d / %d(Cheat On)", (*player)->GetPacketData()->state.hp, (*player)->GetPacketData()->state.hp);
+	}
+	else
+	{
+		fHp = 1.f - (*player)->GetPacketData()->state.hp / float((*player)->GetPacketData()->state.maxhp);
+		wsprintf(wcHP, L"%d / %d", (*player)->GetPacketData()->state.hp, (*player)->GetPacketData()->state.maxhp);
+	}
 
-	wsprintf(wcHP, L"%d / %d", (*player)->GetPacketData()->state.hp, (*player)->GetPacketData()->state.maxhp);
+	
+
+	
 
 	m_pFont->m_wstrText = wcHP;
 

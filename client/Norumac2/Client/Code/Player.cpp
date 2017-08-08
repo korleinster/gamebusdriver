@@ -230,7 +230,6 @@ int CPlayer::Update(void)
 		m_fSpeed = 12.0;
 	}
 
-	//cout << "ÄÞº¸1:" << boolalpha << m_bCombo[0] << " / ÄÞº¸2:" << boolalpha << m_bCombo[1] << endl;
 
 
 	return 0;
@@ -291,9 +290,9 @@ void CPlayer::Render(void)
 
 
 	if (m_bDeath == false)
-		dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(m_ePlayerState);
+		dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(m_ePlayerState, 40.f);
 	else if (m_bDeath == true)
-		dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimationOnce(PLAYER_DEAD);
+		dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimationOnce(PLAYER_DEAD, 40.f);
 }
 
 void  CPlayer::ShadowmapRender(void)
@@ -309,9 +308,9 @@ void  CPlayer::ShadowmapRender(void)
 	m_pGrapicDevice->m_pDeviceContext->VSSetShader(m_pShadowAniVertexShader->m_pVertexShader, NULL, 0);
 
 	if (m_bDeath == false)
-		dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(m_ePlayerState);
+		dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(m_ePlayerState,40.f);
 	else if (m_bDeath == true)
-		dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimationOnce(PLAYER_DEAD);
+		dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimationOnce(PLAYER_DEAD, 40.f);
 
 	m_pGrapicDevice->m_pDeviceContext->IASetInputLayout(m_pShadowNonAniVertexShader->m_pVertexLayout);
 	m_pGrapicDevice->m_pDeviceContext->VSSetShader(m_pShadowNonAniVertexShader->m_pVertexShader, NULL, 0);

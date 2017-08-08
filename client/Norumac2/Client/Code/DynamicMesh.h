@@ -97,9 +97,9 @@ private:
 
 
 public:
-	void		PlayAnimation(int _iIdx);
+	void		PlayAnimation(int _iIdx, float _fMulTime);
 	void		BWPlayAnim(int _iIdx);
-	void		PlayAnimationOnce(int _iIdx);
+	void		PlayAnimationOnce(int _iIdx, float _fMulTime);
 	void		ResetPlayTimer();
 
 

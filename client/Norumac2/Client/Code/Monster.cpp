@@ -191,7 +191,7 @@ void CMonster::Render(void)
 		m_pGrapicDevice->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
 		m_pGrapicDevice->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
 
-		dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(m_eMonsterState);
+		dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(m_eMonsterState,20.f);
 	}
 }
 
@@ -209,7 +209,7 @@ void  CMonster::ShadowmapRender(void)
 		m_pGrapicDevice->m_pDeviceContext->IASetInputLayout(m_pShadowAniVertexShader->m_pVertexLayout);
 		m_pGrapicDevice->m_pDeviceContext->VSSetShader(m_pShadowAniVertexShader->m_pVertexShader, NULL, 0);
 
-		dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(m_eMonsterState);
+		dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(m_eMonsterState,20.f);
 
 		m_pGrapicDevice->m_pDeviceContext->IASetInputLayout(m_pShadowNonAniVertexShader->m_pVertexLayout);
 		m_pGrapicDevice->m_pDeviceContext->VSSetShader(m_pShadowNonAniVertexShader->m_pVertexShader, NULL, 0);

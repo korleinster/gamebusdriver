@@ -177,15 +177,21 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 				{
 					if (p->attacking_id < MAX_AI_GOBLIN)
 					{
-						for (auto iter : *CObjMgr::GetInstance()->Get_ObjList(L"Monster"))
+						if (CObjMgr::GetInstance()->Get_ObjList(L"Monster") != NULL)
 						{
-							if (iter->GetPacketData()->id == p->attacking_id) {
-								if ((reinterpret_cast<CMonster*>(iter))->GetAniState() == MONSTER_IDLE)
+							if (CObjMgr::GetInstance()->Get_ObjList(L"Monster")->size() != 0)
+							{
+								for (auto iter : *CObjMgr::GetInstance()->Get_ObjList(L"Monster"))
 								{
-									(reinterpret_cast<CMonster*>(iter))->m_bKey = true;
-									(reinterpret_cast<CMonster*>(iter))->SetAniState(MONSTER_ATT);
+									if (iter->GetPacketData()->id == p->attacking_id) {
+										if ((reinterpret_cast<CMonster*>(iter))->GetAniState() == MONSTER_IDLE)
+										{
+											(reinterpret_cast<CMonster*>(iter))->m_bKey = true;
+											(reinterpret_cast<CMonster*>(iter))->SetAniState(MONSTER_ATT);
+										}
+										break;
+									}
 								}
-								break;
 							}
 						}
 					}
@@ -212,21 +218,30 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 					for (auto iter : *CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer"))
 					{
 						if (iter->GetPacketData()->id == p->attacking_id) {
-							if ((reinterpret_cast<COtherPlayer*>(iter))->GetAniState() == PLAYER_IDLE)
-							{
+							
 								(reinterpret_cast<COtherPlayer*>(iter))->m_bKey = true;
-								if(p->comboState == COMBO1)
+								if (p->comboState == COMBO1)
+								{
 									(reinterpret_cast<COtherPlayer*>(iter))->SetAniState(PLAYER_ATT1);
-								else if(p->comboState == COMBO2)
+								}
+								else if (p->comboState == COMBO2)
+								{
 									(reinterpret_cast<COtherPlayer*>(iter))->SetAniState(PLAYER_ATT2);
+								}
 								else if (p->comboState == COMBO3)
 								{
 									(reinterpret_cast<COtherPlayer*>(iter))->SetAniState(PLAYER_ATT3);
 								}
-								else if (p->comboState == ATK_COMBO_ETC) {
-									// 그냥 기존 애니메이션 재생되게 놔두면 된다.
+								else if (p->comboState == SKILL1) 
+								{
+									(reinterpret_cast<COtherPlayer*>(iter))->SetAniState(PLAYER_SKILL1);
 								}
-							}
+								else if (p->comboState == SKILL2)
+								{
+									(reinterpret_cast<COtherPlayer*>(iter))->SetAniState(PLAYER_SKILL2);
+								}
+
+							
 							break;
 						}
 					}
@@ -828,19 +843,26 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 			if (p->id < MAX_AI_GOBLIN)
 			{
-				list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"Monster")->begin();
-				list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"Monster")->end();
-				//cout << "몬스터 삭제" << endl;
 
-				for (; iter != iter_end; ++iter)
+				if (CObjMgr::GetInstance()->Get_ObjList(L"Monster") != NULL)
 				{
-					//NPC 혹은 몬스터가 죽었을시
-					if ((*iter)->GetPacketData()->id == p->id)
+					if (CObjMgr::GetInstance()->Get_ObjList(L"Monster")->size() != 0)
 					{
-						CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
-						::Safe_Delete(*iter);
-						iter = CObjMgr::GetInstance()->Get_ObjList(L"Monster")->erase(iter);
-						break;
+						list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"Monster")->begin();
+						list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"Monster")->end();
+						//cout << "몬스터 삭제" << endl;
+
+						for (; iter != iter_end; ++iter)
+						{
+							//NPC 혹은 몬스터가 죽었을시
+							if ((*iter)->GetPacketData()->id == p->id)
+							{
+								CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
+								::Safe_Delete(*iter);
+								iter = CObjMgr::GetInstance()->Get_ObjList(L"Monster")->erase(iter);
+								break;
+							}
+						}
 					}
 				}
 

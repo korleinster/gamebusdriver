@@ -206,6 +206,9 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 								{
 									(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
 									(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_NORMALATT);
+									CObj* pObj = CEffect::Create(L"BossEffect1", L"Texture_White", D3DXVECTOR3((*iter).GetInfo()->m_vPos.x, (*iter).GetInfo()->m_vPos.y, (*iter).GetInfo()->m_vPos.z));
+									pObj->GetInfo()->m_fAngle[ANGLE_Y] = 270.f;
+									CObjMgr::GetInstance()->AddObject(L"Effect", pObj);
 								}
 							}
 						}
@@ -713,6 +716,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		
 				(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
 				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT1);
+				
 
 		}
 
@@ -721,6 +725,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 	
 				(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
 				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT2);
+				
 
 		}
 
@@ -729,6 +734,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		
 				(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
 				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT3);
+				
 
 		}
 
@@ -737,6 +743,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			
 				(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
 				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT4);
+				
 		}
 
 		else if (p->att_type == BOSS_ATT_05)
@@ -744,6 +751,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 				(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
 				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT5);
+				
 
 		}
 

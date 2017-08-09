@@ -653,7 +653,7 @@ void CPlayer::KeyInput()
 	}
 
 
-	if ((CInput::GetInstance()->GetDIKeyState(DIK_SPACE) & 0x80) && (m_fKeyCool > 1.0f))
+	if ((CInput::GetInstance()->GetDIKeyState(DIK_SPACE) & 0x80) && (m_fKeyCool > 0.7f))
 	{
 		m_bPush = true;
 		int iSeverAtt;

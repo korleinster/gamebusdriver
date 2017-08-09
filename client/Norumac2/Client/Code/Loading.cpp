@@ -163,6 +163,11 @@ void CLoading::StageLoading(void)
 		, L"Texture_QuestUI"
 		, L"../Resource/Uiimage/questBackground.png");
 
+	hr = CResourcesMgr::GetInstance()->AddTexture(
+		RESOURCE_STAGE
+		, L"Texture_White"
+		, L"../Resource/Meshimage/WhiteImage.png");
+
 
 	FAILED_CHECK_RETURN(hr, );
 

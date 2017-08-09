@@ -75,7 +75,7 @@ HRESULT CEffect::Initialize(wstring wstMeshKey, wstring wstrTextureKey , D3DXVEC
 	if (FAILED(AddComponent(wstMeshKey, wstrTextureKey)))
 		return E_FAIL;
 
-	m_pInfo->m_vScale = D3DXVECTOR3(0.001f, 0.001f, 0.001f);
+	//m_pInfo->m_vScale = D3DXVECTOR3(0.1f, 0.1f, 0.1f);
 	m_pInfo->m_vPos = vPos;
 	//m_pInfo->m_vScale = D3DXVECTOR3(10.f, 10.f, 10.f);
 	//m_pInfo->m_fAngle[ANGLE_X] = /*D3DX_PI / 2 * -1.f;*/D3DXToRadian(-90);
@@ -161,7 +161,7 @@ void CEffect::Render(void)
 		m_pGrapicDevice->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
 		m_pGrapicDevice->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
 
-		dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(0,20.f);
+		dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(0,40.f);
 	}
 }
 
@@ -183,7 +183,7 @@ HRESULT CEffect::AddComponent(wstring wstMeshKey, wstring wstrTextureKey)
 {
 	CComponent* pComponent = NULL;
 
-	vecAniName = *(CAnimationMgr::GetInstance()->GetAnimaiton(L"Effect"));
+	vecAniName = *(CAnimationMgr::GetInstance()->GetAnimaiton(wstMeshKey));
 
 
 	//TransForm

@@ -229,8 +229,6 @@ HRESULT CLogo::Add_Dynamic_Buffer(void)
 		//////////////////////ÀÌÆåÆ®//////////////////////////////////
 
 		vecAni.push_back("Test_Effect");
-		
-
 		hr = CResourcesMgr::GetInstance()->AddMesh(
 			RESOURCE_STAGE,
 			MESH_DYNAMIC,
@@ -240,6 +238,21 @@ HRESULT CLogo::Add_Dynamic_Buffer(void)
 		FAILED_CHECK_RETURN(hr, E_FAIL);
 
 		CAnimationMgr::GetInstance()->AddAnimation(L"Effect", &vecAni);
+
+		vecAni.clear();
+
+
+
+		vecAni.push_back("bossAttack01");
+		hr = CResourcesMgr::GetInstance()->AddMesh(
+			RESOURCE_STAGE,
+			MESH_DYNAMIC,
+			L"BossEffect1",
+			"../Resource/Effect/",
+			"", vecAni);
+		FAILED_CHECK_RETURN(hr, E_FAIL);
+
+		CAnimationMgr::GetInstance()->AddAnimation(L"BossEffect1", &vecAni);
 
 		vecAni.clear();
 		//////////////////////////////////////////////////////////////

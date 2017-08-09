@@ -45,6 +45,7 @@ private:
 	ID3D11Buffer*		m_pSceneVertexShaderCB;
 	ID3D11Buffer*		m_pScenePixelShaderCB;
 
+	bool			m_bQuestFlag = { false }; // 퀘스트 관련 패킷 한번만 보내도록 하기 위한 신호 변수 - 서버한테 문의 할것
 public:
 	float			m_fPotionTime;//포션 쿨
 	float			m_fTpTime;//텔레포트 쿨

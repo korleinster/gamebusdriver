@@ -881,8 +881,9 @@ void CPlayer::KeyInput()
 			{
 				if (dynamic_cast<CNpc*>(*iter)->m_eNpcType == NPC_SLIME)
 				{
-					if (abs(m_pInfo->m_vPos.x - (*iter)->GetInfo()->m_vPos.x) < 5.f && abs(m_pInfo->m_vPos.z - (*iter)->GetInfo()->m_vPos.z) < 5.f)
+					if ((abs(m_pInfo->m_vPos.x - (*iter)->GetInfo()->m_vPos.x) < 5.f && abs(m_pInfo->m_vPos.z - (*iter)->GetInfo()->m_vPos.z) < 5.f) && (false == m_bQuestFlag))
 					{
+						m_bQuestFlag = true;
 						m_eQuestState = QUEST_SLIME;
 						g_client.sendPacket(0, QUEST_START, nullptr);
 						cout << "½½¶óÀÓ Äù½ºÆ® ¹Þ¾ÆÁü" << endl;
@@ -892,7 +893,7 @@ void CPlayer::KeyInput()
 
 		}
 
-		if (m_eQuestState == QUEST_SLIME && m_iQuestStateMount == MAX_AI_SLIME)
+		else if (m_eQuestState == QUEST_SLIME && m_iQuestStateMount == MAX_AI_SLIME)
 		{
 			list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"NPC")->begin();
 			list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"NPC")->end();
@@ -901,8 +902,9 @@ void CPlayer::KeyInput()
 			{
 				if (dynamic_cast<CNpc*>(*iter)->m_eNpcType == NPC_GOBLIN)
 				{
-					if (abs(m_pInfo->m_vPos.x - (*iter)->GetInfo()->m_vPos.x)  < 5.f && abs(m_pInfo->m_vPos.z - (*iter)->GetInfo()->m_vPos.z) < 5.f)
+					if ((abs(m_pInfo->m_vPos.x - (*iter)->GetInfo()->m_vPos.x)  < 5.f && abs(m_pInfo->m_vPos.z - (*iter)->GetInfo()->m_vPos.z) < 5.f) && (true == m_bQuestFlag))
 					{
+						m_bQuestFlag = false;
 						m_eQuestState = QUEST_GOBLIN;
 						g_client.sendPacket(0, QUEST_START, nullptr);
 						cout << "°íºí¸° Äù½ºÆ® ¹Þ¾ÆÁü" << endl;
@@ -912,7 +914,7 @@ void CPlayer::KeyInput()
 
 		}
 
-		if (m_eQuestState == QUEST_SLIME && m_iQuestStateMount == MAX_AI_GOBLIN)
+		else if (m_eQuestState == QUEST_SLIME && m_iQuestStateMount == MAX_AI_GOBLIN)
 		{
 			list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"NPC")->begin();
 			list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"NPC")->end();
@@ -921,8 +923,9 @@ void CPlayer::KeyInput()
 			{
 				if (dynamic_cast<CNpc*>(*iter)->m_eNpcType == NPC_BOSS)
 				{
-					if (abs(m_pInfo->m_vPos.x - (*iter)->GetInfo()->m_vPos.x) < 5.f && abs(m_pInfo->m_vPos.z - (*iter)->GetInfo()->m_vPos.z) < 5.f)
+					if ((abs(m_pInfo->m_vPos.x - (*iter)->GetInfo()->m_vPos.x) < 5.f && abs(m_pInfo->m_vPos.z - (*iter)->GetInfo()->m_vPos.z) < 5.f) && (false == m_bQuestFlag))
 					{
+						m_bQuestFlag = true;
 						m_eQuestState = QUEST_BOSS;
 						g_client.sendPacket(0, QUEST_START, nullptr);
 						cout << "º¸½º Äù½ºÆ® ¹Þ¾ÆÁü" << endl;

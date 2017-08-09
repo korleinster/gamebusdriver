@@ -914,7 +914,7 @@ void CPlayer::KeyInput()
 
 		}
 
-		else if (m_eQuestState == QUEST_SLIME && m_iQuestStateMount == MAX_AI_GOBLIN)
+		else if (m_eQuestState == QUEST_GOBLIN && m_iQuestStateMount == MAX_AI_GOBLIN)
 		{
 			list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"NPC")->begin();
 			list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->Get_ObjList(L"NPC")->end();

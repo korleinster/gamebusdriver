@@ -764,6 +764,7 @@ void player_session::m_process_packet(Packet buf[])
 				m_sub_status.str += 50;
 				m_player_data.state.hp += 500;
 				sc_chat cheat;
+				cheat.id = -1;
 				memcpy(cheat.msg, reinterpret_cast<wchar_t*>(L"공격력 강화 치트 적용 완료"), MAX_BUF_SIZE - 6);
 				send_packet(reinterpret_cast<Packet*>(&cheat));
 			}

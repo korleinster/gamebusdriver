@@ -669,7 +669,7 @@ void CPlayer::KeyInput()
 			m_fComboTime = 0.f;
 			m_fKeyCool = 0.f;
 			m_ePlayerState = PLAYER_ATT1;
-			cout << "콤보1단계 활성" << endl;
+			//cout << "콤보1단계 활성" << endl;
 			iSeverAtt = COMBO1;
 		}
 		else if (m_bCombo[0] == true && m_bCombo[1] == false)
@@ -679,7 +679,7 @@ void CPlayer::KeyInput()
 			m_fComboTime = 0.f;
 			m_fKeyCool = 0.f;
 			m_ePlayerState = PLAYER_ATT2;
-			cout << "콤보2단계 활성" << endl;
+			//cout << "콤보2단계 활성" << endl;
 			iSeverAtt = COMBO2;
 		}
 		else if (m_bCombo[0] == true && m_bCombo[1] == true)
@@ -689,7 +689,7 @@ void CPlayer::KeyInput()
 
 			m_bCombo[0] = false;
 			m_bCombo[1] = false;
-			cout << "콤보 해제	1:" << boolalpha << m_bCombo[0] << "	2:" << boolalpha << m_bCombo[1] << endl;
+			//cout << "콤보 해제	1:" << boolalpha << m_bCombo[0] << "	2:" << boolalpha << m_bCombo[1] << endl;
 			m_fComboTime = 0.f;
 			m_fKeyCool = 0.f;
 			m_ePlayerState = PLAYER_ATT3;
@@ -984,14 +984,14 @@ void CPlayer::TimeSetter(void)
 	{
 		m_bCombo[0] = false;
 		m_bCombo[1] = false;
-		cout << "콤보1단계 초기화" << endl;
+		//cout << "콤보1단계 초기화" << endl;
 	}
 
 	if (m_fComboTime > 2.8f && m_bCombo[1] == true)
 	{
 		m_bCombo[0] = false;
 		m_bCombo[1] = false;
-		cout << "콤보2단계 초기화" << endl;
+		//cout << "콤보2단계 초기화" << endl;
 	}
 }
 

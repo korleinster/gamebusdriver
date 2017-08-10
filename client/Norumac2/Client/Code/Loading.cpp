@@ -168,6 +168,42 @@ void CLoading::StageLoading(void)
 		, L"Texture_White"
 		, L"../Resource/Meshimage/WhiteImage.png");
 
+	hr = CResourcesMgr::GetInstance()->AddTexture(
+		RESOURCE_STAGE
+		, L"Texture_Red"
+		, L"../Resource/Meshimage/RedImage.png");
+
+	hr = CResourcesMgr::GetInstance()->AddTexture(
+		RESOURCE_STAGE
+		, L"Texture_Black"
+		, L"../Resource/Meshimage/BlackImage.png");
+
+	hr = CResourcesMgr::GetInstance()->AddTexture(
+		RESOURCE_STAGE
+		, L"Texture_Orange"
+		, L"../Resource/Meshimage/OrangeImage.png");
+
+	hr = CResourcesMgr::GetInstance()->AddTexture(
+		RESOURCE_STAGE
+		, L"Texture_Yellow"
+		, L"../Resource/Meshimage/YellowImage.png");
+
+	hr = CResourcesMgr::GetInstance()->AddTexture(
+		RESOURCE_STAGE
+		, L"Texture_Green"
+		, L"../Resource/Meshimage/GreenImage.png");
+
+	hr = CResourcesMgr::GetInstance()->AddTexture(
+		RESOURCE_STAGE
+		, L"Texture_Blue"
+		, L"../Resource/Meshimage/BlueImage.png");
+
+	hr = CResourcesMgr::GetInstance()->AddTexture(
+		RESOURCE_STAGE
+		, L"Texture_Purple"
+		, L"../Resource/Meshimage/PurpleImage.png");
+
+
 
 	FAILED_CHECK_RETURN(hr, );
 
@@ -195,6 +231,15 @@ void CLoading::StageLoading(void)
 	FAILED_CHECK_RETURN(hr, );
 
 	StaticMeshLoad();
+
+
+
+	hr = CResourcesMgr::GetInstance()->AddMesh(
+		RESOURCE_STAGE
+		, MESH_STATIC
+		, L"ParticleCube"
+		, "../Resource/effect/"
+		, "ParticleCube.FBX");
 
 
 	//다이나믹은 ㅅㅂ 스레드 ㅈ같아서 스레드로딩안함. 

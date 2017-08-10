@@ -253,6 +253,9 @@
     <Filter Include="02.Object\10.NPC">
       <UniqueIdentifier>{e1ad7a92-5a49-4801-945e-42df1ae4a7d4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Object\11.MeshParticle">
+      <UniqueIdentifier>{33da6374-75bf-4db9-a1c0-d0852eedae4e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -519,6 +522,9 @@
     <ClInclude Include="..\Code\NPC.h">
       <Filter>02.Object\10.NPC</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\MeshParticle.h">
+      <Filter>02.Object\11.MeshParticle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\MainApp.cpp">
@@ -757,6 +763,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\NPC.cpp">
       <Filter>02.Object\10.NPC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\MeshParticle.cpp">
+      <Filter>02.Object\11.MeshParticle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -17,6 +17,8 @@
 #include "Font.h"
 #include "QuestUI.h"
 #include "Effect.h"
+#include <random>
+#include "MeshParticle.h"
 
 void AsynchronousClientClass::processPacket(Packet* buf)
 {
@@ -169,6 +171,15 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 		if (CSceneMgr::GetInstance()->GetScene() != SCENE_LOGO)
 		{
+
+			////////파티클을위한 난수///////
+			default_random_engine dre;
+			uniform_real_distribution<float> randFloat(-1.f, 1.f);
+			uniform_int_distribution<int> randInt(0, 7);
+			////////////////////////////////////
+
+
+
 			// 먼저 어떤 놈이 칼질을 했는지 아이디 확인 후, 그 녀석 애니메이션 편집 ( 내 아이디가 아니면 일단 애니메이션 작동 시켜야 됨 )
 			/// 만약 이 위치에 내 고유 id 가 들어있다면, 이미 키를 누른 시점에서 애니메이션을 재생했기 때문에, 그냥 if 문을 넘어간다.
 			if (m_player.id != p->attacking_id) {
@@ -407,6 +418,13 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 							CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 20, 0xFFFFD200);
 							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
 
+							for (int i = 0; i < 200; ++i)
+							{
+								pObj = CMeshParticle::Create(L"ParticleCube", D3DXVECTOR3(vPos.x, vPos.y + 0.f, vPos.z), (PARTICLECOLOR)randInt(dre));
+								pObj->GetInfo()->m_vDir= D3DXVECTOR3(randFloat(dre), randFloat(dre), randFloat(dre));
+								CObjMgr::GetInstance()->AddObject(L"Particle", pObj);
+							}
+
 							//pObj = CEffect::Create(L"Effect", L"Texture_Slime", D3DXVECTOR3(vPos.x,vPos.y + 2.f, vPos.z));
 							//CObjMgr::GetInstance()->AddObject(L"Effect", pObj);
 						}
@@ -414,6 +432,13 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 						{
 							CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 25, 0xFF00FFFF);
 							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+
+							for (int i = 0; i < 200; ++i)
+							{
+								pObj = CMeshParticle::Create(L"ParticleCube", D3DXVECTOR3(vPos.x, vPos.y + 0.f, vPos.z), (PARTICLECOLOR)randInt(dre));
+								pObj->GetInfo()->m_vDir = D3DXVECTOR3(randFloat(dre), randFloat(dre), randFloat(dre));
+								CObjMgr::GetInstance()->AddObject(L"Particle", pObj);
+							}
 
 							//pObj = CEffect::Create(L"Effect", L"Texture_Slime", D3DXVECTOR3(vPos.x, vPos.y + 2.f, vPos.z));
 							//CObjMgr::GetInstance()->AddObject(L"Effect", pObj);
@@ -423,6 +448,13 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 							CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 30, 0xFF00E4FF);
 							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
 
+							for (int i = 0; i < 200; ++i)
+							{
+								pObj = CMeshParticle::Create(L"ParticleCube", D3DXVECTOR3(vPos.x, vPos.y + 0.f, vPos.z), (PARTICLECOLOR)randInt(dre));
+								pObj->GetInfo()->m_vDir = D3DXVECTOR3(randFloat(dre), randFloat(dre), randFloat(dre));
+								CObjMgr::GetInstance()->AddObject(L"Particle", pObj);
+							}
+
 							//pObj = CEffect::Create(L"Effect", L"Texture_Slime", D3DXVECTOR3(vPos.x, vPos.y + 2.f, vPos.z));
 							//CObjMgr::GetInstance()->AddObject(L"Effect", pObj);
 						}
@@ -431,6 +463,13 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 							CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 45, 0xFF00A2FF);
 							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
 
+							for (int i = 0; i < 200; ++i)
+							{
+								pObj = CMeshParticle::Create(L"ParticleCube", D3DXVECTOR3(vPos.x, vPos.y + 0.f, vPos.z), (PARTICLECOLOR)randInt(dre));
+								pObj->GetInfo()->m_vDir = D3DXVECTOR3(randFloat(dre), randFloat(dre), randFloat(dre));
+								CObjMgr::GetInstance()->AddObject(L"Particle", pObj);
+							}
+
 							//pObj = CEffect::Create(L"Effect", L"Texture_Slime", D3DXVECTOR3(vPos.x, vPos.y + 2.f, vPos.z));
 							//CObjMgr::GetInstance()->AddObject(L"Effect", pObj);
 						}
@@ -438,6 +477,13 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 						{
 							CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 60, 0xFF0000FF);
 							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+
+							for (int i = 0; i < 200; ++i)
+							{
+								pObj = CMeshParticle::Create(L"ParticleCube", D3DXVECTOR3(vPos.x, vPos.y + 0.f, vPos.z), (PARTICLECOLOR)randInt(dre));
+								pObj->GetInfo()->m_vDir = D3DXVECTOR3(randFloat(dre), randFloat(dre), randFloat(dre));
+								CObjMgr::GetInstance()->AddObject(L"Particle", pObj);
+							}
 
 							//pObj = CEffect::Create(L"Effect", L"Texture_Slime", D3DXVECTOR3(vPos.x, vPos.y + 2.f, vPos.z));
 							//CObjMgr::GetInstance()->AddObject(L"Effect", pObj);

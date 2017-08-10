@@ -209,6 +209,7 @@
     <ClInclude Include="..\Code\LogoBack.h" />
     <ClInclude Include="..\Code\MainApp.h" />
     <ClInclude Include="..\Code\Mesh.h" />
+    <ClInclude Include="..\Code\MeshParticle.h" />
     <ClInclude Include="..\Code\MobHpBasic.h" />
     <ClInclude Include="..\Code\Monster.h" />
     <ClInclude Include="..\Code\MultiRenderTarget.h" />
@@ -295,6 +296,7 @@
     <ClCompile Include="..\Code\LogoBack.cpp" />
     <ClCompile Include="..\Code\MainApp.cpp" />
     <ClCompile Include="..\Code\Mesh.cpp" />
+    <ClCompile Include="..\Code\MeshParticle.cpp" />
     <ClCompile Include="..\Code\MobHpBasic.cpp" />
     <ClCompile Include="..\Code\Monster.cpp" />
     <ClCompile Include="..\Code\MultiRenderTarget.cpp" />

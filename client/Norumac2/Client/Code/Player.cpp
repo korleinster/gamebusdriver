@@ -177,7 +177,7 @@ int CPlayer::Update(void)
 		if (g_bChatMode == false)
 			KeyInput();
 
-		AniMove();
+		//AniMove();
 		CObj::Update();
 
 		//cout << m_bPush << endl;
@@ -726,7 +726,7 @@ void CPlayer::KeyInput()
 	}*/
 
 
-	if ((CInput::GetInstance()->GetDIKeyState(DIK_Q) & 0x80) && m_pInfo->m_ServerInfo.state.gauge > 50)
+	if ((CInput::GetInstance()->GetDIKeyState(DIK_Q) & 0x80) && m_pInfo->m_ServerInfo.state.gauge > 50  && (m_fKeyCool > 0.7f))
 	{
 		m_bPush = true;
 		int iSeverAtt;
@@ -736,7 +736,6 @@ void CPlayer::KeyInput()
 
 		m_ePlayerState = PLAYER_SKILL1;
 		iSeverAtt = SKILL1;
-		m_bSkillUsed = true;
 
 		g_client.sendPacket(sizeof(int), KEYINPUT_ATTACK, reinterpret_cast<BYTE*>(&iSeverAtt));
 
@@ -762,7 +761,7 @@ void CPlayer::KeyInput()
 		}
 	}
 
-	if ((CInput::GetInstance()->GetDIKeyState(DIK_W) & 0x80) && m_pInfo->m_ServerInfo.state.gauge > 50)
+	if ((CInput::GetInstance()->GetDIKeyState(DIK_W) & 0x80) && m_pInfo->m_ServerInfo.state.gauge > 50 && (m_fKeyCool > 0.7f))
 	{
 		m_bPush = true;
 		int iSeverAtt;
@@ -772,7 +771,6 @@ void CPlayer::KeyInput()
 
 		m_ePlayerState = PLAYER_SKILL2;
 		iSeverAtt = SKILL2;
-		m_bSkillUsed = true;
 
 		g_client.sendPacket(sizeof(int), KEYINPUT_ATTACK, reinterpret_cast<BYTE*>(&iSeverAtt));
 
@@ -827,20 +825,6 @@ void CPlayer::KeyInput()
 	}
 
 	if (CInput::GetInstance()->GetDIKeyState(DIK_3) & 0x80)
-	{
-		if (m_bTpCool == true)
-		{
-			return;
-		}
-		m_pInfo->m_vPos = D3DXVECTOR3(330.f, 0.f, 408.f);
-		m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
-		m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
-		SetNaviIndex(CNaviMgr::GetInstance()->GetCellIndex(&m_pInfo->m_vPos));
-		g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
-		m_bTpCool = true;
-	}
-
-	if (CInput::GetInstance()->GetDIKeyState(DIK_4) & 0x80)
 	{
 		if (m_bTpCool == true)
 		{
@@ -1062,22 +1046,16 @@ Packet* CPlayer::GetPacket()
 	return m_Packet;
 }
 
-void CPlayer::AniMove(void)
+void CPlayer::Skill1(void)
 {
 	//애니매이션에 따라 얼마나 이동할껀지 부분임.
 
-	float		fTime = CTimeMgr::GetInstance()->GetTime();
 
-	/*if(m_bSkillUsed ==true)
-		cout << m_fSkillMoveTime << endl;*/
-
-		/*if (m_ePlayerState == PLAYER_SKILL1)
+		if (m_ePlayerState == PLAYER_SKILL1)
 		{
-			if (m_fSkillMoveTime > 0.6f && m_fSkillMoveTime < 1.2f)
+			if (m_fSkillMoveTime > 1.1f && m_fSkillMoveTime < 1.2f && m_bSkillUsed == false)
 			{
-				CNaviMgr::GetInstance()->MoveOnNaviMesh(&m_pInfo->m_vPos, &(m_pInfo->m_vDir * m_fSpeed * fTime), m_dwCellNum);
-				g_client.sendPacket(sizeof(char), CHANGED_DIRECTION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.dir));
-				g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
+				m_bSkillUsed = true;
 			}
-		}*/
+		}
 }

@@ -194,7 +194,7 @@
     <ClInclude Include="..\Code\FaceUI.h" />
     <ClInclude Include="..\Code\FbxParser.h" />
     <ClInclude Include="..\Code\FeverBar.h" />
-    <ClInclude Include="..\Code\Flower.h" />
+    <ClInclude Include="..\Code\QuestMark.h" />
     <ClInclude Include="..\Code\Font.h" />
     <ClInclude Include="..\Code\FontMgr.h" />
     <ClInclude Include="..\Code\Frustum.h" />
@@ -281,7 +281,7 @@
     <ClCompile Include="..\Code\FaceUI.cpp" />
     <ClCompile Include="..\Code\FbxParser.cpp" />
     <ClCompile Include="..\Code\FeverBar.cpp" />
-    <ClCompile Include="..\Code\Flower.cpp" />
+    <ClCompile Include="..\Code\QuestMark.cpp" />
     <ClCompile Include="..\Code\Font.cpp" />
     <ClCompile Include="..\Code\FontMgr.cpp" />
     <ClCompile Include="..\Code\Frustum.cpp" />

@@ -209,6 +209,11 @@ void CLoading::StageLoading(void)
 		, L"Texture_NPC"
 		, L"../Resource/Meshimage/npc_idle.png");
 
+	hr = CResourcesMgr::GetInstance()->AddTexture(
+		RESOURCE_STAGE
+		, L"Texture_QuestMark"
+		, L"../Resource/Uiimage/QuestMark.png");
+
 
 
 

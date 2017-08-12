@@ -1,6 +1,7 @@
 #pragma once
 #include "Obj.h"
 
+class CQuestMark;
 class CShader;
 class CVIBuffer;
 class CTexture;
@@ -22,6 +23,7 @@ private:
 	CTexture*		m_pTexture;
 	VTXTEX*			m_pVerTex;
 	CTerrainCol*	m_pTerrainCol;
+	CQuestMark*		m_pQuestMark;
 
 	// Scene meshes shader constant buffers
 	ID3D11Buffer*		m_pSceneVertexShaderCB;
@@ -29,6 +31,7 @@ private:
 public:
 	QUESTNPCTYPE	m_eNpcType;
 	bool			m_bPlayerIn;
+	bool			m_bQuestAccept;
 
 public:
 	virtual HRESULT Initialize(wstring wstMeshKey, wstring wstrTextureKey, D3DXVECTOR3 vPos, QUESTNPCTYPE eNpcType);
@@ -45,5 +48,6 @@ private:
 	HRESULT	AddComponent(wstring wstMeshKey, wstring wstrTextureKey);
 	void SetCurrling(void);
 	void NpcChat(void);
+	void QuestMark(void);
 };
 

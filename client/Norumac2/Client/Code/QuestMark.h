@@ -4,13 +4,12 @@
 class CShader;
 class CVIBuffer;
 class CTexture;
-class CTerrainCol;
-class CFlower :
+class CQuestMark :
 	public CObj
 {
 public:
-	CFlower();
-	virtual ~CFlower();
+	CQuestMark();
+	virtual ~CQuestMark();
 
 private:
 	CVIBuffer*		m_pBuffer;
@@ -18,15 +17,14 @@ private:
 	CShader*		m_pPixelShader;
 	CTexture*		m_pTexture;
 	VTXTEX*			m_pVerTex;
-	CTerrainCol*	m_pTerrainCol;
 
 public:
-	virtual HRESULT Initialize(void);
+	virtual HRESULT Initialize(D3DXVECTOR3 vPos);
 	virtual int		Update(void);
-	virtual void	Render(void);
+	virtual void	Render(bool bQuestAccept);
 
 public:
-	static CFlower* Create(void);
+	static CQuestMark* Create(D3DXVECTOR3 vPos);
 
 private:
 	HRESULT	AddComponent(void);

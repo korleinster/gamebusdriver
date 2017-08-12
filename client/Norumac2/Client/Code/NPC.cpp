@@ -22,6 +22,7 @@
 #include "ChatUI.h"
 #include "Player.h"
 #include "Font.h"
+#include "QuestMark.h"
 
 #pragma pack(push,1)
 struct CB_VS_PER_OBJECT
@@ -54,6 +55,9 @@ CNpc::CNpc()
 
 	m_eNpcType = NPC_SLIME;
 	m_bPlayerIn = false;
+
+	m_bQuestAccept = false;
+	m_pQuestMark = NULL;
 
 }
 
@@ -94,6 +98,9 @@ HRESULT CNpc::Initialize(wstring wstMeshKey, wstring wstrTextureKey, D3DXVECTOR3
 	if (iter != iter_end)
 		m_pVerTex = *dynamic_cast<CTerrain*>(*iter)->GetVertex();
 
+
+	m_pQuestMark = CQuestMark::Create(D3DXVECTOR3(m_pInfo->m_vPos.x, 2.5f, m_pInfo->m_vPos.z));
+
 	CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, this);
 
 	D3D11_BUFFER_DESC cbDesc;
@@ -124,6 +131,9 @@ int CNpc::Update(void)
 
 	m_pTerrainCol->CollisionTerrain(&m_pInfo->m_vPos, m_pVerTex);
 
+
+	m_pQuestMark->Update();
+	QuestMark();
 
 	CObj::Update();
 
@@ -175,6 +185,7 @@ void CNpc::Render(void)
 		m_pGrapicDevice->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
 
 		dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(0,20.f);
+		m_pQuestMark->Render(m_bQuestAccept);
 	}
 }
 
@@ -196,6 +207,7 @@ void  CNpc::ShadowmapRender(void)
 
 		m_pGrapicDevice->m_pDeviceContext->IASetInputLayout(m_pShadowNonAniVertexShader->m_pVertexLayout);
 		m_pGrapicDevice->m_pDeviceContext->VSSetShader(m_pShadowNonAniVertexShader->m_pVertexShader, NULL, 0);
+		m_pQuestMark->Render(m_bQuestAccept);
 	}
 }
 
@@ -483,6 +495,24 @@ void CNpc::NpcChat(void)
 
 			pChatUI->m_ChatLogList.push_back(pFont);
 		}
+	}
+}
+
+void CNpc::QuestMark(void)
+{
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(*(CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin()));
+
+	if (pPlayer->m_eQuestState == QUEST_SLIME && m_eNpcType == NPC_SLIME)
+	{
+		m_bQuestAccept = true;
+	}
+	else if (pPlayer->m_eQuestState == QUEST_GOBLIN && m_eNpcType == NPC_GOBLIN)
+	{
+		m_bQuestAccept = true;
+	}
+	else if (pPlayer->m_eQuestState == QUEST_BOSS && m_eNpcType == NPC_BOSS)
+	{
+		m_bQuestAccept = true;
 	}
 }
 

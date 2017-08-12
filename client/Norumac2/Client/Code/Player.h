@@ -61,7 +61,7 @@ public:
 	virtual void	ShadowmapRender(void);
 	void			KeyInput(void);
 	Packet*			GetPacket(void);
-	void			AniMove(void);
+	void			Skill1(void);
 	void			SetNaviIndex(DWORD dwIndex) { m_dwCellNum = dwIndex; }
 	void			TimeSetter(void);
 

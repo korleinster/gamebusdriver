@@ -1179,6 +1179,8 @@ void TimerQueue::processPacket(event_type *p) {
 					p_atk.under_attack_id = id;		// 맞는 놈의 id
 					p_atk.hp = g_clients[id]->get_player_data()->state.hp;	// 맞은 놈의 hp
 					p_atk.comboState = ATK_COMBO_ETC;
+					p_atk.pos.x = g_clients[id]->get_player_data()->pos.x;
+					p_atk.pos.y = g_clients[id]->get_player_data()->pos.y;
 
 					// hp 가 0 이 되면 사망처리를 한다. -> 각각의 클라이언트에서 hp 가 0 된 녀석을 지워줌
 					if (0 >= g_clients[id]->get_player_data()->state.hp) {

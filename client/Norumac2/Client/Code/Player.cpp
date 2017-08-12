@@ -95,7 +95,7 @@ HRESULT CPlayer::Initialize(void)
 	//m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 	//m_pInfo->m_vScale = D3DXVECTOR3(0.05f, 0.05f, 0.05f);
 	m_pInfo->m_vScale = D3DXVECTOR3(1.f, 1.f, 1.f);
-	m_fSpeed = 4.7;
+	m_fSpeed = 4.7f;
 
 	list<CObj*>::iterator iter = CObjMgr::GetInstance()->m_mapObj[L"Terrain"].begin();
 	list<CObj*>::iterator iter_end = CObjMgr::GetInstance()->m_mapObj[L"Terrain"].end();
@@ -227,11 +227,11 @@ int CPlayer::Update(void)
 
 	if (CInput::GetInstance()->GetDIKeyState(DIK_LBRACKET) & 0x80)// "["키 
 	{
-		m_fSpeed = 4.7;
+		m_fSpeed = 4.7f;
 	}
 	if (CInput::GetInstance()->GetDIKeyState(DIK_RBRACKET) & 0x80)// "]"키
 	{
-		m_fSpeed = 12.0;
+		m_fSpeed = 12.f;
 	}
 
 
@@ -885,6 +885,12 @@ void CPlayer::KeyInput()
 						pChatUI->m_ChatLogList.push_back(pFont);
 
 						///////////////////
+
+						//////퀘스트창출력///
+
+						pQuestUI->m_QuestScript->m_wstrText = L"슬라임을 잡아라!";
+						pQuestUI->m_QuestState->m_wstrText = L"슬라임 남은 마리수 : 0 / 10";
+						///////////////////////
 					}
 				}
 			}
@@ -929,6 +935,14 @@ void CPlayer::KeyInput()
 						pChatUI->m_ChatLogList.push_back(pFont);
 
 						///////////////////
+
+
+						//////퀘스트창출력///
+
+						pQuestUI->m_QuestScript->m_wstrText = L"고블린을 잡아라!";
+						pQuestUI->m_QuestState->m_wstrText = L"고블린 남은 마리수 : 0 / 10";
+						///////////////////////
+						
 					}
 				}
 			}
@@ -974,6 +988,12 @@ void CPlayer::KeyInput()
 						pChatUI->m_ChatLogList.push_back(pFont);
 
 						///////////////////
+
+						//////퀘스트창출력///
+
+						pQuestUI->m_QuestScript->m_wstrText = L"매직 골램을 잡아라!";
+						pQuestUI->m_QuestState->m_wstrText = L"매직골램 퇴치 : 0 / 1";
+						///////////////////////
 					}
 				}
 			}

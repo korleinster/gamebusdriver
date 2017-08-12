@@ -15,6 +15,7 @@ public:
 private:
 	CLoading*	m_pLoading;
 	bool		m_bDynamicLoading;
+	bool		m_serverConnected{ false };
 
 
 public:

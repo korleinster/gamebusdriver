@@ -533,56 +533,63 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 			if (0 >= p->hp)
 			{
-				cout << "쥬금" << endl;
 				if (p->under_attack_id < MAX_AI_NUM)
 				{
 					if (p->under_attack_id < MAX_AI_GOBLIN)
 					{
- 						list<CObj*>* ListObj = CObjMgr::GetInstance()->Get_ObjList(L"Monster");
+ 						/*list<CObj*>* ListObj = CObjMgr::GetInstance()->Get_ObjList(L"Monster");
 						list<CObj*>::iterator iter = ListObj->begin();
-						list<CObj*>::iterator iter_end = ListObj->end();
+						list<CObj*>::iterator iter_end = ListObj->end();*/
 
 						D3DXVECTOR3 vPos;
 
-						for (; iter != iter_end; ++iter)
+						/*for (; iter != iter_end; ++iter)
 						{
 							if ((*iter)->GetPacketData()->id == p->under_attack_id)
+							{*/
+
+								//vPos = (*iter)->GetInfo()->m_vPos;
+
+						CPlayer* pPlayer = dynamic_cast<CPlayer*>(*(CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin()));
+
+						if (p->attacking_id == pPlayer->GetInfo()->m_ServerInfo.id)
+						{
+
+							vPos = D3DXVECTOR3(p->pos.x, pPlayer->GetInfo()->m_vPos.y, p->pos.y);
+
+							int damage_Value =  (-1 * p->hp) + 20;
+							if (10 > damage_Value)
 							{
+								CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 20, 0xFFFFD200);
+								CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+							}
+							else if (20 > damage_Value)
+							{
+								CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 25, 0xFF00FFFF);
+								CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+							}
+							else if (30 > damage_Value)
+							{
+								CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 30, 0xFF00E4FF);
+								CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+							}
+							else if (40 > damage_Value)
+							{
+								CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 45, 0xFF00A2FF);
+								CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+							}
+							else
+							{
+								CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 60, 0xFF0000FF);
+								CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+							}
+						}
 
-								vPos = (*iter)->GetInfo()->m_vPos;
-
-								int damage_Value = (CObjMgr::GetInstance()->Get_MonsterServerData(p->under_attack_id))->state.hp - p->hp;
-								if (10 > damage_Value)
-								{
-									CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 20, 0xFFFFD200);
-									CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
-								}
-								else if (20 > damage_Value)
-								{
-									CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 25, 0xFF00FFFF);
-									CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
-								}
-								else if (30 > damage_Value)
-								{
-									CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 30, 0xFF00E4FF);
-									CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
-								}
-								else if (40 > damage_Value)
-								{
-									CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 45, 0xFF00A2FF);
-									CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
-								}
-								else
-								{
-									CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 60, 0xFF0000FF);
-									CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
-								}
-
-								CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
+						/*		CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
 								(*iter)->m_bDeath = true;
 								break;
 							}
-						}
+						}*/
 
 
 						//몹이 죽으면 체력바도 없에자.
@@ -602,50 +609,55 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 					}
 					else
 					{
-						list<CObj*>* ListObj = CObjMgr::GetInstance()->Get_ObjList(L"Boss");
+						/*list<CObj*>* ListObj = CObjMgr::GetInstance()->Get_ObjList(L"Boss");
 						list<CObj*>::iterator iter = ListObj->begin();
-						list<CObj*>::iterator iter_end = ListObj->end();
+						list<CObj*>::iterator iter_end = ListObj->end();*/
 
 						D3DXVECTOR3 vPos;
+						CPlayer* pPlayer = dynamic_cast<CPlayer*>(*(CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin()));
 
-						for (; iter != iter_end; ++iter)
+						//for (; iter != iter_end; ++iter)
+						//{
+						//	if ((*iter)->GetPacketData()->id == p->under_attack_id)
+						//	{
+						if (p->attacking_id == pPlayer->GetInfo()->m_ServerInfo.id)
 						{
-							if ((*iter)->GetPacketData()->id == p->under_attack_id)
+
+							vPos = D3DXVECTOR3(p->pos.x, pPlayer->GetInfo()->m_vPos.y, p->pos.y);
+
+							int damage_Value = (-1 * p->hp) + 20;
+							if (10 > damage_Value)
 							{
-								vPos = (*iter)->GetInfo()->m_vPos;
-
-								int damage_Value = (CObjMgr::GetInstance()->Get_MonsterServerData(p->under_attack_id))->state.hp - p->hp;
-								if (10 > damage_Value)
-								{
-									CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 20, 0xFFFFD200);
-									CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
-								}
-								else if (20 > damage_Value)
-								{
-									CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 25, 0xFF00FFFF);
-									CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
-								}
-								else if (30 > damage_Value)
-								{
-									CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 30, 0xFF00E4FF);
-									CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
-								}
-								else if (40 > damage_Value)
-								{
-									CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 45, 0xFF00A2FF);
-									CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
-								}
-								else
-								{
-									CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 60, 0xFF0000FF);
-									CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
-								}
-
-								CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
-								(*iter)->m_bDeath = true;
-								break;
+								CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 20, 0xFFFFD200);
+								CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+							}
+							else if (20 > damage_Value)
+							{
+								CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 25, 0xFF00FFFF);
+								CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+							}
+							else if (30 > damage_Value)
+							{
+								CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 30, 0xFF00E4FF);
+								CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+							}
+							else if (40 > damage_Value)
+							{
+								CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 45, 0xFF00A2FF);
+								CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+							}
+							else
+							{
+								CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 60, 0xFF0000FF);
+								CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
 							}
 						}
+
+								/*CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
+								(*iter)->m_bDeath = true;
+								break;*/
+							//}
+						//}
 
 
 						//몹이 죽으면 체력바도 없에자.
@@ -729,9 +741,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
 
 		for (auto ChatList : pChatUI->m_ChatLogList)
-		{
 			ChatList->m_vPos.y -= 20.f;
-		}
 
 		if (pChatUI->m_ChatLogList.size() == 7)
 		{
@@ -770,27 +780,38 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		auto player = CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin();
 		dynamic_cast<CPlayer*>(*player)->m_iQuestStateMount = p->quest;
 
+		cout << "퀘스트 패킷 날라옴" << endl;
+
 
 		wchar_t wcQuestState[MAX_BUF_SIZE];
 
 		
 
-		if (p->quest < MAX_AI_SLIME)
+		if (/*p->quest < MAX_AI_SLIME &&*/ dynamic_cast<CPlayer*>(*player)->m_eQuestState == QUEST_SLIME)
 		{
 			pQuestUI->m_QuestScript->m_wstrText = L"슬라임을 잡아라!";
-			wsprintf(wcQuestState, L"슬라임 남은 마리수 : %d / %d", p->quest, MAX_AI_SLIME);
+			if(p->quest < MAX_AI_SLIME)
+				wsprintf(wcQuestState, L"슬라임 남은 마리수 : %d / %d", p->quest, MAX_AI_SLIME);
+			else
+				wsprintf(wcQuestState, L"퀘스트 완료!");
 			pQuestUI->m_QuestState->m_wstrText = wcQuestState;
 		}
-		else if (p->quest >= MAX_AI_SLIME && p->quest < MAX_AI_GOBLIN)
+		else if (/*p->quest >= MAX_AI_SLIME && p->quest < MAX_AI_GOBLIN &&*/ dynamic_cast<CPlayer*>(*player)->m_eQuestState ==QUEST_GOBLIN)
 		{
 			pQuestUI->m_QuestScript->m_wstrText = L"고블린을 잡아라!";
-			wsprintf(wcQuestState, L"고블린 남은 마리수 : %d / %d", p->quest - MAX_AI_SLIME, MAX_AI_GOBLIN - MAX_AI_SLIME);
+			if (p->quest - MAX_AI_SLIME < MAX_AI_GOBLIN - MAX_AI_SLIME)
+				wsprintf(wcQuestState, L"고블린 남은 마리수 : %d / %d", p->quest - MAX_AI_SLIME, MAX_AI_GOBLIN - MAX_AI_SLIME);
+			else
+				wsprintf(wcQuestState, L"퀘스트 완료!");
 			pQuestUI->m_QuestState->m_wstrText = wcQuestState;
 		}
-		else 
+		else if(dynamic_cast<CPlayer*>(*player)->m_eQuestState == QUEST_BOSS)
 		{
 			pQuestUI->m_QuestScript->m_wstrText = L"매직 골램을 잡아라!";
-			wsprintf(wcQuestState, L"매직골램 퇴치 : %d / %d", p->quest - MAX_AI_GOBLIN, 1);
+			if (p->quest - MAX_AI_GOBLIN < 1)
+				wsprintf(wcQuestState, L"매직골램 퇴치 : %d / %d", p->quest - MAX_AI_GOBLIN, 1);
+			else
+				wsprintf(wcQuestState, L"퀘스트 완료!");
 			pQuestUI->m_QuestState->m_wstrText = wcQuestState;
 		}
 
@@ -977,7 +998,6 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 							//NPC 혹은 몬스터가 죽었을시
 							if ((*iter)->GetPacketData()->id == p->id)
 							{
-								cout << "디스커넥" << p->id << endl;
 								CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
 								::Safe_Delete(*iter);
 								iter = CObjMgr::GetInstance()->Get_ObjList(L"Monster")->erase(iter);
@@ -1005,7 +1025,6 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 							//NPC 혹은 몬스터가 죽었을시
 							if ((*iter)->GetPacketData()->id == p->id)
 							{
-								
 								CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
 								::Safe_Delete(*iter);
 								iter = CObjMgr::GetInstance()->Get_ObjList(L"Boss")->erase(iter);

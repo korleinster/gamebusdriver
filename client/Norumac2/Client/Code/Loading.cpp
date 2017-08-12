@@ -261,11 +261,7 @@ void CLoading::StageLoading(void)
 	m_bComplete = true;
 
 
-	if (m_serverConnected == false) {
-		g_client.Init(g_hWnd);
-		g_bLogin = true;
-		m_serverConnected = true;
-	}
+	
 }
 
 void CLoading::TextureLoad(void)

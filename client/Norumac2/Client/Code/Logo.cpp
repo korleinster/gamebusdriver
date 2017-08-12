@@ -55,6 +55,13 @@ int CLogo::Update(void)
 		if (m_bDynamicLoading == false)
 			Add_Dynamic_Buffer();
 
+
+		if (m_serverConnected == false) {
+			g_client.Init(g_hWnd);
+			g_bLogin = true;
+			m_serverConnected = true;
+		}
+
 		if (m_bDynamicLoading == true && g_bLogin == true)
 		{
 			if (GetAsyncKeyState(VK_RETURN))

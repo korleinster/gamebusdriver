@@ -34,7 +34,7 @@ private:
 private:
 	TCHAR		m_szLoadMessage[128];
 	bool		m_bComplete;
-	bool		m_serverConnected{ false };
+	
 };
 
 //class CLoading

@@ -22,6 +22,7 @@
 #include "OtherPlayer.h"
 #include "NaviMgr.h"
 #include "NPC.h"
+#include "QuestUI.h"
 
 #pragma pack(push,1)
 struct CB_VS_PER_OBJECT
@@ -871,7 +872,7 @@ void CPlayer::KeyInput()
 
 	if (CInput::GetInstance()->GetDIKeyState(DIK_T) & 0x80)
 	{
-		
+		CQuestUI* pQuestUI = dynamic_cast<CQuestUI*>(*(CObjMgr::GetInstance()->Get_ObjList(L"QuestUI")->begin()));
 		if (m_eQuestState == QUEST_NOT)
 		{
 			list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"NPC")->begin();
@@ -885,6 +886,7 @@ void CPlayer::KeyInput()
 					{
 						m_bQuestFlag = true;
 						m_eQuestState = QUEST_SLIME;
+						pQuestUI->m_bRender = true;
 						g_client.sendPacket(0, QUEST_START, nullptr);
 						cout << "½½¶óÀÓ Äù½ºÆ® ¹Þ¾ÆÁü" << endl;
 					}
@@ -907,6 +909,7 @@ void CPlayer::KeyInput()
 						m_bQuestFlag = false;
 						m_eQuestState = QUEST_GOBLIN;
 						g_client.sendPacket(0, QUEST_START, nullptr);
+						pQuestUI->m_bRender = true;
 						cout << "°íºí¸° Äù½ºÆ® ¹Þ¾ÆÁü" << endl;
 					}
 				}
@@ -928,6 +931,7 @@ void CPlayer::KeyInput()
 						m_bQuestFlag = true;
 						m_eQuestState = QUEST_BOSS;
 						g_client.sendPacket(0, QUEST_START, nullptr);
+						pQuestUI->m_bRender = true;
 						cout << "º¸½º Äù½ºÆ® ¹Þ¾ÆÁü" << endl;
 					}
 				}

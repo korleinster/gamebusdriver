@@ -724,7 +724,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		else 
 		{
 			pQuestUI->m_QuestScript->m_wstrText = L"¸ÅÁ÷ °ñ·¥À» Àâ¾Æ¶ó!";
-			wsprintf(wcQuestState, L"¸ÅÁ÷°ñ·¥ ÅðÄ¡ : %d / %d", p->quest - MAX_AI_SLIME - MAX_AI_GOBLIN, MAX_AI_BOSS);
+			wsprintf(wcQuestState, L"¸ÅÁ÷°ñ·¥ ÅðÄ¡ : %d / %d", p->quest - MAX_AI_GOBLIN, 1);
 			pQuestUI->m_QuestState->m_wstrText = wcQuestState;
 		}
 

@@ -46,9 +46,17 @@ CRenderMgr::CRenderMgr()
 	m_pTargetMgr->Initialize();
 	m_pLightMgr->Initialize();
 
-	m_fDirColor[RGB_RED] = 1.0f;
-	m_fDirColor[RGB_GREEN] = 1.0f;
-	m_fDirColor[RGB_BLUE] = 1.0f;
+	// Dir
+	m_fDirColor[RGB_RED] = 1.2f;
+	m_fDirColor[RGB_GREEN] = 1.2f;
+	m_fDirColor[RGB_BLUE] = 1.2f;
+
+	// Point
+	m_fPointColor[RGB_RED] = 1.5f;
+	m_fPointColor[RGB_GREEN] = 1.0f;
+	m_fPointColor[RGB_BLUE] = 0.0f;
+	m_fPointY = 2.f;
+	m_fPointRadius = 11.f;
 
 	m_vDirLight = D3DXVECTOR3(-0.62f, -0.44f, -0.64f);
 
@@ -156,17 +164,18 @@ void CRenderMgr::Render(const float & fTime)
 			D3DXVECTOR3(m_fDirColor[RGB_RED], m_fDirColor[RGB_GREEN], m_fDirColor[RGB_BLUE]));
 
 		// 조명 클리어
-		//m_pLightMgr->ClearLights();
-		//// 점조명 갱신
-		/*for (int i = 0; i < 100; ++i)
-		{
-		if (i % 3 == 0)
-		m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f, 20.f, 0.f + i * 5), 20.f, D3DXVECTOR3(0.0f, 0.0f, i));
-		else if (i % 3 == 1)
-		m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f, 0.f + i * 5, 0.f), 20.f, D3DXVECTOR3(0.0f, i, 0.0f));
-		else if (i % 3 == 2)
-		m_pLightMgr->AddPointLight(D3DXVECTOR3(0.f + i * 5, 20.f, 0.f), 20.f, D3DXVECTOR3(i, 0.0f, 0.0f));
-		}*/
+		m_pLightMgr->ClearLights();
+
+		m_pLightMgr->AddPointLight(D3DXVECTOR3(145.844, 0.f + m_fPointY, 405.368f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+		m_pLightMgr->AddPointLight(D3DXVECTOR3(156.513f, 0.f + m_fPointY, 403.979f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+
+		m_pLightMgr->AddPointLight(D3DXVECTOR3(156.798f, 0.f + m_fPointY, 393.433f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+		m_pLightMgr->AddPointLight(D3DXVECTOR3(264.912f, 18.f + m_fPointY, 367.82f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+		m_pLightMgr->AddPointLight(D3DXVECTOR3(265.683f, 18.f + m_fPointY, 359.509f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+		m_pLightMgr->AddPointLight(D3DXVECTOR3(266.164f, 18.f + m_fPointY, 351.829f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+		m_pLightMgr->AddPointLight(D3DXVECTOR3(266.839f, 18.f + m_fPointY, 344.844f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+		m_pLightMgr->AddPointLight(D3DXVECTOR3(266.085f, 18.f + m_fPointY, 338.866f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+		
 	}
 
 	// 그림자 렌더
@@ -450,6 +459,44 @@ void CRenderMgr::Input(float fTime)
 			m_fTimeCheck = 0.f;
 		}
 	}
+
+	/*if (CInput::GetInstance()->GetDIKeyState(DIK_C) & 0x80)
+	{
+		m_fPointY += 0.1f;
+	cout << "PointY : " << m_fPointY << endl;
+	}
+
+	if (CInput::GetInstance()->GetDIKeyState(DIK_V) & 0x80)
+	{
+		m_fPointY -= 0.1f;
+	cout << "PointY : " << m_fPointY << endl;
+	}*/
+
+	/*if (CInput::GetInstance()->GetDIKeyState(DIK_B) & 0x80)
+	{
+		m_fPointRadius += 0.1f;
+		cout << "PointRadius : " << m_fPointRadius << endl;
+	}
+
+	if (CInput::GetInstance()->GetDIKeyState(DIK_N) & 0x80)
+	{
+		m_fPointRadius -= 0.1f;
+		cout << "PointRadius : " << m_fPointRadius << endl;
+	}*/
+
+	//if (CInput::GetInstance()->GetDIKeyState(DIK_Z) & 0x80)
+	//{
+	//	m_fPointColor[0] += 0.1f;
+	//	//m_fPointColor[1] += 0.1f;
+	//	cout << "m_fPointColor : " << m_fPointColor[0] << endl;
+	//}
+
+	//if (CInput::GetInstance()->GetDIKeyState(DIK_X) & 0x80)
+	//{
+	//	m_fPointColor[0] -= 0.1f;
+	//	//m_fPointColor[1] -= 0.1f;
+	//	cout << "m_fPointColor : " << m_fPointColor[0] << endl;
+	//}
 
 	/*if (CInput::GetInstance()->GetDIKeyState(DIK_Z) & 0x80)
 	{

@@ -124,6 +124,7 @@ HRESULT CPlayer::Initialize(void)
 
 int CPlayer::Update(void)
 {
+	//cout << "플레이어 좌표 ( " << m_pInfo->m_vPos.x << " , " << m_pInfo->m_vPos.y << " , " << m_pInfo->m_vPos.z << " )" << endl;
 	if (m_bStart)
 	{
 		SetNaviIndex(CNaviMgr::GetInstance()->GetCellIndex(&m_pInfo->m_vPos));
@@ -238,25 +239,6 @@ int CPlayer::Update(void)
 
 void CPlayer::Render(void)
 {
-
-	//ConstantBuffer cb;
-	//D3DXMatrixTranspose(&cb.matWorld, &m_pInfo->m_matWorld);
-	//D3DXMatrixTranspose(&cb.matView, &CCamera::GetInstance()->m_matView);
-	//D3DXMatrixTranspose(&cb.matProjection, &CCamera::GetInstance()->m_matProj);
-	//m_pGrapicDevice->m_pDeviceContext->UpdateSubresource(m_pBuffer->m_ConstantBuffer, 0, NULL, &cb, 0, 0);
-
-	//m_pGrapicDevice->m_pDeviceContext->VSSetShader(m_pVertexShader->m_pVertexShader, NULL, 0);
-	//m_pGrapicDevice->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pBuffer->m_ConstantBuffer);
-	////////////////////
-	//m_pGrapicDevice->m_pDeviceContext->PSSetShader(m_pPixelShader->m_pPixelShader, NULL, 0);
-	//m_pGrapicDevice->m_pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureRV);
-	//m_pGrapicDevice->m_pDeviceContext->PSSetSamplers(0, 1, &m_pTexture->m_pSamplerLinear);
-
-	////m_pBuffer->Render();
-	//dynamic_cast<CDynamicMesh*>(m_pBuffer)->PlayAnimation(m_ePlayerState);
-
-	//////////////////////////////////////////////////////////////////////////////////
-
 	// Get the projection & view matrix from the camera class
 	D3DXMATRIX mView = *(CCamera::GetInstance()->GetViewMatrix());
 	D3DXMATRIX mProj = *(CCamera::GetInstance()->GetProjMatrix());

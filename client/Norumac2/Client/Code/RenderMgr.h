@@ -67,6 +67,9 @@ private:
 	void Input(float fTime); // 추가
 	D3DXVECTOR3			m_vDirLight;// 추가
 	float				m_fDirColor[RGB_END];// 추가
+	float				m_fPointColor[RGB_END];// 추가
+	float				m_fPointY;
+	float				m_fPointRadius;
 private:
 	CShader*			m_pBorderLineVS;
 	CShader*			m_pBorderLinePS;

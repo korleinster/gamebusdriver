@@ -262,14 +262,14 @@ void CStage::DataLoad(void)
 
 			
 
-			if (0 == wcscmp(pObjectKey, L"streetlamp"))
+			/*if (0 == wcscmp(pObjectKey, L"streetlamp"))
 			{
 				D3DXVECTOR3 vPos;
 				vPos.x = ((CInfo*)pComponent)->m_vPos.x - 0.5f;
 				vPos.y = ((CInfo*)pComponent)->m_vPos.y+1;
 				vPos.z = ((CInfo*)pComponent)->m_vPos.z;
 				pLightMgr->AddPointLight(vPos, 3.f, D3DXVECTOR3(1.0f, 0.0f, 0.0f));
-			}
+			}*/
 		}
 	}
 	CloseHandle(hFile);

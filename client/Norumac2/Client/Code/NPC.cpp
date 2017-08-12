@@ -19,6 +19,9 @@
 #include "AnimationMgr.h"
 #include "TerrainCol.h"
 #include "Terrain.h"
+#include "ChatUI.h"
+#include "Player.h"
+#include "Font.h"
 
 #pragma pack(push,1)
 struct CB_VS_PER_OBJECT
@@ -50,6 +53,7 @@ CNpc::CNpc()
 	m_pScenePixelShaderCB = NULL;
 
 	m_eNpcType = NPC_SLIME;
+	m_bPlayerIn = false;
 
 }
 
@@ -115,6 +119,7 @@ int CNpc::Update(void)
 
 	D3DXVec3TransformNormal(&m_pInfo->m_vDir, &g_vLook, &m_pInfo->m_matWorld);
 
+	NpcChat();
 	SetCurrling();
 
 	m_pTerrainCol->CollisionTerrain(&m_pInfo->m_vPos, m_pVerTex);
@@ -253,5 +258,231 @@ void CNpc::SetCurrling(void)
 		m_bCurred = true;
 	else
 		m_bCurred = false;
+}
+
+void CNpc::NpcChat(void)
+{
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(*(CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin()));
+
+	D3DXVECTOR3 vPlayerPos = pPlayer->GetInfo()->m_vPos;
+
+	CChatUI* pChatUI = dynamic_cast<CChatUI*>(*(CObjMgr::GetInstance()->Get_ObjList(L"ChatUI")->begin()));
+
+	
+
+
+
+
+	if ((abs(m_pInfo->m_vPos.x - vPlayerPos.x) < 2.f && abs(m_pInfo->m_vPos.z - vPlayerPos.z) < 2.f) )
+	{
+		if (pPlayer->m_eQuestState == QUEST_NOT && m_bPlayerIn == false && m_eNpcType == NPC_SLIME)
+		{
+			m_bPlayerIn = true;
+
+			CFont* pFont = CFont::Create(L"Font_Clear");
+
+			pFont->m_eType = FONT_TYPE_OUTLINE;
+			pFont->m_fSize = 20.f;
+			pFont->m_nColor = 0xFFFFFFFF;
+			pFont->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
+			pFont->m_vPos = D3DXVECTOR2(15.f, 620.f);
+			pFont->m_fOutlineSize = 1.f;
+			pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
+
+			pFont->m_wstrText = L"주민: 슬라임이 갑자기 난폭해졌어요!";
+
+			for (auto ChatList : pChatUI->m_ChatLogList)
+				ChatList->m_vPos.y -= 20.f;
+
+			if (pChatUI->m_ChatLogList.size() == 7)
+			{
+				pChatUI->m_ChatLogList.pop_front(); 
+			}
+
+			pChatUI->m_ChatLogList.push_back(pFont);
+
+			pFont = CFont::Create(L"Font_Clear");
+
+			pFont->m_eType = FONT_TYPE_OUTLINE;
+			pFont->m_fSize = 20.f;
+			pFont->m_nColor = 0xFFFFFFFF;
+			pFont->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
+			pFont->m_vPos = D3DXVECTOR2(15.f, 620.f);
+			pFont->m_fOutlineSize = 1.f;
+			pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
+
+			pFont->m_wstrText = L"용사님깨서 도와주시지 않겠습니까?(수락: T키)";
+
+			for (auto ChatList : pChatUI->m_ChatLogList)
+				ChatList->m_vPos.y -= 20.f;
+
+			if (pChatUI->m_ChatLogList.size() == 7)
+			{
+				pChatUI->m_ChatLogList.pop_front(); 
+			}
+
+
+
+			pChatUI->m_ChatLogList.push_back(pFont);
+		}
+		else if (pPlayer->m_eQuestState == QUEST_SLIME && m_bPlayerIn == false && m_eNpcType == NPC_GOBLIN && pPlayer->m_iQuestStateMount >= MAX_AI_SLIME)
+		{
+			m_bPlayerIn = true;
+
+			CFont* pFont = CFont::Create(L"Font_Clear");
+
+			pFont->m_eType = FONT_TYPE_OUTLINE;
+			pFont->m_fSize = 20.f;
+			pFont->m_nColor = 0xFFFFFFFF;
+			pFont->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
+			pFont->m_vPos = D3DXVECTOR2(15.f, 620.f);
+			pFont->m_fOutlineSize = 1.f;
+			pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
+
+			pFont->m_wstrText = L"주민: 마을에 고블린이....용사님 도와주십시요!(수락: T키)";
+
+			for (auto ChatList : pChatUI->m_ChatLogList)
+				ChatList->m_vPos.y -= 20.f;
+
+			if (pChatUI->m_ChatLogList.size() == 7)
+			{
+				pChatUI->m_ChatLogList.pop_front(); // 앞에 폰트객체지우는걸 해야하는대 일단 귀찮으니깐 팝만하자. 나중에 처리해야지
+			}
+
+			pChatUI->m_ChatLogList.push_back(pFont);
+		}
+		else if (pPlayer->m_eQuestState == QUEST_GOBLIN && m_bPlayerIn == false && m_eNpcType == NPC_BOSS && pPlayer->m_iQuestStateMount >= MAX_AI_GOBLIN)
+		{
+			m_bPlayerIn = true;
+
+			CFont* pFont = CFont::Create(L"Font_Clear");
+
+			pFont->m_eType = FONT_TYPE_OUTLINE;
+			pFont->m_fSize = 20.f;
+			pFont->m_nColor = 0xFFFFFFFF;
+			pFont->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
+			pFont->m_vPos = D3DXVECTOR2(15.f, 620.f);
+			pFont->m_fOutlineSize = 1.f;
+			pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
+
+			pFont->m_wstrText = L"주민: 흉포의 원인 골렘이 근처에 있습니다.";
+
+
+
+			for (auto ChatList : pChatUI->m_ChatLogList)
+				ChatList->m_vPos.y -= 20.f;
+
+			if (pChatUI->m_ChatLogList.size() == 7)
+			{
+				pChatUI->m_ChatLogList.pop_front(); // 앞에 폰트객체지우는걸 해야하는대 일단 귀찮으니깐 팝만하자. 나중에 처리해야지
+			}
+
+			pChatUI->m_ChatLogList.push_back(pFont);
+
+			pFont = CFont::Create(L"Font_Clear");
+
+			pFont->m_eType = FONT_TYPE_OUTLINE;
+			pFont->m_fSize = 20.f;
+			pFont->m_nColor = 0xFFFFFFFF;
+			pFont->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
+			pFont->m_vPos = D3DXVECTOR2(15.f, 620.f);
+			pFont->m_fOutlineSize = 1.f;
+			pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
+
+			pFont->m_wstrText = L"다른 용사님들과 같이 퇴치를 부탁드려요!(수락: T키)";
+
+			for (auto ChatList : pChatUI->m_ChatLogList)
+				ChatList->m_vPos.y -= 20.f;
+
+			if (pChatUI->m_ChatLogList.size() == 7)
+			{
+				pChatUI->m_ChatLogList.pop_front(); // 앞에 폰트객체지우는걸 해야하는대 일단 귀찮으니깐 팝만하자. 나중에 처리해야지
+			}
+
+			pChatUI->m_ChatLogList.push_back(pFont);
+		}
+	}
+
+	else
+	{
+		if (pPlayer->m_eQuestState == QUEST_NOT && m_bPlayerIn == true && m_eNpcType == NPC_SLIME)
+		{
+			m_bPlayerIn = false;
+
+			CFont* pFont = CFont::Create(L"Font_Clear");
+
+			pFont->m_eType = FONT_TYPE_OUTLINE;
+			pFont->m_fSize = 20.f;
+			pFont->m_nColor = 0xFFFFFFFF;
+			pFont->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
+			pFont->m_vPos = D3DXVECTOR2(15.f, 620.f);
+			pFont->m_fOutlineSize = 1.f;
+			pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
+
+			pFont->m_wstrText = L"주민: 저런!... 그럼 저흰 어떻게 되는겁니까?...";
+
+			for (auto ChatList : pChatUI->m_ChatLogList)
+				ChatList->m_vPos.y -= 20.f;
+
+			if (pChatUI->m_ChatLogList.size() == 7)
+			{
+				pChatUI->m_ChatLogList.pop_front(); // 앞에 폰트객체지우는걸 해야하는대 일단 귀찮으니깐 팝만하자. 나중에 처리해야지
+			}
+
+			pChatUI->m_ChatLogList.push_back(pFont);
+		}
+		else if (pPlayer->m_eQuestState == QUEST_SLIME && m_bPlayerIn == true && m_eNpcType == NPC_GOBLIN)
+		{
+			m_bPlayerIn = false;
+
+			CFont* pFont = CFont::Create(L"Font_Clear");
+
+			pFont->m_eType = FONT_TYPE_OUTLINE;
+			pFont->m_fSize = 20.f;
+			pFont->m_nColor = 0xFFFFFFFF;
+			pFont->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
+			pFont->m_vPos = D3DXVECTOR2(15.f, 620.f);
+			pFont->m_fOutlineSize = 1.f;
+			pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
+
+			pFont->m_wstrText = L"주민: 살려주십시요 용사님!...";
+
+			for (auto ChatList : pChatUI->m_ChatLogList)
+				ChatList->m_vPos.y -= 20.f;
+
+			if (pChatUI->m_ChatLogList.size() == 7)
+			{
+				pChatUI->m_ChatLogList.pop_front(); // 앞에 폰트객체지우는걸 해야하는대 일단 귀찮으니깐 팝만하자. 나중에 처리해야지
+			}
+
+			pChatUI->m_ChatLogList.push_back(pFont);
+		}
+		else if (pPlayer->m_eQuestState == QUEST_GOBLIN && m_bPlayerIn == true && m_eNpcType == NPC_BOSS)
+		{
+			m_bPlayerIn = false;
+
+			CFont* pFont = CFont::Create(L"Font_Clear");
+
+			pFont->m_eType = FONT_TYPE_OUTLINE;
+			pFont->m_fSize = 20.f;
+			pFont->m_nColor = 0xFFFFFFFF;
+			pFont->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
+			pFont->m_vPos = D3DXVECTOR2(15.f, 620.f);
+			pFont->m_fOutlineSize = 1.f;
+			pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
+
+			pFont->m_wstrText = L"주민: 아!... 이 마을은 누가 구원할 것인지...";
+
+			for (auto ChatList : pChatUI->m_ChatLogList)
+				ChatList->m_vPos.y -= 20.f;
+
+			if (pChatUI->m_ChatLogList.size() == 7)
+			{
+				pChatUI->m_ChatLogList.pop_front(); // 앞에 폰트객체지우는걸 해야하는대 일단 귀찮으니깐 팝만하자. 나중에 처리해야지
+			}
+
+			pChatUI->m_ChatLogList.push_back(pFont);
+		}
+	}
 }
 

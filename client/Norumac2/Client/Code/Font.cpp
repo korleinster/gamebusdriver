@@ -19,6 +19,7 @@ CFont::CFont()
 	m_fOutlineSize = 1.f;
 	m_nOutlineColor = 0xFF000000;
 	m_dwRefCount = 0;
+	m_bEntered = false;
 }
 
 CFont::~CFont()

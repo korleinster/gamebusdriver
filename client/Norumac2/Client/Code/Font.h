@@ -49,6 +49,7 @@ public:
 	UINT32			m_nOutlineColor;//¿Ü°û¼± »ö»ó (0xAARRGGBB)
 
 	DWORD			m_dwRefCount;
+	bool			m_bEntered;
 
 public:
 	static CFont*		Create(const wstring& _wstPath);

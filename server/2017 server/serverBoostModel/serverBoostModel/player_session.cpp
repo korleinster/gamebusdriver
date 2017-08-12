@@ -641,7 +641,7 @@ void player_session::m_process_packet(Packet buf[])
 								sc_chat chat;
 								chat.id = -1;
 								wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"슬라임 %d 마리 잡음", m_sub_status.quest);
-								if (MAX_AI_SLIME == m_sub_status.quest) { wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"슬라임 퀘스트 완료"); }
+								if (MAX_AI_SLIME == m_sub_status.quest) { wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"슬라임 퀘스트 완료! 다음 NPC를 찾아가세요."); }
  								send_packet(reinterpret_cast<Packet*>(&chat));
 
 								sc_quest q;
@@ -654,7 +654,7 @@ void player_session::m_process_packet(Packet buf[])
 								sc_chat chat;
 								chat.id = -1;
 								wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"고블린 %d 마리 잡음", m_sub_status.quest - MAX_AI_SLIME);
-								if (MAX_AI_GOBLIN == m_sub_status.quest) { wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"고블린 퀘스트 완료"); }
+								if (MAX_AI_GOBLIN == m_sub_status.quest) { wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"고블린 퀘스트 완료! 다음 NPC를 찾아가세요."); }
 								send_packet(reinterpret_cast<Packet*>(&chat));
 
 								sc_quest q;
@@ -666,7 +666,7 @@ void player_session::m_process_packet(Packet buf[])
 
 								sc_chat chat;
 								chat.id = -1;
-								wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"보스 퀘스트 완료");
+								wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"보스 퀘스트 완료! 마을에 평화가 찾아왔습니다.");
 								send_packet(reinterpret_cast<Packet*>(&chat));
 
 								sc_quest q;

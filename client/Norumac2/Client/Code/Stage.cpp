@@ -201,13 +201,13 @@ HRESULT CStage::CreateObj(void)
 	NaviLoad();
 
 
-	pObj = CNpc::Create(L"Slime",L"Texture_Slime", D3DXVECTOR3(164.f, 4.f, 400.f),NPC_SLIME);
+	pObj = CNpc::Create(L"Slime",L"Texture_Slime", D3DXVECTOR3(164.f, 4.f, 400.f), NPC_SLIME);
 	CObjMgr::GetInstance()->AddObject(L"NPC", pObj);
 
 	pObj = CNpc::Create(L"Goblin", L"Texture_Goblin", D3DXVECTOR3(162.f, 4.f, 400.f), NPC_GOBLIN);
 	CObjMgr::GetInstance()->AddObject(L"NPC", pObj);
 
-	pObj = CNpc::Create(L"Player", L"Texture_Player", D3DXVECTOR3(160.f, 4.f, 400.f), NPC_BOSS);
+	pObj = CNpc::Create(L"NPC", L"Texture_NPC", D3DXVECTOR3(160.f, 4.f, 400.f), NPC_BOSS);
 	CObjMgr::GetInstance()->AddObject(L"NPC", pObj);
 	
 

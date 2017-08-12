@@ -533,18 +533,51 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 			if (0 >= p->hp)
 			{
+				cout << "쥬금" << endl;
 				if (p->under_attack_id < MAX_AI_NUM)
 				{
 					if (p->under_attack_id < MAX_AI_GOBLIN)
 					{
-						list<CObj*>* ListObj = CObjMgr::GetInstance()->Get_ObjList(L"Monster");
+ 						list<CObj*>* ListObj = CObjMgr::GetInstance()->Get_ObjList(L"Monster");
 						list<CObj*>::iterator iter = ListObj->begin();
 						list<CObj*>::iterator iter_end = ListObj->end();
+
+						D3DXVECTOR3 vPos;
 
 						for (; iter != iter_end; ++iter)
 						{
 							if ((*iter)->GetPacketData()->id == p->under_attack_id)
 							{
+
+								vPos = (*iter)->GetInfo()->m_vPos;
+
+								int damage_Value = (CObjMgr::GetInstance()->Get_MonsterServerData(p->under_attack_id))->state.hp - p->hp;
+								if (10 > damage_Value)
+								{
+									CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 20, 0xFFFFD200);
+									CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+								}
+								else if (20 > damage_Value)
+								{
+									CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 25, 0xFF00FFFF);
+									CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+								}
+								else if (30 > damage_Value)
+								{
+									CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 30, 0xFF00E4FF);
+									CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+								}
+								else if (40 > damage_Value)
+								{
+									CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 45, 0xFF00A2FF);
+									CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+								}
+								else
+								{
+									CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 60, 0xFF0000FF);
+									CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+								}
+
 								CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
 								(*iter)->m_bDeath = true;
 								break;
@@ -573,10 +606,41 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 						list<CObj*>::iterator iter = ListObj->begin();
 						list<CObj*>::iterator iter_end = ListObj->end();
 
+						D3DXVECTOR3 vPos;
+
 						for (; iter != iter_end; ++iter)
 						{
 							if ((*iter)->GetPacketData()->id == p->under_attack_id)
 							{
+								vPos = (*iter)->GetInfo()->m_vPos;
+
+								int damage_Value = (CObjMgr::GetInstance()->Get_MonsterServerData(p->under_attack_id))->state.hp - p->hp;
+								if (10 > damage_Value)
+								{
+									CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 20, 0xFFFFD200);
+									CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+								}
+								else if (20 > damage_Value)
+								{
+									CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 25, 0xFF00FFFF);
+									CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+								}
+								else if (30 > damage_Value)
+								{
+									CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 30, 0xFF00E4FF);
+									CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+								}
+								else if (40 > damage_Value)
+								{
+									CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 45, 0xFF00A2FF);
+									CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+								}
+								else
+								{
+									CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 60, 0xFF0000FF);
+									CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+								}
+
 								CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
 								(*iter)->m_bDeath = true;
 								break;
@@ -665,7 +729,9 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
 
 		for (auto ChatList : pChatUI->m_ChatLogList)
+		{
 			ChatList->m_vPos.y -= 20.f;
+		}
 
 		if (pChatUI->m_ChatLogList.size() == 7)
 		{
@@ -911,6 +977,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 							//NPC 혹은 몬스터가 죽었을시
 							if ((*iter)->GetPacketData()->id == p->id)
 							{
+								cout << "디스커넥" << p->id << endl;
 								CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
 								::Safe_Delete(*iter);
 								iter = CObjMgr::GetInstance()->Get_ObjList(L"Monster")->erase(iter);
@@ -938,6 +1005,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 							//NPC 혹은 몬스터가 죽었을시
 							if ((*iter)->GetPacketData()->id == p->id)
 							{
+								
 								CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
 								::Safe_Delete(*iter);
 								iter = CObjMgr::GetInstance()->Get_ObjList(L"Boss")->erase(iter);

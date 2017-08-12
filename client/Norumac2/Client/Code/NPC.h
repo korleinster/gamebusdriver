@@ -28,6 +28,7 @@ private:
 	ID3D11Buffer*		m_pScenePixelShaderCB;
 public:
 	QUESTNPCTYPE	m_eNpcType;
+	bool			m_bPlayerIn;
 
 public:
 	virtual HRESULT Initialize(wstring wstMeshKey, wstring wstrTextureKey, D3DXVECTOR3 vPos, QUESTNPCTYPE eNpcType);
@@ -43,5 +44,6 @@ public:
 private:
 	HRESULT	AddComponent(wstring wstMeshKey, wstring wstrTextureKey);
 	void SetCurrling(void);
+	void NpcChat(void);
 };
 

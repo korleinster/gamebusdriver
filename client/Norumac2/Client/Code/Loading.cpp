@@ -204,6 +204,13 @@ void CLoading::StageLoading(void)
 		, L"../Resource/Meshimage/PurpleImage.png");
 
 
+	hr = CResourcesMgr::GetInstance()->AddTexture(
+		RESOURCE_STAGE
+		, L"Texture_NPC"
+		, L"../Resource/Meshimage/npc_idle.png");
+
+
+
 
 	FAILED_CHECK_RETURN(hr, );
 

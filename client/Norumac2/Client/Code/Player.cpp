@@ -23,6 +23,8 @@
 #include "NaviMgr.h"
 #include "NPC.h"
 #include "QuestUI.h"
+#include "ChatUI.h"
+#include "Font.h"
 
 #pragma pack(push,1)
 struct CB_VS_PER_OBJECT
@@ -855,6 +857,9 @@ void CPlayer::KeyInput()
 	if (CInput::GetInstance()->GetDIKeyState(DIK_T) & 0x80)
 	{
 		CQuestUI* pQuestUI = dynamic_cast<CQuestUI*>(*(CObjMgr::GetInstance()->Get_ObjList(L"QuestUI")->begin()));
+		CChatUI* pChatUI = dynamic_cast<CChatUI*>(*(CObjMgr::GetInstance()->Get_ObjList(L"ChatUI")->begin()));
+		CFont* pFont = CFont::Create(L"Font_Clear");
+
 		if (m_eQuestState == QUEST_NOT)
 		{
 			list<CObj*>::iterator iter = CObjMgr::GetInstance()->Get_ObjList(L"NPC")->begin();
@@ -864,13 +869,38 @@ void CPlayer::KeyInput()
 			{
 				if (dynamic_cast<CNpc*>(*iter)->m_eNpcType == NPC_SLIME)
 				{
-					if ((abs(m_pInfo->m_vPos.x - (*iter)->GetInfo()->m_vPos.x) < 5.f && abs(m_pInfo->m_vPos.z - (*iter)->GetInfo()->m_vPos.z) < 5.f) && (false == m_bQuestFlag))
+					if ((abs(m_pInfo->m_vPos.x - (*iter)->GetInfo()->m_vPos.x) < 2.f && abs(m_pInfo->m_vPos.z - (*iter)->GetInfo()->m_vPos.z) < 2.f) && (false == m_bQuestFlag))
 					{
 						m_bQuestFlag = true;
 						m_eQuestState = QUEST_SLIME;
 						pQuestUI->m_bRender = true;
 						g_client.sendPacket(0, QUEST_START, nullptr);
-						cout << "슬라임 퀘스트 받아짐" << endl;
+
+
+						
+
+						///////////채팅 수락 표기//////////
+						pFont->m_eType = FONT_TYPE_OUTLINE;
+						pFont->m_fSize = 20.f;
+						pFont->m_nColor = 0xFFFFFFFF;
+						pFont->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
+						pFont->m_vPos = D3DXVECTOR2(15.f, 620.f);
+						pFont->m_fOutlineSize = 1.f;
+						pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
+
+						pFont->m_wstrText = L"주민: 감사합니다 용사님!";
+
+						for (auto ChatList : pChatUI->m_ChatLogList)
+							ChatList->m_vPos.y -= 20.f;
+
+						if (pChatUI->m_ChatLogList.size() == 7)
+						{
+							pChatUI->m_ChatLogList.pop_front(); // 앞에 폰트객체지우는걸 해야하는대 일단 귀찮으니깐 팝만하자. 나중에 처리해야지
+						}
+
+						pChatUI->m_ChatLogList.push_back(pFont);
+
+						///////////////////
 					}
 				}
 			}
@@ -886,13 +916,35 @@ void CPlayer::KeyInput()
 			{
 				if (dynamic_cast<CNpc*>(*iter)->m_eNpcType == NPC_GOBLIN)
 				{
-					if ((abs(m_pInfo->m_vPos.x - (*iter)->GetInfo()->m_vPos.x)  < 5.f && abs(m_pInfo->m_vPos.z - (*iter)->GetInfo()->m_vPos.z) < 5.f) && (true == m_bQuestFlag))
+					if ((abs(m_pInfo->m_vPos.x - (*iter)->GetInfo()->m_vPos.x)  < 2.f && abs(m_pInfo->m_vPos.z - (*iter)->GetInfo()->m_vPos.z) < 2.f) && (true == m_bQuestFlag))
 					{
 						m_bQuestFlag = false;
 						m_eQuestState = QUEST_GOBLIN;
 						g_client.sendPacket(0, QUEST_START, nullptr);
 						pQuestUI->m_bRender = true;
-						cout << "고블린 퀘스트 받아짐" << endl;
+
+						///////////채팅 수락 표기//////////
+						pFont->m_eType = FONT_TYPE_OUTLINE;
+						pFont->m_fSize = 20.f;
+						pFont->m_nColor = 0xFFFFFFFF;
+						pFont->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
+						pFont->m_vPos = D3DXVECTOR2(15.f, 620.f);
+						pFont->m_fOutlineSize = 1.f;
+						pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
+
+						pFont->m_wstrText = L"주민: 노고가 많습니다 용사님!";
+
+						for (auto ChatList : pChatUI->m_ChatLogList)
+							ChatList->m_vPos.y -= 20.f;
+
+						if (pChatUI->m_ChatLogList.size() == 7)
+						{
+							pChatUI->m_ChatLogList.pop_front(); // 앞에 폰트객체지우는걸 해야하는대 일단 귀찮으니깐 팝만하자. 나중에 처리해야지
+						}
+
+						pChatUI->m_ChatLogList.push_back(pFont);
+
+						///////////////////
 					}
 				}
 			}
@@ -908,13 +960,36 @@ void CPlayer::KeyInput()
 			{
 				if (dynamic_cast<CNpc*>(*iter)->m_eNpcType == NPC_BOSS)
 				{
-					if ((abs(m_pInfo->m_vPos.x - (*iter)->GetInfo()->m_vPos.x) < 5.f && abs(m_pInfo->m_vPos.z - (*iter)->GetInfo()->m_vPos.z) < 5.f) && (false == m_bQuestFlag))
+					if ((abs(m_pInfo->m_vPos.x - (*iter)->GetInfo()->m_vPos.x) < 2.f && abs(m_pInfo->m_vPos.z - (*iter)->GetInfo()->m_vPos.z) < 2.f) && (false == m_bQuestFlag))
 					{
 						m_bQuestFlag = true;
 						m_eQuestState = QUEST_BOSS;
 						g_client.sendPacket(0, QUEST_START, nullptr);
 						pQuestUI->m_bRender = true;
-						cout << "보스 퀘스트 받아짐" << endl;
+
+
+						///////////채팅 수락 표기//////////
+						pFont->m_eType = FONT_TYPE_OUTLINE;
+						pFont->m_fSize = 20.f;
+						pFont->m_nColor = 0xFFFFFFFF;
+						pFont->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
+						pFont->m_vPos = D3DXVECTOR2(15.f, 620.f);
+						pFont->m_fOutlineSize = 1.f;
+						pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
+
+						pFont->m_wstrText = L"주민: 제발 부탁드립니다 용사님!";
+
+						for (auto ChatList : pChatUI->m_ChatLogList)
+							ChatList->m_vPos.y -= 20.f;
+
+						if (pChatUI->m_ChatLogList.size() == 7)
+						{
+							pChatUI->m_ChatLogList.pop_front(); // 앞에 폰트객체지우는걸 해야하는대 일단 귀찮으니깐 팝만하자. 나중에 처리해야지
+						}
+
+						pChatUI->m_ChatLogList.push_back(pFont);
+
+						///////////////////
 					}
 				}
 			}

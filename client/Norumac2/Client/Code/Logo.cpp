@@ -226,6 +226,27 @@ HRESULT CLogo::Add_Dynamic_Buffer(void)
 		vecAni.clear();
 		//////////////////////////////////////////////////////////////
 
+
+
+		//////////////////////NPC//////////////////////////////////
+
+		vecAni.push_back("npc_idle");
+		
+
+		hr = CResourcesMgr::GetInstance()->AddMesh(
+			RESOURCE_STAGE,
+			MESH_DYNAMIC,
+			L"NPC",
+			"../Resource/Mesh/",
+			"", vecAni);
+		FAILED_CHECK_RETURN(hr, E_FAIL);
+
+		CAnimationMgr::GetInstance()->AddAnimation(L"NPC", &vecAni);
+
+		vecAni.clear();
+
+		//////////////////////////////////////////////////////////////
+
 		//////////////////////¿Ã∆Â∆Æ//////////////////////////////////
 
 		vecAni.push_back("Test_Effect");

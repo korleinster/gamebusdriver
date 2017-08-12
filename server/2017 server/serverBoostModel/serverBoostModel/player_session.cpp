@@ -617,6 +617,8 @@ void player_session::m_process_packet(Packet buf[])
 					p.under_attack_id = id;		// 맞는 놈의 id
 					p.hp = g_clients[id]->m_player_data.state.hp;	// 맞은 놈의 hp
 					p.comboState = attState;
+					p.pos.x = g_clients[id]->m_player_data.pos.x;
+					p.pos.y = g_clients[id]->m_player_data.pos.y;
 
 					// hp 가 0 이 되면 사망처리를 한다. -> 각각의 클라이언트에서 hp 가 0 된 녀석을 지워줌
 					if (0 >= g_clients[id]->m_player_data.state.hp) {

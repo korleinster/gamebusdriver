@@ -166,12 +166,13 @@ using sc_dir = struct server_to_client_player_direction
 
 using sc_atk = struct server_to_client_attack_states
 {
-	unsigned char size = sizeof(int) + sizeof(unsigned int) + sizeof(unsigned int) + sizeof(unsigned char) + sizeof(unsigned char) + sizeof(int);
+	unsigned char size = sizeof(int) + sizeof(unsigned int) + sizeof(unsigned int) + sizeof(unsigned char) + sizeof(unsigned char) + sizeof(int) + sizeof(position);
 	unsigned char type = KEYINPUT_ATTACK;
 	unsigned int attacking_id;
 	unsigned int under_attack_id;
 	int hp;
 	int comboState;
+	position pos;
 };
 
 using sc_hp = struct server_to_client_changed_hp

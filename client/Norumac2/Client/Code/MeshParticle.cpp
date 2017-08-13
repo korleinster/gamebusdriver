@@ -101,7 +101,7 @@ int CMeshParticle::Update(void)
 
 
 	float fTime = CTimeMgr::GetInstance()->GetTime();
-	m_pInfo->m_vDir.y -= 0.01f;
+	m_pInfo->m_vDir.y -= 0.05f;
 	m_pInfo->m_vPos += m_pInfo->m_vDir * m_fMoveSpeed * fTime;
 
 

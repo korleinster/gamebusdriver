@@ -994,7 +994,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			else
 			{
 				wsprintf(wcQuestState, L"퀘스트 완료!");
-				CSoundMgr::GetInstance()->PlaySound(L"QuestMidClear.ogg");
+				CSoundMgr::GetInstance()->PlayInterface3(L"QuestMidClear.ogg");
 			}
 			pQuestUI->m_QuestState->m_wstrText = wcQuestState;
 		}
@@ -1006,7 +1006,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			else
 			{
 				wsprintf(wcQuestState, L"퀘스트 완료!");
-				CSoundMgr::GetInstance()->PlaySound(L"QuestMidClear.ogg");
+				CSoundMgr::GetInstance()->PlayInterface3(L"QuestMidClear.ogg");
 			}
 			pQuestUI->m_QuestState->m_wstrText = wcQuestState;
 		}
@@ -1018,7 +1018,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			else
 			{
 				wsprintf(wcQuestState, L"퀘스트 완료!");
-				CSoundMgr::GetInstance()->PlaySound(L"QuestClear.ogg");
+				CSoundMgr::GetInstance()->PlayInterface3(L"QuestClear.ogg");
 			}
 			pQuestUI->m_QuestState->m_wstrText = wcQuestState;
 		}
@@ -1054,55 +1054,63 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 		if (p->att_type == BOSS_ATT_01)
 		{
-		
+				CSoundMgr::GetInstance()->Monster2Sound(L"GolamAtt2.ogg");
 				(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
 				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT1);
 				
-
-		}
-
-		else if (p->att_type == BOSS_ATT_02)
-		{
-	
-				(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
-				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT2);
 				
 
 		}
+
+		//else if (p->att_type == BOSS_ATT_02)
+		//{
+	
+		//	//안씀
+		//		(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
+		//		(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT2);
+
+		//		
+
+		//}
 
 		else if (p->att_type == BOSS_ATT_03)
 		{
 		
+				CSoundMgr::GetInstance()->Monster1Sound(L"GolamAtt3.ogg");
 				(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
 				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT3);
+				
 				
 
 		}
 
 		else if (p->att_type == BOSS_ATT_04)
 		{
-			
+				CSoundMgr::GetInstance()->Monster2Sound(L"GolamAtt4.ogg");
 				(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
 				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT4);
+				
 				
 		}
 
 		else if (p->att_type == BOSS_ATT_05)
 		{
-
+				CSoundMgr::GetInstance()->Monster1Sound(L"GolamAtt5.ogg");
 				(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
 				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT5);
+				
 				
 
 		}
 
-		else if (p->att_type == BOSS_ATT_06)
-		{
-		
-				(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
-				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_BUFF);
+		//else if (p->att_type == BOSS_ATT_06)
+		//{
+		//
+		//	//안씀
+		//		(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
+		//		(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_BUFF);
 
-		}
+		//}
 		/*
 			att_type 에 따라서, 어떤 공격 및 행동인지 확인할 수 있다.
 			따라서 저 타입에 따라서 관련 애니메이션 재생만 하면 됨.

@@ -811,7 +811,7 @@ void CPlayer::KeyInput()
 		}
 		g_client.sendPacket(sizeof(nullptr), KEYINPUT_POTION, 0);
 		m_bPotionCool = true;
-		CSoundMgr::GetInstance()->PlaySound(L"Potion1.ogg");
+		CSoundMgr::GetInstance()->PlayInterface1(L"Potion1.ogg");
 	}
 
 	if (CInput::GetInstance()->GetDIKeyState(DIK_2) & 0x80)
@@ -827,7 +827,7 @@ void CPlayer::KeyInput()
 		m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 		SetNaviIndex(CNaviMgr::GetInstance()->GetCellIndex(&m_pInfo->m_vPos));
 		g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
-		CSoundMgr::GetInstance()->PlaySound(L"TeleportRock.ogg");
+		CSoundMgr::GetInstance()->PlayInterface2(L"TeleportRock.ogg");
 		m_bTpCool = true;
 	}
 

@@ -206,6 +206,22 @@ void CLoading::StageLoading(void)
 
 	hr = CResourcesMgr::GetInstance()->AddTexture(
 		RESOURCE_STAGE
+		, L"Texture_SlimeP"
+		, L"../Resource/Meshimage/SlimePImage.png");
+
+	hr = CResourcesMgr::GetInstance()->AddTexture(
+		RESOURCE_STAGE
+		, L"Texture_GoblinP"
+		, L"../Resource/Meshimage/GoblinPImage.png");
+
+	hr = CResourcesMgr::GetInstance()->AddTexture(
+		RESOURCE_STAGE
+		, L"Texture_Blood"
+		, L"../Resource/Meshimage/BloodImage.png");
+
+
+	hr = CResourcesMgr::GetInstance()->AddTexture(
+		RESOURCE_STAGE
 		, L"Texture_NPC"
 		, L"../Resource/Meshimage/npc_idle.png");
 

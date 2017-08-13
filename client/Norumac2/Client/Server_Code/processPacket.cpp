@@ -279,7 +279,79 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			/// -> 정확히는 hp 전체 총량 값이다. 헷갈리지 않도록 유의
 			/// 다시말하면, 이전 hp 값과, 패킷으로 날아들어온 hp 값을 차이를 비교해서 데미지가 얼마 들어갔는지 표시해주어야 한다.
 			/// 원하면, 깎이는 데미지가 얼마인지만 패킷으로 보내 줄 수도 있음.
-			if (m_player.id == p->under_attack_id) {
+			if (m_player.id == p->under_attack_id) 
+			{
+				CPlayer* pPlayer = dynamic_cast<CPlayer*>(*(CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin()));
+
+				D3DXVECTOR3 vPos = pPlayer->GetInfo()->m_vPos;
+
+				int damage_Value = pPlayer->GetInfo()->m_ServerInfo.state.hp - p->hp;
+				if (10 > damage_Value)
+				{
+					CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 20, 0xFFFFD200);
+					CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+
+					for (int i = 0; i < 50; ++i)
+					{
+						pObj = CMeshParticle::Create(L"ParticleCube", D3DXVECTOR3(vPos.x, vPos.y + 0.f, vPos.z), PC_BLOOD);
+						pObj->GetInfo()->m_vDir = D3DXVECTOR3(randFloat(dre), randFloat(dre), randFloat(dre));
+						pObj->GetInfo()->m_vScale = D3DXVECTOR3(0.05f, 0.05f, 0.05f);
+						CObjMgr::GetInstance()->AddObject(L"Particle", pObj);
+					}
+				}
+				else if (20 > damage_Value)
+				{
+					CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 25, 0xFF00FFFF);
+					CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+
+					for (int i = 0; i < 50; ++i)
+					{
+						pObj = CMeshParticle::Create(L"ParticleCube", D3DXVECTOR3(vPos.x, vPos.y + 0.f, vPos.z), PC_BLOOD);
+						pObj->GetInfo()->m_vDir = D3DXVECTOR3(randFloat(dre), randFloat(dre), randFloat(dre));
+						pObj->GetInfo()->m_vScale = D3DXVECTOR3(0.05f, 0.05f, 0.05f);
+						CObjMgr::GetInstance()->AddObject(L"Particle", pObj);
+					}
+				}
+				else if (30 > damage_Value)
+				{
+					CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 30, 0xFF00E4FF);
+					CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+
+					for (int i = 0; i < 50; ++i)
+					{
+						pObj = CMeshParticle::Create(L"ParticleCube", D3DXVECTOR3(vPos.x, vPos.y + 0.f, vPos.z), PC_BLOOD);
+						pObj->GetInfo()->m_vDir = D3DXVECTOR3(randFloat(dre), randFloat(dre), randFloat(dre));
+						pObj->GetInfo()->m_vScale = D3DXVECTOR3(0.05f, 0.05f, 0.05f);
+						CObjMgr::GetInstance()->AddObject(L"Particle", pObj);
+					}
+				}
+				else if (40 > damage_Value)
+				{
+					CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 45, 0xFF00A2FF);
+					CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+
+					for (int i = 0; i < 50; ++i)
+					{
+						pObj = CMeshParticle::Create(L"ParticleCube", D3DXVECTOR3(vPos.x, vPos.y + 0.f, vPos.z), PC_BLOOD);
+						pObj->GetInfo()->m_vDir = D3DXVECTOR3(randFloat(dre), randFloat(dre), randFloat(dre));
+						pObj->GetInfo()->m_vScale = D3DXVECTOR3(0.05f, 0.05f, 0.05f);
+						CObjMgr::GetInstance()->AddObject(L"Particle", pObj);
+					}
+				}
+				else
+				{
+					CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 60, 0xFF0000FF);
+					CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+
+					for (int i = 0; i < 50; ++i)
+					{
+						pObj = CMeshParticle::Create(L"ParticleCube", D3DXVECTOR3(vPos.x, vPos.y + 0.f, vPos.z), PC_BLOOD);
+						pObj->GetInfo()->m_vDir = D3DXVECTOR3(randFloat(dre), randFloat(dre), randFloat(dre));
+						pObj->GetInfo()->m_vScale = D3DXVECTOR3(0.05f, 0.05f, 0.05f);
+						CObjMgr::GetInstance()->AddObject(L"Particle", pObj);
+					}
+				}
+
 				m_player.state.hp = p->hp;
 				(*CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin())->SetPacketHp(&p->hp);
 				break;
@@ -290,6 +362,90 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			if (p->under_attack_id >= MAX_AI_NUM) // 플레이어일시
 			{
 				if (NULL != (CObjMgr::GetInstance()->Get_PlayerServerData(p->under_attack_id))) {
+					
+
+					list<CObj*>* ListObj = CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer");
+					list<CObj*>::iterator iter = ListObj->begin();
+					list<CObj*>::iterator iter_end = ListObj->end();
+					D3DXVECTOR3 vPos;
+
+					for (; iter != iter_end; ++iter)
+					{
+						if ((*iter)->GetPacketData()->id == p->under_attack_id)
+						{
+							vPos = (*iter)->GetInfo()->m_vPos;
+							break;
+						}
+					}
+
+
+					int damage_Value = (CObjMgr::GetInstance()->Get_PlayerServerData(p->under_attack_id))->state.hp - p->hp;
+					if (10 > damage_Value)
+					{
+						CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 20, 0xFFFFD200);
+						CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+
+						for (int i = 0; i < 50; ++i)
+						{
+							pObj = CMeshParticle::Create(L"ParticleCube", D3DXVECTOR3(vPos.x, vPos.y + 0.f, vPos.z), PC_BLOOD);
+							pObj->GetInfo()->m_vDir = D3DXVECTOR3(randFloat(dre), randFloat(dre), randFloat(dre));
+							pObj->GetInfo()->m_vScale = D3DXVECTOR3(0.05f, 0.05f, 0.05f);
+							CObjMgr::GetInstance()->AddObject(L"Particle", pObj);
+						}
+					}
+					else if (20 > damage_Value)
+					{
+						CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 25, 0xFF00FFFF);
+						CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+
+						for (int i = 0; i < 50; ++i)
+						{
+							pObj = CMeshParticle::Create(L"ParticleCube", D3DXVECTOR3(vPos.x, vPos.y + 0.f, vPos.z), PC_BLOOD);
+							pObj->GetInfo()->m_vDir = D3DXVECTOR3(randFloat(dre), randFloat(dre), randFloat(dre));
+							pObj->GetInfo()->m_vScale = D3DXVECTOR3(0.05f, 0.05f, 0.05f);
+							CObjMgr::GetInstance()->AddObject(L"Particle", pObj);
+						}
+					}
+					else if (30 > damage_Value)
+					{
+						CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 30, 0xFF00E4FF);
+						CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+
+						for (int i = 0; i < 50; ++i)
+						{
+							pObj = CMeshParticle::Create(L"ParticleCube", D3DXVECTOR3(vPos.x, vPos.y + 0.f, vPos.z), PC_BLOOD);
+							pObj->GetInfo()->m_vDir = D3DXVECTOR3(randFloat(dre), randFloat(dre), randFloat(dre));
+							pObj->GetInfo()->m_vScale = D3DXVECTOR3(0.05f, 0.05f, 0.05f);
+							CObjMgr::GetInstance()->AddObject(L"Particle", pObj);
+						}
+					}
+					else if (40 > damage_Value)
+					{
+						CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 45, 0xFF00A2FF);
+						CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+
+						for (int i = 0; i < 50; ++i)
+						{
+							pObj = CMeshParticle::Create(L"ParticleCube", D3DXVECTOR3(vPos.x, vPos.y + 0.f, vPos.z), PC_BLOOD);
+							pObj->GetInfo()->m_vDir = D3DXVECTOR3(randFloat(dre), randFloat(dre), randFloat(dre));
+							pObj->GetInfo()->m_vScale = D3DXVECTOR3(0.05f, 0.05f, 0.05f);
+							CObjMgr::GetInstance()->AddObject(L"Particle", pObj);
+						}
+					}
+					else
+					{
+						CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 60, 0xFF0000FF);
+						CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+
+						for (int i = 0; i < 50; ++i)
+						{
+							pObj = CMeshParticle::Create(L"ParticleCube", D3DXVECTOR3(vPos.x, vPos.y + 0.f, vPos.z), PC_BLOOD);
+							pObj->GetInfo()->m_vDir = D3DXVECTOR3(randFloat(dre), randFloat(dre), randFloat(dre));
+							pObj->GetInfo()->m_vScale = D3DXVECTOR3(0.05f, 0.05f, 0.05f);
+							CObjMgr::GetInstance()->AddObject(L"Particle", pObj);
+						}
+					}
+
 					(CObjMgr::GetInstance()->Get_PlayerServerData(p->under_attack_id))->state.hp = p->hp;
 
 					/*CObj* pObj = CDamageFont::Create();
@@ -327,26 +483,91 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 						{
 							CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 20, 0xFFFFD200);
 							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+
+							for (int i = 0; i < 50; ++i)
+							{
+								PARTICLECOLOR eColor;
+								if (p->under_attack_id < MAX_AI_SLIME)
+									eColor = PC_SILME;
+								else
+									eColor = PC_GOBLIN;
+								pObj = CMeshParticle::Create(L"ParticleCube", D3DXVECTOR3(vPos.x, vPos.y + 0.f, vPos.z), eColor);
+								pObj->GetInfo()->m_vDir = D3DXVECTOR3(randFloat(dre), randFloat(dre), randFloat(dre));
+								pObj->GetInfo()->m_vScale = D3DXVECTOR3(0.05f, 0.05f, 0.05f);
+								CObjMgr::GetInstance()->AddObject(L"Particle", pObj);
+							}
 						}
 						else if (20 > damage_Value)
 						{
 							CObj* pObj = CDamageFont::Create(&vPos, damage_Value,25, 0xFF00FFFF);
 							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+
+							for (int i = 0; i < 50; ++i)
+							{
+								PARTICLECOLOR eColor;
+								if (p->under_attack_id < MAX_AI_SLIME)
+									eColor = PC_SILME;
+								else
+									eColor = PC_GOBLIN;
+								pObj = CMeshParticle::Create(L"ParticleCube", D3DXVECTOR3(vPos.x, vPos.y + 0.f, vPos.z), eColor);
+								pObj->GetInfo()->m_vDir = D3DXVECTOR3(randFloat(dre), randFloat(dre), randFloat(dre));
+								pObj->GetInfo()->m_vScale = D3DXVECTOR3(0.05f, 0.05f, 0.05f);
+								CObjMgr::GetInstance()->AddObject(L"Particle", pObj);
+							}
 						}
 						else if (30 > damage_Value)
 						{
 							CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 30, 0xFF00E4FF);
 							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+
+							for (int i = 0; i < 50; ++i)
+							{
+								PARTICLECOLOR eColor;
+								if (p->under_attack_id < MAX_AI_SLIME)
+									eColor = PC_SILME;
+								else
+									eColor = PC_GOBLIN;
+								pObj = CMeshParticle::Create(L"ParticleCube", D3DXVECTOR3(vPos.x, vPos.y + 0.f, vPos.z), eColor);
+								pObj->GetInfo()->m_vDir = D3DXVECTOR3(randFloat(dre), randFloat(dre), randFloat(dre));
+								pObj->GetInfo()->m_vScale = D3DXVECTOR3(0.05f, 0.05f, 0.05f);
+								CObjMgr::GetInstance()->AddObject(L"Particle", pObj);
+							}
 						}
 						else if (40 > damage_Value)
 						{
 							CObj* pObj = CDamageFont::Create(&vPos, damage_Value, 45, 0xFF00A2FF);
 							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+
+							for (int i = 0; i < 50; ++i)
+							{
+								PARTICLECOLOR eColor;
+								if (p->under_attack_id < MAX_AI_SLIME)
+									eColor = PC_SILME;
+								else
+									eColor = PC_GOBLIN;
+								pObj = CMeshParticle::Create(L"ParticleCube", D3DXVECTOR3(vPos.x, vPos.y + 0.f, vPos.z), eColor);
+								pObj->GetInfo()->m_vDir = D3DXVECTOR3(randFloat(dre), randFloat(dre), randFloat(dre));
+								pObj->GetInfo()->m_vScale = D3DXVECTOR3(0.05f, 0.05f, 0.05f);
+								CObjMgr::GetInstance()->AddObject(L"Particle", pObj);
+							}
 						}
 						else
 						{
 							CObj* pObj = CDamageFont::Create(&vPos, damage_Value,60, 0xFF0000FF);
 							CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+
+							for (int i = 0; i < 50; ++i)
+							{
+								PARTICLECOLOR eColor;
+								if (p->under_attack_id < MAX_AI_SLIME)
+									eColor = PC_SILME;
+								else
+									eColor = PC_GOBLIN;
+								pObj = CMeshParticle::Create(L"ParticleCube", D3DXVECTOR3(vPos.x, vPos.y + 0.f, vPos.z), eColor);
+								pObj->GetInfo()->m_vDir = D3DXVECTOR3(randFloat(dre), randFloat(dre), randFloat(dre));
+								pObj->GetInfo()->m_vScale = D3DXVECTOR3(0.05f, 0.05f, 0.05f);
+								CObjMgr::GetInstance()->AddObject(L"Particle", pObj);
+							}
 						}
 
 
@@ -432,9 +653,6 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 								pObj->GetInfo()->m_vDir= D3DXVECTOR3(randFloat(dre), randFloat(dre), randFloat(dre));
 								CObjMgr::GetInstance()->AddObject(L"Particle", pObj);
 							}
-
-							//pObj = CEffect::Create(L"Effect", L"Texture_Slime", D3DXVECTOR3(vPos.x,vPos.y + 2.f, vPos.z));
-							//CObjMgr::GetInstance()->AddObject(L"Effect", pObj);
 						}
 						else if (20 > damage_Value)
 						{
@@ -447,9 +665,6 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 								pObj->GetInfo()->m_vDir = D3DXVECTOR3(randFloat(dre), randFloat(dre), randFloat(dre));
 								CObjMgr::GetInstance()->AddObject(L"Particle", pObj);
 							}
-
-							//pObj = CEffect::Create(L"Effect", L"Texture_Slime", D3DXVECTOR3(vPos.x, vPos.y + 2.f, vPos.z));
-							//CObjMgr::GetInstance()->AddObject(L"Effect", pObj);
 						}
 						else if (30 > damage_Value)
 						{
@@ -462,9 +677,6 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 								pObj->GetInfo()->m_vDir = D3DXVECTOR3(randFloat(dre), randFloat(dre), randFloat(dre));
 								CObjMgr::GetInstance()->AddObject(L"Particle", pObj);
 							}
-
-							//pObj = CEffect::Create(L"Effect", L"Texture_Slime", D3DXVECTOR3(vPos.x, vPos.y + 2.f, vPos.z));
-							//CObjMgr::GetInstance()->AddObject(L"Effect", pObj);
 						}
 						else if (40 > damage_Value)
 						{
@@ -477,9 +689,6 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 								pObj->GetInfo()->m_vDir = D3DXVECTOR3(randFloat(dre), randFloat(dre), randFloat(dre));
 								CObjMgr::GetInstance()->AddObject(L"Particle", pObj);
 							}
-
-							//pObj = CEffect::Create(L"Effect", L"Texture_Slime", D3DXVECTOR3(vPos.x, vPos.y + 2.f, vPos.z));
-							//CObjMgr::GetInstance()->AddObject(L"Effect", pObj);
 						}
 						else
 						{
@@ -492,9 +701,6 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 								pObj->GetInfo()->m_vDir = D3DXVECTOR3(randFloat(dre), randFloat(dre), randFloat(dre));
 								CObjMgr::GetInstance()->AddObject(L"Particle", pObj);
 							}
-
-							//pObj = CEffect::Create(L"Effect", L"Texture_Slime", D3DXVECTOR3(vPos.x, vPos.y + 2.f, vPos.z));
-							//CObjMgr::GetInstance()->AddObject(L"Effect", pObj);
 						}
 						///////////////////////////////////////////////////
 

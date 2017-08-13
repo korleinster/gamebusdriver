@@ -213,6 +213,12 @@ HRESULT CMeshParticle::AddComponent(const TCHAR* pMeshKey, PARTICLECOLOR ePColor
 		pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Texture_Green");
 	else if (ePColor == PC_ORANGE)
 		pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Texture_Orange");
+	else if (ePColor == PC_SILME)
+		pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Texture_SlimeP");
+	else if (ePColor == PC_GOBLIN)
+		pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Texture_GoblinP");
+	else if (ePColor == PC_BLOOD)
+		pComponent = CResourcesMgr::GetInstance()->CloneResource(RESOURCE_STAGE, L"Texture_Blood");
 
 	m_pTexture = dynamic_cast<CTexture*>(pComponent);
 	NULL_CHECK_RETURN(m_pTexture, E_FAIL);

@@ -149,7 +149,15 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 		if (CSceneMgr::GetInstance()->GetScene() != SCENE_LOGO)
 		{
-			if (m_player.id == p->id) {
+			if (m_player.id == p->id) 
+			{
+				CPlayer* pPlayer = dynamic_cast<CPlayer*>(*(CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin()));
+				int HealValue = p->hp - pPlayer->GetInfo()->m_ServerInfo.state.hp;
+				D3DXVECTOR3 vPos = pPlayer->GetInfo()->m_vPos;
+				CObj* pObj = CDamageFont::Create(&vPos, HealValue, 30, 0xFF00FF00);
+				CObjMgr::GetInstance()->AddObject(L"DamageFont", pObj);
+				
+
 				m_player.state.hp = p->hp;
 				(*(CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin()))->SetPacketHp(&p->hp);
 				break;

@@ -42,7 +42,7 @@ CMeshParticle::CMeshParticle()
 	m_pSceneVertexShaderCB = NULL;
 	m_pScenePixelShaderCB = NULL;
 	m_fRotSpeed = 0.f;
-	m_fMoveSpeed = 20.f;
+	m_fMoveSpeed = 15.f;
 }
 
 
@@ -68,7 +68,7 @@ HRESULT CMeshParticle::Initialize(const TCHAR* pMeshKey,D3DXVECTOR3 vPos, PARTIC
 
 	CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, this);
 
-	m_pInfo->m_vScale = D3DXVECTOR3(0.01f, 0.01f, 0.01f);
+	m_pInfo->m_vScale = D3DXVECTOR3(0.1f, 0.1f, 0.1f);
 	m_vOriginPos = vPos;
 	m_pInfo->m_vPos = vPos;
 
@@ -104,9 +104,9 @@ int CMeshParticle::Update(void)
 	m_pInfo->m_vPos += m_pInfo->m_vDir * m_fMoveSpeed * fTime;
 
 
-	if ((abs(m_pInfo->m_vPos.x - m_vOriginPos.x) > 3.f) ||
-		(abs(m_pInfo->m_vPos.z - m_vOriginPos.z) > 3.f) ||
-		(abs(m_pInfo->m_vPos.y - m_vOriginPos.y) > 3.f))
+	if ((abs(m_pInfo->m_vPos.x - m_vOriginPos.x) > 2.7f) ||
+		(abs(m_pInfo->m_vPos.z - m_vOriginPos.z) > 2.7f) ||
+		(abs(m_pInfo->m_vPos.y - m_vOriginPos.y) > 2.7f))
 		return 100;
 
 
@@ -231,7 +231,7 @@ void CMeshParticle::SetCurrling(void)
 
 	D3DXVECTOR3 vPlayerPos = (*player)->GetInfo()->m_vPos;
 
-	if (abs(m_pInfo->m_vPos.x - vPlayerPos.x) > 20.f || abs(m_pInfo->m_vPos.z - vPlayerPos.z) > 20.f)
+	if (abs(m_pInfo->m_vPos.x - vPlayerPos.x) > 25.f || abs(m_pInfo->m_vPos.z - vPlayerPos.z) > 25.f)
 	{
 		m_bCurred = true;
 		//cout << "ÄÃ¸µµÊ" << endl;

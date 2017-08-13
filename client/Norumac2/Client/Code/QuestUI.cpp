@@ -16,6 +16,7 @@
 #include "FontMgr.h"
 #include "Input.h"
 #include "TimeMgr.h"
+#include "SoundMgr.h"
 
 CQuestUI::CQuestUI()
 {
@@ -85,11 +86,13 @@ int CQuestUI::Update(void)
 	{
 		if (m_bRender == true && m_fCoolTime > 0.2f)
 		{
+			CSoundMgr::GetInstance()->PlayInterface1(L"WindowClose.ogg");
 			m_bRender = false;
 			m_fCoolTime = 0.f;
 		}
 		else if (m_bRender == false && m_fCoolTime > 0.2f)
 		{
+			CSoundMgr::GetInstance()->PlayInterface1(L"WindowOpen.ogg");
 			m_bRender = true;
 			m_fCoolTime = 0.f;
 		}

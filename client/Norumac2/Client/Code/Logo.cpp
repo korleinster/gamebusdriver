@@ -15,6 +15,7 @@
 #include "ObjMgr.h"
 #include "AnimationMgr.h"
 #include "Stage.h"
+#include "SoundMgr.h"
 
 CLogo::CLogo()
 	: m_pLoading(NULL)
@@ -36,6 +37,8 @@ HRESULT CLogo::Initialize(void)
 	hr = CResourcesMgr::GetInstance()->AddTexture(RESOURCE_LOGO,
 		L"Texture_Logo",
 		L"../Resource/Logo.png");
+
+	CSoundMgr::GetInstance()->PlayBgm(L"Loading.ogg");
 
 	if (FAILED(hr))
 		return E_FAIL;
@@ -60,6 +63,7 @@ int CLogo::Update(void)
 			g_client.Init(g_hWnd);
 			g_bLogin = true;
 			m_serverConnected = true;
+			CSoundMgr::GetInstance()->PlaySound(L"LoadingEnd.ogg");
 		}
 
 		if (m_bDynamicLoading == true && g_bLogin == true)

@@ -19,6 +19,7 @@
 #include "Effect.h"
 #include <random>
 #include "MeshParticle.h"
+#include "SoundMgr.h"
 
 void AsynchronousClientClass::processPacket(Packet* buf)
 {
@@ -173,8 +174,6 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 	case KEYINPUT_ATTACK: {
 		sc_atk *p = reinterpret_cast<sc_atk*>(buf);
-
-		// 갑자기 왜 여기서 다른 플레이어 공격 패킷이 안날아 오는지 알 수가 없다 ( 한번 꼭 확인해 보자 *************************** )
 		//cout << "[ " << p->attacking_id << " ] -> [ " << p->under_attack_id << " ] 를 공격함. 현재 HP = " << p->hp << "\n";
 
 		if (CSceneMgr::GetInstance()->GetScene() != SCENE_LOGO)
@@ -203,11 +202,15 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 								for (auto iter : *CObjMgr::GetInstance()->Get_ObjList(L"Monster"))
 								{
 									if (iter->GetPacketData()->id == p->attacking_id) {
-										if ((reinterpret_cast<CMonster*>(iter))->GetAniState() == MONSTER_IDLE)
-										{
+										/*if ((reinterpret_cast<CMonster*>(iter))->GetAniState() == MONSTER_IDLE)
+										{*/
 											(reinterpret_cast<CMonster*>(iter))->m_bKey = true;
 											(reinterpret_cast<CMonster*>(iter))->SetAniState(MONSTER_ATT);
-										}
+											if(p->attacking_id < MAX_AI_SLIME)
+												CSoundMgr::GetInstance()->Monster1Sound(L"SlimeAtk.ogg");
+											else
+												CSoundMgr::GetInstance()->Monster2Sound(L"GoblinAttack2.ogg");
+										//}
 										break;
 									}
 								}
@@ -221,14 +224,12 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 							if (CObjMgr::GetInstance()->Get_ObjList(L"Boss")->size() != 0)
 							{
 								auto iter = *CObjMgr::GetInstance()->Get_ObjList(L"Boss")->begin();
-								if ((reinterpret_cast<CBoss*>(iter))->GetAniState() == BOSS_IDLE)
-								{
+								/*if ((reinterpret_cast<CBoss*>(iter))->GetAniState() == BOSS_IDLE)
+								{*/
 									(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
 									(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_NORMALATT);
-									CObj* pObj = CEffect::Create(L"BossEffect1", L"Texture_White", D3DXVECTOR3((*iter).GetInfo()->m_vPos.x, (*iter).GetInfo()->m_vPos.y, (*iter).GetInfo()->m_vPos.z));
-									pObj->GetInfo()->m_fAngle[ANGLE_Y] = 270.f;
-									CObjMgr::GetInstance()->AddObject(L"Effect", pObj);
-								}
+									CSoundMgr::GetInstance()->Monster1Sound(L"GolemAtt1.ogg");
+								//}
 							}
 						}
 
@@ -268,11 +269,6 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 						}
 					}
 				}
-
-				// *(reinterpret_cast<UINT*>(&buf[sizeof(int) + sizeof(int) + 2])) 이 번호 클라이언트의 애니메이션을 작동시켜야 한다.
-				/// 통신을 하던 도중, 추후 시야에서 사라져, 데이터에서 제거한 상황이 있을 수 있기때문에, 벌써 사라져 없는 클라이언트에 대한 예외 처리도 해주어야 한다.
-				/// 추후 더 효과적으로 하기 위해서는, 애초에 카메라 밖에 위치한 클라이언트에 대해선 처리를 안하는게 가장 좋겠지...?
-
 			}
 
 			// 내가 피해를 입은 것이라면, 내 hp 를 깎고 break;
@@ -352,8 +348,12 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 					}
 				}
 
+				
+
+
 				m_player.state.hp = p->hp;
 				(*CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin())->SetPacketHp(&p->hp);
+				CSoundMgr::GetInstance()->PlaySound(L"PlayerHit.ogg");
 				break;
 			}
 
@@ -575,6 +575,11 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 						(CObjMgr::GetInstance()->Get_MonsterServerData(p->under_attack_id))->state.hp = p->hp;
 
+						if (p->under_attack_id < MAX_AI_SLIME)
+							CSoundMgr::GetInstance()->Monster3Sound(L"SlimeHit.ogg");
+						else
+							CSoundMgr::GetInstance()->Monster4Sound(L"GoblinHit.ogg");
+
 						/////////////////체력바///////////////////////////
 
 						int iSize = 0;
@@ -706,6 +711,8 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 						(CObjMgr::GetInstance()->Get_BossServerData(p->under_attack_id))->state.hp = p->hp;
 
+						CSoundMgr::GetInstance()->Monster3Sound(L"GolemHit.ogg");
+
 						/////////////////체력바///////////////////////////
 
 						int iSize = 0;
@@ -751,18 +758,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 				{
 					if (p->under_attack_id < MAX_AI_GOBLIN)
 					{
- 						/*list<CObj*>* ListObj = CObjMgr::GetInstance()->Get_ObjList(L"Monster");
-						list<CObj*>::iterator iter = ListObj->begin();
-						list<CObj*>::iterator iter_end = ListObj->end();*/
-
 						D3DXVECTOR3 vPos;
-
-						/*for (; iter != iter_end; ++iter)
-						{
-							if ((*iter)->GetPacketData()->id == p->under_attack_id)
-							{*/
-
-								//vPos = (*iter)->GetInfo()->m_vPos;
 
 						CPlayer* pPlayer = dynamic_cast<CPlayer*>(*(CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin()));
 
@@ -799,12 +795,10 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 							}
 						}
 
-						/*		CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
-								(*iter)->m_bDeath = true;
-								break;
-							}
-						}*/
-
+						if (p->under_attack_id < MAX_AI_SLIME)
+							CSoundMgr::GetInstance()->Monster3Sound(L"SlimeDead.ogg");
+						else
+							CSoundMgr::GetInstance()->Monster4Sound(L"GoblinDead.ogg");
 
 						//몹이 죽으면 체력바도 없에자.
 						int iSize = 0;
@@ -823,17 +817,11 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 					}
 					else
 					{
-						/*list<CObj*>* ListObj = CObjMgr::GetInstance()->Get_ObjList(L"Boss");
-						list<CObj*>::iterator iter = ListObj->begin();
-						list<CObj*>::iterator iter_end = ListObj->end();*/
+
 
 						D3DXVECTOR3 vPos;
 						CPlayer* pPlayer = dynamic_cast<CPlayer*>(*(CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin()));
 
-						//for (; iter != iter_end; ++iter)
-						//{
-						//	if ((*iter)->GetPacketData()->id == p->under_attack_id)
-						//	{
 						if (p->attacking_id == pPlayer->GetInfo()->m_ServerInfo.id)
 						{
 
@@ -867,11 +855,8 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 							}
 						}
 
-								/*CRenderMgr::GetInstance()->DelRenderGroup(TYPE_NONEALPHA, *iter);
-								(*iter)->m_bDeath = true;
-								break;*/
-							//}
-						//}
+						CSoundMgr::GetInstance()->Monster4Sound(L"GolemDead.ogg");
+
 
 
 						//몹이 죽으면 체력바도 없에자.
@@ -1007,7 +992,10 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			if(p->quest < MAX_AI_SLIME)
 				wsprintf(wcQuestState, L"슬라임 남은 마리수 : %d / %d", p->quest, MAX_AI_SLIME);
 			else
+			{
 				wsprintf(wcQuestState, L"퀘스트 완료!");
+				CSoundMgr::GetInstance()->PlaySound(L"QuestMidClear.ogg");
+			}
 			pQuestUI->m_QuestState->m_wstrText = wcQuestState;
 		}
 		else if (/*p->quest >= MAX_AI_SLIME && p->quest < MAX_AI_GOBLIN &&*/ dynamic_cast<CPlayer*>(*player)->m_eQuestState ==QUEST_GOBLIN)
@@ -1016,7 +1004,10 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			if (p->quest - MAX_AI_SLIME < MAX_AI_GOBLIN - MAX_AI_SLIME)
 				wsprintf(wcQuestState, L"고블린 남은 마리수 : %d / %d", p->quest - MAX_AI_SLIME, MAX_AI_GOBLIN - MAX_AI_SLIME);
 			else
+			{
 				wsprintf(wcQuestState, L"퀘스트 완료!");
+				CSoundMgr::GetInstance()->PlaySound(L"QuestMidClear.ogg");
+			}
 			pQuestUI->m_QuestState->m_wstrText = wcQuestState;
 		}
 		else if(dynamic_cast<CPlayer*>(*player)->m_eQuestState == QUEST_BOSS)
@@ -1025,7 +1016,10 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 			if (p->quest - MAX_AI_GOBLIN < 1)
 				wsprintf(wcQuestState, L"매직골램 퇴치 : %d / %d", p->quest - MAX_AI_GOBLIN, 1);
 			else
+			{
 				wsprintf(wcQuestState, L"퀘스트 완료!");
+				CSoundMgr::GetInstance()->PlaySound(L"QuestClear.ogg");
+			}
 			pQuestUI->m_QuestState->m_wstrText = wcQuestState;
 		}
 

@@ -25,6 +25,7 @@
 #include "QuestUI.h"
 #include "ChatUI.h"
 #include "Font.h"
+#include "SoundMgr.h"
 
 #pragma pack(push,1)
 struct CB_VS_PER_OBJECT
@@ -198,7 +199,6 @@ int CPlayer::Update(void)
 			m_bDeath = true;
 			m_ePlayerState = PLAYER_DEAD;
 			dynamic_cast<CDynamicMesh*>(m_pBuffer)->ResetPlayTimer();
-
 		}
 	}
 	else if (m_bDeath == true)
@@ -654,6 +654,7 @@ void CPlayer::KeyInput()
 			m_fComboTime = 0.f;
 			m_fKeyCool = 0.f;
 			m_ePlayerState = PLAYER_ATT1;
+			CSoundMgr::GetInstance()->PlaySkillSound(L"PlayerAttack1.ogg");
 			//cout << "콤보1단계 활성" << endl;
 			iSeverAtt = COMBO1;
 		}
@@ -664,6 +665,7 @@ void CPlayer::KeyInput()
 			m_fComboTime = 0.f;
 			m_fKeyCool = 0.f;
 			m_ePlayerState = PLAYER_ATT2;
+			CSoundMgr::GetInstance()->PlaySkillSound2(L"PlayerAttack2.ogg");
 			//cout << "콤보2단계 활성" << endl;
 			iSeverAtt = COMBO2;
 		}
@@ -678,6 +680,7 @@ void CPlayer::KeyInput()
 			m_fComboTime = 0.f;
 			m_fKeyCool = 0.f;
 			m_ePlayerState = PLAYER_ATT3;
+			CSoundMgr::GetInstance()->PlaySkillSound3(L"PlayerAttack3.ogg");
 			iSeverAtt = COMBO3;
 		}
 
@@ -737,6 +740,7 @@ void CPlayer::KeyInput()
 		m_ePlayerState = PLAYER_SKILL1;
 		iSeverAtt = SKILL1;
 
+		CSoundMgr::GetInstance()->PlaySound(L"JumpAtt.ogg");
 		g_client.sendPacket(sizeof(int), KEYINPUT_ATTACK, reinterpret_cast<BYTE*>(&iSeverAtt));
 
 		dynamic_cast<CDynamicMesh*>(m_pBuffer)->ResetPlayTimer();
@@ -771,6 +775,7 @@ void CPlayer::KeyInput()
 
 		m_ePlayerState = PLAYER_SKILL2;
 		iSeverAtt = SKILL2;
+		CSoundMgr::GetInstance()->PlaySound(L"ShildBreak.ogg");
 
 		g_client.sendPacket(sizeof(int), KEYINPUT_ATTACK, reinterpret_cast<BYTE*>(&iSeverAtt));
 
@@ -806,6 +811,7 @@ void CPlayer::KeyInput()
 		}
 		g_client.sendPacket(sizeof(nullptr), KEYINPUT_POTION, 0);
 		m_bPotionCool = true;
+		CSoundMgr::GetInstance()->PlaySound(L"Potion1.ogg");
 	}
 
 	if (CInput::GetInstance()->GetDIKeyState(DIK_2) & 0x80)
@@ -821,6 +827,7 @@ void CPlayer::KeyInput()
 		m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 		SetNaviIndex(CNaviMgr::GetInstance()->GetCellIndex(&m_pInfo->m_vPos));
 		g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
+		CSoundMgr::GetInstance()->PlaySound(L"TeleportRock.ogg");
 		m_bTpCool = true;
 	}
 
@@ -835,6 +842,7 @@ void CPlayer::KeyInput()
 		m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 		SetNaviIndex(CNaviMgr::GetInstance()->GetCellIndex(&m_pInfo->m_vPos));
 		g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
+		CSoundMgr::GetInstance()->PlaySound(L"TeleportRock.ogg");
 		m_bTpCool = true;
 	}
 
@@ -859,6 +867,7 @@ void CPlayer::KeyInput()
 						m_eQuestState = QUEST_SLIME;
 						pQuestUI->m_bRender = true;
 						g_client.sendPacket(0, QUEST_START, nullptr);
+						CSoundMgr::GetInstance()->PlaySound(L"QuestAccept.ogg");
 
 
 						
@@ -912,6 +921,7 @@ void CPlayer::KeyInput()
 						m_eQuestState = QUEST_GOBLIN;
 						g_client.sendPacket(0, QUEST_START, nullptr);
 						pQuestUI->m_bRender = true;
+						CSoundMgr::GetInstance()->PlaySound(L"QuestAccept.ogg");
 
 						///////////채팅 수락 표기//////////
 						pFont->m_eType = FONT_TYPE_OUTLINE;
@@ -964,6 +974,7 @@ void CPlayer::KeyInput()
 						m_eQuestState = QUEST_BOSS;
 						g_client.sendPacket(0, QUEST_START, nullptr);
 						pQuestUI->m_bRender = true;
+						CSoundMgr::GetInstance()->PlaySound(L"QuestAccept.ogg");
 
 
 						///////////채팅 수락 표기//////////

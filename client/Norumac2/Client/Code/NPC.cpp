@@ -132,6 +132,7 @@ int CNpc::Update(void)
 	m_pTerrainCol->CollisionTerrain(&m_pInfo->m_vPos, m_pVerTex);
 
 
+	m_pQuestMark->GetInfo()->m_vPos.y = m_pInfo->m_vPos.y + 2.5f;
 	m_pQuestMark->Update();
 	QuestMark();
 

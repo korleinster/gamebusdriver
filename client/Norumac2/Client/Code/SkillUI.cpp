@@ -144,7 +144,7 @@ void CSkillUI::UpdateBufferToCool(void)
 
 	if (m_eUiType == UI_POTION)
 	{
-		fCoolTime = 1.f - (*pPlayer).m_fPotionTime / 5.f;
+		fCoolTime = (1.f - (*pPlayer).m_fPotionTime / 10.f) ;
 	}
 
 	if (m_eUiType == UI_TPROCK)

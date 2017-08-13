@@ -1027,7 +1027,7 @@ void CPlayer::TimeSetter(void)
 		m_fSeverTime = 0.f;
 	}
 
-	if (m_fPotionTime > 5.f)
+	if (m_fPotionTime > 10.f)
 	{
 		m_fPotionTime = 0.f;
 		if (m_bPotionCool == true)

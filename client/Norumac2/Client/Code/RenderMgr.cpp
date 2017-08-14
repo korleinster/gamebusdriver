@@ -60,7 +60,7 @@ CRenderMgr::CRenderMgr()
 
 	m_vDirLight = D3DXVECTOR3(-0.62f, -0.44f, -0.64f);
 
-	m_pLightMgr->SetAmbient(D3DXVECTOR3(0.4f, 0.5f, 0.4f), D3DXVECTOR3(0.4f, 0.5f, 0.4f));
+	m_pLightMgr->SetAmbient(D3DXVECTOR3(0.4f, 0.4f, 0.4f), D3DXVECTOR3(0.4f, 0.4f, 0.4f));
 	m_pLightMgr->SetDirectional(
 		D3DXVECTOR3(m_vDirLight.x, m_vDirLight.y, m_vDirLight.z),
 		D3DXVECTOR3(m_fDirColor[RGB_RED], m_fDirColor[RGB_GREEN], m_fDirColor[RGB_BLUE]));
@@ -152,9 +152,7 @@ HRESULT CRenderMgr::InitScene(void)
 void CRenderMgr::Render(const float & fTime)
 {
 	// 키세팅
-//#if defined( DEBUG ) || defined( _DEBUG )
 	Input(fTime);
-//#endif
 
 	if (m_bDefferdOn)
 	{
@@ -168,18 +166,21 @@ void CRenderMgr::Render(const float & fTime)
 
 		m_pLightMgr->AddPointLight(D3DXVECTOR3(145.844, 0.f + m_fPointY, 405.368f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
 		m_pLightMgr->AddPointLight(D3DXVECTOR3(156.513f, 0.f + m_fPointY, 403.979f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
-
 		m_pLightMgr->AddPointLight(D3DXVECTOR3(156.798f, 0.f + m_fPointY, 393.433f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
 		m_pLightMgr->AddPointLight(D3DXVECTOR3(264.912f, 18.f + m_fPointY, 367.82f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
 		m_pLightMgr->AddPointLight(D3DXVECTOR3(265.683f, 18.f + m_fPointY, 359.509f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
 		m_pLightMgr->AddPointLight(D3DXVECTOR3(266.164f, 18.f + m_fPointY, 351.829f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
 		m_pLightMgr->AddPointLight(D3DXVECTOR3(266.839f, 18.f + m_fPointY, 344.844f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
 		m_pLightMgr->AddPointLight(D3DXVECTOR3(266.085f, 18.f + m_fPointY, 338.866f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
-		
-	}
+		m_pLightMgr->AddPointLight(D3DXVECTOR3(253.751f, 18.f + m_fPointY, 365.297f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+		m_pLightMgr->AddPointLight(D3DXVECTOR3(252.876f, 18.f + m_fPointY, 359.522f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+		m_pLightMgr->AddPointLight(D3DXVECTOR3(252.955f, 18.f + m_fPointY, 352.078f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
 
-	// 그림자 렌더
-	Render_ShadowMap();
+		m_pLightMgr->AddPointLight(D3DXVECTOR3(252.01f, 18.f + m_fPointY, 345.47f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+	}		
+
+	if (m_bDefferdOn)
+		Render_ShadowMap();
 
 	ID3D11DepthStencilState* pPrevDepthState;
 	UINT nPrevStencil;
@@ -199,7 +200,8 @@ void CRenderMgr::Render(const float & fTime)
 
 	m_pTargetMgr->GetGBuffer()->End_MRT(m_pDevice->m_pDeviceContext);
 
-	Render_BorderLine();
+	if (m_bDefferdOn)
+		Render_BorderLine();
 
 	// Set the render target and do the lighting
 	m_pDevice->m_pDeviceContext->OMSetRenderTargets(1, &m_pDevice->m_pRenderTargetView, m_pTargetMgr->GetGBuffer()->GetDepthReadOnlyDSV());

@@ -72,13 +72,6 @@ HRESULT CMeshParticle::Initialize(const TCHAR* pMeshKey,D3DXVECTOR3 vPos, PARTIC
 	m_vOriginPos = vPos;
 	m_pInfo->m_vPos = vPos;
 
-
-
-	
-
-	
-
-
 	D3D11_BUFFER_DESC cbDesc;
 	ZeroMemory(&cbDesc, sizeof(cbDesc));
 	cbDesc.Usage = D3D11_USAGE_DYNAMIC;

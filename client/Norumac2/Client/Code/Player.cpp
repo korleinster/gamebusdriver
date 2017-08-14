@@ -207,6 +207,7 @@ int CPlayer::Update(void)
 		{
 			m_bDeath = false;
 			m_ePlayerState = PLAYER_IDLE;
+			SetNaviIndex(CNaviMgr::GetInstance()->GetCellIndex(&m_pInfo->m_vPos));
 		}
 
 	}

@@ -346,8 +346,8 @@ void CMainApp::Release(void)
 	CCamera::GetInstance()->DestroyInstance();
 	CShaderMgr::GetInstance()->DestroyInstance();
 	CInput::GetInstance()->DestroyInstance();
-	CRenderMgr::GetInstance()->DestroyInstance();
 	CObjMgr::GetInstance()->DestroyInstance();
+	CRenderMgr::GetInstance()->DestroyInstance();
 	CSceneMgr::GetInstance()->DestroyInstance();
 	CResourcesMgr::GetInstance()->DestroyInstance();
 	CAnimationMgr::GetInstance()->DestroyInstance();

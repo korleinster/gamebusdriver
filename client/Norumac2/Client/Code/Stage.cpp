@@ -62,7 +62,7 @@ int CStage::Update(void)
 		m_bFirstLogin = true;
 	}
 
-	if (CInput::GetInstance()->GetDIKeyState(DIK_F9) & 0x80)
+	/*if (CInput::GetInstance()->GetDIKeyState(DIK_F9) & 0x80)
 	{
 		m_bNaviRender = true;
 	}
@@ -70,7 +70,7 @@ int CStage::Update(void)
 	if (CInput::GetInstance()->GetDIKeyState(DIK_F10) & 0x80)
 	{
 		m_bNaviRender = false;
-	}
+	}*/
 
 	if (CSceneMgr::GetInstance()->GetScene() == SCENE_STAGE)
 		CObjMgr::GetInstance()->Update();
@@ -85,8 +85,8 @@ void CStage::Render(void)
 	if(CSceneMgr::GetInstance()->GetScene() == SCENE_STAGE)
 		CRenderMgr::GetInstance()->Render(fTime);
 
-	if(m_bNaviRender)
-		CNaviMgr::GetInstance()->Render();
+	/*if(m_bNaviRender)
+		CNaviMgr::GetInstance()->Render();*/
 }
 
 void CStage::Release(void)

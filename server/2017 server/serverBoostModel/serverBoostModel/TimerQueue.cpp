@@ -121,6 +121,14 @@ void TimerQueue::processPacket(event_type *p) {
 			g_clients[p->id]->set_state(mov);
 			g_clients[p->id]->get_player_data()->pos.x = 160;
 			g_clients[p->id]->get_player_data()->pos.y = 400;
+			if ((g_clients[p->id]->get_sub_data()->quest >= MAX_AI_SLIME) && (g_clients[p->id]->quest_start == false)) {
+				g_clients[p->id]->get_player_data()->pos.x = 258.569;
+				g_clients[p->id]->get_player_data()->pos.y = 367.788;
+			}
+			if ((g_clients[p->id]->get_sub_data()->quest >= MAX_AI_GOBLIN) && (g_clients[p->id]->quest_start == true)) {
+				g_clients[p->id]->get_player_data()->pos.x = 259.641;
+				g_clients[p->id]->get_player_data()->pos.y = 186.569;
+			}
 			g_clients[p->id]->get_player_data()->state.mp = 10;
 			g_clients[p->id]->get_player_data()->state.gauge = 0;
 			g_clients[p->id]->get_player_data()->state.hp = g_clients[p->id]->get_player_data()->state.maxhp;

@@ -127,7 +127,8 @@ HRESULT CPlayer::Initialize(void)
 
 int CPlayer::Update(void)
 {
-	cout << "플레이어 좌표 ( " << m_pInfo->m_vPos.x << " , " << m_pInfo->m_vPos.y << " , " << m_pInfo->m_vPos.z << " )" << endl;
+	//cout << "플레이어 좌표 ( " << m_pInfo->m_vPos.x << " , " << m_pInfo->m_vPos.y << " , " << m_pInfo->m_vPos.z << " )" << endl;
+	cout << m_dwCellNum << endl;
 	if (m_bStart)
 	{
 		SetNaviIndex(CNaviMgr::GetInstance()->GetCellIndex(&m_pInfo->m_vPos));
@@ -588,7 +589,7 @@ void CPlayer::KeyInput()
 		m_bMoving = true;
 		m_bMoveSend = true;
 		m_pInfo->m_fAngle[ANGLE_Y] = D3DXToRadian(225.f);
-		CNaviMgr::GetInstance()->MoveOnNaviMesh(&m_pInfo->m_vPos, &(m_pInfo->m_vDir * m_fSpeed * fTime), m_dwCellNum);
+		m_dwCellNum = CNaviMgr::GetInstance()->MoveOnNaviMesh(&m_pInfo->m_vPos, &(m_pInfo->m_vDir * m_fSpeed * fTime), m_dwCellNum);
 		m_pInfo->m_ServerInfo.pos.x = m_pInfo->m_vPos.x;
 		m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 

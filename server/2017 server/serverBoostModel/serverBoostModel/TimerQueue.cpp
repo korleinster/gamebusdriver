@@ -48,12 +48,13 @@ void TimerQueue::processPacket(event_type *p) {
 					// 이미 통신이 끊기거나 ( ai 가 죽은 녀석이면 pass )
 		if (DISCONNECTED == g_clients[p->id]->get_current_connect_state()) { break; }
 
-		int adding_hp_size = 5;
-		if (true == g_clients[p->id]->is_hp_postion) { adding_hp_size *= 2; }
+		int adding_hp_size = 10;
+		if (false == g_clients[p->id]->is_hp_postion) { break; }
 
 		// hp가 maxhp 이상이 아니면, 아래 실행
 		if (false == (g_clients[p->id]->get_player_data()->state.hp > (g_clients[p->id]->get_player_data()->state.maxhp - 1))) {
 			g_clients[p->id]->get_player_data()->state.hp += adding_hp_size;
+
 
 			// 만피가 되었다면, 계속 hp 더해주는 모드 끄기
 			if (g_clients[p->id]->get_player_data()->state.maxhp <= g_clients[p->id]->get_player_data()->state.hp) {
@@ -250,6 +251,10 @@ void TimerQueue::processPacket(event_type *p) {
 			return direction_ai;
 		};
 
+		std::random_device rd;
+		std::mt19937_64 mt(rd());
+		std::uniform_int_distribution<int> dist(0, g_clients[p->id]->get_sub_data()->critical);
+
 		// [ 보스 ]
 		if (p->id == MAX_AI_BOSS - 1) {
 
@@ -265,7 +270,7 @@ void TimerQueue::processPacket(event_type *p) {
 				case BOSS_ATT_02:
 				case BOSS_ATT_01: {
 					if ((player_size * player_size) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) {
-						g_clients[target_id]->get_player_data()->state.hp -= (g_clients[p->id]->get_sub_data()->str - g_clients[target_id]->get_sub_data()->def);
+						g_clients[target_id]->get_player_data()->state.hp -= (g_clients[p->id]->get_sub_data()->str + dist(mt) - g_clients[target_id]->get_sub_data()->def);
 						int target_hp = g_clients[target_id]->get_player_data()->state.hp;
 
 						sc_boss_atk b_atk;
@@ -396,7 +401,7 @@ void TimerQueue::processPacket(event_type *p) {
 				}
 				case BOSS_ATT_05: {
 					if ((player_size * player_size) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) {
-						g_clients[target_id]->get_player_data()->state.hp -= (g_clients[p->id]->get_sub_data()->str + 20 - g_clients[target_id]->get_sub_data()->def);
+						g_clients[target_id]->get_player_data()->state.hp -= (g_clients[p->id]->get_sub_data()->str + 20 + dist(mt) - g_clients[target_id]->get_sub_data()->def);
 						int target_hp = g_clients[target_id]->get_player_data()->state.hp;
 
 						sc_boss_atk b_atk;
@@ -521,7 +526,7 @@ void TimerQueue::processPacket(event_type *p) {
 				dir_packet.id = p->id;
 				g_clients[p->id]->send_packet_other_players_in_view_range(reinterpret_cast<Packet*>(&dir_packet), p->id);
 
-				g_clients[target_id]->get_player_data()->state.hp -= (g_clients[p->id]->get_sub_data()->str - g_clients[target_id]->get_sub_data()->def);
+				g_clients[target_id]->get_player_data()->state.hp -= (g_clients[p->id]->get_sub_data()->str + dist(mt) - g_clients[target_id]->get_sub_data()->def);
 				int target_hp = g_clients[target_id]->get_player_data()->state.hp;
 
 				sc_atk packet;
@@ -600,7 +605,7 @@ void TimerQueue::processPacket(event_type *p) {
 			dir_packet.id = p->id;
 			g_clients[p->id]->send_packet_other_players_in_view_range(reinterpret_cast<Packet*>(&dir_packet), p->id);
 
-			g_clients[target_id]->get_player_data()->state.hp -= (g_clients[p->id]->get_sub_data()->str - g_clients[target_id]->get_sub_data()->def);
+			g_clients[target_id]->get_player_data()->state.hp -= (g_clients[p->id]->get_sub_data()->str + dist(mt) - g_clients[target_id]->get_sub_data()->def);
 			int target_hp = g_clients[target_id]->get_player_data()->state.hp;
 
 			sc_atk packet;
@@ -739,6 +744,7 @@ void TimerQueue::processPacket(event_type *p) {
 	case POSTION: {
 
 		g_clients[p->id]->is_hp_postion = false;
+
 
 		break;
 	}

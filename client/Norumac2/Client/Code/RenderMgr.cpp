@@ -101,6 +101,8 @@ CRenderMgr::CRenderMgr()
 	m_pFPSFont->m_vPos = D3DXVECTOR2(750.f, 50.f);
 	m_pFPSFont->m_fOutlineSize = 1.f;
 	m_pFPSFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
+
+	//InitLight();
 }
 
 
@@ -149,6 +151,54 @@ HRESULT CRenderMgr::InitScene(void)
 	return S_OK;
 }
 
+void CRenderMgr::InitLight()
+{
+	// 디렉셔널 갱신
+	m_pLightMgr->SetDirectional(
+		D3DXVECTOR3(m_vDirLight.x, m_vDirLight.y, m_vDirLight.z),
+		D3DXVECTOR3(m_fDirColor[RGB_RED], m_fDirColor[RGB_GREEN], m_fDirColor[RGB_BLUE]));
+
+	// 조명 클리어
+	m_pLightMgr->ClearLights();
+
+	// 노랑
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(145.844, 0.f + m_fPointY, 405.368f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(156.513f, 0.f + m_fPointY, 403.979f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(156.798f, 0.f + m_fPointY, 393.433f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(264.912f, 18.f + m_fPointY, 367.82f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(265.683f, 18.f + m_fPointY, 359.509f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(266.164f, 18.f + m_fPointY, 351.829f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(266.839f, 18.f + m_fPointY, 344.844f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(266.085f, 18.f + m_fPointY, 338.866f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(253.751f, 18.f + m_fPointY, 365.297f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(252.876f, 18.f + m_fPointY, 359.522f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(252.955f, 18.f + m_fPointY, 352.078f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(252.01f, 18.f + m_fPointY, 345.47f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(251.769f, 18.f + m_fPointY, 339.204f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(252.01f, 18.f + m_fPointY, 332.87f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(266.404f, 18.f + m_fPointY, 333.864f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(265.649f, 18.1111f + m_fPointY, 304.897f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(253.479f, 18.1111f + m_fPointY, 304.006f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+
+	// 파랑
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(256.161f, 15.f + m_fPointY, 319.372f), m_fPointRadius, D3DXVECTOR3(0.f, 0.f, m_fPointColor[0]));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(264.109f, 15.f + m_fPointY, 318.953f), m_fPointRadius, D3DXVECTOR3(0.f, 0.f, m_fPointColor[0]));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(272.109f, 12.f + m_fPointY, 318.553f), m_fPointRadius, D3DXVECTOR3(0.f, 0.f, m_fPointColor[0]));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(248.109f, 12.f + m_fPointY, 319.773f), m_fPointRadius, D3DXVECTOR3(0.f, 0.f, m_fPointColor[0]));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(280.109f, 8.f + m_fPointY, 318.153f), m_fPointRadius, D3DXVECTOR3(0.f, 0.f, m_fPointColor[0]));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(288.109f, 8.f + m_fPointY, 317.753f), m_fPointRadius, D3DXVECTOR3(0.f, 0.f, m_fPointColor[0]));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(296.109f, 8.f + m_fPointY, 317.353f), m_fPointRadius, D3DXVECTOR3(0.f, 0.f, m_fPointColor[0]));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(304.109f, 8.f + m_fPointY, 316.953f), m_fPointRadius, D3DXVECTOR3(0.f, 0.f, m_fPointColor[0]));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(256.161f, 5.f + m_fPointY, 319.372f), m_fPointRadius, D3DXVECTOR3(0.f, 0.f, m_fPointColor[0]));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(264.109f, 5.f + m_fPointY, 318.953f), m_fPointRadius, D3DXVECTOR3(0.f, 0.f, m_fPointColor[0]));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(272.109f, 2.f + m_fPointY, 318.553f), m_fPointRadius, D3DXVECTOR3(0.f, 0.f, m_fPointColor[0]));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(248.109f, 2.f + m_fPointY, 319.773f), m_fPointRadius, D3DXVECTOR3(0.f, 0.f, m_fPointColor[0]));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(280.109f, 0.f + m_fPointY, 318.153f), m_fPointRadius, D3DXVECTOR3(0.f, 0.f, m_fPointColor[0]));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(288.109f, 0.f + m_fPointY, 317.753f), m_fPointRadius, D3DXVECTOR3(0.f, 0.f, m_fPointColor[0]));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(296.109f, 0.f + m_fPointY, 317.353f), m_fPointRadius, D3DXVECTOR3(0.f, 0.f, m_fPointColor[0]));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(304.109f, 0.f + m_fPointY, 316.953f), m_fPointRadius, D3DXVECTOR3(0.f, 0.f, m_fPointColor[0]));
+}
+
 void CRenderMgr::Render(const float & fTime)
 {
 	// 키세팅
@@ -164,6 +214,7 @@ void CRenderMgr::Render(const float & fTime)
 		// 조명 클리어
 		m_pLightMgr->ClearLights();
 
+		// 노랑
 		m_pLightMgr->AddPointLight(D3DXVECTOR3(145.844, 0.f + m_fPointY, 405.368f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
 		m_pLightMgr->AddPointLight(D3DXVECTOR3(156.513f, 0.f + m_fPointY, 403.979f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
 		m_pLightMgr->AddPointLight(D3DXVECTOR3(156.798f, 0.f + m_fPointY, 393.433f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
@@ -175,9 +226,31 @@ void CRenderMgr::Render(const float & fTime)
 		m_pLightMgr->AddPointLight(D3DXVECTOR3(253.751f, 18.f + m_fPointY, 365.297f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
 		m_pLightMgr->AddPointLight(D3DXVECTOR3(252.876f, 18.f + m_fPointY, 359.522f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
 		m_pLightMgr->AddPointLight(D3DXVECTOR3(252.955f, 18.f + m_fPointY, 352.078f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
-
 		m_pLightMgr->AddPointLight(D3DXVECTOR3(252.01f, 18.f + m_fPointY, 345.47f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
-	}		
+		m_pLightMgr->AddPointLight(D3DXVECTOR3(251.769f, 18.f + m_fPointY, 339.204f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+		m_pLightMgr->AddPointLight(D3DXVECTOR3(252.01f, 18.f + m_fPointY, 332.87f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+		m_pLightMgr->AddPointLight(D3DXVECTOR3(266.404f, 18.f + m_fPointY, 333.864f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+		m_pLightMgr->AddPointLight(D3DXVECTOR3(265.649f, 18.1111f + m_fPointY, 304.897f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+		m_pLightMgr->AddPointLight(D3DXVECTOR3(253.479f, 18.1111f + m_fPointY, 304.006f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+
+		// 파랑
+		m_pLightMgr->AddPointLight(D3DXVECTOR3(256.161f, 15.f + m_fPointY, 319.372f), m_fPointRadius, D3DXVECTOR3(0.f, 0.f, m_fPointColor[0]));
+		m_pLightMgr->AddPointLight(D3DXVECTOR3(264.109f, 15.f + m_fPointY, 318.953f), m_fPointRadius, D3DXVECTOR3(0.f, 0.f, m_fPointColor[0]));
+		m_pLightMgr->AddPointLight(D3DXVECTOR3(272.109f, 12.f + m_fPointY, 318.553f), m_fPointRadius, D3DXVECTOR3(0.f, 0.f, m_fPointColor[0]));
+		m_pLightMgr->AddPointLight(D3DXVECTOR3(248.109f, 12.f + m_fPointY, 319.773f), m_fPointRadius, D3DXVECTOR3(0.f, 0.f, m_fPointColor[0]));
+		m_pLightMgr->AddPointLight(D3DXVECTOR3(280.109f, 8.f + m_fPointY, 318.153f), m_fPointRadius, D3DXVECTOR3(0.f, 0.f, m_fPointColor[0]));
+		m_pLightMgr->AddPointLight(D3DXVECTOR3(288.109f, 8.f + m_fPointY, 317.753f), m_fPointRadius, D3DXVECTOR3(0.f, 0.f, m_fPointColor[0]));
+		m_pLightMgr->AddPointLight(D3DXVECTOR3(296.109f, 8.f + m_fPointY, 317.353f), m_fPointRadius, D3DXVECTOR3(0.f, 0.f, m_fPointColor[0]));
+		m_pLightMgr->AddPointLight(D3DXVECTOR3(304.109f, 8.f + m_fPointY, 316.953f), m_fPointRadius, D3DXVECTOR3(0.f, 0.f, m_fPointColor[0]));
+		m_pLightMgr->AddPointLight(D3DXVECTOR3(256.161f, 5.f + m_fPointY, 319.372f), m_fPointRadius, D3DXVECTOR3(0.f, 0.f, m_fPointColor[0]));
+		m_pLightMgr->AddPointLight(D3DXVECTOR3(264.109f, 5.f + m_fPointY, 318.953f), m_fPointRadius, D3DXVECTOR3(0.f, 0.f, m_fPointColor[0]));
+		m_pLightMgr->AddPointLight(D3DXVECTOR3(272.109f, 2.f + m_fPointY, 318.553f), m_fPointRadius, D3DXVECTOR3(0.f, 0.f, m_fPointColor[0]));
+		m_pLightMgr->AddPointLight(D3DXVECTOR3(248.109f, 2.f + m_fPointY, 319.773f), m_fPointRadius, D3DXVECTOR3(0.f, 0.f, m_fPointColor[0]));
+		m_pLightMgr->AddPointLight(D3DXVECTOR3(280.109f, 0.f + m_fPointY, 318.153f), m_fPointRadius, D3DXVECTOR3(0.f, 0.f, m_fPointColor[0]));
+		m_pLightMgr->AddPointLight(D3DXVECTOR3(288.109f, 0.f + m_fPointY, 317.753f), m_fPointRadius, D3DXVECTOR3(0.f, 0.f, m_fPointColor[0]));
+		m_pLightMgr->AddPointLight(D3DXVECTOR3(296.109f, 0.f + m_fPointY, 317.353f), m_fPointRadius, D3DXVECTOR3(0.f, 0.f, m_fPointColor[0]));
+		m_pLightMgr->AddPointLight(D3DXVECTOR3(304.109f, 0.f + m_fPointY, 316.953f), m_fPointRadius, D3DXVECTOR3(0.f, 0.f, m_fPointColor[0]));
+	}
 
 	if (m_bDefferdOn)
 		Render_ShadowMap();

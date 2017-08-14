@@ -35,6 +35,7 @@ public:
 	void DelRenderGroup(RENDERGROUP eRednerID, CObj* pObj);
 
 private:
+	void InitLight();
 	void Render_Priority(void);
 	void Render_NoneAlpha(void);
 	void Render_Alpha(void);

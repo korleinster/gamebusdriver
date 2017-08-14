@@ -127,7 +127,6 @@ HRESULT CPlayer::Initialize(void)
 
 int CPlayer::Update(void)
 {
-	cout << "플레이어 좌표 ( " << m_pInfo->m_vPos.x << " , " << m_pInfo->m_vPos.y << " , " << m_pInfo->m_vPos.z << " )" << endl;
 	if (m_bStart)
 	{
 		SetNaviIndex(CNaviMgr::GetInstance()->GetCellIndex(&m_pInfo->m_vPos));

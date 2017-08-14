@@ -76,8 +76,8 @@ void AsynchronousClientClass::Init(const HWND& hwnd)
 
 	LuaScript script("../../../../server/2017 server/serverBoostModel/serverBoostModel/script/AI_default_status.lua");
 
-	MAX_AI_SLIME = script.get<int>("ai_status_slime.howMany");
-	MAX_AI_GOBLIN = script.get<int>("ai_status_goblin.howMany");
+	MAX_AI_SLIME = script.get<int>("ai_status_slime2.howMany");
+	MAX_AI_GOBLIN = script.get<int>("ai_status_goblin2.howMany");
 	MAX_AI_BOSS = script.get<int>("ai_status_boss.howMany");
 	MAX_AI_NUM = MAX_AI_BOSS;
 

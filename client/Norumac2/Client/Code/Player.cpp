@@ -127,7 +127,7 @@ HRESULT CPlayer::Initialize(void)
 
 int CPlayer::Update(void)
 {
-	cout << m_dwCellNum << endl;
+	//cout << m_dwCellNum << endl;
 	if (m_bStart)
 	{
 		SetNaviIndex(CNaviMgr::GetInstance()->GetCellIndex(&m_pInfo->m_vPos));

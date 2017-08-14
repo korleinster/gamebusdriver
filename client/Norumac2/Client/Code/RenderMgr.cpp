@@ -423,6 +423,7 @@ void CRenderMgr::Input(float fTime)
 {
 	m_fTimeCheck += fTime;
 
+#if defined( DEBUG ) || defined( _DEBUG )
 	if (m_fTimeCheck >= 0.5f)
 	{
 		if (CInput::GetInstance()->GetDIKeyState(DIK_TAB) & 0x80)
@@ -434,6 +435,7 @@ void CRenderMgr::Input(float fTime)
 			m_fTimeCheck = 0.f;
 		}
 	}
+#endif	
 
 	if (m_fTimeCheck >= 0.5f)
 	{

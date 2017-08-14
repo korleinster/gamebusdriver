@@ -131,7 +131,7 @@ private:
 	// Linked list with the active lights
 	vector<LIGHT> m_arrLights;
 
-	int	m_iShadowMapSize = 2048;//8192;//4096;//2048;
+	int	m_iShadowMapSize = 258;//8192;//4096;//2048;
 
 	// Cascaded shadow maps
 	ID3D11Texture2D* m_pCascadedDepthStencilRT;

@@ -36,9 +36,9 @@ CMainApp::CMainApp()
 	: m_pRcCol(NULL),
 	m_pInfo(NULL)
 {
-	AllocConsole();
+	/*AllocConsole();
 	freopen("CONOUT$", "wt", stdout);
-	SetConsoleTitleA("Debug");
+	SetConsoleTitleA("Debug");*/
 
 	//_CrtSetBreakAlloc(280);
 }
@@ -46,7 +46,7 @@ CMainApp::CMainApp()
 
 CMainApp::~CMainApp()
 {
-	FreeConsole();
+	//FreeConsole();
 	Release();
 }
 

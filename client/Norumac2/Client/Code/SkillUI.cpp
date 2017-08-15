@@ -68,6 +68,12 @@ int CSkillUI::Update(void)
 	if (m_eUiType == UI_TPROCK && (*pPlayer).m_bTpCool)
 		UpdateBufferToCool();
 
+	if (m_eUiType == UI_SKILL1 && (*pPlayer).m_bSkil1Cool)
+		UpdateBufferToCool();
+
+	if (m_eUiType == UI_SKILL2 && (*pPlayer).m_bSkil1Cool)
+		UpdateBufferToCool();
+
 
 	return 0;
 
@@ -150,6 +156,16 @@ void CSkillUI::UpdateBufferToCool(void)
 	if (m_eUiType == UI_TPROCK)
 	{
 		fCoolTime = 1.f - (*pPlayer).m_fTpTime / 5.f;
+	}
+
+	if (m_eUiType == UI_SKILL1)
+	{
+		fCoolTime = 1.f - (*pPlayer).m_fSkill1Time / 1.f;
+	}
+
+	if (m_eUiType == UI_SKILL2)
+	{
+		fCoolTime = 1.f - (*pPlayer).m_fSkill1Time / 1.f;
 	}
 
 

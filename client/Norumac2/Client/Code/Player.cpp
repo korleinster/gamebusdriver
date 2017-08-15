@@ -76,6 +76,10 @@ CPlayer::CPlayer()
 	m_fKeyCool = 5.f;
 	m_eQuestState = QUEST_NOT;
 	m_iQuestStateMount = 0;
+	m_bSkil1Cool = false;
+	m_bSkil2Cool = false;
+	m_fSkill1Time = 0.f;
+	m_fSkill2Time = 0.f;
 
 	m_Packet = new Packet[MAX_BUF_SIZE];
 }
@@ -198,6 +202,7 @@ int CPlayer::Update(void)
 		{
 			m_bDeath = true;
 			m_ePlayerState = PLAYER_DEAD;
+			m_pInfo->m_ServerInfo.state.gauge = 0;
 			dynamic_cast<CDynamicMesh*>(m_pBuffer)->ResetPlayTimer();
 		}
 	}
@@ -208,6 +213,7 @@ int CPlayer::Update(void)
 			m_bDeath = false;
 			m_ePlayerState = PLAYER_IDLE;
 			SetNaviIndex(CNaviMgr::GetInstance()->GetCellIndex(&m_pInfo->m_vPos));
+			m_pInfo->m_ServerInfo.state.gauge = 0;
 		}
 
 	}
@@ -730,7 +736,7 @@ void CPlayer::KeyInput()
 	}*/
 
 
-	if ((CInput::GetInstance()->GetDIKeyState(DIK_Q) & 0x80) && m_pInfo->m_ServerInfo.state.gauge > 50  && (m_fKeyCool > 0.7f))
+	if ((CInput::GetInstance()->GetDIKeyState(DIK_Q) & 0x80) && m_pInfo->m_ServerInfo.state.gauge > 50  && (m_bSkil1Cool == false))
 	{
 		m_bPush = true;
 		int iSeverAtt;
@@ -740,6 +746,7 @@ void CPlayer::KeyInput()
 
 		m_ePlayerState = PLAYER_SKILL1;
 		iSeverAtt = SKILL1;
+		m_bSkil1Cool = true;
 
 		CSoundMgr::GetInstance()->PlaySound(L"JumpAtt.ogg");
 		g_client.sendPacket(sizeof(int), KEYINPUT_ATTACK, reinterpret_cast<BYTE*>(&iSeverAtt));
@@ -766,7 +773,7 @@ void CPlayer::KeyInput()
 		}
 	}
 
-	if ((CInput::GetInstance()->GetDIKeyState(DIK_W) & 0x80) && m_pInfo->m_ServerInfo.state.gauge > 50 && (m_fKeyCool > 0.7f))
+	if ((CInput::GetInstance()->GetDIKeyState(DIK_W) & 0x80) && m_pInfo->m_ServerInfo.state.gauge > 50 && (m_bSkil1Cool == false))
 	{
 		m_bPush = true;
 		int iSeverAtt;
@@ -777,6 +784,7 @@ void CPlayer::KeyInput()
 		m_ePlayerState = PLAYER_SKILL2;
 		iSeverAtt = SKILL2;
 		CSoundMgr::GetInstance()->PlaySound(L"ShildBreak.ogg");
+		m_bSkil1Cool = true;
 
 		g_client.sendPacket(sizeof(int), KEYINPUT_ATTACK, reinterpret_cast<BYTE*>(&iSeverAtt));
 
@@ -1031,6 +1039,13 @@ void CPlayer::TimeSetter(void)
 	if (m_bSkillUsed == true)
 		m_fSkillMoveTime += CTimeMgr::GetInstance()->GetTime();
 
+	if (m_bSkil1Cool == true)
+		m_fSkill1Time += CTimeMgr::GetInstance()->GetTime();
+
+	if (m_bSkil2Cool == true)
+		m_fSkill2Time += CTimeMgr::GetInstance()->GetTime();
+
+
 
 	if (m_fSeverTime > 0.1f && m_bMoveSend)
 	{
@@ -1054,6 +1069,24 @@ void CPlayer::TimeSetter(void)
 		if (m_bTpCool == true)
 		{
 			m_bTpCool = false;
+		}
+	}
+
+	if (m_fSkill1Time > 1.f)
+	{
+		m_fSkill1Time = 0.f;
+		if (m_bSkil1Cool == true)
+		{
+			m_bSkil1Cool = false;
+		}
+	}
+
+	if (m_fSkill2Time > 1.f)
+	{
+		m_fSkill2Time = 0.f;
+		if (m_bSkil2Cool == true)
+		{
+			m_bSkil2Cool = false;
 		}
 	}
 

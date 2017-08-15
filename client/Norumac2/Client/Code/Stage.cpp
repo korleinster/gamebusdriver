@@ -182,6 +182,21 @@ HRESULT CStage::CreateObj(void)
 		return E_FAIL;
 	CObjMgr::GetInstance()->AddObject(L"TpRockUI", pObj);
 
+	pObj = CSkillUI::Create(UI_TPROCK, L"Texture_TpRock", D3DXVECTOR2(380.f, 718.f));
+	if (pObj == NULL)
+		return E_FAIL;
+	CObjMgr::GetInstance()->AddObject(L"TpRockUI", pObj);
+
+	pObj = CSkillUI::Create(UI_SKILL1, L"Texture_UISkill1", D3DXVECTOR2(580.f, 718.f));
+	if (pObj == NULL)
+		return E_FAIL;
+	CObjMgr::GetInstance()->AddObject(L"SkillUI1", pObj);
+
+	pObj = CSkillUI::Create(UI_SKILL2, L"Texture_UISkill2", D3DXVECTOR2(625.f, 718.f));
+	if (pObj == NULL)
+		return E_FAIL;
+	CObjMgr::GetInstance()->AddObject(L"SkillUI2", pObj);
+
 	pObj = CBottomUI::Create();
 	if (pObj == NULL)
 		return E_FAIL;

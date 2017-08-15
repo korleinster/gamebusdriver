@@ -202,6 +202,7 @@ int CPlayer::Update(void)
 		{
 			m_bDeath = true;
 			m_ePlayerState = PLAYER_DEAD;
+			m_pInfo->m_ServerInfo.state.gauge = 0;
 			dynamic_cast<CDynamicMesh*>(m_pBuffer)->ResetPlayTimer();
 		}
 	}
@@ -212,6 +213,7 @@ int CPlayer::Update(void)
 			m_bDeath = false;
 			m_ePlayerState = PLAYER_IDLE;
 			SetNaviIndex(CNaviMgr::GetInstance()->GetCellIndex(&m_pInfo->m_vPos));
+			m_pInfo->m_ServerInfo.state.gauge = 0;
 		}
 
 	}
@@ -771,7 +773,7 @@ void CPlayer::KeyInput()
 		}
 	}
 
-	if ((CInput::GetInstance()->GetDIKeyState(DIK_W) & 0x80) && m_pInfo->m_ServerInfo.state.gauge > 50 && (m_bSkil2Cool == false))
+	if ((CInput::GetInstance()->GetDIKeyState(DIK_W) & 0x80) && m_pInfo->m_ServerInfo.state.gauge > 50 && (m_bSkil1Cool == false))
 	{
 		m_bPush = true;
 		int iSeverAtt;
@@ -782,7 +784,7 @@ void CPlayer::KeyInput()
 		m_ePlayerState = PLAYER_SKILL2;
 		iSeverAtt = SKILL2;
 		CSoundMgr::GetInstance()->PlaySound(L"ShildBreak.ogg");
-		m_bSkil2Cool = true;
+		m_bSkil1Cool = true;
 
 		g_client.sendPacket(sizeof(int), KEYINPUT_ATTACK, reinterpret_cast<BYTE*>(&iSeverAtt));
 

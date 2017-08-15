@@ -1039,83 +1039,89 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		// 변동사항이 있으면 알려줄거고, 모르는거 있으면, 나대서 추측하며 멋대로 구현말고 꼭 물어볼것
 
 		sc_boss_atk *p = reinterpret_cast<sc_boss_atk*>(buf);
-		auto iter = *CObjMgr::GetInstance()->Get_ObjList(L"Boss")->begin();
 
-		/*BOSS_ATT,
-			BOSS_ATT_01,
-			BOSS_ATT_02,
-			BOSS_ATT_03,
-			BOSS_ATT_04,
-			BOSS_ATT_05,
-			BOSS_ATT_06*/
-
-
-		//cout << "보스패킷:" << (int)p->att_type << endl;
-
-		if (p->att_type == BOSS_ATT_01)
+		if (CObjMgr::GetInstance()->Get_ObjList(L"Boss") != NULL)
 		{
-				CSoundMgr::GetInstance()->Monster2Sound(L"GolamAtt2.mp3");
-				(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
-				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT1);
-				
-				
+			if (CObjMgr::GetInstance()->Get_ObjList(L"Boss")->size() != 0)
+			{
+				auto iter = *CObjMgr::GetInstance()->Get_ObjList(L"Boss")->begin();
 
+				/*BOSS_ATT,
+					BOSS_ATT_01,
+					BOSS_ATT_02,
+					BOSS_ATT_03,
+					BOSS_ATT_04,
+					BOSS_ATT_05,
+					BOSS_ATT_06*/
+
+
+					//cout << "보스패킷:" << (int)p->att_type << endl;
+
+				if (p->att_type == BOSS_ATT_01)
+				{
+					CSoundMgr::GetInstance()->Monster2Sound(L"GolamAtt2.mp3");
+					(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
+					(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT1);
+
+
+
+				}
+
+				//else if (p->att_type == BOSS_ATT_02)
+				//{
+
+				//	//안씀
+				//		(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
+				//		(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT2);
+
+				//		
+
+				//}
+
+				else if (p->att_type == BOSS_ATT_03)
+				{
+
+					CSoundMgr::GetInstance()->Monster1Sound(L"GolamAtt3.mp3");
+					(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
+					(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT3);
+
+
+
+				}
+
+				else if (p->att_type == BOSS_ATT_04)
+				{
+					CSoundMgr::GetInstance()->Monster2Sound(L"GolamAtt4.ogg");
+					(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
+					(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT4);
+
+
+				}
+
+				else if (p->att_type == BOSS_ATT_05)
+				{
+					CSoundMgr::GetInstance()->Monster1Sound(L"GolamAtt5.mp3");
+					(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
+					(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT5);
+
+
+
+				}
+
+				//else if (p->att_type == BOSS_ATT_06)
+				//{
+				//
+				//	//안씀
+				//		(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
+				//		(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_BUFF);
+
+				//}
+				/*
+					att_type 에 따라서, 어떤 공격 및 행동인지 확인할 수 있다.
+					따라서 저 타입에 따라서 관련 애니메이션 재생만 하면 됨.
+				*/
+			}
 		}
-
-		//else if (p->att_type == BOSS_ATT_02)
-		//{
-	
-		//	//안씀
-		//		(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
-		//		(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT2);
-
-		//		
-
-		//}
-
-		else if (p->att_type == BOSS_ATT_03)
-		{
-		
-				CSoundMgr::GetInstance()->Monster1Sound(L"GolamAtt3.mp3");
-				(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
-				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT3);
-				
-				
-
-		}
-
-		else if (p->att_type == BOSS_ATT_04)
-		{
-				CSoundMgr::GetInstance()->Monster2Sound(L"GolamAtt4.ogg");
-				(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
-				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT4);
-				
-				
-		}
-
-		else if (p->att_type == BOSS_ATT_05)
-		{
-				CSoundMgr::GetInstance()->Monster1Sound(L"GolamAtt5.mp3");
-				(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
-				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT5);
-				
-				
-
-		}
-
-		//else if (p->att_type == BOSS_ATT_06)
-		//{
-		//
-		//	//안씀
-		//		(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
-		//		(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_BUFF);
-
-		//}
-		/*
-			att_type 에 따라서, 어떤 공격 및 행동인지 확인할 수 있다.
-			따라서 저 타입에 따라서 관련 애니메이션 재생만 하면 됨.
-		*/
-
 		break;
 	}
 

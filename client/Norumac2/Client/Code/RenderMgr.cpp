@@ -95,10 +95,10 @@ CRenderMgr::CRenderMgr()
 
 	m_pFPSFont->m_eType = FONT_TYPE_OUTLINE;
 	m_pFPSFont->m_wstrText = L"";
-	m_pFPSFont->m_fSize = 30.f;
+	m_pFPSFont->m_fSize = 15.f;
 	m_pFPSFont->m_nColor = 0xFF0000FF;
 	m_pFPSFont->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
-	m_pFPSFont->m_vPos = D3DXVECTOR2(750.f, 50.f);
+	m_pFPSFont->m_vPos = D3DXVECTOR2(940.f, 20.f);
 	m_pFPSFont->m_fOutlineSize = 1.f;
 	m_pFPSFont->m_nOutlineColor = 0xFF000000 /*0xFFFFFFFF*/;
 }

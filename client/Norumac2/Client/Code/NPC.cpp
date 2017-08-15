@@ -302,7 +302,7 @@ void CNpc::NpcChat(void)
 			pFont->m_fOutlineSize = 1.f;
 			pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
 
-			pFont->m_wstrText = L"주민: 슬라임이 갑자기 난폭해졌어요!";
+			pFont->m_wstrText = L"[ 주민 ] 주변의 슬라임이 갑자기 난폭해져 공격해요 !";
 
 			for (auto ChatList : pChatUI->m_ChatLogList)
 				ChatList->m_vPos.y -= 20.f;
@@ -324,7 +324,7 @@ void CNpc::NpcChat(void)
 			pFont->m_fOutlineSize = 1.f;
 			pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
 
-			pFont->m_wstrText = L"용사님깨서 도와주시지 않겠습니까?(수락: T키)";
+			pFont->m_wstrText = L"[ 주민 ] 혼자서는 너무 무리인데.. 어떻게 해야하지.. ( 슬라임 퇴치 수락 : T키 )";
 
 			for (auto ChatList : pChatUI->m_ChatLogList)
 				ChatList->m_vPos.y -= 20.f;
@@ -352,7 +352,7 @@ void CNpc::NpcChat(void)
 			pFont->m_fOutlineSize = 1.f;
 			pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
 
-			pFont->m_wstrText = L"주민: 마을에 고블린이....용사님 도와주십시요!(수락: T키)";
+			pFont->m_wstrText = L"[ 주민 ] 마을이 고블린에게 습격당했어요 ! ( 고블린 처치 수락 : T키 )";
 
 			for (auto ChatList : pChatUI->m_ChatLogList)
 				ChatList->m_vPos.y -= 20.f;
@@ -378,7 +378,7 @@ void CNpc::NpcChat(void)
 			pFont->m_fOutlineSize = 1.f;
 			pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
 
-			pFont->m_wstrText = L"주민: 흉포의 원인 골렘이 근처에 있습니다.";
+			pFont->m_wstrText = L"[ 주민 ] 주변 몬스터 흉포의 원인 골렘이 근처에 있습니다 !";
 
 
 
@@ -402,7 +402,7 @@ void CNpc::NpcChat(void)
 			pFont->m_fOutlineSize = 1.f;
 			pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
 
-			pFont->m_wstrText = L"다른 용사님들과 같이 퇴치를 부탁드려요!(수락: T키)";
+			pFont->m_wstrText = L"[ 주민 ] 다 같이 힘을 합쳐 퇴치 할 수 있을까요 ? ( 매직 골렘 파괴 수락: T키)";
 
 			for (auto ChatList : pChatUI->m_ChatLogList)
 				ChatList->m_vPos.y -= 20.f;
@@ -432,7 +432,7 @@ void CNpc::NpcChat(void)
 			pFont->m_fOutlineSize = 1.f;
 			pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
 
-			pFont->m_wstrText = L"주민: 저런!... 그럼 저흰 어떻게 되는겁니까?...";
+			pFont->m_wstrText = L"[ 주민 ] 저런!... 그럼 저흰 어떻게 되는겁니까?...";
 
 			for (auto ChatList : pChatUI->m_ChatLogList)
 				ChatList->m_vPos.y -= 20.f;
@@ -458,7 +458,7 @@ void CNpc::NpcChat(void)
 			pFont->m_fOutlineSize = 1.f;
 			pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
 
-			pFont->m_wstrText = L"주민: 살려주십시요 용사님!...";
+			pFont->m_wstrText = L"[ 주민 ] 살려주십시요 용사님!...";
 
 			for (auto ChatList : pChatUI->m_ChatLogList)
 				ChatList->m_vPos.y -= 20.f;
@@ -484,7 +484,7 @@ void CNpc::NpcChat(void)
 			pFont->m_fOutlineSize = 1.f;
 			pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
 
-			pFont->m_wstrText = L"주민: 아!... 이 마을은 누가 구원할 것인지...";
+			pFont->m_wstrText = L"[ 주민 ] 아!... 이 마을은 누가 구원할 것인지...";
 
 			for (auto ChatList : pChatUI->m_ChatLogList)
 				ChatList->m_vPos.y -= 20.f;

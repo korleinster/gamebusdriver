@@ -882,7 +882,7 @@ void CPlayer::KeyInput()
 						pFont->m_fOutlineSize = 1.f;
 						pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
 
-						pFont->m_wstrText = L"주민: 감사합니다 용사님!";
+						pFont->m_wstrText = L"[ 주민 ] 정말 감사드립니다 용사님 !";
 
 						for (auto ChatList : pChatUI->m_ChatLogList)
 							ChatList->m_vPos.y -= 20.f;
@@ -898,8 +898,8 @@ void CPlayer::KeyInput()
 
 						//////퀘스트창출력///
 
-						pQuestUI->m_QuestScript->m_wstrText = L"슬라임을 잡아라!";
-						pQuestUI->m_QuestState->m_wstrText = L"슬라임 남은 마리수 : 0 / 20";
+						pQuestUI->m_QuestScript->m_wstrText = L"슬라임 퇴치하기 !";
+						pQuestUI->m_QuestState->m_wstrText = L"슬라임 퇴치 진행도 ( 0 / 20 )";
 						///////////////////////
 					}
 				}
@@ -933,7 +933,7 @@ void CPlayer::KeyInput()
 						pFont->m_fOutlineSize = 1.f;
 						pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
 
-						pFont->m_wstrText = L"주민: 노고가 많습니다 용사님!";
+						pFont->m_wstrText = L"[ 주민 ] 용사님 덕분에 한 시름 놓았어요 !";
 
 						for (auto ChatList : pChatUI->m_ChatLogList)
 							ChatList->m_vPos.y -= 20.f;
@@ -950,7 +950,7 @@ void CPlayer::KeyInput()
 
 						//////퀘스트창출력///
 
-						pQuestUI->m_QuestScript->m_wstrText = L"고블린을 잡아라!";
+						pQuestUI->m_QuestScript->m_wstrText = L"고블린을 처치하자 !";
 						pQuestUI->m_QuestState->m_wstrText = L"고블린 남은 마리수 : 0 / 15";
 						///////////////////////
 						
@@ -987,7 +987,7 @@ void CPlayer::KeyInput()
 						pFont->m_fOutlineSize = 1.f;
 						pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
 
-						pFont->m_wstrText = L"주민: 제발 부탁드립니다 용사님!";
+						pFont->m_wstrText = L"[ 주민 ] 저희 힘으로는 무리에요 ! 도와주세요 !";
 
 						for (auto ChatList : pChatUI->m_ChatLogList)
 							ChatList->m_vPos.y -= 20.f;
@@ -1004,7 +1004,7 @@ void CPlayer::KeyInput()
 						//////퀘스트창출력///
 
 						pQuestUI->m_QuestScript->m_wstrText = L"매직 골램을 잡아라!";
-						pQuestUI->m_QuestState->m_wstrText = L"매직골램 퇴치 : 0 / 1";
+						pQuestUI->m_QuestState->m_wstrText = L"매직 골램 파괴 : 0 / 1";
 						///////////////////////
 					}
 				}

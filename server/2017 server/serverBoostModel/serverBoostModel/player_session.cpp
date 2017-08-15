@@ -586,6 +586,7 @@ void player_session::m_process_packet(Packet buf[])
 					if (MAX_AI_NUM > id) {
 						// 공격자의 반대 방향으로 일단 맞보도록 전환
 						char ai_dir = DIR_XOR(m_player_data.dir);
+						if (id == (MAX_AI_BOSS - 1)) { ai_dir = g_clients[id]->m_player_data.dir; }
 						if (g_clients[id]->get_player_data()->dir != ai_dir) {
 							g_clients[id]->get_player_data()->dir = ai_dir;
 

@@ -1213,7 +1213,7 @@ void TimerQueue::processPacket(event_type *p) {
 
 																													// 잡은 녀석에는 경험치도 주도록 하자.
 																													// 만약 슬라임이고, quest 수치가 10 마리 잡는거 이하라면
-							if ((MAX_AI_SLIME > id) && (MAX_AI_SLIME > g_clients[p->id]->get_sub_data()->quest)) {
+							if ((MAX_AI_SLIME > id) && (MAX_AI_SLIME > g_clients[p->id]->get_sub_data()->quest) && (true == g_clients[p->id]->quest_start)) {
 								g_clients[p->id]->get_sub_data()->quest += 1;
 
 								sc_chat chat;
@@ -1226,7 +1226,7 @@ void TimerQueue::processPacket(event_type *p) {
 								q.quest = g_clients[p->id]->get_sub_data()->quest;
 								g_clients[p->id]->send_packet(reinterpret_cast<Packet*>(&q));
 							}
-							else if ((MAX_AI_GOBLIN > id) && (MAX_AI_SLIME <= id) && (MAX_AI_GOBLIN > g_clients[p->id]->get_sub_data()->quest) && (MAX_AI_SLIME <= g_clients[p->id]->get_sub_data()->quest)) {
+							else if ((MAX_AI_GOBLIN > id) && (MAX_AI_SLIME <= id) && (MAX_AI_GOBLIN > g_clients[p->id]->get_sub_data()->quest) && (MAX_AI_SLIME <= g_clients[p->id]->get_sub_data()->quest) && (false == g_clients[p->id]->quest_start)) {
 								g_clients[p->id]->get_sub_data()->quest += 1;
 
 								sc_chat chat;
@@ -1238,6 +1238,9 @@ void TimerQueue::processPacket(event_type *p) {
 								sc_quest q;
 								q.quest = g_clients[p->id]->get_sub_data()->quest;
 								g_clients[p->id]->send_packet(reinterpret_cast<Packet*>(&q));
+							}
+							else if (((MAX_AI_BOSS - 1) == id) && (true == g_clients[p->id]->quest_start)) {
+
 							}
 						}
 						else {

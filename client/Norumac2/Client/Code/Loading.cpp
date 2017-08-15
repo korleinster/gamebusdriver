@@ -230,6 +230,16 @@ void CLoading::StageLoading(void)
 		, L"Texture_QuestMark"
 		, L"../Resource/Uiimage/QuestMark.png");
 
+	hr = CResourcesMgr::GetInstance()->AddTexture(
+		RESOURCE_STAGE
+		, L"Texture_UISkill1"
+		, L"../Resource/Uiimage/skill01.png");
+
+	hr = CResourcesMgr::GetInstance()->AddTexture(
+		RESOURCE_STAGE
+		, L"Texture_UISkill2"
+		, L"../Resource/Uiimage/skill02.png");
+
 
 
 

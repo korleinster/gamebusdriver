@@ -53,6 +53,10 @@ public:
 	bool			m_bTpCool;//ÅÚ·¹Æ÷Æ® Äð
 	int				m_iQuestStateMount;
 	QUESTSTATE		m_eQuestState;
+	float			m_fSkill1Time;
+	float			m_fSkill2Time;
+	bool			m_bSkil1Cool;
+	bool			m_bSkil2Cool;
 
 public:
 	virtual HRESULT Initialize(void);

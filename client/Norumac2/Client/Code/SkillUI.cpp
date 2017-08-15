@@ -160,12 +160,12 @@ void CSkillUI::UpdateBufferToCool(void)
 
 	if (m_eUiType == UI_SKILL1)
 	{
-		fCoolTime = 1.f - (*pPlayer).m_fSkill1Time / 1.f;
+		fCoolTime = 1.f - (*pPlayer).m_fSkill1Time / 3.f;
 	}
 
 	if (m_eUiType == UI_SKILL2)
 	{
-		fCoolTime = 1.f - (*pPlayer).m_fSkill1Time / 1.f;
+		fCoolTime = 1.f - (*pPlayer).m_fSkill1Time / 3.f;
 	}
 
 

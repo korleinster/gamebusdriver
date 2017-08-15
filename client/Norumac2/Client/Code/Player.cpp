@@ -1072,7 +1072,7 @@ void CPlayer::TimeSetter(void)
 		}
 	}
 
-	if (m_fSkill1Time > 1.f)
+	if (m_fSkill1Time > 3.f)
 	{
 		m_fSkill1Time = 0.f;
 		if (m_bSkil1Cool == true)
@@ -1081,7 +1081,7 @@ void CPlayer::TimeSetter(void)
 		}
 	}
 
-	if (m_fSkill2Time > 1.f)
+	if (m_fSkill2Time > 3.f)
 	{
 		m_fSkill2Time = 0.f;
 		if (m_bSkil2Cool == true)

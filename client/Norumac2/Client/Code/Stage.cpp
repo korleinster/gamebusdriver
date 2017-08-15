@@ -53,7 +53,7 @@ int CStage::Update(void)
 {
 	if (!m_bBGMStart)
 	{
-		CSoundMgr::GetInstance()->PlayBgm(L"Stage1BGM.wav");
+		CSoundMgr::GetInstance()->PlayBgm(L"Stage1BGM.mp3");
 		m_bBGMStart = true;
 	}
 

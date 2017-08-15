@@ -228,7 +228,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 								{*/
 									(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
 									(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_NORMALATT);
-									CSoundMgr::GetInstance()->Monster1Sound(L"GolemAtt1.ogg");
+									CSoundMgr::GetInstance()->Monster1Sound(L"GolemAtt1.mp3");
 								//}
 							}
 						}
@@ -353,7 +353,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 				m_player.state.hp = p->hp;
 				(*CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin())->SetPacketHp(&p->hp);
-				CSoundMgr::GetInstance()->PlaySound(L"PlayerHit.ogg");
+				CSoundMgr::GetInstance()->PlaySound(L"PlayerHit.mp3");
 				break;
 			}
 
@@ -1054,7 +1054,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 		if (p->att_type == BOSS_ATT_01)
 		{
-				CSoundMgr::GetInstance()->Monster2Sound(L"GolamAtt2.ogg");
+				CSoundMgr::GetInstance()->Monster2Sound(L"GolamAtt2.mp3");
 				(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
 				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT1);
 				
@@ -1076,7 +1076,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		else if (p->att_type == BOSS_ATT_03)
 		{
 		
-				CSoundMgr::GetInstance()->Monster1Sound(L"GolamAtt3.ogg");
+				CSoundMgr::GetInstance()->Monster1Sound(L"GolamAtt3.mp3");
 				(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
 				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT3);
 				
@@ -1095,7 +1095,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 		else if (p->att_type == BOSS_ATT_05)
 		{
-				CSoundMgr::GetInstance()->Monster1Sound(L"GolamAtt5.ogg");
+				CSoundMgr::GetInstance()->Monster1Sound(L"GolamAtt5.mp3");
 				(reinterpret_cast<CBoss*>(iter))->m_bKey = true;
 				(reinterpret_cast<CBoss*>(iter))->SetAniState(BOSS_ATT5);
 				

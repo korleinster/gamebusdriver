@@ -834,7 +834,7 @@ void CPlayer::KeyInput()
 		m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 		SetNaviIndex(CNaviMgr::GetInstance()->GetCellIndex(&m_pInfo->m_vPos));
 		g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
-		CSoundMgr::GetInstance()->PlayInterface2(L"TeleportRock.ogg");
+		CSoundMgr::GetInstance()->PlayInterface2(L"TeleportRock.mp3");
 		m_bTpCool = true;
 	}
 
@@ -849,7 +849,7 @@ void CPlayer::KeyInput()
 		m_pInfo->m_ServerInfo.pos.y = m_pInfo->m_vPos.z;
 		SetNaviIndex(CNaviMgr::GetInstance()->GetCellIndex(&m_pInfo->m_vPos));
 		g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&m_pInfo->m_ServerInfo.pos));
-		CSoundMgr::GetInstance()->PlaySound(L"TeleportRock.ogg");
+		CSoundMgr::GetInstance()->PlaySound(L"TeleportRock.mp3");
 		m_bTpCool = true;
 	}
 

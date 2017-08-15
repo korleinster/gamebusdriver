@@ -15,6 +15,7 @@
 #include "Font.h"
 #include "FontMgr.h"
 #include <conio.h>
+#include "SceneMgr.h"
 
 CChatUI::CChatUI()
 {
@@ -115,7 +116,9 @@ void CChatUI::Render()
 	m_pBuffer->Render();
 
 	m_pFont->Render();
-	m_pStateFont->Render();
+
+	if (CSceneMgr::GetInstance()->GetScene() == SCENE_STAGE)
+		m_pStateFont->Render();
 	
 	for (auto FontList : m_ChatLogList)
 		FontList->Render();

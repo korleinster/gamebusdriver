@@ -274,7 +274,7 @@ void CStage::DataLoad(void)
 			ReadFile(hFile, ((CInfo*)pComponent)->m_vDir, sizeof(D3DXVECTOR3), &dwByte, NULL);
 			ReadFile(hFile, ((CInfo*)pComponent)->m_matWorld, sizeof(D3DXMATRIX), &dwByte, NULL);
 
-			
+			//((CInfo*)pComponent)->m_vPos.y -= 0.1f;
 
 			/*if (0 == wcscmp(pObjectKey, L"streetlamp"))
 			{

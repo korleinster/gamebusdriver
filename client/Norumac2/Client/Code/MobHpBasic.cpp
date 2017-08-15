@@ -47,7 +47,7 @@ HRESULT CMobHpBasic::Initialize(void)
 	m_pFont->m_nFlag = FW1_CENTER | FW1_VCENTER | FW1_RESTORESTATE;
 	m_pFont->m_vPos = D3DXVECTOR2(m_fX, m_fY - 15.f);
 	m_pFont->m_fOutlineSize = 1.f;
-	m_pFont->m_nOutlineColor = 0x00000000 /*0xFFFFFFFF*/;
+	m_pFont->m_nOutlineColor = 0xFF000000 /*0xFFFFFFFF*/;
 
 	return S_OK;
 }

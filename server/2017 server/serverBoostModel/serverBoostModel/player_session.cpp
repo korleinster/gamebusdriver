@@ -739,7 +739,7 @@ void player_session::m_process_packet(Packet buf[])
 
 			if (0 == wcscmp(chatTXT, L"show me the hp")) {
 				if (101 > m_player_data.state.hp) {
-					m_player_data.state.hp += 300;
+					m_player_data.state.hp += 1000;
 					sc_chat cheat;
 					cheat.id = -1;
 					memcpy(cheat.msg, reinterpret_cast<wchar_t*>(L"체력 추가 치트 적용 완료"), MAX_BUF_SIZE - 6);
@@ -765,6 +765,7 @@ void player_session::m_process_packet(Packet buf[])
 			}
 			if (0 == wcscmp(chatTXT, L"power overwhelming")) {
 				m_sub_status.str += 50;
+				m_sub_status.critical += 10;
 				m_player_data.state.hp += 500;
 				m_sub_status.def += 10;
 				sc_chat cheat;

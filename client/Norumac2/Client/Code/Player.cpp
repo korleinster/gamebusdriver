@@ -202,6 +202,7 @@ int CPlayer::Update(void)
 		{
 			m_bDeath = true;
 			m_ePlayerState = PLAYER_DEAD;
+			m_pInfo->m_ServerInfo.state.gauge = 0;
 			dynamic_cast<CDynamicMesh*>(m_pBuffer)->ResetPlayTimer();
 		}
 	}
@@ -212,6 +213,7 @@ int CPlayer::Update(void)
 			m_bDeath = false;
 			m_ePlayerState = PLAYER_IDLE;
 			SetNaviIndex(CNaviMgr::GetInstance()->GetCellIndex(&m_pInfo->m_vPos));
+			m_pInfo->m_ServerInfo.state.gauge = 0;
 		}
 
 	}
@@ -771,7 +773,7 @@ void CPlayer::KeyInput()
 		}
 	}
 
-	if ((CInput::GetInstance()->GetDIKeyState(DIK_W) & 0x80) && m_pInfo->m_ServerInfo.state.gauge > 50 && (m_bSkil2Cool == false))
+	if ((CInput::GetInstance()->GetDIKeyState(DIK_W) & 0x80) && m_pInfo->m_ServerInfo.state.gauge > 50 && (m_bSkil1Cool == false))
 	{
 		m_bPush = true;
 		int iSeverAtt;
@@ -782,7 +784,7 @@ void CPlayer::KeyInput()
 		m_ePlayerState = PLAYER_SKILL2;
 		iSeverAtt = SKILL2;
 		CSoundMgr::GetInstance()->PlaySound(L"ShildBreak.ogg");
-		m_bSkil2Cool = true;
+		m_bSkil1Cool = true;
 
 		g_client.sendPacket(sizeof(int), KEYINPUT_ATTACK, reinterpret_cast<BYTE*>(&iSeverAtt));
 
@@ -886,7 +888,7 @@ void CPlayer::KeyInput()
 						pFont->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
 						pFont->m_vPos = D3DXVECTOR2(15.f, 620.f);
 						pFont->m_fOutlineSize = 1.f;
-						pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
+						pFont->m_nOutlineColor = 0xFF000000 /*0xFFFFFFFF*/;
 
 						pFont->m_wstrText = L"[ 주민 ] 정말 감사드립니다 용사님 !";
 
@@ -937,7 +939,7 @@ void CPlayer::KeyInput()
 						pFont->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
 						pFont->m_vPos = D3DXVECTOR2(15.f, 620.f);
 						pFont->m_fOutlineSize = 1.f;
-						pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
+						pFont->m_nOutlineColor = 0xFF000000 /*0xFFFFFFFF*/;
 
 						pFont->m_wstrText = L"[ 주민 ] 용사님 덕분에 한 시름 놓았어요 !";
 
@@ -991,7 +993,7 @@ void CPlayer::KeyInput()
 						pFont->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
 						pFont->m_vPos = D3DXVECTOR2(15.f, 620.f);
 						pFont->m_fOutlineSize = 1.f;
-						pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
+						pFont->m_nOutlineColor = 0xFF000000 /*0xFFFFFFFF*/;
 
 						pFont->m_wstrText = L"[ 주민 ] 저희 힘으로는 무리에요 ! 도와주세요 !";
 

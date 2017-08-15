@@ -100,7 +100,7 @@ CRenderMgr::CRenderMgr()
 	m_pFPSFont->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
 	m_pFPSFont->m_vPos = D3DXVECTOR2(750.f, 50.f);
 	m_pFPSFont->m_fOutlineSize = 1.f;
-	m_pFPSFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
+	m_pFPSFont->m_nOutlineColor = 0xFF000000 /*0xFFFFFFFF*/;
 }
 
 

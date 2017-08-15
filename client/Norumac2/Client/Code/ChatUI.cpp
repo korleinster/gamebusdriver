@@ -44,7 +44,7 @@ HRESULT CChatUI::Initialize(void)
 	m_pFont->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
 	m_pFont->m_vPos = D3DXVECTOR2(15.f, 640.f);
 	m_pFont->m_fOutlineSize = 1.f;
-	m_pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
+	m_pFont->m_nOutlineColor = 0xFF000000 /*0xFFFFFFFF*/;
 
 	//
 	CRenderMgr::GetInstance()->AddRenderGroup(TYPE_UI, this);

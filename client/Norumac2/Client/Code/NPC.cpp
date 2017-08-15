@@ -300,7 +300,7 @@ void CNpc::NpcChat(void)
 			pFont->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
 			pFont->m_vPos = D3DXVECTOR2(15.f, 620.f);
 			pFont->m_fOutlineSize = 1.f;
-			pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
+			pFont->m_nOutlineColor = 0xFF000000 /*0xFFFFFFFF*/;
 
 			pFont->m_wstrText = L"[ 주민 ] 주변의 슬라임이 갑자기 난폭해져 공격해요 !";
 
@@ -322,7 +322,7 @@ void CNpc::NpcChat(void)
 			pFont->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
 			pFont->m_vPos = D3DXVECTOR2(15.f, 620.f);
 			pFont->m_fOutlineSize = 1.f;
-			pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
+			pFont->m_nOutlineColor = 0xFF000000 /*0xFFFFFFFF*/;
 
 			pFont->m_wstrText = L"[ 주민 ] 혼자서는 너무 무리인데.. 어떻게 해야하지.. ( 슬라임 퇴치 수락 : T키 )";
 
@@ -350,7 +350,7 @@ void CNpc::NpcChat(void)
 			pFont->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
 			pFont->m_vPos = D3DXVECTOR2(15.f, 620.f);
 			pFont->m_fOutlineSize = 1.f;
-			pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
+			pFont->m_nOutlineColor = 0xFF000000 /*0xFFFFFFFF*/;
 
 			pFont->m_wstrText = L"[ 주민 ] 마을이 고블린에게 습격당했어요 ! ( 고블린 처치 수락 : T키 )";
 
@@ -376,7 +376,7 @@ void CNpc::NpcChat(void)
 			pFont->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
 			pFont->m_vPos = D3DXVECTOR2(15.f, 620.f);
 			pFont->m_fOutlineSize = 1.f;
-			pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
+			pFont->m_nOutlineColor = 0xFF000000 /*0xFFFFFFFF*/;
 
 			pFont->m_wstrText = L"[ 주민 ] 주변 몬스터 흉포의 원인 골렘이 근처에 있습니다 !";
 
@@ -400,7 +400,7 @@ void CNpc::NpcChat(void)
 			pFont->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
 			pFont->m_vPos = D3DXVECTOR2(15.f, 620.f);
 			pFont->m_fOutlineSize = 1.f;
-			pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
+			pFont->m_nOutlineColor = 0xFF000000 /*0xFFFFFFFF*/;
 
 			pFont->m_wstrText = L"[ 주민 ] 다 같이 힘을 합쳐 퇴치 할 수 있을까요 ? ( 매직 골렘 파괴 수락: T키)";
 
@@ -430,7 +430,7 @@ void CNpc::NpcChat(void)
 			pFont->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
 			pFont->m_vPos = D3DXVECTOR2(15.f, 620.f);
 			pFont->m_fOutlineSize = 1.f;
-			pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
+			pFont->m_nOutlineColor = 0xFF000000 /*0xFFFFFFFF*/;
 
 			pFont->m_wstrText = L"[ 주민 ] 저런!... 그럼 저흰 어떻게 되는겁니까?...";
 
@@ -456,7 +456,7 @@ void CNpc::NpcChat(void)
 			pFont->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
 			pFont->m_vPos = D3DXVECTOR2(15.f, 620.f);
 			pFont->m_fOutlineSize = 1.f;
-			pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
+			pFont->m_nOutlineColor = 0xFF000000 /*0xFFFFFFFF*/;
 
 			pFont->m_wstrText = L"[ 주민 ] 살려주십시요 용사님!...";
 
@@ -482,7 +482,7 @@ void CNpc::NpcChat(void)
 			pFont->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
 			pFont->m_vPos = D3DXVECTOR2(15.f, 620.f);
 			pFont->m_fOutlineSize = 1.f;
-			pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
+			pFont->m_nOutlineColor = 0xFF000000 /*0xFFFFFFFF*/;
 
 			pFont->m_wstrText = L"[ 주민 ] 아!... 이 마을은 누가 구원할 것인지...";
 

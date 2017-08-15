@@ -937,7 +937,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		pFont->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
 		pFont->m_vPos = D3DXVECTOR2(15.f, 620.f);
 		pFont->m_fOutlineSize = 1.f;
-		pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
+		pFont->m_nOutlineColor = 0xFF000000 /*0xFFFFFFFF*/;
 
 		for (auto ChatList : pChatUI->m_ChatLogList)
 			ChatList->m_vPos.y -= 20.f;

@@ -1217,7 +1217,7 @@ void TimerQueue::processPacket(event_type *p) {
 								g_clients[p->id]->get_sub_data()->quest += 1;
 
 								sc_chat chat;
-								chat.id = p->id;
+								chat.id = -1;
 								wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"슬라임 %d 마리 잡음", g_clients[p->id]->get_sub_data()->quest);
 								if (MAX_AI_SLIME == g_clients[p->id]->get_sub_data()->quest) { wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"슬라임 퀘스트 완료"); }
 								g_clients[p->id]->send_packet(reinterpret_cast<Packet*>(&chat));
@@ -1230,7 +1230,7 @@ void TimerQueue::processPacket(event_type *p) {
 								g_clients[p->id]->get_sub_data()->quest += 1;
 
 								sc_chat chat;
-								chat.id = p->id;
+								chat.id = -1;
 								wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"고블린 %d 마리 잡음", g_clients[p->id]->get_sub_data()->quest - MAX_AI_SLIME);
 								if (MAX_AI_GOBLIN == g_clients[p->id]->get_sub_data()->quest) { wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"고블린 퀘스트 완료");; }
 								g_clients[p->id]->send_packet(reinterpret_cast<Packet*>(&chat));

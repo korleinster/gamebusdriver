@@ -232,6 +232,8 @@ HRESULT CStage::CreateObj(void)
 	CCamera::GetInstance()->SetCameraTarget(pObj->GetInfo());
 
 
+
+
 	DataLoad();
 	
 

@@ -888,7 +888,7 @@ void CPlayer::KeyInput()
 						pFont->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
 						pFont->m_vPos = D3DXVECTOR2(15.f, 620.f);
 						pFont->m_fOutlineSize = 1.f;
-						pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
+						pFont->m_nOutlineColor = 0xFF000000 /*0xFFFFFFFF*/;
 
 						pFont->m_wstrText = L"[ 주민 ] 정말 감사드립니다 용사님 !";
 
@@ -939,7 +939,7 @@ void CPlayer::KeyInput()
 						pFont->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
 						pFont->m_vPos = D3DXVECTOR2(15.f, 620.f);
 						pFont->m_fOutlineSize = 1.f;
-						pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
+						pFont->m_nOutlineColor = 0xFF000000 /*0xFFFFFFFF*/;
 
 						pFont->m_wstrText = L"[ 주민 ] 용사님 덕분에 한 시름 놓았어요 !";
 
@@ -993,7 +993,7 @@ void CPlayer::KeyInput()
 						pFont->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
 						pFont->m_vPos = D3DXVECTOR2(15.f, 620.f);
 						pFont->m_fOutlineSize = 1.f;
-						pFont->m_nOutlineColor = 0xFFFFFFFF /*0xFFFFFFFF*/;
+						pFont->m_nOutlineColor = 0xFF000000 /*0xFFFFFFFF*/;
 
 						pFont->m_wstrText = L"[ 주민 ] 저희 힘으로는 무리에요 ! 도와주세요 !";
 

@@ -40,6 +40,7 @@ CStaticObject::CStaticObject()
 	m_pVerTex = NULL;
 	m_pSceneVertexShaderCB = NULL;
 	m_pScenePixelShaderCB = NULL;
+	m_bSRender = true;
 }
 
 
@@ -66,6 +67,17 @@ HRESULT CStaticObject::Initialize(const TCHAR* pMeshKey)
 	m_pInfo->m_fAngle[ANGLE_X] = D3DXToRadian(-90);
 
 	CRenderMgr::GetInstance()->AddRenderGroup(TYPE_NONEALPHA, this);
+
+	int temp = _tcscmp(m_tcMeshKey, L"grass");
+	if (temp == 0)
+	{
+		m_bSRender = false;
+	}
+	temp = _tcscmp(m_tcMeshKey, L"grass2");
+	if (temp == 0)
+	{
+		m_bSRender = false;
+	}
 
 	D3D11_BUFFER_DESC cbDesc;
 	ZeroMemory(&cbDesc, sizeof(cbDesc));
@@ -147,7 +159,8 @@ void  CStaticObject::ShadowmapRender(void)
 		m_pGrapicDevice->m_pDeviceContext->Unmap(m_pCascadedShadowGenVertexCB, 0);
 		m_pGrapicDevice->m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pCascadedShadowGenVertexCB);
 
-		m_pBuffer->Render();
+		if(m_bSRender == true)
+			m_pBuffer->Render();
 	}
 }
 

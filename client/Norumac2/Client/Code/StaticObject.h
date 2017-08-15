@@ -18,6 +18,7 @@ private:
 	CShader*		m_pPixelShader;
 	CTexture*		m_pTexture;
 	VTXTEX*			m_pVerTex;
+	bool			m_bSRender;
 
 	// Scene meshes shader constant buffers
 	ID3D11Buffer*		m_pSceneVertexShaderCB;

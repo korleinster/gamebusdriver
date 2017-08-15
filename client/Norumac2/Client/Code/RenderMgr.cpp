@@ -95,10 +95,10 @@ CRenderMgr::CRenderMgr()
 
 	m_pFPSFont->m_eType = FONT_TYPE_OUTLINE;
 	m_pFPSFont->m_wstrText = L"";
-	m_pFPSFont->m_fSize = 30.f;
+	m_pFPSFont->m_fSize = 15.f;
 	m_pFPSFont->m_nColor = 0xFF0000FF;
 	m_pFPSFont->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
-	m_pFPSFont->m_vPos = D3DXVECTOR2(750.f, 50.f);
+	m_pFPSFont->m_vPos = D3DXVECTOR2(940.f, 20.f);
 	m_pFPSFont->m_fOutlineSize = 1.f;
 	m_pFPSFont->m_nOutlineColor = 0xFF000000 /*0xFFFFFFFF*/;
 }
@@ -679,4 +679,12 @@ void CRenderMgr::InitPointLight()
 	m_pLightMgr->AddPointLight(D3DXVECTOR3(254.173f, 18.1111f + m_fPointY, 164.089f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
 	m_pLightMgr->AddPointLight(D3DXVECTOR3(254.177f, 18.1111f + m_fPointY, 157.071f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
 	m_pLightMgr->AddPointLight(D3DXVECTOR3(253.679f, 18.1111f + m_fPointY, 150.711f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(273.973f, 18.2222f + m_fPointY, 142.918f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(273.493f, 18.2222f + m_fPointY, 131.002f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(266.631f, 18.2222f + m_fPointY, 122.72f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(254.813f, 18.2222f + m_fPointY, 120.799f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(246.764f, 18.2222f + m_fPointY, 130.417f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+	m_pLightMgr->AddPointLight(D3DXVECTOR3(246.638f, 18.2222f + m_fPointY, 142.463f), m_fPointRadius, D3DXVECTOR3(m_fPointColor[RGB_RED], m_fPointColor[RGB_GREEN], m_fPointColor[RGB_BLUE]));
+
+	// 87°³
 }

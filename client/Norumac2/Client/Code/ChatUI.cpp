@@ -46,6 +46,17 @@ HRESULT CChatUI::Initialize(void)
 	m_pFont->m_fOutlineSize = 1.f;
 	m_pFont->m_nOutlineColor = 0xFF000000 /*0xFFFFFFFF*/;
 
+
+
+	m_pStateFont->m_eType = FONT_TYPE_OUTLINE;
+	m_pStateFont->m_wstrText = L"채팅Off";
+	m_pStateFont->m_fSize = 20.f;
+	m_pStateFont->m_nColor = 0xFFFFFFFF;
+	m_pStateFont->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
+	m_pStateFont->m_vPos = D3DXVECTOR2(15.f, 660.f);
+	m_pStateFont->m_fOutlineSize = 1.f;
+	m_pStateFont->m_nOutlineColor = 0xFF000000 /*0xFFFFFFFF*/;
+
 	//
 	CRenderMgr::GetInstance()->AddRenderGroup(TYPE_UI, this);
 	return S_OK;
@@ -64,6 +75,15 @@ int CChatUI::Update(void)
 	m_matView._41 = m_fX - (WINCX >> 1);
 	m_matView._42 = -m_fY + (WINCY >> 1);
 
+
+	if (g_bChatMode == true)
+	{
+		m_pStateFont->m_wstrText = L"채팅On";
+	}
+	else
+	{
+		m_pStateFont->m_wstrText = L"채팅Off";
+	}
 
 	CObj::Update();
 
@@ -95,6 +115,7 @@ void CChatUI::Render()
 	m_pBuffer->Render();
 
 	m_pFont->Render();
+	m_pStateFont->Render();
 	
 	for (auto FontList : m_ChatLogList)
 		FontList->Render();
@@ -137,6 +158,7 @@ HRESULT CChatUI::AddComponent(void)
 
 
 	m_pFont = CFont::Create(L"Font_Star");
+	m_pStateFont = CFont::Create(L"Font_Star");
 
 	return S_OK;
 }

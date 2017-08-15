@@ -66,7 +66,7 @@ ai_status_goblin = {
 
 ai_status_goblin2 = {
 	pos = { x = 259.741, y = 153.277 },
-	radius = 10,
+	radius = 7,
 	
 	howMany	= 5 + ai_status_goblin.howMany,
 	aiMovSpeed = 0.5,

@@ -277,7 +277,7 @@ void TimerQueue::processPacket(event_type *p) {
 				case BOSS_ATT_06:
 				case BOSS_ATT_02:
 				case BOSS_ATT_01: {
-					if ((player_size * player_size) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) {
+					if ((player_size * player_size) >= DISTANCE_TRIANGLE(x, y, my_x, my_y) && (dead != g_clients[target_id]->get_state())) {
 						g_clients[target_id]->get_player_data()->state.hp -= (g_clients[p->id]->get_sub_data()->str + dist(mt) - g_clients[target_id]->get_sub_data()->def);
 						int target_hp = g_clients[target_id]->get_player_data()->state.hp;
 
@@ -408,7 +408,7 @@ void TimerQueue::processPacket(event_type *p) {
 					break;
 				}
 				case BOSS_ATT_05: {
-					if ((player_size * player_size) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) {
+					if ((player_size * player_size) >= DISTANCE_TRIANGLE(x, y, my_x, my_y) && (dead != g_clients[target_id]->get_state())) {
 						g_clients[target_id]->get_player_data()->state.hp -= (g_clients[p->id]->get_sub_data()->str + 20 + dist(mt) - g_clients[target_id]->get_sub_data()->def);
 						int target_hp = g_clients[target_id]->get_player_data()->state.hp;
 
@@ -528,7 +528,7 @@ void TimerQueue::processPacket(event_type *p) {
 		// [ 고블린 ]
 		else if ((p->id < MAX_AI_GOBLIN) && (p->id > MAX_AI_SLIME)) {
 
-			if (((VIEW_RANGE - 5) * (VIEW_RANGE - 5)) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) {
+			if (((VIEW_RANGE - 5) * (VIEW_RANGE - 5)) >= DISTANCE_TRIANGLE(x, y, my_x, my_y) && (dead != g_clients[target_id]->get_state())) {
 				sc_dir dir_packet;
 				dir_packet.dir = g_clients[p->id]->get_player_data()->dir = dir_refresh();
 				dir_packet.id = p->id;
@@ -606,7 +606,7 @@ void TimerQueue::processPacket(event_type *p) {
 		}
 
 		// [ 슬라임 ] 공격 범위 내라면, 공격을...
-		if ((player_size * player_size) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) {
+		if ((player_size * player_size) >= DISTANCE_TRIANGLE(x, y, my_x, my_y) && (dead != g_clients[target_id]->get_state())) {
 
 			sc_dir dir_packet;
 			dir_packet.dir = g_clients[p->id]->get_player_data()->dir = dir_refresh();
@@ -772,6 +772,7 @@ void TimerQueue::processPacket(event_type *p) {
 					// 충돌 범위에 있는 유저 검색
 					for (auto players : g_clients) {
 						if (DISCONNECTED == players->get_current_connect_state()) { continue; }
+						if (dead != g_clients[target_id]->get_state()) { continue; }
 						if (p->id >= players->get_id()) { continue; }
 
 						float atked_x = players->get_player_data()->pos.x, atked_y = players->get_player_data()->pos.y;
@@ -1023,6 +1024,7 @@ void TimerQueue::processPacket(event_type *p) {
 					// 충돌 범위에 있는 유저 검색
 					for (auto players : g_clients) {
 						if (DISCONNECTED == players->get_current_connect_state()) { continue; }
+						if (dead != g_clients[target_id]->get_state()) { continue; }
 						if (p->id >= players->get_id()) { continue; }
 
 						float atked_x = players->get_player_data()->pos.x, atked_y = players->get_player_data()->pos.y;

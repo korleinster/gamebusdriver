@@ -31,7 +31,13 @@ public:
 	void set_gauge_reducing(bool b) { is_gauge_reducing = b; }
 	bool get_gauge_reducing() { return is_gauge_reducing; }
 
-	void set_state(int s) { m_state = s; }
+	void set_state(int s) {
+		//state_mutex.lock();
+		if (-1 != m_state) {
+			m_state = s;
+		}
+		//state_mutex.unlock();
+	}
 	int get_state() { return m_state; }
 
 	bool set_hp(int hp) { m_player_data.state.hp = hp; return true; }
@@ -123,4 +129,6 @@ private:
 	mutex m_view_lock;
 	unordered_set<unsigned int> m_view_list;
 	/// 고민 2. 따로 멀티 쓰레드 전용 자료구조를 만들어 쓸 것인가 ? CAS... 5000을 위해서는 써야 할것이다...
+
+	mutex state_mutex;
 };

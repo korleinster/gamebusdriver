@@ -143,7 +143,7 @@ void boostAsioServer::g_client_init() {
 	}
 
 	// °íºí¸° AI
-	for (int i = MAX_AI_SLIME; i < MAX_AI_GOBLIN - 10; ++i)
+	for (int i = MAX_AI_SLIME; i < MAX_AI_GOBLIN - 5; ++i)
 	{
 		g_clients.emplace_back(new player_session(boost::asio::ip::tcp::socket(g_io_service), ++m_playerIndex));
 		//cout << "goblin id = " << m_playerIndex << endl;
@@ -175,7 +175,7 @@ void boostAsioServer::g_client_init() {
 		g_clients[i]->m_target_id = none;
 	}
 
-	for (int i = MAX_AI_GOBLIN - 10; i < MAX_AI_GOBLIN; ++i)
+	for (int i = MAX_AI_GOBLIN - 5; i < MAX_AI_GOBLIN; ++i)
 	{
 		g_clients.emplace_back(new player_session(boost::asio::ip::tcp::socket(g_io_service), ++m_playerIndex));
 		//cout << "goblin id = " << m_playerIndex << endl;

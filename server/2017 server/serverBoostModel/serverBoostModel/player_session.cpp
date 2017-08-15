@@ -248,13 +248,14 @@ void player_session::m_recv_packet()
 		if (error_code) {
 			if (error_code.value() == boost::asio::error::operation_aborted) { return; }
 			// client was disconnected
-			if (false == g_clients[m_id]->get_current_connect_state()) { return; }
+			//if (false == g_clients[m_id]->get_current_connect_state()) { return; }
 
 			cout << "Client No. [ " << m_id << " ] Disonnected \t:: IP = " << m_socket.remote_endpoint().address().to_string() << ", Port = " << m_socket.remote_endpoint().port() << "\n";
 			m_socket.shutdown(m_socket.shutdown_both);
 			m_socket.close();
 
-			m_connect_state = false;
+			set_state(-1);
+			m_connect_state = DISCONNECTED;
 
 			// guest 가 아니면 DB 에 데이터 저장
 			if (0 != wcscmp(L"guest", m_login_id)) {

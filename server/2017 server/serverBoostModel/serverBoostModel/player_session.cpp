@@ -764,7 +764,7 @@ void player_session::m_process_packet(Packet buf[])
 					send_packet(reinterpret_cast<Packet*>(&hp_p));
 				}
 			}
-			if (0 == wcscmp(chatTXT, L"power overwhelming")) {
+			else if (0 == wcscmp(chatTXT, L"power overwhelming")) {
 				if (50 < m_sub_status.str) {
 					m_sub_status.str -= 50;
 					m_sub_status.critical -= 20;
@@ -781,6 +781,19 @@ void player_session::m_process_packet(Packet buf[])
 					memcpy(cheat.msg, reinterpret_cast<wchar_t*>(L"강화 치트 적용 완료"), MAX_BUF_SIZE - 6);
 					send_packet(reinterpret_cast<Packet*>(&cheat));
 				}
+			}
+			else if (0 == wcscmp(chatTXT, L"quest reset")) {
+				m_sub_status.quest = 0;
+				quest_start = false;
+
+				sc_quest q;
+				q.quest = m_sub_status.quest;
+				send_packet(reinterpret_cast<Packet*>(&q));
+
+				sc_chat cheat;
+				cheat.id = -1;
+				memcpy(cheat.msg, reinterpret_cast<wchar_t*>(L"퀘스트 초기화 완료"), MAX_BUF_SIZE - 6);
+				send_packet(reinterpret_cast<Packet*>(&cheat));
 			}
 
 			for (auto players : g_clients) {

@@ -958,7 +958,7 @@ void CPlayer::KeyInput()
 						//////퀘스트창출력///
 
 						pQuestUI->m_QuestScript->m_wstrText = L"고블린을 처치하자 !";
-						pQuestUI->m_QuestState->m_wstrText = L"고블린 남은 마리수 : 0 / 15";
+						pQuestUI->m_QuestState->m_wstrText = L"고블린 퇴치 진행도 ( 0 / 15 )";
 						///////////////////////
 						
 					}

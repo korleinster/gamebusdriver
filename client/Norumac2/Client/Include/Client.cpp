@@ -10,6 +10,9 @@
 #include "ChatUI.h"
 #include "ObjMgr.h"
 #include "Font.h"
+#include "QuestUI.h"
+#include "Player.h"
+#include "NPC.h"
 //#include <vld.h>
 
 // 전역 변수:
@@ -124,6 +127,30 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 					// 여기다가 데이터를 담은 뒤 전송
 					g_client.sendPacket(MAX_CHAT_SIZE / 2, CHAT, reinterpret_cast<Packet*>(&cText));
+
+
+					////////////퀘스트 초기화 관련///////////////
+					if (0 == wcscmp(cText, L"quest reset"))
+					{
+						CQuestUI* pQuestUI = dynamic_cast<CQuestUI*>(*(CObjMgr::GetInstance()->Get_ObjList(L"QuestUI")->begin()));
+						auto player = CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin();
+
+						pQuestUI->m_QuestScript->m_wstrText = L"";
+						pQuestUI->m_QuestState->m_wstrText = L"";
+
+						dynamic_cast<CPlayer*>(*player)->m_eQuestState = QUEST_NOT;
+						dynamic_cast<CPlayer*>(*player)->m_bQuestFlag = false;
+
+
+						auto npc = CObjMgr::GetInstance()->Get_ObjList(L"NPC")->begin();
+						auto npc_end = CObjMgr::GetInstance()->Get_ObjList(L"NPC")->end();
+
+						for (npc; npc != npc_end; ++npc)
+						{
+							dynamic_cast<CNpc*>(*npc)->m_bQuestAccept = false;
+						}
+					}
+					////////////////////////////////////
 
 					ZeroMemory(&cText, sizeof(TCHAR) * (MAX_CHAT_SIZE / 2));
 					//보내고나서 문자열을 비워준다.

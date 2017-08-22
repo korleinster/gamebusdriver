@@ -988,9 +988,9 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 		if (/*p->quest < MAX_AI_SLIME &&*/ dynamic_cast<CPlayer*>(*player)->m_eQuestState == QUEST_SLIME)
 		{
-			pQuestUI->m_QuestScript->m_wstrText = L"슬라임을 잡아라!";
+			pQuestUI->m_QuestScript->m_wstrText = L"슬라임 퇴치하기 !";
 			if(p->quest < MAX_AI_SLIME)
-				wsprintf(wcQuestState, L"슬라임 남은 마리수 : %d / %d", p->quest, MAX_AI_SLIME);
+				wsprintf(wcQuestState, L"슬라임 퇴치 진행도 ( %d / %d )", p->quest, MAX_AI_SLIME);
 			else
 			{
 				wsprintf(wcQuestState, L"퀘스트 완료!");
@@ -1000,9 +1000,9 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		}
 		else if (/*p->quest >= MAX_AI_SLIME && p->quest < MAX_AI_GOBLIN &&*/ dynamic_cast<CPlayer*>(*player)->m_eQuestState ==QUEST_GOBLIN)
 		{
-			pQuestUI->m_QuestScript->m_wstrText = L"고블린을 잡아라!";
+			pQuestUI->m_QuestScript->m_wstrText = L"고블린을 처치하자 !";
 			if (p->quest - MAX_AI_SLIME < MAX_AI_GOBLIN - MAX_AI_SLIME)
-				wsprintf(wcQuestState, L"고블린 남은 마리수 : %d / %d", p->quest - MAX_AI_SLIME, MAX_AI_GOBLIN - MAX_AI_SLIME);
+				wsprintf(wcQuestState, L"고블린 퇴치 진행도 ( %d / %d )", p->quest - MAX_AI_SLIME, MAX_AI_GOBLIN - MAX_AI_SLIME);
 			else
 			{
 				wsprintf(wcQuestState, L"퀘스트 완료!");
@@ -1014,7 +1014,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		{
 			pQuestUI->m_QuestScript->m_wstrText = L"매직 골램을 잡아라!";
 			if (p->quest - MAX_AI_GOBLIN < 1)
-				wsprintf(wcQuestState, L"매직골램 퇴치 : %d / %d", p->quest - MAX_AI_GOBLIN, 1);
+				wsprintf(wcQuestState, L"매직 골램 파괴 : %d / %d", p->quest - MAX_AI_GOBLIN, 1);
 			else
 			{
 				wsprintf(wcQuestState, L"퀘스트 완료!");

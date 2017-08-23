@@ -238,34 +238,41 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 				else
 				{
-					for (auto iter : *CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer"))
+					if (CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer") != NULL)
 					{
-						if (iter->GetPacketData()->id == p->attacking_id) {
-							
-								(reinterpret_cast<COtherPlayer*>(iter))->m_bKey = true;
-								if (p->comboState == COMBO1)
-								{
-									(reinterpret_cast<COtherPlayer*>(iter))->SetAniState(PLAYER_ATT1);
-								}
-								else if (p->comboState == COMBO2)
-								{
-									(reinterpret_cast<COtherPlayer*>(iter))->SetAniState(PLAYER_ATT2);
-								}
-								else if (p->comboState == COMBO3)
-								{
-									(reinterpret_cast<COtherPlayer*>(iter))->SetAniState(PLAYER_ATT3);
-								}
-								else if (p->comboState == SKILL1) 
-								{
-									(reinterpret_cast<COtherPlayer*>(iter))->SetAniState(PLAYER_SKILL1);
-								}
-								else if (p->comboState == SKILL2)
-								{
-									(reinterpret_cast<COtherPlayer*>(iter))->SetAniState(PLAYER_SKILL2);
-								}
+						if (CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer")->size() != 0)
+						{
 
-							
-							break;
+							for (auto iter : *CObjMgr::GetInstance()->Get_ObjList(L"OtherPlayer"))
+							{
+								if (iter->GetPacketData()->id == p->attacking_id) {
+
+									(reinterpret_cast<COtherPlayer*>(iter))->m_bKey = true;
+									if (p->comboState == COMBO1)
+									{
+										(reinterpret_cast<COtherPlayer*>(iter))->SetAniState(PLAYER_ATT1);
+									}
+									else if (p->comboState == COMBO2)
+									{
+										(reinterpret_cast<COtherPlayer*>(iter))->SetAniState(PLAYER_ATT2);
+									}
+									else if (p->comboState == COMBO3)
+									{
+										(reinterpret_cast<COtherPlayer*>(iter))->SetAniState(PLAYER_ATT3);
+									}
+									else if (p->comboState == SKILL1)
+									{
+										(reinterpret_cast<COtherPlayer*>(iter))->SetAniState(PLAYER_SKILL1);
+									}
+									else if (p->comboState == SKILL2)
+									{
+										(reinterpret_cast<COtherPlayer*>(iter))->SetAniState(PLAYER_SKILL2);
+									}
+
+
+									break;
+								}
+							}
 						}
 					}
 				}

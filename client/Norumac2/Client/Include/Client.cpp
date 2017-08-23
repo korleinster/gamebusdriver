@@ -13,6 +13,7 @@
 #include "QuestUI.h"
 #include "Player.h"
 #include "NPC.h"
+#include "Info.h"
 //#include <vld.h>
 
 // 전역 변수:
@@ -140,6 +141,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 						dynamic_cast<CPlayer*>(*player)->m_eQuestState = QUEST_NOT;
 						dynamic_cast<CPlayer*>(*player)->m_bQuestFlag = false;
+						dynamic_cast<CPlayer*>(*player)->GetInfo()->m_vPos = D3DXVECTOR3(155.f, 0.f, 400.f);
+						dynamic_cast<CPlayer*>(*player)->GetInfo()->m_ServerInfo.pos.x = 155.f;
+						dynamic_cast<CPlayer*>(*player)->GetInfo()->m_ServerInfo.pos.x = 400.f;
+						g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&(dynamic_cast<CPlayer*>(*player)->GetInfo()->m_ServerInfo.pos)));
 
 
 						auto npc = CObjMgr::GetInstance()->Get_ObjList(L"NPC")->begin();

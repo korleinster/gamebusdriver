@@ -914,7 +914,6 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 		sc_chat *p = reinterpret_cast<sc_chat*>(buf);
 
 		CChatUI* pChatUI = dynamic_cast<CChatUI*>(*(CObjMgr::GetInstance()->Get_ObjList(L"ChatUI")->begin()));
-
 		
 		wchar_t* str = (wchar_t*)p->msg;
 		/*wchar_t *wch = new wchar_t[str.length() + 1];

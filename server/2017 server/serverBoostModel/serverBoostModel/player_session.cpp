@@ -9,14 +9,14 @@ bool player_session::check_login() {
 	int login_cnt{ 2 };
 	while (--login_cnt)
 	{
-		// id size + id + pw size + pw ( id ¹®ÀÚ¿­ + pw ¹®ÀÚ¿­ + 2 )
+		// id size + id + pw size + pw ( id ë¬¸ìì—´ + pw ë¬¸ìì—´ + 2 )
 		Packet temp_buf[MAX_BUF_SIZE]{ 0 };
 		m_socket.receive(boost::asio::buffer(temp_buf, MAX_BUF_SIZE));
 
 		wcscpy(m_login_id, reinterpret_cast<wchar_t*>(&temp_buf[1]));
 		wcscpy(m_login_pw, reinterpret_cast<wchar_t*>(&temp_buf[temp_buf[0] + 4]));
 
-		// ±×³É guest ¶ó¸é, DB Á¢¼Ó ¾øÀÌ ±×³É ok...
+		// ê·¸ëƒ¥ guest ë¼ë©´, DB ì ‘ì† ì—†ì´ ê·¸ëƒ¥ ok...
 		if ((0 == wcscmp(L"guest", m_login_id)) && (0 == wcscmp(L"guest", m_login_pw))) {
 			temp_buf[0] = 1;
 			m_socket.send(boost::asio::buffer(temp_buf, MAX_BUF_SIZE));
@@ -24,16 +24,16 @@ bool player_session::check_login() {
 		}
 
 		if (true == d.DB_Login(m_login_id, m_login_pw, this)) {
-			// ·Î±×ÀÎ ¼º°ø ½Ã ¿©±â¼­ ÇÃ·¹ÀÌ¾î µ¥ÀÌÅÍ ºÒ·¯¿Í¼­ ÀÔ·Â
+			// ë¡œê·¸ì¸ ì„±ê³µ ì‹œ ì—¬ê¸°ì„œ í”Œë ˆì´ì–´ ë°ì´í„° ë¶ˆëŸ¬ì™€ì„œ ì…ë ¥
 
-			/// ( ¼º°øÇß´Ù°í Å¬¶óÇÑÅ× ¸Ş¼¼Áö Àü¼Û )
+			/// ( ì„±ê³µí–ˆë‹¤ê³  í´ë¼í•œí…Œ ë©”ì„¸ì§€ ì „ì†¡ )
 			temp_buf[0] = 1;
 			m_socket.send(boost::asio::buffer(temp_buf, MAX_BUF_SIZE));
 			return true;
 		}
 		else {
-			// ·Î±×ÀÎ ½ÇÆĞ ½Ã, ¿©±â¼­ Ã³¸®
-			/// ( ½ÇÆĞÇß´Ù°í Å¬¶óÇÑÅ× ¸Ş¼¼Áö Àü¼Û )
+			// ë¡œê·¸ì¸ ì‹¤íŒ¨ ì‹œ, ì—¬ê¸°ì„œ ì²˜ë¦¬
+			/// ( ì‹¤íŒ¨í–ˆë‹¤ê³  í´ë¼í•œí…Œ ë©”ì„¸ì§€ ì „ì†¡ )
 			temp_buf[0] = 0;
 			m_socket.send(boost::asio::buffer(temp_buf, MAX_BUF_SIZE));
 		}
@@ -47,12 +47,12 @@ bool player_session::check_login() {
 	return false;
 }
 
-// return °ªÀº °ø°İ ÇØ¾ßÇÏ´Â target id °ªÀÌ return µÈ´Ù.
+// return ê°’ì€ ê³µê²© í•´ì•¼í•˜ëŠ” target id ê°’ì´ return ëœë‹¤.
 unsigned int player_session::ai_rand_mov()
 {
 	char orgin_dir = m_player_data.dir;
 
-	// ¹«ÀÛÀ§ ¹æÇâ 8 °³ Áß Á¤ÇÏ±â
+	// ë¬´ì‘ìœ„ ë°©í–¥ 8 ê°œ ì¤‘ ì •í•˜ê¸°
 	int a = rand() % 8;
 
 	m_player_data.dir = 0;
@@ -77,7 +77,7 @@ unsigned int player_session::ai_rand_mov()
 		send_packet_other_players_in_view_range(reinterpret_cast<Packet*>(&pp), m_id);
 	}
 
-	// ÇØ´ç ¹æÇâÀ¸·Î ¿òÁ÷ÀÌ±â - ¸ø°¡´Â °÷ Ãæµ¹ Ã³¸®¸¦ ÇØ¾ßÇÑ´Ù¸é ¿©±â¼­ ÇØ¾ßÇÑ´Ù.
+	// í•´ë‹¹ ë°©í–¥ìœ¼ë¡œ ì›€ì§ì´ê¸° - ëª»ê°€ëŠ” ê³³ ì¶©ëŒ ì²˜ë¦¬ë¥¼ í•´ì•¼í•œë‹¤ë©´ ì—¬ê¸°ì„œ í•´ì•¼í•œë‹¤.
 	position *pos = &m_player_data.pos;
 
 	if ((dir & KEYINPUT_RIGHT) == (KEYINPUT_RIGHT)) { pos->x -= ai_mov_speed; pos->y -= ai_mov_speed; }
@@ -85,26 +85,26 @@ unsigned int player_session::ai_rand_mov()
 	if ((dir & KEYINPUT_UP) == (KEYINPUT_UP)) { pos->x += ai_mov_speed; pos->y -= ai_mov_speed; }
 	if ((dir & KEYINPUT_DOWN) == (KEYINPUT_DOWN)) { pos->x -= ai_mov_speed; pos->y += ai_mov_speed; }
 
-	// ±ÙÃ³¿¡ °ø°İÇØ¾ß ÇÒ ÀûÀÌ ÀÖ´Ù¸é ÇØ´ç id return
+	// ê·¼ì²˜ì— ê³µê²©í•´ì•¼ í•  ì ì´ ìˆë‹¤ë©´ í•´ë‹¹ id return
 	unsigned int target_id = return_nearlest_player(RANGE_CHECK_AI_ATT);
 	
-	// ³» À§Ä¡¿Í ¹æÇâÀÌ ¹Ù²î¾ú´Ù°í, ÁÖº¯ ÇÃ·¹ÀÌ¾î¿¡°Ô ¾Ë¸®±â
+	// ë‚´ ìœ„ì¹˜ì™€ ë°©í–¥ì´ ë°”ë€Œì—ˆë‹¤ê³ , ì£¼ë³€ í”Œë ˆì´ì–´ì—ê²Œ ì•Œë¦¬ê¸°
 	sc_move p;
 	p.id = m_id;
 	p.pos = m_player_data.pos;
 
 	send_packet_other_players_in_view_range(reinterpret_cast<Packet*>(&p), m_id);
 
-	// user °¡ ÇÑ¸íÀÌ¶óµµ ÀÖ´Ù¸é
+	// user ê°€ í•œëª…ì´ë¼ë„ ìˆë‹¤ë©´
 	if (none != return_nearlest_player(VIEW_RANGE)) {
-		// °è¼Ó ¿òÁ÷ÀÌ´Â°Ç, Å¸ÀÌ¸Ó ½º·¹µå¿¡¼­ ÇÑ´Ù
+		// ê³„ì† ì›€ì§ì´ëŠ”ê±´, íƒ€ì´ë¨¸ ìŠ¤ë ˆë“œì—ì„œ í•œë‹¤
 		/*if (true != ai_is_rand_mov) {
 			ai_is_rand_mov = true;
 			g_time_queue.add_event(m_id, 3, CHANGE_AI_STATE_MOV, true);
 		}*/
 	}
 	else {
-		// ÁÖº¯¿¡ ¾Æ¹«µµ ¾ø´Ù¸é, °ªÀ» ÃÊ±âÈ­ ÇÏÀÚ
+		// ì£¼ë³€ì— ì•„ë¬´ë„ ì—†ë‹¤ë©´, ê°’ì„ ì´ˆê¸°í™” í•˜ì
 		sc_disconnect packet;
 		packet.id = m_id;
 		send_packet_other_players(reinterpret_cast<Packet*>(&packet), m_id);
@@ -163,10 +163,10 @@ void player_session::Init()
 {
 	m_connect_state = true;
 
-	// ±âº» ¼ÂÆÃ ÃÊ±âÈ­ Á¤º¸ º¸³»±â
+	// ê¸°ë³¸ ì…‹íŒ… ì´ˆê¸°í™” ì •ë³´ ë³´ë‚´ê¸°
 
 	if (0 == wcscmp(L"guest", m_login_id)) {
-		// guest ÀÔÀåÀÌ¶ó¸é, ÃÊ±âÈ­¸¦ ¿©±â¿¡¼­ ÁøÇàÇÑ´Ù.
+		// guest ì…ì¥ì´ë¼ë©´, ì´ˆê¸°í™”ë¥¼ ì—¬ê¸°ì—ì„œ ì§„í–‰í•œë‹¤.
 		m_player_data.id = m_id;
 		m_player_data.pos.x = 160;
 		m_player_data.pos.y = 400;
@@ -217,23 +217,23 @@ void player_session::Init()
 	init_player.player_info = m_player_data;
 	g_clients[m_id]->send_packet(reinterpret_cast<Packet*>(&init_player));
 
-	// ÃÊ±âÈ­ Á¤º¸ º¸³»±â 2 - ¾ê Á¤º¸¸¦ ´Ù¸¥ ¾ÖµéÇÑÅ× º¸³»°í, ´Ù¸¥ ¾Öµé Á¤º¸¸¦ ¾êÇÑÅ× º¸³»±â
+	// ì´ˆê¸°í™” ì •ë³´ ë³´ë‚´ê¸° 2 - ì–˜ ì •ë³´ë¥¼ ë‹¤ë¥¸ ì• ë“¤í•œí…Œ ë³´ë‚´ê³ , ë‹¤ë¥¸ ì• ë“¤ ì •ë³´ë¥¼ ì–˜í•œí…Œ ë³´ë‚´ê¸°
 	sc_other_init_info my_info_to_other;
 	sc_other_init_info other_info_to_me;
 
 	my_info_to_other.playerData = m_player_data;
 
 	for (auto id : m_view_list) {
-		// ´Ù¸¥ ¾Öµé Á¤º¸¸¦ º¹»çÇØ¼­ ³Ö°í, ¾êÇÑÅ× ¸ÕÀú º¸³»°í...
+		// ë‹¤ë¥¸ ì• ë“¤ ì •ë³´ë¥¼ ë³µì‚¬í•´ì„œ ë„£ê³ , ì–˜í•œí…Œ ë¨¼ì € ë³´ë‚´ê³ ...
 		other_info_to_me.playerData = *(g_clients[id]->get_player_data());
 		send_packet(reinterpret_cast<Packet*>(&other_info_to_me));
 
-		if (true == g_clients[id]->get_player_data()->is_ai) { continue; }	// ai ¸é pass
-		// ¾ê Á¤º¸¸¦ ÀÌÁ¦ ´Ù¸¥ ¾ÖµéÇÑÅ× º¸³»¸é µÇ´Âµ¥..
+		if (true == g_clients[id]->get_player_data()->is_ai) { continue; }	// ai ë©´ pass
+		// ì–˜ ì •ë³´ë¥¼ ì´ì œ ë‹¤ë¥¸ ì• ë“¤í•œí…Œ ë³´ë‚´ë©´ ë˜ëŠ”ë°..
 		g_clients[id]->send_packet(reinterpret_cast<Packet*>(&my_info_to_other));
 	}
 
-	// Äù½ºÆ® ÁøÇà»óÈ² º¸³»±â
+	// í€˜ìŠ¤íŠ¸ ì§„í–‰ìƒí™© ë³´ë‚´ê¸°
 	sc_quest q;
 	q.quest = m_sub_status.quest;
 	send_packet(reinterpret_cast<Packet*>(&q));
@@ -257,7 +257,7 @@ void player_session::m_recv_packet()
 			set_state(-1);
 			m_connect_state = DISCONNECTED;
 
-			// guest °¡ ¾Æ´Ï¸é DB ¿¡ µ¥ÀÌÅÍ ÀúÀå
+			// guest ê°€ ì•„ë‹ˆë©´ DB ì— ë°ì´í„° ì €ì¥
 			if (0 != wcscmp(L"guest", m_login_id)) {
 				DB d;
 				d.DB_Update(m_login_id, this);
@@ -326,7 +326,7 @@ void player_session::refresh_view_list()
 			continue;
 		}
 
-		// view list ¿¡ ³Ö¾îÁÖ±â
+		// view list ì— ë„£ì–´ì£¼ê¸°
 		vl_add(players->get_id());
 		if (false == players->m_player_data.is_ai) { players->vl_add(m_id); }		
 	}
@@ -370,11 +370,11 @@ void player_session::send_packet(Packet *packet)
 
 void player_session::m_process_packet(Packet buf[])
 {
-	// packet[0] = packet size		> 0¹øÂ° ÀÚ¸®¿¡´Â ¹«Á¶°Ç, ÆĞÅ¶ÀÇ Å©±â°¡ µé¾î°¡¾ß¸¸ ÇÑ´Ù.
-	// packet[1] = type				> 1¹øÂ° ÀÚ¸®¿¡´Â ÇöÀç ÆĞÅ¶ÀÌ ¹«½¼ ÆĞÅ¶ÀÎÁö ¼Ó¼ºÀ» Á¤ÇØÁÖ´Â °ªÀÌ´Ù.
-	// packet[...] = data			> 2¹øÂ° ºÎÅÍ´Â ¼Ó¼º¿¡ ¸Â´Â ¼ø´ë·Î Ã³¸®¸¦ ÇØÁØ´Ù.
+	// packet[0] = packet size		> 0ë²ˆì§¸ ìë¦¬ì—ëŠ” ë¬´ì¡°ê±´, íŒ¨í‚·ì˜ í¬ê¸°ê°€ ë“¤ì–´ê°€ì•¼ë§Œ í•œë‹¤.
+	// packet[1] = type				> 1ë²ˆì§¸ ìë¦¬ì—ëŠ” í˜„ì¬ íŒ¨í‚·ì´ ë¬´ìŠ¨ íŒ¨í‚·ì¸ì§€ ì†ì„±ì„ ì •í•´ì£¼ëŠ” ê°’ì´ë‹¤.
+	// packet[...] = data			> 2ë²ˆì§¸ ë¶€í„°ëŠ” ì†ì„±ì— ë§ëŠ” ìˆœëŒ€ë¡œ ì²˜ë¦¬ë¥¼ í•´ì¤€ë‹¤.
 
-	// buf[1] ¹øÂ°ÀÇ ¼Ó¼ºÀ¸·Î ºĞ·ù¸¦ ÇÑ µÚ¿¡, ³»ºÎ¿¡¼­ 2¹øÂ° ºÎÅÍ µ¥ÀÌÅÍ¸¦ Ã³¸®ÇÏ±â ½ÃÀÛÇÑ´Ù.
+	// buf[1] ë²ˆì§¸ì˜ ì†ì„±ìœ¼ë¡œ ë¶„ë¥˜ë¥¼ í•œ ë’¤ì—, ë‚´ë¶€ì—ì„œ 2ë²ˆì§¸ ë¶€í„° ë°ì´í„°ë¥¼ ì²˜ë¦¬í•˜ê¸° ì‹œì‘í•œë‹¤.
 
 	{
 		switch (buf[1])
@@ -390,7 +390,7 @@ void player_session::m_process_packet(Packet buf[])
 			p.id = m_id;
 			p.pos = m_player_data.pos;
 
-			// ÀüÃ¼ À¯Àú °Ë»öÇÏ¿© view list °»½Å ÀÛ¾÷ & ÆĞÅ¶ »Ñ¸®±â
+			// ì „ì²´ ìœ ì € ê²€ìƒ‰í•˜ì—¬ view list ê°±ì‹  ì‘ì—… & íŒ¨í‚· ë¿Œë¦¬ê¸°
 			for (auto players : g_clients)
 			{
 				if (DISCONNECTED == players->m_connect_state) { continue; }
@@ -405,7 +405,7 @@ void player_session::m_process_packet(Packet buf[])
 						send_packet(reinterpret_cast<Packet*>(&send_to_me));
 
 						if (true == players->get_player_data()->is_ai) {
-							// player ½Ã¾ß¿¡¼­ »ç¶óÁø º¿ÀÌ¶ó¸é, »óÅÂ ¹× À§Ä¡ ÃÊ±âÈ­ ÇÊ¿ä ******************************************
+							// player ì‹œì•¼ì—ì„œ ì‚¬ë¼ì§„ ë´‡ì´ë¼ë©´, ìƒíƒœ ë° ìœ„ì¹˜ ì´ˆê¸°í™” í•„ìš” ******************************************
 
 							continue;
 						}
@@ -416,7 +416,7 @@ void player_session::m_process_packet(Packet buf[])
 					continue;
 				}
 
-				// view list ¿¡ ÀÖÀ¸¸é skip
+				// view list ì— ìˆìœ¼ë©´ skip
 				if (true == vl_find(players->get_id())) {
 					players->send_packet(reinterpret_cast<Packet*>(&p));
 					continue;
@@ -428,21 +428,21 @@ void player_session::m_process_packet(Packet buf[])
 				other_player_info_to_me.playerData = players->m_player_data;
 				send_packet(reinterpret_cast<Packet*>(&other_player_info_to_me));
 
-				// »ó´ë°¡ ÄÄÇ»ÅÍ¶ó¸é ÆĞÅ¶ º¸³¾ ÇÊ¿ä°¡ ¾øÁö
+				// ìƒëŒ€ê°€ ì»´í“¨í„°ë¼ë©´ íŒ¨í‚· ë³´ë‚¼ í•„ìš”ê°€ ì—†ì§€
 				if (true == players->get_player_data()->is_ai) { continue; }
-				players->vl_add(m_id);	// ÇØ´ç ÇÃ·¹ÀÌ¾î°¡ º¿ÀÌ¸é, ½Ã¾ß¿¡ ³Ö¾îÁÙ ÇÊ¿ä°¡ ¾øÁö. ( À§¿¡¼­ ºÎÅÍ À§Ä¡ ÀÌµ¿ÇÔ )
+				players->vl_add(m_id);	// í•´ë‹¹ í”Œë ˆì´ì–´ê°€ ë´‡ì´ë©´, ì‹œì•¼ì— ë„£ì–´ì¤„ í•„ìš”ê°€ ì—†ì§€. ( ìœ„ì—ì„œ ë¶€í„° ìœ„ì¹˜ ì´ë™í•¨ )
 
 				sc_other_init_info my_info_to_other_player;
 				my_info_to_other_player.playerData = m_player_data;
 				players->send_packet(reinterpret_cast<Packet*>(&my_info_to_other_player));
 			}
 
-			/// ÀÌµ¿ ½Ã¾ßÃ³¸® ÀÌÈÄ...
-			// ³» view list ¸¦ °Ë»öÇØ¼­..
+			/// ì´ë™ ì‹œì•¼ì²˜ë¦¬ ì´í›„...
+			// ë‚´ view list ë¥¼ ê²€ìƒ‰í•´ì„œ..
 			for (auto id : m_view_list) {
-				// ¸¸¾à º¿ÀÌ¶ó¸é...
+				// ë§Œì•½ ë´‡ì´ë¼ë©´...
 				if (true == g_clients[id]->get_player_data()->is_ai) {					
-					// ½Ã¾ß¿¡ ÀÖ´Â ÄÄÇ»ÅÍ ÀÌ¹Ç·Î, ·£´ı ¹«ºùÀ» ÇÏµµ·Ï ÇÏ°Ô ÇÏÀÚ
+					// ì‹œì•¼ì— ìˆëŠ” ì»´í“¨í„° ì´ë¯€ë¡œ, ëœë¤ ë¬´ë¹™ì„ í•˜ë„ë¡ í•˜ê²Œ í•˜ì
 					if (true != g_clients[id]->ai_is_rand_mov) {
 						g_clients[id]->ai_is_rand_mov = true;
 						g_time_queue.add_event(id, 0, CHANGE_AI_STATE_MOV, true);
@@ -484,19 +484,19 @@ void player_session::m_process_packet(Packet buf[])
 			break;
 		}
 
-		case KEYINPUT_ATTACK:		// ±âº» °ø°İ ( µ¥¹ÌÁö °è»ê, hit box ¹üÀ§ Á¶Á¤, ÀüºÎ ¿©±â¼­ ´Ù Á¶ÀıÇØ¾ß ÇÑ´Ù. )
+		case KEYINPUT_ATTACK:		// ê¸°ë³¸ ê³µê²© ( ë°ë¯¸ì§€ ê³„ì‚°, hit box ë²”ìœ„ ì¡°ì •, ì „ë¶€ ì—¬ê¸°ì„œ ë‹¤ ì¡°ì ˆí•´ì•¼ í•œë‹¤. )
 		{
-			int attState = static_cast<int>(buf[2]);	// Player °ø°İ ÇöÀç »óÅÂ, ÄŞº¸ ¹× ½ºÅ³ ±¸ºĞÇÏ´Â ¿ëµµ
+			int attState = static_cast<int>(buf[2]);	// Player ê³µê²© í˜„ì¬ ìƒíƒœ, ì½¤ë³´ ë° ìŠ¤í‚¬ êµ¬ë¶„í•˜ëŠ” ìš©ë„
 			if (dead == m_state) { break; }
-			// ¿ŞÂÊ Å° = ¿ìÃø + ¾Æ·¡
-			// ¿ìÃø Å° = ¿ŞÂÊ + À§
-			// À§ Å° = ¿ìÃø + À§
-			// ¾Æ·¡ Å° = ¿ŞÂÊ + ¾Æ·¡
+			// ì™¼ìª½ í‚¤ = ìš°ì¸¡ + ì•„ë˜
+			// ìš°ì¸¡ í‚¤ = ì™¼ìª½ + ìœ„
+			// ìœ„ í‚¤ = ìš°ì¸¡ + ìœ„
+			// ì•„ë˜ í‚¤ = ì™¼ìª½ + ì•„ë˜
 
-			// Ãæµ¹Ã¼Å© °Ë»çÇÏ°í ³­ µÚ¿¡..
-			float att_x = 0.3, att_y = 0.3;		// Å×½ºÆ®¿ë Å¬¶ó °ø°İ ¸®Ä¡°¡ ¿äÁ¤µµ
+			// ì¶©ëŒì²´í¬ ê²€ì‚¬í•˜ê³  ë‚œ ë’¤ì—..
+			float att_x = 0.3, att_y = 0.3;		// í…ŒìŠ¤íŠ¸ìš© í´ë¼ ê³µê²© ë¦¬ì¹˜ê°€ ìš”ì •ë„
 			float my_x = m_player_data.pos.x, my_y = m_player_data.pos.y;
-			float player_size = 1.35;	// °´Ã¼ Ãæµ¹ Å©±â ¹İÁö¸§
+			float player_size = 1.35;	// ê°ì²´ ì¶©ëŒ í¬ê¸° ë°˜ì§€ë¦„
 			char *dir = &m_player_data.dir;
 			bool is_gauge_on = false;
 			unsigned int deleting_id = 0;
@@ -515,20 +515,20 @@ void player_session::m_process_packet(Packet buf[])
 				float x = g_clients[id]->m_player_data.pos.x;
 				float y = g_clients[id]->m_player_data.pos.y;
 
-				// °ø°İÀ» Çß´Âµ¥ »ó´ë°¡ ¸Â¾Ò´Ù°í ÆÇÁ¤ÀÌ µÈ´Ù¸é...================================================================
+				// ê³µê²©ì„ í–ˆëŠ”ë° ìƒëŒ€ê°€ ë§ì•˜ë‹¤ê³  íŒì •ì´ ëœë‹¤ë©´...================================================================
 				if((player_size * player_size) >= DISTANCE_TRIANGLE(x, y, my_x, my_y)) {
 
-					// ³­ ÀÌÁ¦ °ø°İ »óÅÂ --------------
+					// ë‚œ ì´ì œ ê³µê²© ìƒíƒœ --------------
 					set_state(att);
 
-					// ÇöÀç °ø°İ ÄŞº¸ ¹× ½ºÅ³¿¡ µû¶ó¼­ µ¥¹ÌÁö ±¸ºĞÇØÁÖ±â
+					// í˜„ì¬ ê³µê²© ì½¤ë³´ ë° ìŠ¤í‚¬ì— ë”°ë¼ì„œ ë°ë¯¸ì§€ êµ¬ë¶„í•´ì£¼ê¸°
 					int addingDamage = 0;
 					switch (attState)
 					{
 					case COMBO1: addingDamage = 0; break;
 					case COMBO2: addingDamage = 5; break;
 					case COMBO3: addingDamage = 10; break;
-						// °ÔÀÌÁö À½¼ö °ü·ÃÇÏ¿© ¼öÁ¤ & °ÔÀÌÁö ±ğÀÌ¸é Åëº¸µµ ÇØÁÖ±â
+						// ê²Œì´ì§€ ìŒìˆ˜ ê´€ë ¨í•˜ì—¬ ìˆ˜ì • & ê²Œì´ì§€ ê¹ì´ë©´ í†µë³´ë„ í•´ì£¼ê¸°
 					case SKILL1: {
 						if (50 > m_player_data.state.gauge) { break; }
 						addingDamage = 30;
@@ -538,7 +538,7 @@ void player_session::m_process_packet(Packet buf[])
 						p.gauge = m_player_data.state.gauge;
 						send_packet(reinterpret_cast<Packet*>(&p));
 
-						// 2 ÃÊÈÄ µô
+						// 2 ì´ˆí›„ ë”œ
 						g_time_queue.add_event(m_id, 1.5f, TIMER_ATT, false);
 
 						break;
@@ -552,13 +552,13 @@ void player_session::m_process_packet(Packet buf[])
 						p.gauge = m_player_data.state.gauge;
 						send_packet(reinterpret_cast<Packet*>(&p));
 
-						// 1 ÃÊÈÄ µô
+						// 1 ì´ˆí›„ ë”œ
 						g_time_queue.add_event(m_id, 0.7f, TIMER_ATT, false);
 
 						break;
 					}
 					case SKILL3: {
-						// ¿©±ä ±¸Çö ¾ÈµÇ¾îÀÖ´Âµí
+						// ì—¬ê¸´ êµ¬í˜„ ì•ˆë˜ì–´ìˆëŠ”ë“¯
 						if (50 > m_player_data.state.gauge) { break; }
 						addingDamage = 15;
 						m_player_data.state.gauge -= 50;
@@ -571,21 +571,21 @@ void player_session::m_process_packet(Packet buf[])
 					default: addingDamage = 0; break;
 					}
 
-					// ÀÏ´Ü »ó´ë Ã¼·Â Âõ±â
+					// ì¼ë‹¨ ìƒëŒ€ ì²´ë ¥ ì°¢ê¸°
 					std::random_device rd;
 					std::mt19937_64 mt(rd());
 					std::uniform_int_distribution<int> dist(0, m_sub_status.critical);
 					g_clients[id]->m_player_data.state.hp -= ((m_sub_status.str + addingDamage + dist(mt)) - g_clients[id]->m_sub_status.def);
-					is_gauge_on = true; // ¹ß¿­ °ÔÀÌÁö¸¦ ¸¶Áö¸· Ã¼Å© ¶§ ¿Ã·ÁÁÖÀÚ
+					is_gauge_on = true; // ë°œì—´ ê²Œì´ì§€ë¥¼ ë§ˆì§€ë§‰ ì²´í¬ ë•Œ ì˜¬ë ¤ì£¼ì
 
 					if (false == g_clients[id]->get_hp_adding()) {
 						//g_clients[id]->set_hp_adding(true);
-						//g_time_queue.add_event(id, 1, HP_ADD, false);	// AI Å¸°İ ÀÏ¶§, µû·Î hp Ãß°¡ÇØ ÁÖ´Â ÇÔ¼ö°¡ ¾ø´Ù !!! -> ÀÏ¹İ ÇÃ·¹ÀÌ¾î¿Í µ¿ÀÏÇÏ°Ô Ã³¸®ÇÔ
+						//g_time_queue.add_event(id, 1, HP_ADD, false);	// AI íƒ€ê²© ì¼ë•Œ, ë”°ë¡œ hp ì¶”ê°€í•´ ì£¼ëŠ” í•¨ìˆ˜ê°€ ì—†ë‹¤ !!! -> ì¼ë°˜ í”Œë ˆì´ì–´ì™€ ë™ì¼í•˜ê²Œ ì²˜ë¦¬í•¨
 					}
 
-					// ¸ÂÀº ³ğÀÌ ai ¸é, ¹İ°İÀ» ÇÏÀÚ.
+					// ë§ì€ ë†ˆì´ ai ë©´, ë°˜ê²©ì„ í•˜ì.
 					if (MAX_AI_NUM > id) {
-						// °ø°İÀÚÀÇ ¹İ´ë ¹æÇâÀ¸·Î ÀÏ´Ü ¸Âº¸µµ·Ï ÀüÈ¯
+						// ê³µê²©ìì˜ ë°˜ëŒ€ ë°©í–¥ìœ¼ë¡œ ì¼ë‹¨ ë§ë³´ë„ë¡ ì „í™˜
 						char ai_dir = DIR_XOR(m_player_data.dir);
 						if (id == (MAX_AI_BOSS - 1)) { ai_dir = g_clients[id]->m_player_data.dir; }
 						if (g_clients[id]->get_player_data()->dir != ai_dir) {
@@ -595,7 +595,7 @@ void player_session::m_process_packet(Packet buf[])
 							p.id = id;
 							p.dir = ai_dir;
 							
-							// ¹æÇâ ¹Ù²ï°Å ¾Ë·ÁÁà¾ß ÇÒ Ä£±¸µé¿¡°Ô ¾Ë·ÁÁÖÀÚ.
+							// ë°©í–¥ ë°”ë€ê±° ì•Œë ¤ì¤˜ì•¼ í•  ì¹œêµ¬ë“¤ì—ê²Œ ì•Œë ¤ì£¼ì.
 							for (auto players : g_clients) {
 								if (DISCONNECTED == players->get_current_connect_state()) { continue; }
 								if (id == players->m_id) { continue; }
@@ -606,26 +606,26 @@ void player_session::m_process_packet(Packet buf[])
 							}
 						}
 
-						// ¸ÂÀº AI »óÅÂ°¡ att ÀÌ ¾Æ´Ï¶ó¸é.. °ø°İ ÀÚ¼¼¸¦ ÃëÇØÁÖ¾î¾ß ÇÑ´Ù.
+						// ë§ì€ AI ìƒíƒœê°€ att ì´ ì•„ë‹ˆë¼ë©´.. ê³µê²© ìì„¸ë¥¼ ì·¨í•´ì£¼ì–´ì•¼ í•œë‹¤.
 						if (att != g_clients[id]->m_state) {
 							if (none == g_clients[id]->m_target_id) { g_clients[id]->m_target_id = m_id; }
-							g_time_queue.add_event(id, 0, CHANGE_AI_STATE_ATT, true); // ÇÏÁö¸¸ ÀÌ°Ç ÁÖº¯ ±ÙÁ¢ÇÏ¸é ÀÚµ¿À¸·Î °ø°İÇüÀ¸·Î º¯ÇÏµµ·Ï ¼ÂÆÃÇÏÀÚ
+							g_time_queue.add_event(id, 0, CHANGE_AI_STATE_ATT, true); // í•˜ì§€ë§Œ ì´ê±´ ì£¼ë³€ ê·¼ì ‘í•˜ë©´ ìë™ìœ¼ë¡œ ê³µê²©í˜•ìœ¼ë¡œ ë³€í•˜ë„ë¡ ì…‹íŒ…í•˜ì
 						}
 						//g_clients[id]->m_state = att;
 					}
 					
 					sc_atk p;
-					p.attacking_id = m_id;		// °ø°İÀÚ id
-					p.under_attack_id = id;		// ¸Â´Â ³ğÀÇ id
-					p.hp = g_clients[id]->m_player_data.state.hp;	// ¸ÂÀº ³ğÀÇ hp
+					p.attacking_id = m_id;		// ê³µê²©ì id
+					p.under_attack_id = id;		// ë§ëŠ” ë†ˆì˜ id
+					p.hp = g_clients[id]->m_player_data.state.hp;	// ë§ì€ ë†ˆì˜ hp
 					p.comboState = attState;
 					p.pos.x = g_clients[id]->m_player_data.pos.x;
 					p.pos.y = g_clients[id]->m_player_data.pos.y;
 
-					// hp °¡ 0 ÀÌ µÇ¸é »ç¸ÁÃ³¸®¸¦ ÇÑ´Ù. -> °¢°¢ÀÇ Å¬¶óÀÌ¾ğÆ®¿¡¼­ hp °¡ 0 µÈ ³à¼®À» Áö¿öÁÜ
+					// hp ê°€ 0 ì´ ë˜ë©´ ì‚¬ë§ì²˜ë¦¬ë¥¼ í•œë‹¤. -> ê°ê°ì˜ í´ë¼ì´ì–¸íŠ¸ì—ì„œ hp ê°€ 0 ëœ ë…€ì„ì„ ì§€ì›Œì¤Œ
 					if (0 >= g_clients[id]->m_player_data.state.hp) {
 						
-						// ¸ÂÀº ¾Ö°¡ ai ¸é ±×³É ¿¬°á ²÷¾î¼­ Á×ÀÌ±â
+						// ë§ì€ ì• ê°€ ai ë©´ ê·¸ëƒ¥ ì—°ê²° ëŠì–´ì„œ ì£½ì´ê¸°
 						if (MAX_AI_NUM > g_clients[id]->get_id()) {
 							g_clients[id]->m_connect_state = DISCONNECTED;
 							g_clients[id]->ai_is_rand_mov = false;
@@ -635,17 +635,17 @@ void player_session::m_process_packet(Packet buf[])
 							dis_p.id = id;
 
 							send_packet_other_players(reinterpret_cast<Packet *>(&dis_p), id);
-							g_time_queue.add_event(g_clients[id]->m_player_data.id, 10, DEAD_TO_ALIVE, true);	// bot ¸®Á¨
+							g_time_queue.add_event(g_clients[id]->m_player_data.id, 10, DEAD_TO_ALIVE, true);	// bot ë¦¬ì  
 							
-							// ÀâÀº ³à¼®¿¡´Â °æÇèÄ¡µµ ÁÖµµ·Ï ÇÏÀÚ.
-							// ¸¸¾à ½½¶óÀÓÀÌ°í, quest ¼öÄ¡°¡ 10 ¸¶¸® Àâ´Â°Å ÀÌÇÏ¶ó¸é
+							// ì¡ì€ ë…€ì„ì—ëŠ” ê²½í—˜ì¹˜ë„ ì£¼ë„ë¡ í•˜ì.
+							// ë§Œì•½ ìŠ¬ë¼ì„ì´ê³ , quest ìˆ˜ì¹˜ê°€ 10 ë§ˆë¦¬ ì¡ëŠ”ê±° ì´í•˜ë¼ë©´
 							if ((MAX_AI_SLIME > id) && (MAX_AI_SLIME > m_sub_status.quest) && (true == quest_start)) {
 								m_sub_status.quest += 1;
 
 								sc_chat chat;
 								chat.id = -1;
-								wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"½½¶óÀÓ %d ¸¶¸® ÀâÀ½", m_sub_status.quest);
-								if (MAX_AI_SLIME == m_sub_status.quest) { wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"½½¶óÀÓ Äù½ºÆ® ¿Ï·á! ´ÙÀ½ NPC¸¦ Ã£¾Æ°¡¼¼¿ä."); }
+								wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"ìŠ¬ë¼ì„ %d ë§ˆë¦¬ ì¡ìŒ", m_sub_status.quest);
+								if (MAX_AI_SLIME == m_sub_status.quest) { wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"ìŠ¬ë¼ì„ í€˜ìŠ¤íŠ¸ ì™„ë£Œ! ë‹¤ìŒ NPCë¥¼ ì°¾ì•„ê°€ì„¸ìš”."); }
  								send_packet(reinterpret_cast<Packet*>(&chat));
 
 								sc_quest q;
@@ -657,8 +657,8 @@ void player_session::m_process_packet(Packet buf[])
 
 								sc_chat chat;
 								chat.id = -1;
-								wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"°íºí¸° %d ¸¶¸® ÀâÀ½", m_sub_status.quest - MAX_AI_SLIME);
-								if (MAX_AI_GOBLIN == m_sub_status.quest) { wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"°íºí¸° Äù½ºÆ® ¿Ï·á! ´ÙÀ½ NPC¸¦ Ã£¾Æ°¡¼¼¿ä."); }
+								wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"ê³ ë¸”ë¦° %d ë§ˆë¦¬ ì¡ìŒ", m_sub_status.quest - MAX_AI_SLIME);
+								if (MAX_AI_GOBLIN == m_sub_status.quest) { wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"ê³ ë¸”ë¦° í€˜ìŠ¤íŠ¸ ì™„ë£Œ! ë‹¤ìŒ NPCë¥¼ ì°¾ì•„ê°€ì„¸ìš”."); }
 								send_packet(reinterpret_cast<Packet*>(&chat));
 
 								sc_quest q;
@@ -670,7 +670,7 @@ void player_session::m_process_packet(Packet buf[])
 
 								sc_chat chat;
 								chat.id = -1;
-								wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"º¸½º Äù½ºÆ® ¿Ï·á! ¸¶À»¿¡ ÆòÈ­°¡ Ã£¾Æ¿Ô½À´Ï´Ù.");
+								wsprintfW(reinterpret_cast<wchar_t*>(chat.msg), L"ë³´ìŠ¤ í€˜ìŠ¤íŠ¸ ì™„ë£Œ! ë§ˆì„ì— í‰í™”ê°€ ì°¾ì•„ì™”ìŠµë‹ˆë‹¤.");
 								send_packet(reinterpret_cast<Packet*>(&chat));
 
 								sc_quest q;
@@ -679,7 +679,7 @@ void player_session::m_process_packet(Packet buf[])
 							}
 						}
 						else {
-							// Á×Àº ¾Ö°¡ player ÀÏ °æ¿ì..
+							// ì£½ì€ ì• ê°€ player ì¼ ê²½ìš°..
 
 							sc_disconnect dis_p;
 							dis_p.id = id;
@@ -688,7 +688,7 @@ void player_session::m_process_packet(Packet buf[])
 							g_clients[id]->set_state(dead);
 
 							for (auto player_view_ids : *g_clients[id]->get_view_list()) {
-								// dead lock ¹æÁö¿ë continue;
+								// dead lock ë°©ì§€ìš© continue;
 								if (player_view_ids == m_id) { deleting_id = id; continue; }
 								g_clients[player_view_ids]->vl_remove(id);
 
@@ -701,25 +701,29 @@ void player_session::m_process_packet(Packet buf[])
 						}
 					}
 
-					send_packet(reinterpret_cast<Packet*>(&p));
-					if (true == g_clients[id]->get_player_data()->is_ai) { continue; }
-					g_clients[id]->send_packet(reinterpret_cast<Packet*>(&p));
+					//send_packet(reinterpret_cast<Packet*>(&p));					
+					auto viewList = m_view_list;
+					for (auto mid : viewList)
+					{						
+						if (true == g_clients[mid]->get_player_data()->is_ai) { continue; }
+						g_clients[mid]->send_packet(reinterpret_cast<Packet*>(&p));
+					}					
 				}
 			}
 			m_view_lock.unlock();
 			if (0 < deleting_id) { vl_remove(deleting_id); }
 
 			if (true == m_player_data.is_ai) { break; }
-			// ¹ß¿­ °ÔÀÌÁö°¡ ¿Ã¶ó°¡¾ß ÇÑ´Ù¸é ---- ( AI ´Â ÇÊ¿ä ¾øÀ¸´Ï skip )
+			// ë°œì—´ ê²Œì´ì§€ê°€ ì˜¬ë¼ê°€ì•¼ í•œë‹¤ë©´ ---- ( AI ëŠ” í•„ìš” ì—†ìœ¼ë‹ˆ skip )
 			if (true == is_gauge_on) {
-				// ¹ß¿­ °ÔÀÌÁö °ªÀ» ¿Ã¸®°í
+				// ë°œì—´ ê²Œì´ì§€ ê°’ì„ ì˜¬ë¦¬ê³ 
 				m_player_data.state.gauge += 10;
 				if (m_player_data.state.maxgauge < m_player_data.state.gauge) { m_player_data.state.gauge = m_player_data.state.maxgauge; }
 
-				/// °ø°İÀ» ¾ÈÇÑÁö 3ÃÊ ºÎÅÍ °ÔÀÌÁö°¡ °¨¼ÒÇÏµµ·Ï ÇÑ´Ù.
+				/// ê³µê²©ì„ ì•ˆí•œì§€ 3ì´ˆ ë¶€í„° ê²Œì´ì§€ê°€ ê°ì†Œí•˜ë„ë¡ í•œë‹¤.
 				g_time_queue.add_event(m_id, 3, CHANGE_PLAYER_STATE, false);
 
-				// ÆĞÅ¶À» ´ç»çÀÚ¿¡°Ô ÇÏ³ª º¸³»ÁÖÀÚ.
+				// íŒ¨í‚·ì„ ë‹¹ì‚¬ìì—ê²Œ í•˜ë‚˜ ë³´ë‚´ì£¼ì.
 				sc_fever p;
 				p.gauge = m_player_data.state.gauge;
 				send_packet(reinterpret_cast<Packet*>(&p));
@@ -743,7 +747,7 @@ void player_session::m_process_packet(Packet buf[])
 					m_player_data.state.hp += 9000;
 					sc_chat cheat;
 					cheat.id = -1;
-					memcpy(cheat.msg, reinterpret_cast<wchar_t*>(L"Ã¼·Â Ãß°¡ Ä¡Æ® Àû¿ë ¿Ï·á"), MAX_BUF_SIZE - 6);
+					memcpy(cheat.msg, reinterpret_cast<wchar_t*>(L"ì²´ë ¥ ì¶”ê°€ ì¹˜íŠ¸ ì ìš© ì™„ë£Œ"), MAX_BUF_SIZE - 6);
 					send_packet(reinterpret_cast<Packet*>(&cheat));
 
 					sc_hp hp_p;
@@ -755,7 +759,7 @@ void player_session::m_process_packet(Packet buf[])
 					m_player_data.state.hp = 100;
 					sc_chat cheat;
 					cheat.id = -1;
-					memcpy(cheat.msg, reinterpret_cast<wchar_t*>(L"Ã¼·Â Ä¡Æ® ÇØÁ¦"), MAX_BUF_SIZE - 6);
+					memcpy(cheat.msg, reinterpret_cast<wchar_t*>(L"ì²´ë ¥ ì¹˜íŠ¸ í•´ì œ"), MAX_BUF_SIZE - 6);
 					send_packet(reinterpret_cast<Packet*>(&cheat));
 
 					sc_hp hp_p;
@@ -770,7 +774,7 @@ void player_session::m_process_packet(Packet buf[])
 					m_sub_status.critical -= 20;
 					sc_chat cheat;
 					cheat.id = -1;
-					memcpy(cheat.msg, reinterpret_cast<wchar_t*>(L"°­È­ Ä¡Æ® ÇØÁ¦"), MAX_BUF_SIZE - 6);
+					memcpy(cheat.msg, reinterpret_cast<wchar_t*>(L"ê°•í™” ì¹˜íŠ¸ í•´ì œ"), MAX_BUF_SIZE - 6);
 					send_packet(reinterpret_cast<Packet*>(&cheat));
 				}
 				else {
@@ -778,7 +782,7 @@ void player_session::m_process_packet(Packet buf[])
 					m_sub_status.critical += 20;
 					sc_chat cheat;
 					cheat.id = -1;
-					memcpy(cheat.msg, reinterpret_cast<wchar_t*>(L"°­È­ Ä¡Æ® Àû¿ë ¿Ï·á"), MAX_BUF_SIZE - 6);
+					memcpy(cheat.msg, reinterpret_cast<wchar_t*>(L"ê°•í™” ì¹˜íŠ¸ ì ìš© ì™„ë£Œ"), MAX_BUF_SIZE - 6);
 					send_packet(reinterpret_cast<Packet*>(&cheat));
 				}
 			}
@@ -792,7 +796,7 @@ void player_session::m_process_packet(Packet buf[])
 
 				sc_chat cheat;
 				cheat.id = -1;
-				memcpy(cheat.msg, reinterpret_cast<wchar_t*>(L"Äù½ºÆ® ÃÊ±âÈ­ ¿Ï·á"), MAX_BUF_SIZE - 6);
+				memcpy(cheat.msg, reinterpret_cast<wchar_t*>(L"í€˜ìŠ¤íŠ¸ ì´ˆê¸°í™” ì™„ë£Œ"), MAX_BUF_SIZE - 6);
 				send_packet(reinterpret_cast<Packet*>(&cheat));
 			}
 
@@ -814,11 +818,11 @@ void player_session::m_process_packet(Packet buf[])
 			break;
 		}
 		default:
-			// Àß ¾È³¯¾Æ ¿À´Â ÆĞÅ¶ start, web
+			// ì˜ ì•ˆë‚ ì•„ ì˜¤ëŠ” íŒ¨í‚· start, web
 			switch (buf[1])
 			{
 			case TEST:
-				// ¹ŞÀº ÆĞÅ¶À» ±×´ë·Î µ¹·ÁÁØ´Ù.
+				// ë°›ì€ íŒ¨í‚·ì„ ê·¸ëŒ€ë¡œ ëŒë ¤ì¤€ë‹¤.
 				cout << "Client No. [ " << m_id << " ] TEST Packet Recived !!\n";
 				printf("buf[0] = %d, buf[1] = %d, buf[2] = %d\n\n", buf[0], buf[1], buf[2]);
 				send_packet(buf);

@@ -80,6 +80,7 @@ CPlayer::CPlayer()
 	m_bSkil2Cool = false;
 	m_fSkill1Time = 0.f;
 	m_fSkill2Time = 0.f;
+	m_fAniTime = 0.f;
 
 	m_Packet = new Packet[MAX_BUF_SIZE];
 }
@@ -181,7 +182,7 @@ int CPlayer::Update(void)
 		if (g_bChatMode == false)
 			KeyInput();
 
-		//AniMove();
+		AniTimeSet();
 		CObj::Update();
 
 		//cout << m_bPush << endl;
@@ -659,6 +660,7 @@ void CPlayer::KeyInput()
 			m_bCombo[0] = true;
 			m_fComboTime = 0.f;
 			m_fKeyCool = 0.f;
+			m_fAniTime = 0.f;
 			m_ePlayerState = PLAYER_ATT1;
 			CSoundMgr::GetInstance()->PlaySkillSound(L"PlayerAttack1.ogg");
 			//cout << "ÄÞº¸1´Ü°è È°¼º" << endl;
@@ -670,6 +672,7 @@ void CPlayer::KeyInput()
 			//m_bCombo[0] = false;
 			m_fComboTime = 0.f;
 			m_fKeyCool = 0.f;
+			m_fAniTime = 0.f;
 			m_ePlayerState = PLAYER_ATT2;
 			CSoundMgr::GetInstance()->PlaySkillSound2(L"PlayerAttack2.ogg");
 			//cout << "ÄÞº¸2´Ü°è È°¼º" << endl;
@@ -685,6 +688,7 @@ void CPlayer::KeyInput()
 			//cout << "ÄÞº¸ ÇØÁ¦	1:" << boolalpha << m_bCombo[0] << "	2:" << boolalpha << m_bCombo[1] << endl;
 			m_fComboTime = 0.f;
 			m_fKeyCool = 0.f;
+			m_fAniTime = 0.f;
 			m_ePlayerState = PLAYER_ATT3;
 			CSoundMgr::GetInstance()->PlaySkillSound3(L"PlayerAttack3.ogg");
 			iSeverAtt = COMBO3;
@@ -1104,6 +1108,66 @@ void CPlayer::TimeSetter(void)
 	}
 }
 
+
+void CPlayer::AniTimeSet(void)
+{
+	if (m_ePlayerState != PLAYER_IDLE)
+	{
+		switch (m_ePlayerState)
+		{
+		case PLAYER_MOVE:
+			m_fAniTime += CTimeMgr::GetInstance()->GetTime();
+			if (m_fAniTime > 0.2f && m_bPush == false)
+			{
+				m_ePlayerState = PLAYER_IDLE;
+				m_fAniTime = 0.f;
+			}
+			break;
+		case PLAYER_ATT1:
+			m_fAniTime += CTimeMgr::GetInstance()->GetTime();
+			if (m_fAniTime > 1.f)
+			{
+				m_ePlayerState = PLAYER_IDLE;
+				m_fAniTime = 0.f;
+			}
+			break;
+		case PLAYER_ATT2:
+			m_fAniTime += CTimeMgr::GetInstance()->GetTime();
+			if (m_fAniTime > 1.f)
+			{
+				m_ePlayerState = PLAYER_IDLE;
+				m_fAniTime = 0.f;
+			}
+			break;
+		case PLAYER_ATT3:
+			m_fAniTime += CTimeMgr::GetInstance()->GetTime();
+			if (m_fAniTime > 1.5f)
+			{
+				m_ePlayerState = PLAYER_IDLE;
+				m_fAniTime = 0.f;
+			}
+			break;
+		case PLAYER_SKILL1:
+			m_fAniTime += CTimeMgr::GetInstance()->GetTime();
+			if (m_fAniTime > 2.1f)
+			{
+				m_ePlayerState = PLAYER_IDLE;
+				m_fAniTime = 0.f;
+			}
+			break;
+		case PLAYER_SKILL2:
+			m_fAniTime += CTimeMgr::GetInstance()->GetTime();
+			if (m_fAniTime > 1.8f)
+			{
+				m_ePlayerState = PLAYER_IDLE;
+				m_fAniTime = 0.f;
+			}
+			break;
+		default:
+			break;
+		}
+	}
+}
 
 Packet* CPlayer::GetPacket()
 {

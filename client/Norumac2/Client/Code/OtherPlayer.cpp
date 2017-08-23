@@ -55,6 +55,7 @@ COtherPlayer::COtherPlayer()
 	m_pScenePixelShaderCB = NULL;
 
 	m_fSeverTime = 0.f;
+	m_fAniTime = 0.f;
 }
 
 
@@ -82,7 +83,7 @@ HRESULT COtherPlayer::Initialize(void)
 	m_pSceneVertexShaderCB = NULL;
 	m_pScenePixelShaderCB = NULL;
 
-	m_fSpeed = 4.7;
+	m_fSpeed = 4.7f;
 
 	if (FAILED(AddComponent()))
 		return E_FAIL;
@@ -142,6 +143,7 @@ int COtherPlayer::Update(void)
 
 	//SetCurrling();
 	
+	AniTimeSet();
 
 	CObj::Update();
 
@@ -342,8 +344,69 @@ void COtherPlayer::SetSeverPosMove(void)
 		D3DXVECTOR3 vDir;
 		vDir = D3DXVECTOR3(m_pInfo->m_ServerInfo.pos.x, m_pInfo->m_vPos.y, m_pInfo->m_ServerInfo.pos.y) - m_pInfo->m_vPos;
 		m_pInfo->m_vPos += vDir * m_fSpeed * fTime;
+		m_bMoveForServer = true;
+	}
+	else
+		m_bMoveForServer = false;
+}
 
-
+void COtherPlayer::AniTimeSet(void)
+{
+	if (m_ePlayerState != PLAYER_IDLE)
+	{
+		switch (m_ePlayerState)
+		{
+			case PLAYER_MOVE:
+				m_fAniTime += CTimeMgr::GetInstance()->GetTime();
+				if (m_fAniTime > 0.2f && m_bMoveForServer == false)
+				{
+					m_ePlayerState = PLAYER_IDLE;
+					m_fAniTime = 0.f;
+				}
+				break;
+		case PLAYER_ATT1:
+			m_fAniTime += CTimeMgr::GetInstance()->GetTime();
+			if (m_fAniTime > 1.f)
+			{
+				m_ePlayerState = PLAYER_IDLE;
+				m_fAniTime = 0.f;
+			}
+			break;
+		case PLAYER_ATT2:
+			m_fAniTime += CTimeMgr::GetInstance()->GetTime();
+			if (m_fAniTime > 1.f)
+			{
+				m_ePlayerState = PLAYER_IDLE;
+				m_fAniTime = 0.f;
+			}
+			break;
+		case PLAYER_ATT3:
+			m_fAniTime += CTimeMgr::GetInstance()->GetTime();
+			if (m_fAniTime > 1.5f)
+			{
+				m_ePlayerState = PLAYER_IDLE;
+				m_fAniTime = 0.f;
+			}
+			break;
+		case PLAYER_SKILL1:
+			m_fAniTime += CTimeMgr::GetInstance()->GetTime();
+			if (m_fAniTime > 2.1f)
+			{
+				m_ePlayerState = PLAYER_IDLE;
+				m_fAniTime = 0.f;
+			}
+			break;
+		case PLAYER_SKILL2:
+			m_fAniTime += CTimeMgr::GetInstance()->GetTime();
+			if (m_fAniTime > 1.8f)
+			{
+				m_ePlayerState = PLAYER_IDLE;
+				m_fAniTime = 0.f;
+			}
+			break;
+		default:
+			break;
+		}
 	}
 }
 

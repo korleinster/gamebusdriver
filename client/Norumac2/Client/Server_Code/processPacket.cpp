@@ -20,6 +20,8 @@
 #include <random>
 #include "MeshParticle.h"
 #include "SoundMgr.h"
+#include "VIBuffer.h"
+#include "DynamicMesh.h"
 
 void AsynchronousClientClass::processPacket(Packet* buf)
 {
@@ -247,25 +249,31 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 							{
 								if (iter->GetPacketData()->id == p->attacking_id) {
 
+									CVIBuffer* pBuffer = (reinterpret_cast<COtherPlayer*>(iter))->m_pBuffer;
 									(reinterpret_cast<COtherPlayer*>(iter))->m_bKey = true;
 									if (p->comboState == COMBO1)
 									{
+										dynamic_cast<CDynamicMesh*>(pBuffer)->ResetPlayTimer();
 										(reinterpret_cast<COtherPlayer*>(iter))->SetAniState(PLAYER_ATT1);
 									}
 									else if (p->comboState == COMBO2)
 									{
+										dynamic_cast<CDynamicMesh*>(pBuffer)->ResetPlayTimer();
 										(reinterpret_cast<COtherPlayer*>(iter))->SetAniState(PLAYER_ATT2);
 									}
 									else if (p->comboState == COMBO3)
 									{
+										dynamic_cast<CDynamicMesh*>(pBuffer)->ResetPlayTimer();
 										(reinterpret_cast<COtherPlayer*>(iter))->SetAniState(PLAYER_ATT3);
 									}
 									else if (p->comboState == SKILL1)
 									{
+										dynamic_cast<CDynamicMesh*>(pBuffer)->ResetPlayTimer();
 										(reinterpret_cast<COtherPlayer*>(iter))->SetAniState(PLAYER_SKILL1);
 									}
 									else if (p->comboState == SKILL2)
 									{
+										dynamic_cast<CDynamicMesh*>(pBuffer)->ResetPlayTimer();
 										(reinterpret_cast<COtherPlayer*>(iter))->SetAniState(PLAYER_SKILL2);
 									}
 

@@ -38,7 +38,7 @@ private:
 	float			m_fSkillMoveTime;//스킬을쓰고 몇초부터 이동을 걸어줄지 하는 시간값
 	bool			m_bSkillUsed;//스킬사용여부
 	float			m_fKeyCool;//공격키용 쿨
-
+	float			m_fAniTime;//애니 싱크용 타이머
 	
 
 	// Scene meshes shader constant buffers
@@ -59,6 +59,7 @@ public:
 	bool			m_bSkil2Cool;
 	bool			m_bQuestFlag = { false }; // 퀘스트 관련 패킷 한번만 보내도록 하기 위한 신호 변수 - 서버한테 문의 할것
 
+
 public:
 	virtual HRESULT Initialize(void);
 	virtual int		Update(void);
@@ -69,6 +70,7 @@ public:
 	void			Skill1(void);
 	void			SetNaviIndex(DWORD dwIndex) { m_dwCellNum = dwIndex; }
 	void			TimeSetter(void);
+	void			AniTimeSet(void);
 
 public:
 	static CPlayer* Create(void);

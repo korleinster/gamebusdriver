@@ -14,7 +14,6 @@ public:
 	virtual ~COtherPlayer();
 
 private:
-	CVIBuffer*		m_pBuffer;
 	CShader*		m_pVertexShader;
 	CShader*		m_pPixelShader;
 	CShader*		m_pShadowAniVertexShader;
@@ -32,6 +31,8 @@ private:
 public:
 	bool			m_bKey; // Å°°¡ ´­·Ç³ª?
 	//bool			m_bPush;
+	float			m_fAniTime;
+	CVIBuffer*		m_pBuffer;
 
 
 
@@ -52,5 +53,6 @@ private:
 	void ChangeDir(void);
 	void SetCurrling(void);
 	void SetSeverPosMove(void);
+	void AniTimeSet(void);
 };
 

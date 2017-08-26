@@ -14,6 +14,7 @@
 #include "Player.h"
 #include "NPC.h"
 #include "Info.h"
+#include "NaviMgr.h"
 //#include <vld.h>
 
 // 전역 변수:
@@ -145,6 +146,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 						dynamic_cast<CPlayer*>(*player)->GetInfo()->m_ServerInfo.pos.x = 155.f;
 						dynamic_cast<CPlayer*>(*player)->GetInfo()->m_ServerInfo.pos.x = 400.f;
 						g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&(dynamic_cast<CPlayer*>(*player)->GetInfo()->m_ServerInfo.pos)));
+						dynamic_cast<CPlayer*>(*player)->SetNaviIndex(CNaviMgr::GetInstance()->GetCellIndex(&(dynamic_cast<CPlayer*>(*player)->GetInfo()->m_vPos)));
 
 
 						auto npc = CObjMgr::GetInstance()->Get_ObjList(L"NPC")->begin();
@@ -153,6 +155,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 						for (npc; npc != npc_end; ++npc)
 						{
 							dynamic_cast<CNpc*>(*npc)->m_bQuestAccept = false;
+							dynamic_cast<CNpc*>(*npc)->m_bPlayerIn = false;
 						}
 					}
 					////////////////////////////////////

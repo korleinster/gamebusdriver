@@ -64,7 +64,7 @@ int CCamera::Update(void)
 
 	if (CSceneMgr::GetInstance()->m_eType != SCENE_LOGO)
 	{
-		KeyState();
+		//KeyState();
 
 		if (m_bDebugCam == true)
 		{

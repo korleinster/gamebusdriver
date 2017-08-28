@@ -26,7 +26,7 @@ HRESULT CFontMgr::AddFont(const LPCWSTR& strFontPath, const wstring& strFontKey,
 	if (hr == E_FAIL)
 		return E_FAIL;
 
-	pFont = CFont::Create(strFontName);
+	//pFont = CFont::Create(strFontName);
 	NULL_CHECK_RETURN(pFont, E_FAIL);
 
 	m_mapFont.insert(MAPFONT::value_type(strFontKey, pFont));

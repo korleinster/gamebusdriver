@@ -128,40 +128,68 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 					//상대방에게 메시지를 보내는 부분
 
 					// 여기다가 데이터를 담은 뒤 전송
-					g_client.sendPacket(MAX_CHAT_SIZE / 2, CHAT, reinterpret_cast<Packet*>(&cText));
 
-
-					////////////퀘스트 초기화 관련///////////////
-					if (0 == wcscmp(cText, L"quest reset"))
+					if (_tcslen(cText) > 30)//채팅이 30자 이상 작성되면 못보내개끔 한다
 					{
-						CQuestUI* pQuestUI = dynamic_cast<CQuestUI*>(*(CObjMgr::GetInstance()->Get_ObjList(L"QuestUI")->begin()));
-						auto player = CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin();
+						CFont* pFont = CFont::Create(L"../Resource/Font/ClearType.ttf", L"ClearFont");
 
-						pQuestUI->m_QuestScript->m_wstrText = L"";
-						pQuestUI->m_QuestState->m_wstrText = L"";
+						pFont->m_eType = FONT_TYPE_OUTLINE;
+						pFont->m_fSize = 20.f;
+						pFont->m_nColor = 0xFFFFFFFF;
+						pFont->m_nFlag = FW1_LEFT | FW1_VCENTER | FW1_RESTORESTATE;
+						pFont->m_vPos = D3DXVECTOR2(15.f, 620.f);
+						pFont->m_fOutlineSize = 1.f;
+						pFont->m_nOutlineColor = 0xFF000000 /*0xFFFFFFFF*/;
 
-						dynamic_cast<CPlayer*>(*player)->m_eQuestState = QUEST_NOT;
-						dynamic_cast<CPlayer*>(*player)->m_bQuestFlag = false;
-						dynamic_cast<CPlayer*>(*player)->GetInfo()->m_vPos = D3DXVECTOR3(155.f, 0.f, 400.f);
-						dynamic_cast<CPlayer*>(*player)->GetInfo()->m_ServerInfo.pos.x = 155.f;
-						dynamic_cast<CPlayer*>(*player)->GetInfo()->m_ServerInfo.pos.x = 400.f;
-						g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&(dynamic_cast<CPlayer*>(*player)->GetInfo()->m_ServerInfo.pos)));
-						dynamic_cast<CPlayer*>(*player)->SetNaviIndex(CNaviMgr::GetInstance()->GetCellIndex(&(dynamic_cast<CPlayer*>(*player)->GetInfo()->m_vPos)));
+						pFont->m_wstrText = L"System : 채팅은 30자 이내로만 가능합니다.";
 
+						for (auto ChatList : pChatUI->m_ChatLogList)
+							ChatList->m_vPos.y -= 20.f;
 
-						auto npc = CObjMgr::GetInstance()->Get_ObjList(L"NPC")->begin();
-						auto npc_end = CObjMgr::GetInstance()->Get_ObjList(L"NPC")->end();
-
-						for (npc; npc != npc_end; ++npc)
+						if (pChatUI->m_ChatLogList.size() == 7)
 						{
-							dynamic_cast<CNpc*>(*npc)->m_bQuestAccept = false;
-							dynamic_cast<CNpc*>(*npc)->m_bPlayerIn = false;
+							pChatUI->m_ChatLogList.pop_front(); // 앞에 폰트객체지우는걸 해야하는대 일단 귀찮으니깐 팝만하자. 나중에 처리해야지
 						}
-					}
-					////////////////////////////////////
 
-					ZeroMemory(&cText, sizeof(TCHAR) * (MAX_CHAT_SIZE / 2));
-					//보내고나서 문자열을 비워준다.
+						pChatUI->m_ChatLogList.push_back(pFont);
+					}
+					else
+					{
+						g_client.sendPacket(MAX_CHAT_SIZE / 2, CHAT, reinterpret_cast<Packet*>(&cText));
+
+
+						////////////퀘스트 초기화 관련///////////////
+						if (0 == wcscmp(cText, L"quest reset"))
+						{
+							CQuestUI* pQuestUI = dynamic_cast<CQuestUI*>(*(CObjMgr::GetInstance()->Get_ObjList(L"QuestUI")->begin()));
+							auto player = CObjMgr::GetInstance()->Get_ObjList(L"Player")->begin();
+
+							pQuestUI->m_QuestScript->m_wstrText = L"";
+							pQuestUI->m_QuestState->m_wstrText = L"";
+
+							dynamic_cast<CPlayer*>(*player)->m_eQuestState = QUEST_NOT;
+							dynamic_cast<CPlayer*>(*player)->m_bQuestFlag = false;
+							dynamic_cast<CPlayer*>(*player)->GetInfo()->m_vPos = D3DXVECTOR3(155.f, 0.f, 400.f);
+							dynamic_cast<CPlayer*>(*player)->GetInfo()->m_ServerInfo.pos.x = 155.f;
+							dynamic_cast<CPlayer*>(*player)->GetInfo()->m_ServerInfo.pos.x = 400.f;
+							g_client.sendPacket(sizeof(position), CHANGED_POSITION, reinterpret_cast<BYTE*>(&(dynamic_cast<CPlayer*>(*player)->GetInfo()->m_ServerInfo.pos)));
+							dynamic_cast<CPlayer*>(*player)->SetNaviIndex(CNaviMgr::GetInstance()->GetCellIndex(&(dynamic_cast<CPlayer*>(*player)->GetInfo()->m_vPos)));
+
+
+							auto npc = CObjMgr::GetInstance()->Get_ObjList(L"NPC")->begin();
+							auto npc_end = CObjMgr::GetInstance()->Get_ObjList(L"NPC")->end();
+
+							for (npc; npc != npc_end; ++npc)
+							{
+								dynamic_cast<CNpc*>(*npc)->m_bQuestAccept = false;
+								dynamic_cast<CNpc*>(*npc)->m_bPlayerIn = false;
+							}
+						}
+						////////////////////////////////////
+
+						ZeroMemory(&cText, sizeof(TCHAR) * (MAX_CHAT_SIZE / 2));
+						//보내고나서 문자열을 비워준다.				
+					}
 					g_fChatCool = 0.f;
 				}
 			}

@@ -27,10 +27,10 @@ CFont::~CFont()
 	Release();
 }
 
-CFont* CFont::Create(const wstring& _wstrPath)
+CFont* CFont::Create(const LPCWSTR& strFontPath, const wstring& strFontName)
 {
 	CFont* pResource = new CFont;
-	if (FAILED(dynamic_cast<CFont*>(pResource)->Initialize(_wstrPath)))
+	if (FAILED(dynamic_cast<CFont*>(pResource)->Initialize(strFontPath,strFontName)))
 		::Safe_Delete(pResource);
 
 	return pResource;
@@ -46,15 +46,20 @@ CFont * CFont::CloneFont(void)
 	return pFont;
 }
 
-HRESULT CFont::Initialize(const wstring& _wstrPath)
+HRESULT CFont::Initialize(const LPCWSTR& strFontPath, const wstring& strFontName)
 {
+	HRESULT hr = AddFontResourceEx(strFontPath, FR_PRIVATE, NULL);
+	if (hr == E_FAIL)
+		return E_FAIL;
+
+
 	m_pDeivceContext = CDevice::GetInstance()->m_pDeviceContext;
-	Load_Font(_wstrPath);
+	Load_Font(strFontName);
 
 	return S_OK;
 }
 
-HRESULT CFont::Load_Font(const wstring& _wstrPath)
+HRESULT CFont::Load_Font(const wstring& strFontName)
 {
 	if (FAILED(FW1CreateFactory(FW1_VERSION, &m_pFW1FontFactory)))
 	{
@@ -63,7 +68,7 @@ HRESULT CFont::Load_Font(const wstring& _wstrPath)
 	}
 
 	if (FAILED(m_pFW1FontFactory->CreateFontWrapper(
-		CDevice::GetInstance()->m_pDevice, _wstrPath.c_str(), &m_pFW1FontWarpper)))
+		CDevice::GetInstance()->m_pDevice, strFontName.c_str(), &m_pFW1FontWarpper)))
 	{
 		MSG_BOX(L"Not Find Font");
 		return E_FAIL;

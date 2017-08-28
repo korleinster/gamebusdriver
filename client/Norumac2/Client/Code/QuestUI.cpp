@@ -171,8 +171,8 @@ HRESULT CQuestUI::AddComponent(void)
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"PS_Shader", pComponent));
 
 
-	m_QuestScript = CFont::Create(L"Font_Star");
-	m_QuestState = CFont::Create(L"Font_Star");
+	m_QuestScript = CFont::Create(L"../Resource/Font/Ko_Star.ttf", L"Ko_Star");
+	m_QuestState = CFont::Create(L"../Resource/Font/Ko_Star.ttf", L"Ko_Star");
 
 	return S_OK;
 }

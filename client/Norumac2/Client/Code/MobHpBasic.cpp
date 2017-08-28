@@ -149,7 +149,7 @@ HRESULT CMobHpBasic::AddComponent(void)
 	m_mapComponent.insert(map<const TCHAR*, CComponent*>::value_type(L"PS_Shader", pComponent));
 
 
-	m_pFont = CFont::Create(L"Font_Star");
+	m_pFont = CFont::Create(L"../Resource/Font/Ko_Star.ttf", L"Ko_Star");
 
 	return S_OK;
 }

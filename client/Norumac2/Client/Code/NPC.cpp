@@ -292,7 +292,7 @@ void CNpc::NpcChat(void)
 		{
 			m_bPlayerIn = true;
 
-			CFont* pFont = CFont::Create(L"Font_Clear");
+			CFont* pFont = CFont::Create(L"../Resource/Font/ClearType.ttf", L"ClearFont");
 
 			pFont->m_eType = FONT_TYPE_OUTLINE;
 			pFont->m_fSize = 20.f;
@@ -314,7 +314,7 @@ void CNpc::NpcChat(void)
 
 			pChatUI->m_ChatLogList.push_back(pFont);
 
-			pFont = CFont::Create(L"Font_Clear");
+			pFont = CFont::Create(L"../Resource/Font/ClearType.ttf", L"ClearFont");
 
 			pFont->m_eType = FONT_TYPE_OUTLINE;
 			pFont->m_fSize = 20.f;
@@ -342,7 +342,7 @@ void CNpc::NpcChat(void)
 		{
 			m_bPlayerIn = true;
 
-			CFont* pFont = CFont::Create(L"Font_Clear");
+			CFont* pFont = CFont::Create(L"../Resource/Font/ClearType.ttf", L"ClearFont");
 
 			pFont->m_eType = FONT_TYPE_OUTLINE;
 			pFont->m_fSize = 20.f;
@@ -368,7 +368,7 @@ void CNpc::NpcChat(void)
 		{
 			m_bPlayerIn = true;
 
-			CFont* pFont = CFont::Create(L"Font_Clear");
+			CFont* pFont = CFont::Create(L"../Resource/Font/ClearType.ttf", L"ClearFont");
 
 			pFont->m_eType = FONT_TYPE_OUTLINE;
 			pFont->m_fSize = 20.f;
@@ -392,7 +392,7 @@ void CNpc::NpcChat(void)
 
 			pChatUI->m_ChatLogList.push_back(pFont);
 
-			pFont = CFont::Create(L"Font_Clear");
+			pFont = CFont::Create(L"../Resource/Font/ClearType.ttf", L"ClearFont");
 
 			pFont->m_eType = FONT_TYPE_OUTLINE;
 			pFont->m_fSize = 20.f;
@@ -422,7 +422,7 @@ void CNpc::NpcChat(void)
 		{
 			m_bPlayerIn = false;
 
-			CFont* pFont = CFont::Create(L"Font_Clear");
+			CFont* pFont = CFont::Create(L"../Resource/Font/ClearType.ttf", L"ClearFont");
 
 			pFont->m_eType = FONT_TYPE_OUTLINE;
 			pFont->m_fSize = 20.f;
@@ -448,7 +448,7 @@ void CNpc::NpcChat(void)
 		{
 			m_bPlayerIn = false;
 
-			CFont* pFont = CFont::Create(L"Font_Clear");
+			CFont* pFont = CFont::Create(L"../Resource/Font/ClearType.ttf", L"ClearFont");
 
 			pFont->m_eType = FONT_TYPE_OUTLINE;
 			pFont->m_fSize = 20.f;
@@ -474,7 +474,7 @@ void CNpc::NpcChat(void)
 		{
 			m_bPlayerIn = false;
 
-			CFont* pFont = CFont::Create(L"Font_Clear");
+			CFont* pFont = CFont::Create(L"../Resource/Font/ClearType.ttf", L"ClearFont");
 
 			pFont->m_eType = FONT_TYPE_OUTLINE;
 			pFont->m_fSize = 20.f;

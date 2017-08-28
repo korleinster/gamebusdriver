@@ -97,6 +97,6 @@ CDamageFont* CDamageFont::Create(const D3DXVECTOR3* pPos, const float& fDmg, con
 
 HRESULT CDamageFont::Add_Component(void)
 {
-	m_pFont = CFont::Create(L"Font_Clear");
+	m_pFont = CFont::Create(L"../Resource/Font/ClearType.ttf", L"ClearFont");
 	return S_OK;
 }

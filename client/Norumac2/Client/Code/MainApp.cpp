@@ -291,8 +291,8 @@ HRESULT CMainApp::Initialize(void)
 		return E_FAIL;
 	}
 
-	hr = CFontMgr::GetInstance()->AddFont(L"../Resource/Font/Ko_Star.ttf", L"Font_Star", L"KoStar");
-	hr = CFontMgr::GetInstance()->AddFont(L"../Resource/Font/ClearType.ttf", L"Font_Clear", L"ClearFont");
+	//hr = CFontMgr::GetInstance()->AddFont(L"../Resource/Font/Ko_Star.ttf", L"Font_Star", L"KoStar");
+	//hr = CFontMgr::GetInstance()->AddFont(L"../Resource/Font/ClearType.ttf", L"Font_Clear", L"ClearFont");
 
 	CSoundMgr::GetInstance()->Initialize();
 	CSoundMgr::GetInstance()->LoadSoundFile();

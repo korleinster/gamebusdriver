@@ -52,14 +52,14 @@ public:
 	bool			m_bEntered;
 
 public:
-	static CFont*		Create(const wstring& _wstPath);
+	static CFont*		Create(const LPCWSTR& strFontPath, const wstring& strFontName);
 	virtual CFont*		CloneFont(void);
 
 private:
-	HRESULT			Load_Font(const wstring& _wstPath);
+	HRESULT			Load_Font(const wstring& strFontName);
 
 public:
-	HRESULT			Initialize(const wstring& _wstPath);
+	HRESULT			Initialize(const LPCWSTR& strFontPath, const wstring& strFontName);
 	void			Render();
 	DWORD			Release();
 

@@ -928,7 +928,7 @@ void AsynchronousClientClass::processPacket(Packet* buf)
 
 		wcout << wstr << endl;*/
 
-		CFont* pFont = CFont::Create(L"Font_Clear");
+		CFont* pFont = CFont::Create(L"../Resource/Font/ClearType.ttf", L"ClearFont");
 
 
 		wchar_t wcNick[20] = L""; 

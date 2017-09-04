@@ -862,7 +862,7 @@ void CPlayer::KeyInput()
 	{
 		CQuestUI* pQuestUI = dynamic_cast<CQuestUI*>(*(CObjMgr::GetInstance()->Get_ObjList(L"QuestUI")->begin()));
 		CChatUI* pChatUI = dynamic_cast<CChatUI*>(*(CObjMgr::GetInstance()->Get_ObjList(L"ChatUI")->begin()));
-		CFont* pFont = CFont::Create(L"Font_Clear");
+		CFont* pFont = CFont::Create(L"../Resource/Font/ClearType.ttf", L"ClearFont");
 
 		if (m_eQuestState == QUEST_NOT)
 		{

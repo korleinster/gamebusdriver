@@ -90,7 +90,7 @@ CRenderMgr::CRenderMgr()
 	cbDesc.ByteWidth = sizeof(CB_LINEAR_DEPTH);
 	CDevice::GetInstance()->m_pDevice->CreateBuffer(&cbDesc, NULL, &m_pLinearDepthCB);
 
-	m_pFPSFont = CFont::Create(L"Font_Star");
+	m_pFPSFont = CFont::Create(L"../Resource/Font/Ko_Star.ttf", L"Ko_Star");
 
 
 	m_pFPSFont->m_eType = FONT_TYPE_OUTLINE;
@@ -437,7 +437,7 @@ void CRenderMgr::Input(float fTime)
 	}
 #endif	
 
-	if (m_fTimeCheck >= 0.5f)
+	/*if (m_fTimeCheck >= 0.5f)
 	{
 		if (CInput::GetInstance()->GetDIKeyState(DIK_0) & 0x80)
 		{
@@ -447,7 +447,7 @@ void CRenderMgr::Input(float fTime)
 				m_bDefferdOn = true;
 			m_fTimeCheck = 0.f;
 		}
-	}
+	}*/
 
 	/*if (CInput::GetInstance()->GetDIKeyState(DIK_C) & 0x80)
 	{

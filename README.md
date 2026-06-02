@@ -1,27 +1,26 @@
 # gamebusdriver
-KPU 
-졸업작품용 협업 System
+KPU Graduation Project — Collaborative System
 
-
-**서버가 체고시다**
+**The server is the best**
 ---------------------------------
-_**신기술 너무 좋아 하앍하앍**_
+_**New tech is so exciting**_
 
 
-여기서부턴 README 및 GitHub 사용법
+From here on: README and GitHub usage guide
 ================================
-기본적으로 텍스트 예쁘게 만드는 방법은 아래와 같다.
-*Italic*, **bold**, and  `monospace`
+Basic text formatting:
 
-fork 를 눌러서, 자기 github 으로 프로젝트를 복사해 오게 된다.
-  * 마음대로 수정해도, 일단 내꺼에만 저장하게 되고, 원본 전체 마스터 프로젝트에는 변동이 없다.
-  * 이렇게 점도 찍을 수 있고
+*Italic*, **bold**, and `monospace`
 
-> 왼쪽 앞에 만들 수 있고
+Click **Fork** to copy the project to your own GitHub.
+  * You can modify it freely — changes are only saved to your copy, leaving the original master project untouched.
+  * You can also add bullet points like this
+
+> You can add a block quote like this
 >
-> 선이 주륵주륵
+> With a vertical bar on the left
 
-전부다 수정하고 왼쪽 위의 New Pull Request 를 눌러 원본에 이걸 적용해 달라고 요청한다.
-원본 소유자는 이 요청을 적용하고 수정적용한다.
+After making all your changes, click **New Pull Request** in the top left to request that your changes be merged into the original.
+The original owner reviews the request and applies the changes.
 
-* 이후 내용은 Pull requests 에서 close 된 내용을 살펴보자! 간단한 노잼 설명이 있다!
+* Check the closed Pull Requests tab for more — there's a simple (if a bit dry) explanation there!
